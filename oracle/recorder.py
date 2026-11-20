@@ -164,6 +164,28 @@ class Store:
         manifest.update(self.root, changes)
 
 
+SAMPLE_EVERY = 20
+
+
+def sequence(cid):
+    tail = cid.rsplit("-", 1)[-1]
+    return int(tail) if tail.isdigit() else None
+
+
+def sampled(job):
+    """Requirement 8.1: every control case, and every case whose sequence is a multiple of 20."""
+    if job.get("control"):
+        return True
+    seq = sequence(job["id"])
+    return seq is not None and seq % SAMPLE_EVERY == 0
+
+
+def fingerprint(got):
+    """What two runs of one case must agree on: outcome, raw field text, hashes of files written."""
+    return {"outcome": got.get("outcome"), "printed": dict(got.get("printed", {})),
+            "files": {f["path"]: f["sha256"] for f in got.get("files", [])}}
+
+
 def capture_screens(got, control):
     """Every screen for a control case, the final screen for any other case."""
     final = got.get("final") or []
@@ -222,9 +244,19 @@ class Recorder:
         }
 
     def attempt(self, profile, job, manager=None, block=True):
-        """Run a job once. Returns (got, run_id, run dir, control differences)."""
+        """Run a job, and run it a second time when it is in the determinism sample.
+        Returns (got, run_id, run dir, control differences). got["determinism"] is None when
+        the job was not sampled or did not answer, else "same" or "differs"."""
         got = self._run(profile, job, manager, block)
         run_id, d = self._log("recording", job, got)
+        got["determinism"] = None
+        if sampled(job) and got["outcome"] in STORED:
+            second = self._run(profile, job, manager, block=True)
+            self._log("determinism", job, second)
+            a, b = fingerprint(got), fingerprint(second)
+            got["determinism"] = "same" if a == b else "differs"
+            if a != b:
+                ledger.log_nondeterminism(job["id"], a, b)
         diffs = cases.check_control(profile, job["control"], got) if job.get("control") else []
         return got, run_id, d, diffs
 
@@ -239,7 +271,7 @@ class Recorder:
                 "screen_id": got.get("screen_id"), "printed": got.get("printed", {}),
                 "message": got.get("message"), "files": got.get("files", []),
                 "capture_path": capture_path if stored else runs.rel(d), "recorded": stored,
-                "reason": got.get("reason")}
+                "reason": got.get("reason"), "determinism": got.get("determinism")}
 
     # ---- control cases ------------------------------------------------------------------
 
@@ -303,6 +335,7 @@ class Recorder:
                "control": None, "seed": None, "generator_version": None}
         out = self.record_job(profile, job, manager, block=False)
         self.update_coverage()
+        out.pop("determinism")  # a differing second run is in the ledger's nondeterminism
         return out
 
     def create_batch(self, profile, seed, count, modes=None, shapes=None, manager=None):
@@ -333,7 +366,8 @@ class Recorder:
         out = {"batch_id": batch_id, "cases_run": len(results),
                "recorded": sum(1 for r in results if r["recorded"]),
                "timeouts": by_outcome.get("timeout", 0), "unknown_screens": by_outcome.get("unknown_screen", 0),
-               "nondeterministic": 0, "determinism_checked": False, "by_outcome": by_outcome,
+               "nondeterministic": sum(1 for r in results + controls if r.get("determinism") == "differs"),
+               "determinism_checked": True, "by_outcome": by_outcome,
                "cases_per_minute": round(done / minutes, 1), "report_path": runs.rel(report)}
         out.update({k: v for k, v in (extra or {}).items() if k in out})
         return out
