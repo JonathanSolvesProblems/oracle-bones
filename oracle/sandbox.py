@@ -86,6 +86,68 @@ def run_args(cfg, drive, server_id, session_id, name=None):
     return args
 
 
+def labelled_containers(label, value=None):
+    """Container ids carrying the label (any value when value is None), with that label's value."""
+    flt = label if value is None else "%s=%s" % (label, value)
+    r = docker("ps", "-a", "--filter", "label=" + flt, "--format",
+               "{{.ID}}\t{{.Label \"%s\"}}" % label, check=False, timeout=60)
+    out = []
+    for line in r.stdout.splitlines():
+        if "\t" in line:
+            cid, val = line.split("\t", 1)
+            out.append((cid, val))
+    return out
+
+
+def remove_containers(ids):
+    if ids:
+        docker("rm", "-f", *ids, check=False, timeout=120)
+
+
+_process_server_id = None
+
+
+def process_server_id():
+    """A server id for this process, registered with its pid so that other servers do not
+    mistake this process's containers for orphans."""
+    global _process_server_id
+    if _process_server_id is None:
+        import uuid
+        sid = "proc-" + uuid.uuid4().hex
+        d = paths.OUT / "servers"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / ("%s.pid" % sid)).write_text(str(os.getpid()))
+        _process_server_id = sid
+    return _process_server_id
+
+
+def pid_alive(pid):
+    """True when a process with this id is running. Never signals it."""
+    if pid <= 0:
+        return False
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        handle = kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            return False
+        try:
+            code = wintypes.DWORD()
+            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
+                return False
+            return code.value == 259  # STILL_ACTIVE
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
 # ---- temporary drives ------------------------------------------------------------------
 
 def _inside_repo(p):

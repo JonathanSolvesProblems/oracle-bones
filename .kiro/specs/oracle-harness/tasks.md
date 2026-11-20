@@ -42,12 +42,12 @@
   - [x] 4.6 Write the stub target and run Properties 5 and 6 against it
     - _Requirements: 4.3, 5.1, 5.5, 5.6_
 
-- [ ] 5. Sessions and ledger
-  - [ ] 5.1 Write `oracle/sessions.py`: session ids, the concurrency semaphore with `session_limit`, idle sweep, exit handler, and removal of containers left by dead servers. Property 12.
+- [x] 5. Sessions and ledger
+  - [x] 5.1 Write `oracle/sessions.py`: session ids, the concurrency semaphore with `session_limit`, idle sweep, exit handler, and removal of containers left by dead servers. Property 12.
     - _Requirements: 2.4, 3.1, 3.2, 3.3, 3.4_
-  - [ ] 5.2 Write `oracle/ledger.py`: the schema, the harness's sections, a locked atomic update that never touches the Exhumer's sections, and the coverage rules for fields and screens
+  - [x] 5.2 Write `oracle/ledger.py`: the schema, the harness's sections, a locked atomic update that never touches the Exhumer's sections, and the coverage rules for fields and screens
     - _Requirements: 4.4, 6.5, 13.1, 13.2, 13.3, 13.4_
-  - [ ] 5.3 Write the exploratory run log under `oracle/out/runs/<run-id>/` with transcript, final screen and files
+  - [x] 5.3 Write the exploratory run log under `oracle/out/runs/<run-id>/` with transcript, final screen and files
     - _Requirements: 9.1, 14.7_
 
 - [ ] 6. Checkpoint: reproduce the spike

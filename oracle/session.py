@@ -22,7 +22,7 @@ ANSWER_GRACE_S = 15  # extra time for the runner to answer beyond the wait it wa
 
 
 class Session:
-    def __init__(self, profile, cfg=None, server_id="cli", session_id=None, setup=None, argv=None,
+    def __init__(self, profile, cfg=None, server_id=None, session_id=None, setup=None, argv=None,
                  extra_files=None):
         self.profile = profile
         self.cfg = cfg or config_mod.load()
@@ -44,7 +44,7 @@ class Session:
             (self.drive / name).write_bytes(data)
         self.before = sandbox.snapshot(self.drive)
         try:
-            self.proc = sandbox.launch(self.cfg, self.drive, server_id, self.id)
+            self.proc = sandbox.launch(self.cfg, self.drive, server_id or sandbox.process_server_id(), self.id)
             threading.Thread(target=self._pump, daemon=True).start()
             env = dict(profile["env"])
             env["EMU2_DRIVE_C"] = "/drive"
@@ -218,6 +218,12 @@ class Session:
                 try:
                     self.proc.wait(timeout=10)
                 except Exception:
+                    pass
+                # Killing the docker client does not always stop the container; remove it by label.
+                try:
+                    left = sandbox.labelled_containers(sandbox.LABEL_SESSION, self.id)
+                    sandbox.remove_containers([cid for cid, _ in left])
+                except OracleError:
                     pass
             self.proc = None
         if self.drive is not None:

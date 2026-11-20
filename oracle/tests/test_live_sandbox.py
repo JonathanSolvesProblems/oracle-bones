@@ -23,7 +23,7 @@ DOCKER_MANAGED = {"/", "/proc", "/dev", "/dev/pts", "/dev/mqueue", "/dev/shm", "
 def run_check(prof, argv, frozen_time):
     cfg = config.load()
     drive = sandbox.make_drive(prof, fetch.require_verified(prof))
-    proc = sandbox.launch(cfg, drive, "test", str(uuid.uuid4()))
+    proc = sandbox.launch(cfg, drive, sandbox.process_server_id(), str(uuid.uuid4()))
     try:
         def call(req):
             proc.stdin.write(json.dumps(req) + "\n")

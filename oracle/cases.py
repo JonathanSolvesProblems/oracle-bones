@@ -6,6 +6,7 @@ unknown_screen (the harness got no answer). Only the first group may ever be sto
 
 from . import screen as screen_mod
 from .errors import OracleError
+from .runner import keys as keys_mod
 from .profile import screen_by_id
 from .session import Session
 
@@ -38,7 +39,7 @@ def _stop_screens(profile):
     return [s["id"] for s in profile["screens"] if s["kind"] in ("rejected", "error") and s["marker"]]
 
 
-def run(profile, mode, shape, inputs, control=None, cfg=None, server_id="cli", capture_all=False):
+def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, capture_all=False):
     """Run a case in a fresh session. Returns a dict; never raises for timeouts."""
     setup = dict(control.get("setup", {})) if control else {}
     steps = steps_for(profile, mode, shape, control)
@@ -54,7 +55,11 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id="cli", c
     out = {"mode": mode, "shape": shape, "inputs": dict(inputs), "printed": {}, "message": None,
            "screen_id": None, "files": []}
 
+    visited = []
+
     def keep(desc):
+        if desc.get("screen_id") and (not visited or visited[-1] != desc["screen_id"]):
+            visited.append(desc["screen_id"])
         if capture_all and (not screens or screens[-1]["hash"] != desc["hash"]):
             screens.append({"hash": desc["hash"], "rows": desc["rows"]})
 
@@ -94,6 +99,16 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id="cli", c
         out["files"] = s.changed_files()
         out["drive_files"] = _copy_out(s, out["files"])
     out["screens"] = screens
+    out["visited"] = visited
+    keys_by_screen = {}
+    for t in out["transcript"]:
+        if t.get("expect") and not t["resend"]:
+            for k in keys_mod.parse(t["keys"]):
+                note = "literal" if k.kind == "char" and not k.mods else k.notation()
+                keys_by_screen.setdefault(t["expect"], [])
+                if note not in keys_by_screen[t["expect"]]:
+                    keys_by_screen[t["expect"]].append(note)
+    out["keys_by_screen"] = keys_by_screen
     return out
 
 
