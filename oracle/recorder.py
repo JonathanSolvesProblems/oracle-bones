@@ -460,6 +460,25 @@ class Recorder:
         self.update_coverage()
         return {"case_id": cid, "old": old_sha, "new": new_sha, "outcome": got["outcome"], "run_id": run_id}
 
+    # ---- replay (never stored) ----------------------------------------------------------
+
+    def replay(self, profile, cid, manager=None):
+        """Rerun a stored golden's inputs and compare. Writes only the run log under oracle/out/."""
+        g = self.store.load(cid)
+        control = next((c for c in profile["controls"] if c["id"] == cid), None) if g["control"] else None
+        if g["control"] and control is None:
+            raise OracleError("invalid_arguments", "%s is a control case the profile no longer lists" % cid)
+        job = {"id": cid, "mode": g["mode"], "shape": g["shape"], "inputs": dict(g["inputs"]), "control": control}
+        got = self._run(profile, job, manager)
+        run_id, _ = self._log("replay", job, got)
+        want = {"outcome": g["outcome"], "printed": g["printed"],
+                "files": {f["path"]: f["sha256"] for f in g["files"]}}
+        have = fingerprint(got)
+        diffs = [{"what": k, "golden": want[k], "replay": have[k]} for k in want if want[k] != have[k]]
+        if g["outcome"] == "observed" and got.get("screen_id") != g["expected_screen"]:
+            diffs.append({"what": "screen_id", "golden": g["expected_screen"], "replay": got.get("screen_id")})
+        return {"case_id": cid, "run_id": run_id, "match": not diffs, "differences": diffs}
+
     # ---- coverage -----------------------------------------------------------------------
 
     def update_coverage(self):

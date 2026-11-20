@@ -59,7 +59,7 @@
   - [x] 6.3 Find whether emu2 can send LPT1 output to a file, and record the answer in `harness_findings`
     - _Requirements: 9.2_
 
-- [ ] 7. Goldens
+- [x] 7. Goldens
   - [x] 7.1 Write `oracle/generator.py`: seeded, versioned, ranges and boundaries from the profile, ids assigned before dispatch. Property 3.
     - _Requirements: 7.7, 7.9_
   - [x] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
@@ -72,7 +72,7 @@
     - _Requirements: 7.8, 7.9_
   - [x] 7.6 Record the control cases first, with every screen captured, stopping on any difference; then replace the spike's `unobserved` notes in the profile with `cite` entries for drive layout, screen size and menu resend
     - _Requirements: 6.2, 6.3, 6.4, 6.5_
-  - [ ] 7.7 Property 2: replay a sample of goldens and check they match and write nothing under `oracle/goldens/`
+  - [x] 7.7 Property 2: replay a sample of goldens and check they match and write nothing under `oracle/goldens/`
     - _Requirements: 7.1, 7.4, 9.1_
 
 - [ ] 8. Comparison

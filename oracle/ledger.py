@@ -64,13 +64,14 @@ def _lock(timeout_s=30):
         try:
             fd = os.open(str(lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             break
-        except FileExistsError:
+        except (FileExistsError, PermissionError):
+            # On Windows a lock file that another writer is deleting raises PermissionError.
             try:
                 if time.time() - lock.stat().st_mtime > 120:  # left by a crashed writer
                     lock.unlink()
                     continue
-            except FileNotFoundError:
-                continue
+            except (FileNotFoundError, PermissionError):
+                pass
             if time.monotonic() > deadline:
                 raise OracleError("internal", "the ledger is locked: %s" % lock)
             time.sleep(0.05)
@@ -79,10 +80,20 @@ def _lock(timeout_s=30):
         os.close(fd)
         yield
     finally:
+        _retry(lock.unlink, FileNotFoundError)
+
+
+def _retry(fn, ignore=(), tries=100):
+    """Windows refuses to delete or replace a file another thread has open for a moment."""
+    for i in range(tries):
         try:
-            lock.unlink()
-        except FileNotFoundError:
-            pass
+            return fn()
+        except ignore:
+            return None
+        except PermissionError:
+            if i == tries - 1:
+                raise
+            time.sleep(0.02)
 
 
 def update(change):
@@ -98,7 +109,7 @@ def update(change):
         p = path()
         tmp = p.with_suffix(".tmp")
         tmp.write_text(json.dumps(led, indent=2, sort_keys=False) + "\n", encoding="utf-8", newline="\n")
-        os.replace(tmp, p)
+        _retry(lambda: os.replace(tmp, p))
         return led
 
 

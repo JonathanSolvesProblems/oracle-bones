@@ -3,9 +3,11 @@
   python -m oracle.record --controls                 record the control cases not yet stored
   python -m oracle.record --seed 1 --count 100       record a generated batch (controls first)
   python -m oracle.record --rerecord nd-trap-000001  replace one golden, logged in `rerecords`
+  python -m oracle.record --replay [CASE_ID ...]     rerun goldens (all when none named) and compare;
+                                                     stores nothing
 
 Replacing a golden is possible only here. The MCP tools reach the create-only path.
-Exit codes: 0 done, 1 a harness failure or a case that could not be recorded.
+Exit codes: 0 done, 1 a harness failure, a case that could not be recorded, or a replay that differs.
 """
 
 import argparse
@@ -25,6 +27,7 @@ def main(argv=None):
     g.add_argument("--controls", action="store_true", help="record the control cases not yet stored")
     g.add_argument("--rerecord", metavar="CASE_ID", help="replace one golden by rerunning its inputs")
     g.add_argument("--seed", type=int, help="record a generated batch from this seed")
+    g.add_argument("--replay", nargs="*", metavar="CASE_ID", help="rerun goldens and compare (all when none named)")
     ap.add_argument("--count", type=int, default=0, help="cases in the batch (with --seed)")
     ap.add_argument("--modes", nargs="*", help="limit the batch to these modes")
     ap.add_argument("--shapes", nargs="*", help="limit the batch to these shapes")
@@ -43,6 +46,16 @@ def main(argv=None):
                 print("every control case is already stored")
             for r in out:
                 print("%s  %s  %s" % (r["case_id"], r["outcome"], r["capture_path"]))
+        elif args.replay is not None:
+            ids = args.replay or rec.store.ids()
+            bad = 0
+            for cid in ids:
+                r = rec.replay(prof, cid)
+                bad += not r["match"]
+                print("%s  %s  %s" % (cid, "same" if r["match"] else "DIFFERS", r["run_id"]))
+                for d in r["differences"]:
+                    print("    %s: golden %r, replay %r" % (d["what"], d["golden"], d["replay"]))
+            return 1 if bad else 0
         elif args.rerecord:
             out = rec.rerecord(prof, args.rerecord)
             print("replaced %s: %s -> %s" % (out["case_id"], out["old"], out["new"]))
