@@ -17,10 +17,12 @@ profile expects is a harness failure: nothing is stored for the control cases an
 import hashlib
 import json
 import os
+import queue
 import shutil
 import threading
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from . import cases, generator, ledger, manifest, paths, runs
@@ -291,7 +293,13 @@ class Recorder:
             return []
         self.store.reserve([j["id"] for j in jobs])
         try:
-            done = [(job,) + self.attempt(profile, job, manager) for job in jobs]
+            done = self.parallel(profile, jobs, manager, lambda *item: item)
+            errors = [{"case_id": job["id"], "error": err.to_dict()["error"]}
+                      for job, got, run_id, d, diffs, err in done if err is not None]
+            if errors:
+                raise OracleError("internal", "harness failure: a control case could not run; "
+                                  "nothing was stored and the run stopped", {"failed": errors})
+            done = [item[:5] for item in sorted(done, key=lambda item: item[0]["id"])]
             failed = [{"case_id": job["id"], "run_id": run_id, "differences": diffs}
                       for job, got, run_id, d, diffs in done if diffs or got["outcome"] not in STORED]
             if failed:
@@ -315,6 +323,56 @@ class Recorder:
             cid = "%s-%06d" % (prefix, generator.next_sequences(profile, taken).get(prefix, 1))
             self.store.reserve([cid])
             return cid
+
+    def parallel(self, profile, jobs, manager, on_result):
+        """Run jobs on up to max_sessions workers. Each finished job goes through a queue to one
+        writer thread, which calls on_result(job, got, run_id, run dir, control differences,
+        error). Returns what on_result returned, in finishing order."""
+        q = queue.Queue()
+        results, failures = [], []
+
+        def writer():
+            while True:
+                item = q.get()
+                if item is None:
+                    return
+                try:
+                    results.append(on_result(*item))
+                except BaseException as e:  # noqa: BLE001  re-raised on the calling thread
+                    failures.append(e)
+
+        def work(job):
+            try:
+                q.put((job,) + self.attempt(profile, job, manager) + (None,))
+            except OracleError as e:
+                q.put((job, None, None, None, None, e))
+
+        wt = threading.Thread(target=writer, name="golden-writer", daemon=True)
+        wt.start()
+        try:
+            with ThreadPoolExecutor(self.cfg["max_sessions"], thread_name_prefix="case") as ex:
+                list(ex.map(work, jobs))
+        finally:
+            q.put(None)
+            wt.join()
+        if failures:
+            raise failures[0]
+        return results
+
+    def _write_result(self, profile, job, got, run_id, d, diffs, err):
+        """On the writer thread: store an answered case, release the id of any other."""
+        try:
+            if err is not None:
+                return {"run_id": None, "case_id": None, "generated_id": job["id"], "outcome": "harness_error",
+                        "error": err.to_dict()["error"], "recorded": False, "determinism": None}
+            stored = got["outcome"] in STORED
+            if stored:
+                self._store(profile, job, got)
+            out = self._summary(job, got, run_id, d, stored, self.store.capture_rel(job["id"]))
+            out["generated_id"] = job["id"]
+            return out
+        finally:
+            self.store.release([job["id"]])
 
     def record_job(self, profile, job, manager=None, block=True):
         """Record one non-control job whose id is already reserved."""
@@ -346,7 +404,12 @@ class Recorder:
             jobs = generator.generate(profile, seed, count, modes, shapes,
                                       existing_ids=self.store.taken_ids() + [c["id"] for c in profile["controls"]])
             self.store.reserve([j["id"] for j in jobs])
-        results = [self.record_job(profile, dict(j, control=None), manager) for j in jobs]
+        try:
+            results = self.parallel(profile, [dict(j, control=None) for j in jobs], manager,
+                                    lambda *item: self._write_result(profile, *item))
+        finally:
+            self.store.release([j["id"] for j in jobs])
+        results.sort(key=lambda r: r["generated_id"])
         self.update_coverage()
         return self._batch_report(seed, count, controls, results, started)
 

@@ -63,7 +63,7 @@ INPUTS = {"left_slope": "3", "right_slope": "2", "bottom_width": "10", "n": ".03
 def test_controls_first_then_a_new_id(rec, prof):
     out = rec.create(prof, "normal_depth", "trapezoid", INPUTS)
     ids = [c["id"] for c in prof["controls"]]
-    assert rec.calls[:2 * len(ids)] == [i for i in ids for _ in (1, 2)]  # each run twice (Requirement 8.1)
+    assert sorted(rec.calls[:2 * len(ids)]) == sorted(ids * 2)  # each run twice (Requirement 8.1)
     assert rec.store.ids() == sorted(ids + ["nd-trap-000003"])
     assert out["case_id"] == "nd-trap-000003" and out["recorded"] is True
     again = rec.create(prof, "normal_depth", "trapezoid", INPUTS)

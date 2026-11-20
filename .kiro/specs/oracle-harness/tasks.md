@@ -68,7 +68,7 @@
     - _Requirements: 10.2_
   - [x] 7.4 Add the determinism sample: run twice every twentieth case and every control case, compare, store the first, log differences. Property 1.
     - _Requirements: 8.1, 8.2, 8.3, 8.4_
-  - [ ] 7.5 Add parallel batches up to `max_sessions` with a single writer thread, and report cases per minute
+  - [x] 7.5 Add parallel batches up to `max_sessions` with a single writer thread, and report cases per minute
     - _Requirements: 7.8, 7.9_
   - [ ] 7.6 Record the control cases first, with every screen captured, stopping on any difference; then replace the spike's `unobserved` notes in the profile with `cite` entries for drive layout, screen size and menu resend
     - _Requirements: 6.2, 6.3, 6.4, 6.5_

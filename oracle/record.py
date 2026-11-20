@@ -51,6 +51,9 @@ def main(argv=None):
                 ap.error("--seed needs --count of 1 or more")
             out = rec.create_batch(prof, args.seed, args.count, args.modes, args.shapes)
             print(json.dumps(out, indent=2))
+            print("%s cases per minute" % out["cases_per_minute"])
+            if out["by_outcome"].get("harness_error"):
+                return 1
     except OracleError as e:
         print("%s: %s" % (e.category, e.message), file=sys.stderr)
         if e.detail:
