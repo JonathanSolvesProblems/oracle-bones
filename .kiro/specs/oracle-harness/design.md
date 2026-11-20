@@ -90,7 +90,7 @@ neither `cite` nor `unobserved` fails with `profile_invalid`.
   "entry": "QT.EXE",
   "screen": {"rows": 25, "cols": 80, "pty_rows": 27,
              "unobserved": "spike 2026-11-06, outside repo: 25-row screen"},
-  "frozen_time": "1995-06-01T12:00:00",
+  "frozen_time": "1995-06-01 12:00:00",
   "limits": {"settle_ms": 150, "wait_timeout_s": 10, "case_time_limit_s": 60, "retry_limit": 3},
   "keys": ["{Enter}", "{F2}", "{F5}", "{F7}", "{F9}", "{F10}", "1", "2", "3", "4",
            "V", "R", "T", "C", "I"],

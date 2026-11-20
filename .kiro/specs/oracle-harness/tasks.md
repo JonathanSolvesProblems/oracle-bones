@@ -1,11 +1,11 @@
 # Implementation Plan
 
-- [ ] 1. Config and profile
-  - [ ] 1.1 Write `oracle/harness.json`: emu2 repo and pinned commit, `max_sessions`, container CPU, memory and pids limits, session idle limit, rebuild command and time limit
+- [x] 1. Config and profile
+  - [x] 1.1 Write `oracle/harness.json`: emu2 repo and pinned commit, `max_sessions`, container CPU, memory and pids limits, session idle limit, rebuild command and time limit
     - _Requirements: 2.5, 2.7, 3.2, 3.4, 12.1_
-  - [ ] 1.2 Write the profile JSON Schema and loader in `oracle/profile.py`: reject unknown keys, and any program fact with neither `cite` nor `unobserved`
+  - [x] 1.2 Write the profile JSON Schema and loader in `oracle/profile.py`: reject unknown keys, and any program fact with neither `cite` nor `unobserved`
     - _Requirements: 6.5_
-  - [ ] 1.3 Write `oracle/targets/quick2.json`: archive URL and size with `sha256` null, env, drive layout, entry, screen size and pty rows, frozen time, limits, keys, mode and shape codes, screens and markers, form order, ranges and boundaries, and the four control cases from the 2026-11-06 spike, each spike fact marked unobserved with its source
+  - [x] 1.3 Write `oracle/targets/quick2.json`: archive URL and size with `sha256` null, env, drive layout, entry, screen size and pty rows, frozen time, limits, keys, mode and shape codes, screens and markers, form order, ranges and boundaries, and the four control cases from the 2026-11-06 spike, each spike fact marked unobserved with its source
     - _Requirements: 1.1, 2.4, 2.6, 2.8, 2.9, 4.3, 5.4, 5.5, 6.1, 6.5, 7.7, 11.1_
 
 - [ ] 2. Fetch the binary
