@@ -1,5 +1,10 @@
 {
-  "screens": {},
+  "screens": {
+    "title": {
+      "visits": 1,
+      "keys_tried": []
+    }
+  },
   "fields": {},
   "cases": {},
   "unanswered": [],

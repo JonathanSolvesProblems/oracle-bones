@@ -85,14 +85,14 @@
   - [ ] 8.4 Build `oracle/quickset.json` (control cases except behaviour cases, plus an even spread over every mode and shape, 200 in total, uncovered pairs listed) and the full set; time the quick set on the development laptop
     - _Requirements: 11.6, 11.7_
 
-- [ ] 9. Serve over MCP
+- [x] 9. Serve over MCP
   - [x] 9.1 Write `oracle/schemas.py` and `oracle/errors.py`: input and output schemas for the eight tools, the error categories and the retryable table
     - _Requirements: 14.2, 14.3, 14.4_
   - [x] 9.2 Write `oracle/mcp_server.py` with the eight tools, `docker_unavailable` handling, and `record` accepted and passed through, answering `invalid_arguments` until task 7.2 connects it
     - _Requirements: 14.1, 14.5, 14.6, 14.7_
   - [x] 9.3 Test that every tool name matches the pattern, every reply validates against its schema, and no tool takes golden content, field values or a path under `oracle/goldens/`
     - _Requirements: 14.2, 14.3, 14.5_
-  - [ ] 9.4 Set `disabled` to false in `.kiro/settings/mcp.json` and boot QUICK-2 from a Kiro chat
+  - [x] 9.4 Set `disabled` to false in `.kiro/settings/mcp.json` and boot QUICK-2 from a Kiro chat
     - _Requirements: 14.1_
 
 - [ ] 10. Hooks
