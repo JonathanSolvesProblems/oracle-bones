@@ -1,12 +1,115 @@
 {
   "screens": {
     "title": {
-      "visits": 1,
+      "visits": 13,
+      "keys_tried": [
+        "{Enter}",
+        "literal"
+      ]
+    },
+    "main_menu": {
+      "visits": 12,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "shape_menu": {
+      "visits": 9,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "nd_trap_form": {
+      "visits": 6,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "nd_trap_result": {
+      "visits": 6,
+      "keys_tried": []
+    },
+    "irr_editor": {
+      "visits": 3,
+      "keys_tried": [
+        "literal",
+        "{Enter}",
+        "{F10}",
+        "{F6}"
+      ]
+    },
+    "stray_listing": {
+      "visits": 3,
       "keys_tried": []
     }
   },
-  "fields": {},
-  "cases": {},
+  "fields": {
+    "in_left_slope": {
+      "cases": 2
+    },
+    "in_right_slope": {
+      "cases": 2
+    },
+    "in_bottom_width": {
+      "cases": 2
+    },
+    "in_n": {
+      "cases": 2
+    },
+    "in_discharge": {
+      "cases": 2
+    },
+    "depth": {
+      "cases": 2
+    },
+    "in_slope": {
+      "cases": 2
+    },
+    "area": {
+      "cases": 2
+    },
+    "wet_perimeter": {
+      "cases": 2
+    },
+    "velocity": {
+      "cases": 2
+    },
+    "hyd_radius": {
+      "cases": 2
+    },
+    "top_width": {
+      "cases": 2
+    },
+    "froude": {
+      "cases": 2
+    },
+    "flow_type": {
+      "cases": 2
+    }
+  },
+  "cases": {
+    "nd-trap": {
+      "result": 2,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "obs-menudrop": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-nodata": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    }
+  },
   "unanswered": [],
   "unknown_screens": [],
   "nondeterminism": [],
@@ -14,16 +117,8 @@
   "mismatches": {},
   "unobserved": [
     {
-      "profile_path": "drive",
-      "source": "spike 2026-11-06, outside repo: the program stalls after a stray file listing without QUICK2/DATA"
-    },
-    {
       "profile_path": "entry",
       "source": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
-    },
-    {
-      "profile_path": "screen",
-      "source": "spike 2026-11-06, outside repo: 25-row screen, which scrolls in a 25-row terminal"
     },
     {
       "profile_path": "keys",
@@ -32,10 +127,6 @@
     {
       "profile_path": "screens[title]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
-    },
-    {
-      "profile_path": "screens[main_menu]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu accepts a digit and Enter sent the moment it appears; keys sent while the title is showing go to the title's line input instead (the spike's dropped inputs)"
     },
     {
       "profile_path": "screens[shape_menu]",

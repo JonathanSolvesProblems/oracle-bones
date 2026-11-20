@@ -70,7 +70,7 @@
     - _Requirements: 8.1, 8.2, 8.3, 8.4_
   - [x] 7.5 Add parallel batches up to `max_sessions` with a single writer thread, and report cases per minute
     - _Requirements: 7.8, 7.9_
-  - [ ] 7.6 Record the control cases first, with every screen captured, stopping on any difference; then replace the spike's `unobserved` notes in the profile with `cite` entries for drive layout, screen size and menu resend
+  - [x] 7.6 Record the control cases first, with every screen captured, stopping on any difference; then replace the spike's `unobserved` notes in the profile with `cite` entries for drive layout, screen size and menu resend
     - _Requirements: 6.2, 6.3, 6.4, 6.5_
   - [ ] 7.7 Property 2: replay a sample of goldens and check they match and write nothing under `oracle/goldens/`
     - _Requirements: 7.1, 7.4, 9.1_

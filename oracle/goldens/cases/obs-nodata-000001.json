@@ -1,0 +1,222 @@
+{
+  "id": "obs-nodata-000001",
+  "control": true,
+  "expected_screen": "stray_listing",
+  "mode": "normal_depth",
+  "shape": "trapezoid",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "1",
+  "profile_sha256": "3bc0def067fb0c1429971332ee1f187f816e253526a51276fe2051ccfc28d651",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "I{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 4,
+      "expect": "irr_editor",
+      "keys": "0{Enter}",
+      "screen_hash_before": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b",
+      "resend": false,
+      "screen_hash_after": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b"
+    },
+    {
+      "step": 5,
+      "expect": "irr_editor",
+      "keys": "10{Enter}",
+      "screen_hash_before": "e4ec01fb6a69eb4524196b0079e74c7df4075816105af0478447d7fa63e34c75",
+      "resend": false,
+      "screen_hash_after": "e4ec01fb6a69eb4524196b0079e74c7df4075816105af0478447d7fa63e34c75"
+    },
+    {
+      "step": 6,
+      "expect": "irr_editor",
+      "keys": "10{Enter}",
+      "screen_hash_before": "5c84d56a1840def1922004456605a209534980f993f25b4d430808c88036bfe5",
+      "resend": false,
+      "screen_hash_after": "5c84d56a1840def1922004456605a209534980f993f25b4d430808c88036bfe5"
+    },
+    {
+      "step": 7,
+      "expect": "irr_editor",
+      "keys": "1{Enter}",
+      "screen_hash_before": "7e37d4472640349add505b4001dc47e6753211f4cc8b57443e549dccfda4be2e",
+      "resend": false,
+      "screen_hash_after": "7e37d4472640349add505b4001dc47e6753211f4cc8b57443e549dccfda4be2e"
+    },
+    {
+      "step": 8,
+      "expect": "irr_editor",
+      "keys": "20{Enter}",
+      "screen_hash_before": "332134466b467994a498d1ee345e6c99b5b83eb87ad27cb7b30ce670d0697114",
+      "resend": false,
+      "screen_hash_after": "332134466b467994a498d1ee345e6c99b5b83eb87ad27cb7b30ce670d0697114"
+    },
+    {
+      "step": 9,
+      "expect": "irr_editor",
+      "keys": "1{Enter}",
+      "screen_hash_before": "0052bcabf2af5221fb7b9c49be3523ee5048858a106d349094a00eaf2e6ce633",
+      "resend": false,
+      "screen_hash_after": "0052bcabf2af5221fb7b9c49be3523ee5048858a106d349094a00eaf2e6ce633"
+    },
+    {
+      "step": 10,
+      "expect": "irr_editor",
+      "keys": "30{Enter}",
+      "screen_hash_before": "5b8b10f31222a93baac7a730b10b988a51f36ca80a4f8c2accffbfebc4fe7b48",
+      "resend": false,
+      "screen_hash_after": "5b8b10f31222a93baac7a730b10b988a51f36ca80a4f8c2accffbfebc4fe7b48"
+    },
+    {
+      "step": 11,
+      "expect": "irr_editor",
+      "keys": "10{Enter}",
+      "screen_hash_before": "55659cf0ef9df8df2876a0944c18536dcbbd0b14cea4cb197e520773fbe13cbe",
+      "resend": false,
+      "screen_hash_after": "55659cf0ef9df8df2876a0944c18536dcbbd0b14cea4cb197e520773fbe13cbe"
+    },
+    {
+      "step": 12,
+      "expect": "irr_editor",
+      "keys": "{F10}",
+      "screen_hash_before": "811c94156a49315fe168a150773527679af05977183c7495550733de83690ea4",
+      "resend": false,
+      "screen_hash_after": "811c94156a49315fe168a150773527679af05977183c7495550733de83690ea4"
+    },
+    {
+      "step": 13,
+      "expect": "irr_editor",
+      "keys": "10{Enter}",
+      "screen_hash_before": "17ad3589338a53f261b35899197e039c000abf5fa2588eec226fd23aaa11957f",
+      "resend": false,
+      "screen_hash_after": "17ad3589338a53f261b35899197e039c000abf5fa2588eec226fd23aaa11957f"
+    },
+    {
+      "step": 14,
+      "expect": "irr_editor",
+      "keys": "20{Enter}",
+      "screen_hash_before": "d64c726e268d0274c41a1fbdd13a5a77bdabd33dd4dcd798f4c28fb95613ddf0",
+      "resend": false,
+      "screen_hash_after": "d64c726e268d0274c41a1fbdd13a5a77bdabd33dd4dcd798f4c28fb95613ddf0"
+    },
+    {
+      "step": 15,
+      "expect": "irr_editor",
+      "keys": ".05{Enter}",
+      "screen_hash_before": "9ecb08ba0b0369c3d43b038a4fda018aa30a218b0e1218d47ba04e6e9e0a1c9d",
+      "resend": false,
+      "screen_hash_after": "9ecb08ba0b0369c3d43b038a4fda018aa30a218b0e1218d47ba04e6e9e0a1c9d"
+    },
+    {
+      "step": 16,
+      "expect": "irr_editor",
+      "keys": ".035{Enter}",
+      "screen_hash_before": "851b4ac250896a7f0fff2a9a33a0c31b0a9ce4e7dde3c03bf146ad126121ac91",
+      "resend": false,
+      "screen_hash_after": "851b4ac250896a7f0fff2a9a33a0c31b0a9ce4e7dde3c03bf146ad126121ac91"
+    },
+    {
+      "step": 17,
+      "expect": "irr_editor",
+      "keys": ".05{Enter}",
+      "screen_hash_before": "b5fbd0252302a14e7f9929f0b9c6bdbb721408db761c7c3f84505032571d465d",
+      "resend": false,
+      "screen_hash_after": "b5fbd0252302a14e7f9929f0b9c6bdbb721408db761c7c3f84505032571d465d"
+    },
+    {
+      "step": 18,
+      "expect": "irr_editor",
+      "keys": "100{Enter}",
+      "screen_hash_before": "86cef3cf516e103d8008cbba45f379a4bb02a20ac20ddbfcb4c7c5b97a42fcb2",
+      "resend": false,
+      "screen_hash_after": "86cef3cf516e103d8008cbba45f379a4bb02a20ac20ddbfcb4c7c5b97a42fcb2"
+    },
+    {
+      "step": 19,
+      "expect": "irr_editor",
+      "keys": ".005{Enter}",
+      "screen_hash_before": "f1711c093da43e3744b40a11b24bd94e0a117588dd5b750c8efa7e627e221969",
+      "resend": false,
+      "screen_hash_after": "f1711c093da43e3744b40a11b24bd94e0a117588dd5b750c8efa7e627e221969"
+    },
+    {
+      "step": 20,
+      "expect": "irr_editor",
+      "keys": "{Enter}",
+      "screen_hash_before": "d834b87a01395f747b3b117fbb9fcce7dbeb6612c737aed0b97baedadc0b3589",
+      "resend": false,
+      "screen_hash_after": "d834b87a01395f747b3b117fbb9fcce7dbeb6612c737aed0b97baedadc0b3589"
+    },
+    {
+      "step": 21,
+      "expect": "irr_editor",
+      "keys": "{F6}",
+      "screen_hash_before": "73029853971b85bca9202c3eee605c64f1dcde41aac69bd0d635bfee1a2cb32e",
+      "resend": false,
+      "screen_hash_after": "73029853971b85bca9202c3eee605c64f1dcde41aac69bd0d635bfee1a2cb32e"
+    },
+    {
+      "step": 22,
+      "expect": "irr_editor",
+      "keys": "C{Enter}",
+      "screen_hash_before": "487c64373f642ceba9dbb7034ec2eef0cc415f514eb4ee9de5c56fb074b6a430",
+      "resend": false,
+      "screen_hash_after": "487c64373f642ceba9dbb7034ec2eef0cc415f514eb4ee9de5c56fb074b6a430"
+    },
+    {
+      "step": 23,
+      "expect": "irr_editor",
+      "keys": "QUICK2\\DATA{Enter}",
+      "screen_hash_before": "7d906e7cb95acc70959ed4e70caef52d37ccd5a1711aa08355995d031f766df7",
+      "resend": false,
+      "screen_hash_after": "7d906e7cb95acc70959ed4e70caef52d37ccd5a1711aa08355995d031f766df7"
+    },
+    {
+      "step": 24,
+      "expect": "irr_editor",
+      "keys": "TEST{Enter}",
+      "screen_hash_before": "d0ce0f4fc1f6679acd202ce8eb0aca80775bec7b4b5464c2482e979390b1195a",
+      "resend": false,
+      "screen_hash_after": "d0ce0f4fc1f6679acd202ce8eb0aca80775bec7b4b5464c2482e979390b1195a"
+    },
+    {
+      "step": 25,
+      "expect": "irr_editor",
+      "keys": "{Enter}",
+      "screen_hash_before": "4b8387ac869c85c7d91cf2d5d9dda93e017f68f5f39f0dcc493446456c4c646d",
+      "resend": false,
+      "screen_hash_after": "4b8387ac869c85c7d91cf2d5d9dda93e017f68f5f39f0dcc493446456c4c646d"
+    }
+  ],
+  "capture_path": "oracle/goldens/captures/obs-nodata-000001/",
+  "files": [],
+  "recorded_at": "2026-11-20T22:17:32Z"
+}

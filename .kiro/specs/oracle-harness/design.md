@@ -130,8 +130,9 @@ tasks 1 and 7. Only `T` maps to a shape code so far (`trap`, from `structure.md`
 named when the forms have been seen. When a control case is recorded, its `unobserved` notes are
 replaced by `cite` entries naming the control's case id.
 
-Seen in exploratory runs in this repository on 2026-11-20 (not yet recorded, so still marked
-unobserved in the profile): `QT.EXE` first shows a title screen, which is a line input that ends
+The drive layout, the screen size and the main menu's resend flag now cite the recorded control
+cases. Seen in exploratory runs in this repository on 2026-11-20 (not yet recorded as a fact's
+citation, so still marked unobserved in the profile): `QT.EXE` first shows a title screen, which is a line input that ends
 on Enter; then the main menu (1 Critical Depth, 2 Channel Capacity, 3 Normal Depth,
 4 Step-Backwater), which takes a digit and Enter; then the shape menu (V, R, T, C or I, and
 Enter). The trapezoid form asks left slope, right slope, bottom width, Manning's n, discharge,

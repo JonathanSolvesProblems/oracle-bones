@@ -22,7 +22,11 @@
       "QUICK2/DATA"
     ],
     "program_dir": "QUICK2",
-    "unobserved": "spike 2026-11-06, outside repo: the program stalls after a stray file listing without QUICK2/DATA"
+    "cite": [
+      "obs-nodata-000001",
+      "oracle/goldens/captures/obs-nodata-000001/screen-25.txt",
+      "nd-trap-000001"
+    ]
   },
   "entry": {
     "program": "QUICK2/QT.EXE",
@@ -32,7 +36,10 @@
     "rows": 25,
     "cols": 80,
     "pty_rows": 27,
-    "unobserved": "spike 2026-11-06, outside repo: 25-row screen, which scrolls in a 25-row terminal"
+    "cite": [
+      "nd-trap-000001",
+      "oracle/goldens/captures/nd-trap-000001/screen-10.txt"
+    ]
   },
   "frozen_time": "1995-06-01 12:00:00",
   "limits": {
@@ -84,7 +91,11 @@
       "kind": "menu",
       "marker": "MAIN\\s+MENU",
       "resend": false,
-      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu accepts a digit and Enter sent the moment it appears; keys sent while the title is showing go to the title's line input instead (the spike's dropped inputs)"
+      "cite": [
+        "obs-menudrop-000001",
+        "oracle/goldens/captures/obs-menudrop-000001/screen-01.txt",
+        "nd-trap-000001"
+      ]
     },
     {
       "id": "shape_menu",

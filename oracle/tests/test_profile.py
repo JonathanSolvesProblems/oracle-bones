@@ -77,7 +77,26 @@ def test_behaviour_case_must_be_observed(tmp_path):
         profile.load(write(tmp_path, data))
 
 
-def test_unobserved_lists_spike_facts():
-    items = profile.unobserved(profile.load())
-    where = {i["profile_path"] for i in items}
-    assert {"drive", "screen", "screens[main_menu]"} <= where
+def test_spike_facts_cite_the_recorded_control_cases():
+    """Task 7.6: drive layout, screen size and menu resend cite control cases, not the spike."""
+    prof = profile.load()
+    where = {i["profile_path"] for i in profile.unobserved(prof)}
+    assert not {"drive", "screen", "screens[main_menu]"} & where
+    assert "obs-nodata-000001" in prof["drive"]["cite"]
+    assert "nd-trap-000001" in prof["screen"]["cite"]
+    assert "obs-menudrop-000001" in profile.screen_by_id(prof, "main_menu")["cite"]
+
+
+def test_every_cite_names_a_stored_golden_or_capture():
+    """Requirement 6.4: a citation points at something the recorder stored."""
+    cases_dir = paths.REPO_GOLDENS / "cases"
+    missing = []
+    for where, obj in profile.fact_paths(profile.load()):
+        for c in obj.get("cite", []):
+            if "/" in c:
+                ok = c.startswith("oracle/goldens/captures/") and (paths.ROOT / c).is_file()
+            else:
+                ok = (cases_dir / ("%s.json" % c)).is_file()
+            if not ok:
+                missing.append((where, c))
+    assert missing == []
