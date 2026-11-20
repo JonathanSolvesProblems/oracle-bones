@@ -125,3 +125,65 @@ an outcome for control cases that end in neither a result nor an error, and whic
 the coverage ledger.
 
 Credits: 14.81. Time: 14 min 47 s.
+
+## 2026-11-20, session 2 continued: Kiro builds the harness
+
+Settings: Default agent, Claude Opus 5.5, effort Medium, Approve for me.
+
+> Agreed on all of it, with these answers:
+>
+> 1. Update structure.md to the new golden layout (cases/, captures/, MANIFEST.json).
+> 2. Yes to the observed outcome with the expected screen id. Ids for behaviour cases are
+>    obs-<behaviour>-<sequence>, for example obs-nodata-000001 and obs-menudrop-000001. The
+>    two depth cases are nd-trap-000001 and nd-trap-000002. Observed cases prove the harness,
+>    not the rebuild, so keep them out of the comparator and the quick set, and fix 11.6 to
+>    say so.
+> 3. This spec owns the ledger and ledger_read. Update exhume-loop to point here.
+> 4. One limit on recording through MCP: record: true may only create new case ids.
+>    Replacing an existing golden happens only from the runner's command line, and is logged
+>    in rerecords.
+> 5. Commit after each finished task, with a short plain message saying what the task did.
+>    No tool or AI names in commit messages.
+>
+> Then work through the tasks without stopping to ask me, in this order: 1 to 6, then 9, with
+> record passed through but unused until 7 exists. The Exhumer needs the MCP tools by
+> November 22, so 7, 8, 10 and 11 come after.
+> - At 2.2, pin the sha256 yourself once you've checked the archive contains QT.EXE and
+>   QUICK2.EXE, and report the hash in your summary. The 6.1 checkpoint is the real proof
+>   it's the right program.
+> - At 3.4, if libfaketime doesn't reach the program, check whether QUICK-2 shows a date
+>   anywhere. If it doesn't, record that in harness_findings and continue without a frozen
+>   date. Stop only if it does.
+> - At 6.1, don't move on until all four control cases pass. A different number is a harness
+>   bug: keep fixing the harness.
+> Only stop to ask me if a problem would change what the spec promises.
+
+Kiro worked for 70 minutes without stopping and committed each task on its own: config and
+profile, the verified download, the sandbox, the runner, sessions and the ledger, the
+checkpoint, and the MCP server. 72 tests pass.
+
+- **Checkpoint passed.** Through the harness, the 1995 binary printed depth 3.27 at 300 cfs
+  and 4.22 at 500 cfs, with area 59.6, wetted perimeter 27.7 and velocity 5.0, the same as
+  the spike. I re-ran the live tests myself afterwards: 5 of 5 pass.
+- **Pinned archive:** `q2v1.zip`, 392,419 bytes, sha256 `6b8028fa...5de5e`, from the Wayback
+  Machine's 2012-12-24 capture of FEMA's library.
+- **Kiro booted QUICK-2 from its own chat** through the oracle MCP server, then shut the
+  session down and checked no container was left.
+
+The moment Kiro changed my plan: my spike notes said the main menu drops its first inputs, and
+the plan had a resend workaround for it. Kiro found the real cause. QT.EXE opens on a title
+screen that takes typed characters until Enter, so the spike's first two keys went to the
+title, not the menu. The menu itself takes keys the moment it appears. No screen needs resend.
+
+It also narrowed another spike note (the program only stalls without its DATA folder when
+saving a cross section) and found that emu2 has no printer emulation, so printed output
+cannot be captured.
+
+It changed three things the spec promised, and listed each one for me to check: the clock
+starts at a fixed date and then runs, because a frozen clock stops emu2's BIOS tick and
+QUICK-2 hangs on its title; and the two corrected spike findings above. I accepted all three.
+
+It built the seeded case generator (task 7.1) early because the MCP batch tool needed it, and
+said so.
+
+Credits: 210.88. Time: 1 h 9 min 47 s.

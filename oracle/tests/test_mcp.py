@@ -81,7 +81,8 @@ def test_protocol_without_docker():
 
 def test_tools_end_to_end_over_stdio(live, tmp_path):
     """Start the server the way .kiro/settings/mcp.json does and drive it as a client would."""
-    proc = subprocess.Popen([sys.executable, "-m", "oracle.mcp_server"], cwd=paths.ROOT, env=dict(os.environ, ORACLE_LEDGER=str(tmp_path / "ledger.json")),
+    proc = subprocess.Popen([sys.executable, "-m", "oracle.mcp_server"], cwd=paths.ROOT, env=dict(os.environ, ORACLE_LEDGER=str(tmp_path / "ledger.json"),
+                                                                      ORACLE_GOLDENS=str(tmp_path / "goldens")),
                             stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, encoding="utf-8")
     n = [0]
 
@@ -120,7 +121,12 @@ def test_tools_end_to_end_over_stdio(live, tmp_path):
         assert case["outcome"] == "result" and case["printed"]["depth"].strip() == "3.27"
         assert case["recorded"] is False and case["case_id"] is None
         rec = tool("run_case", mode="normal_depth", shape="trapezoid", inputs=inputs, record=True)
-        assert rec["error"]["category"] == "invalid_arguments"
+        assert rec["recorded"] is True and rec["case_id"] == "nd-trap-000003", rec
+        controls = sorted(p.stem for p in (tmp_path / "goldens" / "cases").glob("*.json"))
+        assert controls == ["nd-trap-000001", "nd-trap-000002", "nd-trap-000003", "obs-menudrop-000001",
+                            "obs-nodata-000001"]
+        again = tool("run_case", mode="normal_depth", shape="trapezoid", inputs=inputs, record=True)
+        assert again["case_id"] == "nd-trap-000004"  # a new id, never a replacement
         wrong = tool("run_case", mode="normal_depth", shape="trapezoid", inputs={"left_slope": "3"})
         assert wrong["error"]["category"] == "invalid_arguments"
         batch = tool("run_batch", seed=1, count=2)

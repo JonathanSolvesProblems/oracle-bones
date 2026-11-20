@@ -93,13 +93,13 @@ def test_live_server_containers_kept(live):
 
 def test_exploratory_run_is_logged_not_stored(live, tmp_path, monkeypatch):
     monkeypatch.setattr(paths, "LEDGER", tmp_path / "ledger.json")
-    goldens_before = sorted(p.as_posix() for p in paths.GOLDENS.rglob("*")) if paths.GOLDENS.exists() else []
+    goldens_before = sorted(p.as_posix() for p in paths.REPO_GOLDENS.rglob("*")) if paths.REPO_GOLDENS.exists() else []
     c = next(c for c in live["controls"] if c["id"] == "nd-trap-000001")
     out = runs.explore(live, c["mode"], c["shape"], c["inputs"])
     assert out["outcome"] == "result" and out["printed"]["depth"].strip() == "3.27"
     d = paths.ROOT / out["capture_path"]
     assert (d / "run.json").exists() and (d / "final.txt").exists()
-    goldens_after = sorted(p.as_posix() for p in paths.GOLDENS.rglob("*")) if paths.GOLDENS.exists() else []
+    goldens_after = sorted(p.as_posix() for p in paths.REPO_GOLDENS.rglob("*")) if paths.REPO_GOLDENS.exists() else []
     assert goldens_after == goldens_before
     led = json.loads((tmp_path / "ledger.json").read_text())
     assert led["screens"]["nd_trap_result"]["visits"] == 1

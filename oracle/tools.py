@@ -13,6 +13,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 
 from . import cases, generator, ledger, paths, runs, sandbox, screen
+from .recorder import Recorder
 from . import profile as profile_mod
 from .errors import OracleError
 from .jsonschema_lite import validate
@@ -20,7 +21,6 @@ from .runner import keys as keys_mod
 from .schemas import TOOLS, output_schema
 from .sessions import SessionManager
 
-RECORDING_UNAVAILABLE = "recording is not available yet: the recorder is built in task 7.2"
 COMPARE_UNAVAILABLE = "compare is not available yet: the comparator is built in task 8"
 
 
@@ -29,7 +29,7 @@ class Oracle:
         self.manager = SessionManager(cfg)
         self.default_profile = default_profile or os.environ.get("ORACLE_TARGET") or str(paths.DEFAULT_PROFILE)
         self.session_profiles = {}
-        self.recorder = None  # set by task 7.2: an object with create(...) and create_batch(...)
+        self.recorder = Recorder(cfg=self.manager.cfg)  # create-only: never replaces a golden
         self.comparator = None  # set by task 8
 
     # ---- helpers ------------------------------------------------------------------------
@@ -125,11 +125,9 @@ class Oracle:
 
     def run_case(self, mode, shape, inputs, record=False):
         prof = self._profile()
-        if record:
-            if self.recorder is None:
-                raise OracleError("invalid_arguments", RECORDING_UNAVAILABLE)
-            return self.recorder.create(prof, mode, shape, inputs, manager=self.manager)
         self._need_docker()
+        if record:
+            return self.recorder.create(prof, mode, shape, inputs, manager=self.manager)
         out = runs.explore(prof, mode, shape, inputs, manager=self.manager, block=False)
         out.pop("_got", None)
         out.update({"case_id": None, "recorded": False})
@@ -138,11 +136,9 @@ class Oracle:
 
     def run_batch(self, seed, count, modes=None, shapes=None, record=False):
         prof = self._profile()
-        if record:
-            if self.recorder is None:
-                raise OracleError("invalid_arguments", RECORDING_UNAVAILABLE)
-            return self.recorder.create_batch(prof, seed, count, modes, shapes, manager=self.manager)
         self._need_docker()
+        if record:
+            return self.recorder.create_batch(prof, seed, count, modes, shapes, manager=self.manager)
         batch = generator.generate(prof, seed, count, modes, shapes)
         started = time.monotonic()
 

@@ -334,9 +334,7 @@ after `initialize`, which is when orphaned containers are removed. `tools.py` ho
 without any protocol code, so tests call them directly. Each tool's input and output schema lives in `schemas.py` and is checked on
 every call and every reply. Tool fields are as in Requirement 14.3. `send_keys` caps
 `timeout_s` at the profile's `wait_timeout_s`. `compare` runs the same function as the script.
-`record: true` goes to the recorder's create-only function; no tool takes a case id. Until the
-recorder exists (task 7), `record: true` returns `invalid_arguments` saying recording is not
-available yet.
+`record: true` goes to the recorder's create-only function; no tool takes a case id.
 
 Errors are one exception class carrying `category`, `message`, `retryable` and `detail`.
 `retryable` comes from a fixed table, true only for `session_limit`, `timeout`, `input_ignored`

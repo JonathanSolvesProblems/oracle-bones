@@ -1,0 +1,63 @@
+"""Record goldens from the command line.
+
+  python -m oracle.record --controls                 record the control cases not yet stored
+  python -m oracle.record --seed 1 --count 100       record a generated batch (controls first)
+  python -m oracle.record --rerecord nd-trap-000001  replace one golden, logged in `rerecords`
+
+Replacing a golden is possible only here. The MCP tools reach the create-only path.
+Exit codes: 0 done, 1 a harness failure or a case that could not be recorded.
+"""
+
+import argparse
+import json
+import sys
+
+from . import profile as profile_mod
+from . import sandbox
+from .errors import OracleError
+from .recorder import Recorder
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="python -m oracle.record", description=__doc__.split("\n")[0])
+    ap.add_argument("--profile", help="path to a target profile (default: oracle/targets/quick2.json)")
+    g = ap.add_mutually_exclusive_group(required=True)
+    g.add_argument("--controls", action="store_true", help="record the control cases not yet stored")
+    g.add_argument("--rerecord", metavar="CASE_ID", help="replace one golden by rerunning its inputs")
+    g.add_argument("--seed", type=int, help="record a generated batch from this seed")
+    ap.add_argument("--count", type=int, default=0, help="cases in the batch (with --seed)")
+    ap.add_argument("--modes", nargs="*", help="limit the batch to these modes")
+    ap.add_argument("--shapes", nargs="*", help="limit the batch to these shapes")
+    args = ap.parse_args(argv)
+
+    if not sandbox.docker_available():
+        print("Docker is not running. Start Docker Desktop and try again.", file=sys.stderr)
+        return 1
+    try:
+        prof = profile_mod.load(args.profile)
+        rec = Recorder()
+        if args.controls:
+            out = rec.ensure_controls(prof)
+            rec.update_coverage()
+            if not out:
+                print("every control case is already stored")
+            for r in out:
+                print("%s  %s  %s" % (r["case_id"], r["outcome"], r["capture_path"]))
+        elif args.rerecord:
+            out = rec.rerecord(prof, args.rerecord)
+            print("replaced %s: %s -> %s" % (out["case_id"], out["old"], out["new"]))
+        else:
+            if args.count < 1:
+                ap.error("--seed needs --count of 1 or more")
+            out = rec.create_batch(prof, args.seed, args.count, args.modes, args.shapes)
+            print(json.dumps(out, indent=2))
+    except OracleError as e:
+        print("%s: %s" % (e.category, e.message), file=sys.stderr)
+        if e.detail:
+            print(json.dumps(e.detail, indent=2), file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

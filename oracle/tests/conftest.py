@@ -3,6 +3,8 @@ import tempfile
 
 # Tests never write the committed ledger: point it at a scratch file before oracle is imported.
 os.environ.setdefault("ORACLE_LEDGER", os.path.join(tempfile.mkdtemp(prefix="oracle-test-ledger-"), "ledger.json"))
+# Nor the committed goldens: recording tests write into a scratch directory.
+os.environ.setdefault("ORACLE_GOLDENS", os.path.join(tempfile.mkdtemp(prefix="oracle-test-goldens-"), "goldens"))
 
 import pytest  # noqa: E402
 

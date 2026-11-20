@@ -62,7 +62,7 @@
 - [ ] 7. Goldens
   - [x] 7.1 Write `oracle/generator.py`: seeded, versioned, ranges and boundaries from the profile, ids assigned before dispatch. Property 3.
     - _Requirements: 7.7, 7.9_
-  - [ ] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
+  - [x] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 9.1, 14.5_
   - [ ] 7.3 Write `oracle/manifest.py`: update the manifest on every store and replace
     - _Requirements: 10.2_
