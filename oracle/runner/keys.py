@@ -34,6 +34,7 @@ VERIFIED = {
     # Each pair of captures shows the screen before and after the key (task 4.4).
     "{F2}": "oracle/tests/captures/quick2/keys/F2-after.txt",   # back to the previous prompt
     "{F5}": "oracle/tests/captures/quick2/keys/F5-after.txt",   # print; the screen changes
+    "{F6}": "oracle/tests/captures/quick2/keys/F6-after.txt",   # save; asks for the drive letter
     "{F7}": "oracle/tests/captures/quick2/keys/F7-after.txt",   # main menu
     "{F9}": "oracle/tests/captures/quick2/keys/F9-after.txt",   # new shape
     "{F10}": "oracle/tests/captures/quick2/keys/F10-after.txt",  # quit; the program exits 0

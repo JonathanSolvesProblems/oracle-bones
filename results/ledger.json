@@ -26,11 +26,11 @@
     },
     {
       "profile_path": "screens[title]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: title screen; Enter moves on to the main menu"
+      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
     },
     {
       "profile_path": "screens[main_menu]",
-      "source": "spike 2026-11-06, outside repo: the first two inputs were dropped; exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu takes a digit and Enter"
+      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu accepts a digit and Enter sent the moment it appears; keys sent while the title is showing go to the title's line input instead (the spike's dropped inputs)"
     },
     {
       "profile_path": "screens[shape_menu]",
@@ -46,7 +46,11 @@
     },
     {
       "profile_path": "screens[stray_listing]",
-      "source": "spike 2026-11-06, outside repo: a file listing appears and the program stalls without QUICK2/DATA"
+      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+    },
+    {
+      "profile_path": "screens[irr_editor]",
+      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor"
     },
     {
       "profile_path": "flows[normal_depth/trapezoid]",
@@ -78,9 +82,27 @@
     }
   ],
   "harness_findings": {
-    "lpt1_to_file": null,
-    "menu_drop_cause": null,
-    "frozen_time": null
+    "lpt1_to_file": {
+      "finding": "No. emu2 at commit 9d8698d06e67 has no printer emulation: no BIOS int 17h handler, no LPT port, no LPT1 device name, and DOS handle 4 (PRN) is emu2's own stderr. In QUICK-2, F5 Print on the trapezoid results returns to the shape menu within 0.1 s, writes no file and shows no output.",
+      "evidence": [
+        "emu2 src/dos.c line 87 at the pinned commit",
+        "oracle/tests/captures/quick2/keys/F5-after.txt"
+      ]
+    },
+    "menu_drop_cause": {
+      "finding": "Not a keyboard buffer flush and not a slow start. The title screen is a line input: the first key shows 'Press <Enter> to continue', and typed characters echo there until Enter. A menu digit and Enter sent while the title shows are taken by the title, which is how the spike lost its first two inputs. Keys sent the moment the main menu appears are taken (tried at 0.0, 0.3 and 1.0 s). The main menu is therefore not marked for resend.",
+      "evidence": [
+        "obs-menudrop-000001",
+        "exploratory runs 2026-11-20 (oracle/out, not kept)"
+      ]
+    },
+    "frozen_time": {
+      "finding": "Processes in the container see the profile's date (1995-06-01). A fully frozen clock stops emu2's BIOS tick and QUICK-2 hangs on its title screen, so the clock starts at the fixed time on every run and then runs. No date or time has been seen on any QUICK-2 screen so far.",
+      "evidence": [
+        "oracle/tests/test_live_sandbox.py",
+        "exploratory runs 2026-11-20"
+      ]
+    }
   },
   "open_questions": [],
   "decisions": [],

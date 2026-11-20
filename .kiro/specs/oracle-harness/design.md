@@ -126,12 +126,17 @@ tasks 1 and 7. Only `T` maps to a shape code so far (`trap`, from `structure.md`
 named when the forms have been seen. When a control case is recorded, its `unobserved` notes are
 replaced by `cite` entries naming the control's case id.
 
-Known from the spike, and still unobserved in this repository: entry `QT.EXE` shows a menu of
-1 Critical Depth, 2 Channel Capacity, 3 Normal Depth, 4 Step-Backwater; choosing one chains to
-`QUICK2.EXE` after about a second; the shape menu takes V, R, T, C or I and Enter; the
-trapezoid form asks left slope, right slope, bottom width, Manning's n, discharge, slope, then
-Enter; `.XSC` files save cross sections; `HEC2.DAT` is written by the HEC-2 save; F5 prints to
-LPT1.
+Seen in exploratory runs in this repository on 2026-11-20 (not yet recorded, so still marked
+unobserved in the profile): `QT.EXE` first shows a title screen, which is a line input that ends
+on Enter; then the main menu (1 Critical Depth, 2 Channel Capacity, 3 Normal Depth,
+4 Step-Backwater), which takes a digit and Enter; then the shape menu (V, R, T, C or I, and
+Enter). The trapezoid form asks left slope, right slope, bottom width, Manning's n, discharge,
+slope, then "Begin Calculations <Enter>", and prints the results into the same form. Saving an
+irregular section (F6) writes `QUICK2/DATA/<name>.xsc`; without `QUICK2/DATA` it prints
+`C:\QUICK2\DATA` and "File(s) Not Found", saves nothing and holds. That is the spike's stray
+listing. The spike's dropped menu inputs were typed while the title was showing (see the
+ledger's `menu_drop_cause`), so no QUICK-2 screen is marked for resend. F5 Print returns to the
+shape menu and produces nothing under emu2, which has no printer emulation.
 
 ### Setup (`scripts/setup.py`)
 

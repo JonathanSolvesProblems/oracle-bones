@@ -45,7 +45,7 @@
     "list": [
       "{Enter}",
       "{F2}",
-      "{F5}",
+      "{F5}", "{F6}",
       "{F7}",
       "{F9}",
       "{F10}",
@@ -77,14 +77,14 @@
       "id": "title",
       "kind": "other",
       "marker": "VERSION\\s+1\\.0",
-      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: title screen; Enter moves on to the main menu"
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
     },
     {
       "id": "main_menu",
       "kind": "menu",
       "marker": "MAIN\\s+MENU",
-      "resend": true,
-      "unobserved": "spike 2026-11-06, outside repo: the first two inputs were dropped; exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu takes a digit and Enter"
+      "resend": false,
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu accepts a digit and Enter sent the moment it appears; keys sent while the title is showing go to the title's line input instead (the spike's dropped inputs)"
     },
     {
       "id": "shape_menu",
@@ -223,8 +223,14 @@
     {
       "id": "stray_listing",
       "kind": "other",
-      "marker": null,
-      "unobserved": "spike 2026-11-06, outside repo: a file listing appears and the program stalls without QUICK2/DATA"
+      "marker": "^C:\\\\QUICK2\\\\DATA\\s*$[\\s\\S]*File\\(s\\) Not Found",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+    },
+    {
+      "id": "irr_editor",
+      "kind": "form",
+      "marker": "GROUND\\s+POINTS",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor"
     }
   ],
   "flows": {
@@ -415,6 +421,98 @@
           "keys": "3{Enter}"
         },
         {
+          "expect": "shape_menu",
+          "keys": "I{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "0{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "1{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "20{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "1{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "30{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{F10}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "20{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".05{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".035{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".05{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "100{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".005{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{F6}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "C{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "QUICK2\\DATA{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "TEST{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{Enter}"
+        },
+        {
           "end": [
             "stray_listing"
           ],
@@ -432,18 +530,10 @@
       "mode": "normal_depth",
       "shape": "trapezoid",
       "inputs": {},
-      "setup": {
-        "resend": false
-      },
       "steps": [
         {
           "expect": "title",
-          "keys": "{Enter}"
-        },
-        {
-          "expect": "main_menu",
-          "keys": "3",
-          "immediate": true
+          "keys": "3{Enter}"
         },
         {
           "end": [

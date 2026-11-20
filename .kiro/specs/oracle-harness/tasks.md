@@ -50,13 +50,13 @@
   - [x] 5.3 Write the exploratory run log under `oracle/out/runs/<run-id>/` with transcript, final screen and files
     - _Requirements: 9.1, 14.7_
 
-- [ ] 6. Checkpoint: reproduce the spike
-  - [ ] 6.1 Run the four control cases as exploratory runs: depth 3.27 at 300 cfs and 4.22 at 500 cfs, the stray listing without the data directory, and the unchanged menu with resend off. A different number is a harness bug first: fix the harness, not the expectation.
+- [x] 6. Checkpoint: reproduce the spike
+  - [x] 6.1 Run the four control cases as exploratory runs: depth 3.27 at 300 cfs and 4.22 at 500 cfs, the stray listing without the data directory, and the unchanged menu with resend off. A different number is a harness bug first: fix the harness, not the expectation.
     - Do not continue until all four pass.
     - _Requirements: 6.1, 6.3_
-  - [ ] 6.2 Find why the main menu drops input (keyboard buffer flush, slow start or other) and record the finding in `harness_findings`
+  - [x] 6.2 Find why the main menu drops input (keyboard buffer flush, slow start or other) and record the finding in `harness_findings`
     - _Requirements: 5.5, 13.2_
-  - [ ] 6.3 Find whether emu2 can send LPT1 output to a file, and record the answer in `harness_findings`
+  - [x] 6.3 Find whether emu2 can send LPT1 output to a file, and record the answer in `harness_findings`
     - _Requirements: 9.2_
 
 - [ ] 7. Goldens
