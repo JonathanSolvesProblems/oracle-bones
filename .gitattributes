@@ -1,0 +1,4 @@
+# Hashes of profiles and goldens must match on every platform.
+* text=auto eol=lf
+# Goldens and captures are stored exactly as the runner wrote them.
+oracle/goldens/** -text
