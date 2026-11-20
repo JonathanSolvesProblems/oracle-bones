@@ -8,14 +8,14 @@
   - [x] 1.3 Write `oracle/targets/quick2.json`: archive URL and size with `sha256` null, env, drive layout, entry, screen size and pty rows, frozen time, limits, keys, mode and shape codes, screens and markers, form order, ranges and boundaries, and the four control cases from the 2026-11-06 spike, each spike fact marked unobserved with its source
     - _Requirements: 1.1, 2.4, 2.6, 2.8, 2.9, 4.3, 5.4, 5.5, 6.1, 6.5, 7.7, 11.1_
 
-- [ ] 2. Fetch the binary
-  - [ ] 2.1 Write `scripts/setup.py`: download if missing, hash on every run, stop and report both hashes on mismatch, print and stop when no hash is pinned, unpack by rename, write the `verified.json` stamp
+- [x] 2. Fetch the binary
+  - [x] 2.1 Write `scripts/setup.py`: download if missing, hash on every run, stop and report both hashes on mismatch, print and stop when no hash is pinned, unpack by rename, write the `verified.json` stamp
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
-  - [ ] 2.2 Run setup once, review the printed sha256, and pin it in the profile by hand
+  - [x] 2.2 Run setup once, review the printed sha256, and pin it in the profile by hand
     - _Requirements: 1.4_
-  - [ ] 2.3 Make session start refuse with `setup_required` when the stamp does not match the profile's hash
+  - [x] 2.3 Make session start refuse with `setup_required` when the stamp does not match the profile's hash
     - _Requirements: 1.5_
-  - [ ] 2.4 Add a test that `oracle/vendor/` and `oracle/out/` are gitignored and that no file from the unpacked program exists elsewhere in the repository
+  - [x] 2.4 Add a test that `oracle/vendor/` and `oracle/out/` are gitignored and that no file from the unpacked program exists elsewhere in the repository
     - _Requirements: 1.6_
 
 - [ ] 3. Sandbox

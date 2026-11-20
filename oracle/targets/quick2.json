@@ -5,7 +5,7 @@
     "url": "https://web.archive.org/web/20121224173859id_/https://www.fema.gov/library/file?type=publishedFile&file=q2v1.zip&fileid=c76207a0-fe30-11df-a023-001cc4568fb6",
     "file": "q2v1.zip",
     "bytes": 392419,
-    "sha256": null,
+    "sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
     "must_contain": ["QT.EXE", "QUICK2.EXE"]
   },
   "env": {"EMU2_DEFAULT_DRIVE": "C", "EMU2_CWD": "QUICK2", "TERM": "xterm"},
