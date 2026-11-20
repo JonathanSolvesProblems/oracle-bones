@@ -64,7 +64,7 @@
     - _Requirements: 7.7, 7.9_
   - [x] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 9.1, 14.5_
-  - [ ] 7.3 Write `oracle/manifest.py`: update the manifest on every store and replace
+  - [x] 7.3 Write `oracle/manifest.py`: update the manifest on every store and replace
     - _Requirements: 10.2_
   - [ ] 7.4 Add the determinism sample: run twice every twentieth case and every control case, compare, store the first, log differences. Property 1.
     - _Requirements: 8.1, 8.2, 8.3, 8.4_

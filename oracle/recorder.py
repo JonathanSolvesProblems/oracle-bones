@@ -23,7 +23,7 @@ import time
 import uuid
 from pathlib import Path
 
-from . import cases, generator, ledger, paths, runs
+from . import cases, generator, ledger, manifest, paths, runs
 from . import config as config_mod
 from . import profile as profile_mod
 from .errors import OracleError
@@ -161,7 +161,7 @@ class Store:
             return changes
 
     def _after_write(self, changes):
-        pass
+        manifest.update(self.root, changes)
 
 
 def capture_screens(got, control):
