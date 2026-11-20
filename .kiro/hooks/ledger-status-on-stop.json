@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "ledger-status-on-stop",
+      "description": "When the agent stops, reports open questions, unexercised fields and untriaged mismatches, so that coverage is never claimed from memory.",
+      "trigger": "Stop",
+      "action": { "type": "command", "command": "python scripts/ledger_status.py" },
+      "timeout": 30,
+      "enabled": false
+    }
+  ]
+}

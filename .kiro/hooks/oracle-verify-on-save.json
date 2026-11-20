@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "oracle-verify-on-save",
+      "description": "Grades each solver change against the quick golden set. A command hook, so it spends no credits. On failure the mismatch summary goes to the agent.",
+      "trigger": "PostFileSave",
+      "matcher": "app[/\\\\]src[/\\\\](solver|format)[/\\\\].*\\.ts$",
+      "action": { "type": "command", "command": "python scripts/oracle_quick.py" },
+      "timeout": 120,
+      "enabled": false
+    }
+  ]
+}

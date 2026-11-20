@@ -1,0 +1,12 @@
+# The Kiro folder at the root must never be listed here: the rules can disqualify a
+# submission for it.
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Downloaded binaries are never committed.
+oracle/vendor/
+oracle/out/

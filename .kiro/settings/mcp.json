@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "oracle": {
+      "command": "python",
+      "args": ["-m", "oracle.mcp_server"],
+      "env": {
+        "ORACLE_TARGET": "oracle/targets/quick2.json"
+      },
+      "disabled": true,
+      "autoApprove": ["read_screen", "ledger_read"]
+    }
+  }
+}
