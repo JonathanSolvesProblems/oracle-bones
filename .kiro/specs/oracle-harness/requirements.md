@@ -68,7 +68,7 @@ cannot touch my machine or the network.
 3. THE SYSTEM SHALL mount no host path into the container except one fresh temporary directory created for that case or session, outside the repository.
 4. WHEN a case or session starts THE SYSTEM SHALL fill its temporary directory with the drive layout the profile states, including empty directories, and a copy of the unpacked program. WHEN it ends THE SYSTEM SHALL delete the directory after the captures in Requirement 9 are saved.
 5. THE SYSTEM SHALL start each container with the CPU and memory limits the harness config states.
-6. THE SYSTEM SHALL freeze the date and time the program sees at the value the profile states.
+6. THE SYSTEM SHALL start the program's clock at the date and time the profile states on every run, so that the date the program sees is fixed. The clock then runs, because a clock that never moves stops the emulated BIOS tick (observed: QUICK-2 hangs on its title screen when the clock is frozen).
 7. THE SYSTEM SHALL run emu2 as its own executable, built from the commit the harness config states. Harness code SHALL NOT link emu2, and the repository SHALL NOT contain emu2's source or binary.
 8. THE SYSTEM SHALL give the program a pseudo-terminal of the rows and columns the profile states.
 9. WHEN a case exceeds the profile's case time limit, or a wait exceeds the profile's wait timeout, THE SYSTEM SHALL kill the session and report a timeout, never a result.

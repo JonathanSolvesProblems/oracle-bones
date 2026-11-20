@@ -18,14 +18,14 @@
   - [x] 2.4 Add a test that `oracle/vendor/` and `oracle/out/` are gitignored and that no file from the unpacked program exists elsewhere in the repository
     - _Requirements: 1.6_
 
-- [ ] 3. Sandbox
-  - [ ] 3.1 Write `oracle/Dockerfile`: build stage for emu2 at the pinned commit, runtime stage with Python 3, `pyte`, libfaketime and a non-root user; tag the image with the emu2 commit
+- [x] 3. Sandbox
+  - [x] 3.1 Write `oracle/Dockerfile`: build stage for emu2 at the pinned commit, runtime stage with Python 3, `pyte`, libfaketime and a non-root user; tag the image with the emu2 commit
     - _Requirements: 2.2, 2.6, 2.7_
-  - [ ] 3.2 Write the `docker run` argument builder: `--network none`, non-root `--user`, dropped capabilities, read-only root, CPU, memory and pids limits, harness labels, one `-v` for the temp drive. Property 11.
+  - [x] 3.2 Write the `docker run` argument builder: `--network none`, non-root `--user`, dropped capabilities, read-only root, CPU, memory and pids limits, harness labels, one `-v` for the temp drive. Property 11.
     - _Requirements: 2.1, 2.2, 2.3, 2.5_
-  - [ ] 3.3 Write temp drive handling: create the profile's layout outside the repository, copy in the unpacked program, snapshot hashes, diff after the case, delete after captures are saved
+  - [x] 3.3 Write temp drive handling: create the profile's layout outside the repository, copy in the unpacked program, snapshot hashes, diff after the case, delete after captures are saved
     - _Requirements: 2.3, 2.4, 9.1_
-  - [ ] 3.4 Live sandbox check: only loopback, user id not 0, only the temp drive mounted, and the program sees the frozen date. If libfaketime does not reach the program, stop and ask the user for the fallback.
+  - [x] 3.4 Live sandbox check: only loopback, user id not 0, only the temp drive mounted, and the program sees the frozen date. If libfaketime does not reach the program, stop and ask the user for the fallback.
     - _Requirements: 2.1, 2.2, 2.3, 2.6_
 
 - [ ] 4. Runner

@@ -46,5 +46,15 @@ def load(path=None):
     return data
 
 
+def runner_hash():
+    """Short hash of the files baked into the image, so a changed runner means a new image."""
+    import hashlib
+    h = hashlib.sha256()
+    for p in (paths.ORACLE / "Dockerfile", paths.ORACLE / "runner" / "agent.py"):
+        h.update(p.read_bytes().replace(b"\r\n", b"\n"))
+    return h.hexdigest()[:8]
+
+
 def image_tag(cfg):
-    return "%s:%s" % (cfg["image"], cfg["emu2"]["commit"][:12])
+    """The image tag carries the emu2 commit and the runner hash."""
+    return "%s:%s-%s" % (cfg["image"], cfg["emu2"]["commit"][:12], runner_hash())

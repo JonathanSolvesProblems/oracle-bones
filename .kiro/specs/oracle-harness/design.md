@@ -175,10 +175,14 @@ Two stages. The first clones emu2 at the pinned commit and builds it. The second
 Linux base with Python 3, `pyte`, `libfaketime`, the emu2 binary copied from the first stage,
 and the runner. A fixed non-root user. Nothing of the program is in the image.
 
-Frozen time: the runner starts emu2 with `LD_PRELOAD` of libfaketime and `FAKETIME` set to the
-profile's `frozen_time`. emu2 stays an unmodified separate process. Whether emu2's DOS date and
-time calls pick this up is unverified; task 3.4 checks it with a capture of the program or a DOS
-`DATE` call. If it fails, the fallback is to be chosen with the user.
+Fixed start time: the runner starts emu2 with `LD_PRELOAD` of libfaketime and
+`FAKETIME="@<frozen_time>"`, so every run's clock starts at the profile's `frozen_time` and then
+runs. emu2 stays an unmodified separate process. A fully frozen clock was tried first: emu2
+derives its BIOS tick from `gettimeofday`, so the tick stopped and QUICK-2 hung on its title
+screen. Task 3.4 checks inside a live container that processes see the profile's date.
+
+The image tag is `<image>:<emu2 commit 12>-<runner hash 8>`, where the runner hash covers the
+Dockerfile and `runner/agent.py`, so a changed runner builds a new image.
 
 ### Runner (`oracle/runner/agent.py`)
 
