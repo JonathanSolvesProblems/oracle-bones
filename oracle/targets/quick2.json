@@ -6,11 +6,21 @@
     "file": "q2v1.zip",
     "bytes": 392419,
     "sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
-    "must_contain": ["QT.EXE", "QUICK2.EXE"]
+    "must_contain": [
+      "QT.EXE",
+      "QUICK2.EXE"
+    ]
   },
-  "env": {"EMU2_DEFAULT_DRIVE": "C", "EMU2_CWD": "QUICK2", "TERM": "xterm"},
+  "env": {
+    "EMU2_DEFAULT_DRIVE": "C",
+    "EMU2_CWD": "QUICK2",
+    "TERM": "xterm"
+  },
   "drive": {
-    "dirs": ["QUICK2", "QUICK2/DATA"],
+    "dirs": [
+      "QUICK2",
+      "QUICK2/DATA"
+    ],
     "program_dir": "QUICK2",
     "unobserved": "spike 2026-11-06, outside repo: the program stalls after a stray file listing without QUICK2/DATA"
   },
@@ -19,97 +29,434 @@
     "unobserved": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
   },
   "screen": {
-    "rows": 25, "cols": 80, "pty_rows": 27,
+    "rows": 25,
+    "cols": 80,
+    "pty_rows": 27,
     "unobserved": "spike 2026-11-06, outside repo: 25-row screen, which scrolls in a 25-row terminal"
   },
   "frozen_time": "1995-06-01 12:00:00",
-  "limits": {"settle_ms": 150, "wait_timeout_s": 10, "case_time_limit_s": 60, "retry_limit": 3},
+  "limits": {
+    "settle_ms": 150,
+    "wait_timeout_s": 10,
+    "case_time_limit_s": 60,
+    "retry_limit": 3
+  },
   "keys": {
-    "list": ["{Enter}", "{F2}", "{F5}", "{F7}", "{F9}", "{F10}", "1", "2", "3", "4", "V", "R", "T", "C", "I"],
+    "list": [
+      "{Enter}",
+      "{F2}",
+      "{F5}",
+      "{F7}",
+      "{F9}",
+      "{F10}",
+      "1",
+      "2",
+      "3",
+      "4",
+      "V",
+      "R",
+      "T",
+      "C",
+      "I"
+    ],
     "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys"
   },
   "codes": {
-    "modes": {"critical_depth": "cd", "channel_capacity": "cc", "normal_depth": "nd", "step_backwater": "sb"},
-    "shapes": {"trapezoid": "trap"}
+    "modes": {
+      "critical_depth": "cd",
+      "channel_capacity": "cc",
+      "normal_depth": "nd",
+      "step_backwater": "sb"
+    },
+    "shapes": {
+      "trapezoid": "trap"
+    }
   },
   "screens": [
-    {"id": "main_menu", "kind": "menu", "marker": "Step-Backwater", "resend": true,
-     "unobserved": "spike 2026-11-06, outside repo: menu lists 1 Critical Depth to 4 Step-Backwater; the first two inputs were dropped"},
-    {"id": "shape_menu", "kind": "menu", "marker": null,
-     "unobserved": "spike 2026-11-06, outside repo: shape menu takes V, R, T, C or I and Enter"},
-    {"id": "trap_form", "kind": "form", "marker": null,
-     "prompts": [
-       {"id": "left_slope", "pattern": "(?i)left"},
-       {"id": "right_slope", "pattern": "(?i)right"},
-       {"id": "bottom_width", "pattern": "(?i)width"},
-       {"id": "n", "pattern": "(?i)manning"},
-       {"id": "discharge", "pattern": "(?i)discharge"},
-       {"id": "slope", "pattern": "(?i)slope"},
-       {"id": "begin", "pattern": "(?i)begin"}
-     ],
-     "unobserved": "spike 2026-11-06, outside repo: asks left slope, right slope, bottom width, n, discharge, slope, then Enter"},
-    {"id": "trap_result", "kind": "result", "marker": null, "fields": [],
-     "unobserved": "spike 2026-11-06, outside repo: prints depth 3.27 for the 300 cfs control"},
-    {"id": "stray_listing", "kind": "other", "marker": null,
-     "unobserved": "spike 2026-11-06, outside repo: a file listing appears and the program stalls without QUICK2/DATA"}
+    {
+      "id": "title",
+      "kind": "other",
+      "marker": "VERSION\\s+1\\.0",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: title screen; Enter moves on to the main menu"
+    },
+    {
+      "id": "main_menu",
+      "kind": "menu",
+      "marker": "MAIN\\s+MENU",
+      "resend": true,
+      "unobserved": "spike 2026-11-06, outside repo: the first two inputs were dropped; exploratory runs on 2026-11-20 in this repo, not yet recorded: the menu takes a digit and Enter"
+    },
+    {
+      "id": "shape_menu",
+      "kind": "menu",
+      "marker": "SHAPE OF CROSS SECTION",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
+    },
+    {
+      "id": "nd_trap_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*TRAPEZOIDAL CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {
+          "name": "in_left_slope",
+          "row": 8,
+          "col": 31,
+          "width": 4
+        },
+        {
+          "name": "in_right_slope",
+          "row": 8,
+          "col": 58,
+          "width": 4
+        },
+        {
+          "name": "in_bottom_width",
+          "row": 9,
+          "col": 30,
+          "width": 7
+        },
+        {
+          "name": "in_n",
+          "row": 9,
+          "col": 51,
+          "width": 13
+        },
+        {
+          "name": "in_discharge",
+          "row": 10,
+          "col": 28,
+          "width": 9
+        },
+        {
+          "name": "depth",
+          "row": 10,
+          "col": 50,
+          "width": 14
+        },
+        {
+          "name": "in_slope",
+          "row": 11,
+          "col": 26,
+          "width": 11
+        },
+        {
+          "name": "area",
+          "row": 15,
+          "col": 25,
+          "width": 12
+        },
+        {
+          "name": "wet_perimeter",
+          "row": 15,
+          "col": 58,
+          "width": 6
+        },
+        {
+          "name": "velocity",
+          "row": 16,
+          "col": 28,
+          "width": 9
+        },
+        {
+          "name": "hyd_radius",
+          "row": 16,
+          "col": 55,
+          "width": 9
+        },
+        {
+          "name": "top_width",
+          "row": 17,
+          "col": 27,
+          "width": 10
+        },
+        {
+          "name": "froude",
+          "row": 17,
+          "col": 48,
+          "width": 16
+        },
+        {
+          "name": "flow_type",
+          "row": 18,
+          "col": 49,
+          "width": 16
+        }
+      ],
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: results fill the form; Print <F5> appears"
+    },
+    {
+      "id": "nd_trap_form",
+      "kind": "form",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*TRAPEZOIDAL CHANNEL",
+      "prompts": [
+        {
+          "id": "left_slope",
+          "pattern": "Enter Left Side Slope"
+        },
+        {
+          "id": "right_slope",
+          "pattern": "Enter Right Side Slope"
+        },
+        {
+          "id": "bottom_width",
+          "pattern": "Enter Bottom Width"
+        },
+        {
+          "id": "n",
+          "pattern": "Enter Manning's n"
+        },
+        {
+          "id": "discharge",
+          "pattern": "Enter Discharge"
+        },
+        {
+          "id": "slope",
+          "pattern": "Enter Slope"
+        },
+        {
+          "id": "begin",
+          "pattern": "Begin Calculations\\s+<Enter>"
+        }
+      ],
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: one prompt at a time on row 20"
+    },
+    {
+      "id": "stray_listing",
+      "kind": "other",
+      "marker": null,
+      "unobserved": "spike 2026-11-06, outside repo: a file listing appears and the program stalls without QUICK2/DATA"
+    }
   ],
   "flows": {
     "normal_depth/trapezoid": {
       "steps": [
-        {"expect": "main_menu", "keys": "3"},
-        {"expect": "shape_menu", "keys": "T{Enter}"},
-        {"expect": "trap_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "n", "input": "n", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
-        {"expect": "trap_form", "prompt": "begin", "keys": "{Enter}"},
-        {"end": ["trap_result"]}
+        {
+          "expect": "title",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "main_menu",
+          "keys": "3{Enter}"
+        },
+        {
+          "expect": "shape_menu",
+          "keys": "T{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "left_slope",
+          "input": "left_slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "right_slope",
+          "input": "right_slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "bottom_width",
+          "input": "bottom_width",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "n",
+          "input": "n",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "discharge",
+          "input": "discharge",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "slope",
+          "input": "slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "begin",
+          "keys": "{Enter}"
+        },
+        {
+          "end": [
+            "nd_trap_result"
+          ]
+        }
       ],
-      "unobserved": "spike 2026-11-06, outside repo: menu 3, shape T, six inputs, Enter"
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: title Enter, menu 3 Enter, shape T Enter, six inputs, Enter"
     }
   },
   "ranges": {
-    "left_slope": {"min": 0, "max": 10, "decimals": 1, "boundaries": ["0", "-1"],
-                   "unobserved": "starting range for the generator, not yet observed"},
-    "right_slope": {"min": 0, "max": 10, "decimals": 1, "boundaries": ["0", "-1"],
-                    "unobserved": "starting range for the generator, not yet observed"},
-    "bottom_width": {"min": 1, "max": 200, "decimals": 1, "boundaries": ["0", "-1"],
-                     "unobserved": "starting range for the generator, not yet observed"},
-    "n": {"min": 0.01, "max": 0.15, "decimals": 3, "boundaries": [".000", "-1"],
-          "unobserved": "starting range for the generator, not yet observed"},
-    "discharge": {"min": 1, "max": 20000, "decimals": 0, "boundaries": ["0", "-1"],
-                  "unobserved": "starting range for the generator, not yet observed"},
-    "slope": {"min": 0.0001, "max": 0.05, "decimals": 4, "boundaries": ["0", "-1"],
-              "unobserved": "starting range for the generator, not yet observed"}
+    "left_slope": {
+      "min": 0,
+      "max": 10,
+      "decimals": 1,
+      "boundaries": [
+        "0",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    },
+    "right_slope": {
+      "min": 0,
+      "max": 10,
+      "decimals": 1,
+      "boundaries": [
+        "0",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    },
+    "bottom_width": {
+      "min": 1,
+      "max": 200,
+      "decimals": 1,
+      "boundaries": [
+        "0",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    },
+    "n": {
+      "min": 0.01,
+      "max": 0.15,
+      "decimals": 3,
+      "boundaries": [
+        ".000",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    },
+    "discharge": {
+      "min": 1,
+      "max": 20000,
+      "decimals": 0,
+      "boundaries": [
+        "0",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    },
+    "slope": {
+      "min": 0.0001,
+      "max": 0.05,
+      "decimals": 4,
+      "boundaries": [
+        "0",
+        "-1"
+      ],
+      "unobserved": "starting range for the generator, not yet observed"
+    }
   },
   "controls": [
-    {"id": "nd-trap-000001", "mode": "normal_depth", "shape": "trapezoid",
-     "inputs": {"left_slope": "3", "right_slope": "2", "bottom_width": "10", "n": ".035",
-                "discharge": "300", "slope": ".005"},
-     "expect": {"outcome": "result", "printed": {"depth": "3.27"}},
-     "source": "spike 2026-11-06, outside repo"},
-    {"id": "nd-trap-000002", "mode": "normal_depth", "shape": "trapezoid",
-     "inputs": {"left_slope": "3", "right_slope": "2", "bottom_width": "10", "n": ".035",
-                "discharge": "500", "slope": ".005"},
-     "expect": {"outcome": "result", "printed": {"depth": "4.22"}},
-     "source": "spike 2026-11-06, outside repo"},
-    {"id": "obs-nodata-000001", "mode": "normal_depth", "shape": "trapezoid", "inputs": {},
-     "setup": {"omit_dirs": ["QUICK2/DATA"]},
-     "steps": [
-       {"expect": "main_menu", "keys": "3"},
-       {"end": ["stray_listing"], "hold_ms": 3000}
-     ],
-     "expect": {"outcome": "observed", "screen_id": "stray_listing"},
-     "source": "spike 2026-11-06, outside repo"},
-    {"id": "obs-menudrop-000001", "mode": "normal_depth", "shape": "trapezoid", "inputs": {},
-     "setup": {"resend": false},
-     "steps": [
-       {"expect": "main_menu", "keys": "3", "immediate": true},
-       {"end": ["main_menu"], "hold_ms": 3000}
-     ],
-     "expect": {"outcome": "observed", "screen_id": "main_menu"},
-     "source": "spike 2026-11-06, outside repo"}
+    {
+      "id": "nd-trap-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {
+        "left_slope": "3",
+        "right_slope": "2",
+        "bottom_width": "10",
+        "n": ".035",
+        "discharge": "300",
+        "slope": ".005"
+      },
+      "expect": {
+        "outcome": "result",
+        "printed": {
+          "depth": "3.27"
+        }
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "nd-trap-000002",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {
+        "left_slope": "3",
+        "right_slope": "2",
+        "bottom_width": "10",
+        "n": ".035",
+        "discharge": "500",
+        "slope": ".005"
+      },
+      "expect": {
+        "outcome": "result",
+        "printed": {
+          "depth": "4.22"
+        }
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "obs-nodata-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "setup": {
+        "omit_dirs": [
+          "QUICK2/DATA"
+        ]
+      },
+      "steps": [
+        {
+          "expect": "title",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "main_menu",
+          "keys": "3{Enter}"
+        },
+        {
+          "end": [
+            "stray_listing"
+          ],
+          "hold_ms": 3000
+        }
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "stray_listing"
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "obs-menudrop-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "setup": {
+        "resend": false
+      },
+      "steps": [
+        {
+          "expect": "title",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "main_menu",
+          "keys": "3",
+          "immediate": true
+        },
+        {
+          "end": [
+            "main_menu"
+          ],
+          "hold_ms": 3000
+        }
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "main_menu"
+      },
+      "source": "spike 2026-11-06, outside repo"
+    }
   ]
 }

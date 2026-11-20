@@ -28,18 +28,18 @@
   - [x] 3.4 Live sandbox check: only loopback, user id not 0, only the temp drive mounted, and the program sees the frozen date. If libfaketime does not reach the program, stop and ask the user for the fallback.
     - _Requirements: 2.1, 2.2, 2.3, 2.6_
 
-- [ ] 4. Runner
-  - [ ] 4.1 Write `oracle/runner/agent.py`: emu2 under a pty of the profile's size, pyte screen, JSON-lines `screen`, `wait`, `send`, `kill`; enforce the wait timeout and case time limit by killing and reporting `timeout`
+- [x] 4. Runner
+  - [x] 4.1 Write `oracle/runner/agent.py`: emu2 under a pty of the profile's size, pyte screen, JSON-lines `screen`, `wait`, `send`, `kill`; enforce the wait timeout and case time limit by killing and reporting `timeout`
     - _Requirements: 2.8, 2.9, 4.1, 5.1_
-  - [ ] 4.2 Write host-side screen reading: screen id by marker, unknown screens, raw field extraction, prompt detection with the settle time; unit-test on saved captures
+  - [x] 4.2 Write host-side screen reading: screen id by marker, unknown screens, raw field extraction, prompt detection with the settle time; unit-test on saved captures
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
-  - [ ] 4.3 Write `oracle/runner/keys.py`: tokenizer, xterm encoder, `verified` flags, `unsupported_key` for unverified keys, and the start-of-session check of the profile's keys. Property 7.
+  - [x] 4.3 Write `oracle/runner/keys.py`: tokenizer, xterm encoder, `verified` flags, `unsupported_key` for unverified keys, and the start-of-session check of the profile's keys. Property 7.
     - _Requirements: 5.2, 5.3, 5.4_
-  - [ ] 4.4 Verify each key in the profile's key list against QUICK-2 with a capture, and set `verified` only for keys shown to arrive
+  - [x] 4.4 Verify each key in the profile's key list against QUICK-2 with a capture, and set `verified` only for keys shown to arrive
     - _Requirements: 5.3, 5.4_
-  - [ ] 4.5 Write host-side sending: wait for the expected prompt, send, log transcript steps without wall-clock time, resend only on screens marked for it up to the retry limit, then `input_ignored`
+  - [x] 4.5 Write host-side sending: wait for the expected prompt, send, log transcript steps without wall-clock time, resend only on screens marked for it up to the retry limit, then `input_ignored`
     - _Requirements: 5.1, 5.5, 5.6_
-  - [ ] 4.6 Write the stub target and run Properties 5 and 6 against it
+  - [x] 4.6 Write the stub target and run Properties 5 and 6 against it
     - _Requirements: 4.3, 5.1, 5.5, 5.6_
 
 - [ ] 5. Sessions and ledger

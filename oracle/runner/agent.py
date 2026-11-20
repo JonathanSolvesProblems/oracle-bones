@@ -54,7 +54,7 @@ class Emulator:
             # Start the clock at the fixed time on every run and let it run. A clock that
             # never moves stops emu2's BIOS tick, and QUICK-2 then hangs on its title screen.
             env["FAKETIME"] = "@" + req["frozen_time"]
-            env["FAKETIME_DONT_FAKE_MONOTONIC"] = "1"
+            # FAKETIME_DONT_FAKE_MONOTONIC=1 makes sleep() fail with EINVAL, so it is not set.
             env["FAKETIME_DONT_RESET"] = "1"
         argv = req.get("argv") or ["emu2", req["program"]]
         pid, fd = pty.fork()
