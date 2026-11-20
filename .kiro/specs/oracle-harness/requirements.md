@@ -27,9 +27,13 @@ profile cite where each program fact came from.
 - **Replay**: a fresh run of a stored golden's inputs, to check it. Never stored.
 - **Golden**: the stored result of a recording run. One file per case id.
 - **Outcome**: what a case ended in. `result` (the program printed answers), `rejected` (the
-  program refused an input), or `error` (the program showed an error screen).
+  program refused an input), `error` (the program showed an error screen), or `observed` (a
+  behaviour case ended on the screen the profile expects).
 - **Control case**: a case listed in the profile whose outcome was observed before the harness
   existed. Used to prove the harness reads the program correctly.
+- **Behaviour case**: a control case that checks how the program behaves under a setup change
+  rather than what it calculates. Its outcome is `observed`, its id is
+  `obs-<behaviour>-<sequence>`, and it proves the harness, not the rebuild.
 - **Capture**: the screen text, and the files the program wrote, saved from one run.
 - **Session**: one running container with one emulator, named by a session id.
 - **Ledger**: `results/ledger.json`, the coverage record (Requirement 13).
@@ -114,7 +118,7 @@ gave, so that I can trust it before trusting its goldens.
 
 #### Acceptance Criteria
 
-1. THE SYSTEM SHALL read control cases from the profile. Each states its inputs, any setup change (for example, a directory left out, or resend turned off), the outcome observed, and where it was observed.
+1. THE SYSTEM SHALL read control cases from the profile. Each states its case id, its inputs, any setup change (for example, a directory left out, or resend turned off), the outcome observed (for a behaviour case, `observed` with the expected screen id), and where it was observed.
 2. WHEN the first recording run starts THE SYSTEM SHALL record every control case, with every screen captured, before any other case.
 3. WHEN a control case gives a different outcome or printed value from the one the profile states THE SYSTEM SHALL report a harness failure, store nothing for that case, and stop the batch. The difference is treated as a harness bug first, because the binary already printed the stated value.
 4. WHEN control cases are recorded THE SYSTEM SHALL make their case ids and captures available for the profile's citations.
@@ -122,8 +126,9 @@ gave, so that I can trust it before trusting its goldens.
 
 For QUICK-2 the control cases come from a spike on 2026-11-06, run outside this repository:
 the trapezoid case (left slope 3, right slope 2, bottom width 10, n .035, slope .005) printed
-depth 3.27 at 300 cfs and 4.22 at 500 cfs; the program stalled after a stray file listing
-when `C:\QUICK2\DATA` was missing; and the main menu dropped the first two inputs. Until the
+depth 3.27 at 300 cfs (`nd-trap-000001`) and 4.22 at 500 cfs (`nd-trap-000002`); the program
+stalled after a stray file listing when `C:\QUICK2\DATA` was missing (`obs-nodata-000001`);
+and the main menu dropped the first two inputs (`obs-menudrop-000001`). Until the
 harness records them, the profile values for the drive layout (2.4), screen size (2.8) and
 menu resend (5.5) are marked unobserved, with the spike as their source. After recording,
 those control captures are their citations.
@@ -137,7 +142,7 @@ reproduce them, so that tests run fast and offline and every stored answer can b
 
 1. THE SYSTEM SHALL write under `oracle/goldens/` only from the case runner, and only during a recording run. Exploratory runs and replays SHALL NOT write there.
 2. THE SYSTEM SHALL store one golden file per case id, at `oracle/goldens/cases/<case-id>.json`.
-3. WHEN a case id is recorded again THE SYSTEM SHALL replace its golden and captures through the runner, and log the old and new hashes in the ledger.
+3. WHEN a case id is recorded again THE SYSTEM SHALL replace its golden and captures only through the runner's command line, and log the old and new hashes in the ledger's `rerecords`. No MCP tool SHALL replace a golden.
 4. WHEN a case is recorded THE SYSTEM SHALL store: case id, mode, shape, inputs as typed strings, outcome, each field's raw text exactly as printed, the program's message for `rejected` and `error` outcomes, seed, generator version, emu2 commit, profile version and profile sha256, archive sha256, keystroke transcript, capture path, files written (Requirement 9), and the time recorded.
 5. WHEN a case times out or ends on an unknown screen THE SYSTEM SHALL log it to the ledger and the run log, and SHALL NOT store it as a golden.
 6. WHEN a case is recorded THE SYSTEM SHALL save its capture under `oracle/goldens/captures/<case-id>/`: the final screen for every case, and every screen for control cases.
@@ -191,13 +196,13 @@ rebuild differs.
 
 #### Acceptance Criteria
 
-1. WHEN the comparison runs THE SYSTEM SHALL compare the outcome first, then each field's text with leading and trailing whitespace trimmed. WHEN the profile marks a field as raw THE SYSTEM SHALL compare it untrimmed.
+1. WHEN the comparison runs THE SYSTEM SHALL skip goldens with outcome `observed`, which prove the harness and not the rebuild, and for every other golden compare the outcome first, then each field's text with leading and trailing whitespace trimmed. WHEN the profile marks a field as raw THE SYSTEM SHALL compare it untrimmed.
 2. THE SYSTEM SHALL NOT parse field text as numbers, and SHALL NOT special-case field width or overflow text such as `****`. Those are display rules the rebuild must reproduce.
 3. WHEN differences exist THE SYSTEM SHALL write each one to `oracle/out/mismatches.json` with case id, kind (`outcome`, `value`, `missing_field`, `extra_field`, `rebuild_error`), field, oracle text and rebuild text. THE SYSTEM SHALL rewrite the file on every run, as an empty list when there are none.
 4. WHEN the comparison ends THE SYSTEM SHALL print a summary grouped by field with counts, and update the ledger's mismatch section.
 5. THE SYSTEM SHALL exit with 0 when everything matches, 1 when there are mismatches, 3 when the rebuild crashed or broke its contract, and 4 when the harness could not compare (golden check failed, no goldens, bad config). Code 2 is not used, because Kiro hooks treat 2 as a block.
-6. THE SYSTEM SHALL offer a quick set of 200 cases, listed in `oracle/quickset.json`, spread across every mode and shape the profile lists and including every control case. It SHALL run against stored goldens only, start no container, and finish in under 30 seconds of wall-clock time, rebuild start included, on the development laptop (Acer Nitro ANV15-52, Intel Core i9-13900H, 32 GB). WHEN goldens do not yet cover a mode and shape THE SYSTEM SHALL report that pair as uncovered.
-7. THE SYSTEM SHALL offer a full set of every stored golden, with a target of 10,000 cases, and report the actual count.
+6. THE SYSTEM SHALL offer a quick set of 200 cases, listed in `oracle/quickset.json`, spread across every mode and shape the profile lists, including every control case except behaviour cases, and no golden with outcome `observed`. It SHALL run against stored goldens only, start no container, and finish in under 30 seconds of wall-clock time, rebuild start included, on the development laptop (Acer Nitro ANV15-52, Intel Core i9-13900H, 32 GB). WHEN goldens do not yet cover a mode and shape THE SYSTEM SHALL report that pair as uncovered.
+7. THE SYSTEM SHALL offer a full set of every stored golden except those with outcome `observed`, with a target of 10,000 cases, and report the actual count.
 
 ### Requirement 12: Rebuild contract
 
@@ -249,7 +254,7 @@ session.
 
    where `screen` is `{rows, hash, cursor, screen_id or null, unknown, prompt or null, fields}`.
 4. WHEN a tool fails THE SYSTEM SHALL return `{"error": {"category", "message", "retryable", "detail"}}`. Categories: `invalid_arguments`, `setup_required`, `hash_mismatch`, `docker_unavailable`, `session_not_found`, `session_limit`, `timeout`, `input_ignored`, `unsupported_key`, `emulator_failed`, `profile_invalid`, `golden_check_failed`, `rebuild_failed`, `internal`. `retryable` is true only for `session_limit`, `timeout`, `input_ignored` and `emulator_failed`.
-5. THE SYSTEM SHALL NOT expose any tool that writes a golden directly. A tool writes directly if it accepts golden content, field values or a path under `oracle/goldens/` from the caller. `run_case` and `run_batch` with `record: true` are allowed, because the runner stores only what the binary printed.
+5. THE SYSTEM SHALL NOT expose any tool that writes a golden directly. A tool writes directly if it accepts golden content, field values, a case id or a path under `oracle/goldens/` from the caller. `run_case` and `run_batch` with `record: true` are allowed, because the runner stores only what the binary printed, and they SHALL only create new case ids, never replace an existing golden.
 6. WHEN Docker is not running THE SYSTEM SHALL return `docker_unavailable` with a plain message.
 7. THE SYSTEM SHALL log every exploratory run under `oracle/out/runs/<run-id>/` with its transcript, final screen and files, so that what an agent saw can be found again.
 
@@ -258,17 +263,3 @@ session.
 - Printer output (F5 to LPT1), beyond recording whether emu2 can send it to a file (9.2).
 - Screen display attributes such as colour and highlighting. The harness reads text only.
 - HEC-2, PLOT-2 and AutoHEC-2 from the same bundle.
-
-## Open questions
-
-- **Golden layout versus `structure.md`.** The steering file says goldens are one file per mode.
-  This spec stores one file per case id, plus `captures/` and `MANIFEST.json`. Provisional:
-  this spec wins and `structure.md` is updated.
-- **Control captures that are not ordinary cases.** The no-DATA stall and the dropped menu input
-  have no `result`, `rejected` or `error` outcome, and the stall would otherwise count as a
-  timeout or unknown screen, which is never stored. Provisional: the profile defines the stray
-  listing as a known screen, each such control case gets the outcome `observed` with the
-  expected screen id, and they are stored like other goldens. Their ids are not yet settled;
-  `structure.md` only defines mode-shape-sequence ids.
-- **Ledger ownership.** The exhume-loop spec also defines the ledger and a task for
-  `ledger_read`. Provisional: this spec owns the schema and `ledger_read`.

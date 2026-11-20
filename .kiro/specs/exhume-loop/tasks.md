@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. Ledger
-  - [ ] 1.1 Implement `ledger_read` and the ledger schema
+  - [ ] 1.1 Record the Exhumer's decisions, open questions and stop reason in its ledger sections, through the oracle-harness ledger module (the schema and `ledger_read` are oracle-harness tasks 5.2 and 9.2)
     - _Requirements: 1.2_
   - [ ] 1.2 Write `scripts/check_traceability.py`, which fails on any requirement that cites a missing case
     - _Requirements: 3.2_

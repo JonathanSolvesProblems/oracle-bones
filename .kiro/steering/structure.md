@@ -10,7 +10,10 @@ description: Repository layout and naming rules for case ids, haunting ids and b
 .kiro/                 specs, steering, hooks, agents, workflows, MCP settings. Never gitignored.
 oracle/                Python: runner, screen parser, MCP server
   runner/              code that runs inside the container
-  goldens/             answers recorded from the binary, one file per mode. Read-only to agents.
+  goldens/             answers recorded from the binary. Written only by the runner. Read-only to agents.
+    cases/             one file per case id, <case-id>.json
+    captures/          <case-id>/ screens and the files the program wrote
+    MANIFEST.json      sha256 of every file under goldens/, kept by the runner
   vendor/              downloaded binaries. Gitignored.
   out/                 run reports. Gitignored.
 app/                   Quickened, Vite and TypeScript
@@ -27,5 +30,7 @@ docs/                  build log, mascot brief
 ## Naming
 
 - Case ids look like `nd-trap-000123` (mode, shape, sequence).
+- Behaviour case ids look like `obs-nodata-000001` (`obs`, behaviour, sequence). They prove
+  the harness, not the rebuild, and are never compared or put in the quick set.
 - Haunting ids look like `H-001`.
 - A bugfix spec is named after the behaviour, for example `nd-depth-truncation`.

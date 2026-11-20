@@ -26,10 +26,12 @@ After each observation the Exhumer reads the ledger and picks one action:
 
 ## Ledger
 
+The ledger's schema, its single writer and `ledger_read` belong to the oracle-harness spec
+(Requirement 13, and the Ledger section of its design). The Exhumer reads it with
+`ledger_read` and adds only its own sections, for example:
+
 ```json
 {
-  "screens": {"main_menu": {"visits": 3, "keys_untried": ["F1"]}},
-  "fields": {"depth": {"cases": 12, "understood": false}},
   "open_questions": ["Why does 3.27 ft print with an area of 59.6?"],
   "decisions": [{"t": 1, "saw": "...", "chose": "run_case", "why": "..."}],
   "stopped": null

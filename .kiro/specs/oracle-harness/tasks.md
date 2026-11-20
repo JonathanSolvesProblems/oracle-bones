@@ -62,8 +62,8 @@
 - [ ] 7. Goldens
   - [ ] 7.1 Write `oracle/generator.py`: seeded, versioned, ranges and boundaries from the profile, ids assigned before dispatch. Property 3.
     - _Requirements: 7.7, 7.9_
-  - [ ] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema, one file per case id, captures, written files, atomic writes, replacement with `rerecords`, and no storing of timeouts or unknown screens
-    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 9.1_
+  - [ ] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 9.1, 14.5_
   - [ ] 7.3 Write `oracle/manifest.py`: update the manifest on every store and replace
     - _Requirements: 10.2_
   - [ ] 7.4 Add the determinism sample: run twice every twentieth case and every control case, compare, store the first, log differences. Property 1.
@@ -80,15 +80,15 @@
     - _Requirements: 10.3_
   - [ ] 8.2 Write the rebuild contract runner in `oracle/compare.py` with stub rebuilds that answer, crash, hang and print bad JSON. Property 10.
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
-  - [ ] 8.3 Write the comparator: golden check first, outcome then trimmed or raw fields, `mismatches.json` rewritten every run, summary by field, ledger update, exit codes 0, 1, 3, 4. Property 9.
+  - [ ] 8.3 Write the comparator: golden check first, skip `observed` goldens, outcome then trimmed or raw fields, `mismatches.json` rewritten every run, summary by field, ledger update, exit codes 0, 1, 3, 4. Property 9.
     - _Requirements: 10.4, 11.1, 11.2, 11.3, 11.4, 11.5_
-  - [ ] 8.4 Build `oracle/quickset.json` (control cases plus an even spread over every mode and shape, 200 in total, uncovered pairs listed) and the full set; time the quick set on the development laptop
+  - [ ] 8.4 Build `oracle/quickset.json` (control cases except behaviour cases, plus an even spread over every mode and shape, 200 in total, uncovered pairs listed) and the full set; time the quick set on the development laptop
     - _Requirements: 11.6, 11.7_
 
 - [ ] 9. Serve over MCP
   - [ ] 9.1 Write `oracle/schemas.py` and `oracle/errors.py`: input and output schemas for the eight tools, the error categories and the retryable table
     - _Requirements: 14.2, 14.3, 14.4_
-  - [ ] 9.2 Write `oracle/mcp_server.py` with the eight tools, `docker_unavailable` handling, and `record` passed through to the runner only
+  - [ ] 9.2 Write `oracle/mcp_server.py` with the eight tools, `docker_unavailable` handling, and `record` accepted and passed through, answering `invalid_arguments` until task 7.2 connects it
     - _Requirements: 14.1, 14.5, 14.6, 14.7_
   - [ ] 9.3 Test that every tool name matches the pattern, every reply validates against its schema, and no tool takes golden content, field values or a path under `oracle/goldens/`
     - _Requirements: 14.2, 14.3, 14.5_

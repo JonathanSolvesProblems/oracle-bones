@@ -8,7 +8,7 @@ The solver spec for Quickened is produced by running this loop, not written by h
 
 ## Glossary
 
-- **Ledger**: `results/ledger.json`, the running record of screens seen, fields exercised, cases run, and open questions.
+- **Ledger**: `results/ledger.json`, the coverage record. Its schema, its writer and `ledger_read` are owned by the oracle-harness spec (Requirement 13). The Exhumer writes only its own sections: `open_questions`, `decisions`, `stopped`, each field's `understood` flag, each screen's untried keys, and mismatch triage status.
 - **Haunting**: a behaviour where the dead program disagrees with the exact answer.
 
 ## Requirements

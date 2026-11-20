@@ -107,15 +107,15 @@ neither `cite` nor `unobserved` fails with `profile_invalid`.
                                        "discharge", "slope"]},
   "ranges": {"n": {"min": ".010", "max": ".150", "boundaries": [".000", "-1"]}},
   "controls": [
-    {"name": "trap-300", "mode": "normal_depth", "shape": "trapezoid",
+    {"id": "nd-trap-000001", "mode": "normal_depth", "shape": "trapezoid",
      "inputs": {"left_slope": "3", "right_slope": "2", "bottom_width": "10", "n": ".035",
                 "discharge": "300", "slope": ".005"},
      "expect": {"outcome": "result", "printed": {"depth": "3.27"}},
      "source": "spike 2026-11-06, outside repo"},
-    {"name": "trap-500", "...": "as above with discharge 500, depth 4.22"},
-    {"name": "no-data-dir", "setup": {"omit_dirs": ["QUICK2/DATA"]},
+    {"id": "nd-trap-000002", "...": "as above with discharge 500, depth 4.22"},
+    {"id": "obs-nodata-000001", "setup": {"omit_dirs": ["QUICK2/DATA"]},
      "expect": {"outcome": "observed", "screen_id": "stray_listing"}},
-    {"name": "menu-drop", "setup": {"resend": false},
+    {"id": "obs-menudrop-000001", "setup": {"resend": false},
      "expect": {"outcome": "observed", "screen_id": "main_menu"}}
   ]
 }
@@ -244,7 +244,12 @@ The only code that opens files under `oracle/goldens/` for writing. For a record
 3. Diffs the temp drive against its snapshot and copies new or changed files into
    `captures/<case-id>/files/`.
 4. Writes the capture screens and the golden to temporary names, renames them into place,
-   then updates the manifest. When replacing, it logs the old and new hashes in `rerecords`.
+   then updates the manifest.
+
+Replacing a golden is a separate path: `python -m oracle.record --rerecord <case-id>`, from the
+command line only. It reruns the stored inputs, replaces the golden and captures, and logs the
+old and new hashes in `rerecords`. The function the MCP server calls has no replace mode and
+refuses with `invalid_arguments` if an id it is about to create already exists.
 
 The first recording run records the control cases first. A control case whose outcome or
 printed values differ from `expect` stops the batch with a harness failure and stores nothing.
@@ -292,6 +297,7 @@ or rewrites the Exhumer's sections (`open_questions`, `decisions`, `stopped`, `u
 
 1. Run the golden check; if it fails, exit 4.
 2. Load the chosen goldens: every golden for `full`, the ids in `quickset.json` for `quick`.
+   Goldens with outcome `observed` are dropped here; they prove the harness, not the rebuild.
 3. Start the rebuild command once, write all requests, close stdin, read responses until EOF
    or the time limit.
 4. For each golden: no response means `rebuild_error`; a different outcome means `outcome`;
@@ -300,8 +306,9 @@ or rewrites the Exhumer's sections (`open_questions`, `decisions`, `stopped`, `u
 5. Write `oracle/out/mismatches.json`, print counts grouped by field, update the ledger's
    `mismatches`, exit 0, 1, 3 or 4. A crash outranks plain mismatches.
 
-`quickset.json` is built by `oracle/record.py --build-quickset`: all control cases, then a
-seeded, even spread over every mode and shape pair in the profile, up to 200 in total. Pairs
+`quickset.json` is built by `oracle/record.py --build-quickset`: the control cases that are
+not behaviour cases, then a seeded, even spread over every mode and shape pair in the
+profile, up to 200 in total. No `observed` golden is ever listed. Pairs
 with no goldens are written under `uncovered` and reported on every quick run.
 
 ### MCP server (`oracle/mcp_server.py`, `oracle/schemas.py`, `oracle/errors.py`)
@@ -309,6 +316,9 @@ with no goldens are written under `uncovered` and reported on every quick run.
 Stdio transport. Each tool's input and output schema lives in `schemas.py` and is checked on
 every call and every reply. Tool fields are as in Requirement 14.3. `send_keys` caps
 `timeout_s` at the profile's `wait_timeout_s`. `compare` runs the same function as the script.
+`record: true` goes to the recorder's create-only function; no tool takes a case id. Until the
+recorder exists (task 7), `record: true` returns `invalid_arguments` saying recording is not
+available yet.
 
 Errors are one exception class carrying `category`, `message`, `retryable` and `detail`.
 `retryable` comes from a fixed table, true only for `session_limit`, `timeout`, `input_ignored`
@@ -322,7 +332,8 @@ traceback saved to the run log rather than sent to the caller.
 ```json
 {
   "id": "nd-trap-000001",
-  "control": "trap-300",
+  "control": true,
+  "expected_screen": null,
   "mode": "normal_depth", "shape": "trapezoid",
   "inputs": {"left_slope": "3", "right_slope": "2", "bottom_width": "10",
              "n": ".035", "discharge": "300", "slope": ".005"},
@@ -339,6 +350,9 @@ traceback saved to the run log rather than sent to the caller.
   "recorded_at": "2026-11-20T00:00:00Z"
 }
 ```
+
+A behaviour case such as `obs-nodata-000001` has outcome `observed`, `expected_screen` set to
+the profile's screen id, empty `printed`, and every screen in its capture.
 
 Inputs stay as typed strings, because the program's own parsing is part of its behaviour.
 Printed fields stay raw, because padding is part of what it printed. The values shown for
