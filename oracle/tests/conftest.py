@@ -1,6 +1,12 @@
-import pytest
+import os
+import tempfile
 
-from oracle import fetch, profile, sandbox
+# Tests never write the committed ledger: point it at a scratch file before oracle is imported.
+os.environ.setdefault("ORACLE_LEDGER", os.path.join(tempfile.mkdtemp(prefix="oracle-test-ledger-"), "ledger.json"))
+
+import pytest  # noqa: E402
+
+from oracle import fetch, profile, sandbox  # noqa: E402
 
 _docker = None
 

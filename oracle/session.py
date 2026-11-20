@@ -23,7 +23,7 @@ ANSWER_GRACE_S = 15  # extra time for the runner to answer beyond the wait it wa
 
 class Session:
     def __init__(self, profile, cfg=None, server_id=None, session_id=None, setup=None, argv=None,
-                 extra_files=None):
+                 extra_files=None, case_limit=True):
         self.profile = profile
         self.cfg = cfg or config_mod.load()
         self.id = session_id or str(uuid.uuid4())
@@ -33,6 +33,7 @@ class Session:
         self.started = time.monotonic()
         self.last_used = self.started
         self.limits = profile["limits"]
+        self.case_limit = case_limit  # interactive sessions are bounded by the idle limit instead
         self.proc = None
         self.drive = None
         self._lines = queue.Queue()
@@ -84,6 +85,8 @@ class Session:
         return rep["screen"]
 
     def remaining(self):
+        if not self.case_limit:
+            return float("inf")
         return self.limits["case_time_limit_s"] - (time.monotonic() - self.started)
 
     def _bounded(self, timeout_s):

@@ -41,10 +41,14 @@ oracle/
   harness.json              harness config
   targets/quick2.json       target profile
   Dockerfile
-  runner/agent.py           in-container runner: pty, pyte, key encoding
-  runner/keys.py            key notation parser and encoder, with verified flags
-  sessions.py  recorder.py  record.py  generator.py  compare.py  ledger.py  manifest.py
-  mcp_server.py  errors.py  schemas.py
+  runner/agent.py           in-container runner: pty, pyte (the only file baked into the image)
+  runner/keys.py            key notation parser and encoder, with verified flags (host side)
+  profile.py  config.py  fetch.py  sandbox.py   profile, harness config, setup, containers and drives
+  screen.py  session.py  cases.py  runs.py      screen reading, one session, one case, run logs
+  sessions.py  ledger.py  generator.py          session manager, ledger, seeded cases
+  recorder.py  record.py  compare.py  manifest.py   (tasks 7 and 8)
+  tools.py  mcp_server.py  schemas.py  errors.py    the eight tools, stdio protocol, schemas, errors
+  tests/                    unit, property and live tests; tests/captures/ holds screen fixtures
   quickset.json             the 200 quick-set case ids
   goldens/
     MANIFEST.json
@@ -320,9 +324,14 @@ not behaviour cases, then a seeded, even spread over every mode and shape pair i
 profile, up to 200 in total. No `observed` golden is ever listed. Pairs
 with no goldens are written under `uncovered` and reported on every quick run.
 
-### MCP server (`oracle/mcp_server.py`, `oracle/schemas.py`, `oracle/errors.py`)
+### MCP server (`oracle/mcp_server.py`, `oracle/tools.py`, `oracle/schemas.py`, `oracle/errors.py`)
 
-Stdio transport. Each tool's input and output schema lives in `schemas.py` and is checked on
+Stdio transport, JSON-RPC 2.0, written with the standard library only. It answers
+`initialize` (protocol versions 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05), `ping`,
+`tools/list` and `tools/call`; each call runs on a worker thread and returns both text content
+and `structuredContent`, with `isError` set for error replies. The session manager starts right
+after `initialize`, which is when orphaned containers are removed. `tools.py` holds the tools
+without any protocol code, so tests call them directly. Each tool's input and output schema lives in `schemas.py` and is checked on
 every call and every reply. Tool fields are as in Requirement 14.3. `send_keys` caps
 `timeout_s` at the profile's `wait_timeout_s`. `compare` runs the same function as the script.
 `record: true` goes to the recorder's create-only function; no tool takes a case id. Until the

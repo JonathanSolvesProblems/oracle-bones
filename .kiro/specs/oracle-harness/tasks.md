@@ -60,7 +60,7 @@
     - _Requirements: 9.2_
 
 - [ ] 7. Goldens
-  - [ ] 7.1 Write `oracle/generator.py`: seeded, versioned, ranges and boundaries from the profile, ids assigned before dispatch. Property 3.
+  - [x] 7.1 Write `oracle/generator.py`: seeded, versioned, ranges and boundaries from the profile, ids assigned before dispatch. Property 3.
     - _Requirements: 7.7, 7.9_
   - [ ] 7.2 Write `oracle/recorder.py` and `oracle/record.py`: the golden schema with the `observed` outcome, one file per case id, captures, written files, atomic writes, a create-only path for MCP, `--rerecord <case-id>` on the command line only with `rerecords`, and no storing of timeouts or unknown screens; connect `record: true` in the MCP server to the create-only path
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 9.1, 14.5_
@@ -86,11 +86,11 @@
     - _Requirements: 11.6, 11.7_
 
 - [ ] 9. Serve over MCP
-  - [ ] 9.1 Write `oracle/schemas.py` and `oracle/errors.py`: input and output schemas for the eight tools, the error categories and the retryable table
+  - [x] 9.1 Write `oracle/schemas.py` and `oracle/errors.py`: input and output schemas for the eight tools, the error categories and the retryable table
     - _Requirements: 14.2, 14.3, 14.4_
-  - [ ] 9.2 Write `oracle/mcp_server.py` with the eight tools, `docker_unavailable` handling, and `record` accepted and passed through, answering `invalid_arguments` until task 7.2 connects it
+  - [x] 9.2 Write `oracle/mcp_server.py` with the eight tools, `docker_unavailable` handling, and `record` accepted and passed through, answering `invalid_arguments` until task 7.2 connects it
     - _Requirements: 14.1, 14.5, 14.6, 14.7_
-  - [ ] 9.3 Test that every tool name matches the pattern, every reply validates against its schema, and no tool takes golden content, field values or a path under `oracle/goldens/`
+  - [x] 9.3 Test that every tool name matches the pattern, every reply validates against its schema, and no tool takes golden content, field values or a path under `oracle/goldens/`
     - _Requirements: 14.2, 14.3, 14.5_
   - [ ] 9.4 Set `disabled` to false in `.kiro/settings/mcp.json` and boot QUICK-2 from a Kiro chat
     - _Requirements: 14.1_

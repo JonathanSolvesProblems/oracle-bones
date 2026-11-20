@@ -74,7 +74,7 @@ class SessionManager:
     def start(self, profile, setup=None):
         self.acquire(block=False)
         try:
-            s = Session(profile, self.cfg, server_id=self.server_id, setup=setup)
+            s = Session(profile, self.cfg, server_id=self.server_id, setup=setup, case_limit=False)
         except Exception:
             self.release()
             raise
