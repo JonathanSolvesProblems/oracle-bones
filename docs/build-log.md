@@ -224,3 +224,122 @@ speed as is: most of a 10,000-case run would time out the same way until the Exh
 those screens.
 
 Credits: 41.46. Time: 38 min 35 s.
+
+## 2026-11-21, session 4: a recorder bug, and the Exhumer's spec rewritten
+
+Settings: Default agent, Claude Opus 5.5, Approve for me. A new session.
+
+Reviewing session 3, I found that every step in every golden said the screen had not changed,
+title to main menu included. The harness took the "after" screen the instant the keys went out,
+before QUICK-2 redrew. The numbers were right; the record of what happened was not.
+
+> Two things before the Exhumer's first run, then stop.
+>
+> 1. A harness bug: in oracle/session.py, screen_hash_after comes from the snapshot that "send"
+>    returns, before QUICK-2 redraws, so every transcript step in the goldens reads as
+>    unchanged, title to main menu included. Record the after hash once the screen has settled.
+>    Add a test that fails on the old behaviour, then re-record the four control cases with
+>    --rerecord and check the depths are still 3.27 and 4.22.
+>
+> 2. Get the exhume-loop spec ready for a live run. Its requirements, design and tasks are first
+>    drafts written before the harness existed. Review them against what the harness provides
+>    now and rewrite all three as your own, the way you did for oracle-harness. Gaps I can see:
+>    - The Exhumer has no shell, and no MCP tool writes its ledger sections (decisions, open
+>      questions, stopped). Add one through the harness's ledger module so the single-writer
+>      rule holds.
+>    - "Read the manual" has no manual. The FEMA zip has MAINHLP.EXE, the program's own help,
+>      which the Exhumer can read through the oracle. Use that; no manual file goes in the repo.
+>    - When the Exhumer finds a new screen it adds it to the profile (Requirement 2.1). Say how,
+>      and what that does to the profile version and existing goldens.
+>    - A requirement cites a recorded case or capture, and exploratory runs are not goldens. Say
+>      how an exploratory finding becomes a citable case (record: true, create-only).
+>    - The first-run task should ask something the harness doesn't know yet. Your last batch
+>      found one: 6 of 8 cases with 0 or -1 inputs timed out because no rejected-input screen is
+>      mapped. The irregular 40-point cross-section (a practitioner's real use, points from
+>      QGIS) comes right after.
+>    Then do tasks 1.1 and 1.2.
+>
+> Commit after each task with a short plain message, no tool or AI names, and include
+> docs/build-log.md in the first commit. Only stop to ask me if a problem would change what a
+> spec promises. Stop before the Exhumer's first live run; I'll start that in its own session
+> with the exhumer agent.
+
+Four commits. 122 tests pass, live ones included.
+
+- **The bug is fixed** and a test fails on the old code. A second test checks the committed
+  goldens: each step's after screen must be the next step's before screen. The four control
+  cases were re-recorded and still print 3.27 and 4.22.
+- **A ninth MCP tool, `ledger_write`,** writes the Exhumer's sections under the same lock as
+  the harness and refuses any case id, capture or run id that does not exist. Kiro covered six
+  sections, not the three I named, because three more had no writer. It amended the harness
+  spec for the extra tool.
+- **The manual is the program's help.** F1 on the main menu runs MAINHLP.EXE. Kiro verified F1
+  with a before and after capture before adding it to the profile's keys. To cite the help, the
+  Exhumer records it as a behaviour case.
+- **Profile changes are checked.** When the Exhumer edits the profile, the server re-reads every
+  stored golden under the new profile before it runs the program again, and refuses if any
+  reads differently.
+- **`scripts/check_traceability.py`** fails on any acceptance criterion that cites a case or
+  capture that does not exist.
+
+The task it wrote for the first run: find what QUICK-2 does with 0 and -1 in each trapezoid
+input, map it, record cases, and write the first criteria citing them. If a rejection shows no
+screen a marker can match, the Exhumer records an open question and stops, because that is a
+harness change for a person to decide.
+
+What it left open, and said so: after leaving the help, "Press <Enter> to continue" stays on
+row 0 of the main menu, and it does not know whether that is QUICK-2 or emu2; which
+documentation the ablation gets; and that nothing yet stops the Exhumer's write tool from
+editing the ledger or a golden as a file, because the guard hook is still off.
+
+Credits: 86.84. Time: 56 min 19 s.
+
+## 2026-11-21, session 5: the Exhumer's first run (day 3 gate)
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5, Approve for me. A new session, after a
+window reload so the oracle server listed `ledger_write`.
+
+> Run task 2.1 in .kiro/specs/exhume-loop/tasks.md, the day 3 gate: find what QUICK-2 does with
+> 0 and -1 in each trapezoid input, map it in the profile, record cases for it, and write the
+> first criteria in .kiro/specs/quick2-solver/requirements.md citing them.
+>
+> If that's done and the next question is worth its credits, go on to task 2.2: Normal Depth on
+> an irregular section of about 40 station and elevation points, the way a practitioner used
+> QUICK-2 (points cut along a cross-section line from a DEM in QGIS). Find out whether it takes
+> separate Manning's n for the left overbank, channel and right overbank, and how the bank
+> stations are set.
+>
+> When you stop, list the criteria you wrote with their case ids, and the open questions you
+> left.
+
+In 26 minutes it wrote 22 acceptance criteria into `.kiro/specs/quick2-solver/requirements.md`,
+each one citing a case it recorded in this run, and recorded 13 new goldens. Its first decision,
+logged before it touched the program: no screen for a rejected input was known, so it opened
+the trapezoid form by hand to see what QUICK-2 draws after a 0 or a -1, rather than running
+more cases that would time out. The agent has no shell, so I ran the traceability check
+afterwards: 22 criteria, 0 problems.
+
+What the 1995 program does, as observed:
+
+- **A zero is ignored.** At any of the six trapezoid prompts, 0 leaves the prompt where it is,
+  with no message and no change on screen. That is why the generated cases timed out.
+- **A negative is accepted.** A left side slope of -1 prints a depth of 4.81 ft, with no
+  warning. A negative n leaves the form frozen; a negative discharge or slope drops back to
+  the shape menu, again with no message.
+- **The irregular section takes three Manning's n,** left overbank, channel and right
+  overbank, and bank stations that must match a ground-point station or it shows "ERROR! LEFT
+  Bank Station DOES NOT MATCH a Ground Point". On a 40-point section, raising the left n from
+  .06 to .2 lifts the water surface from 12.22 to 12.52.
+- **After the 40th point** the editor moves on to the bank stations by itself.
+
+It mapped two new screens in the profile, and every profile change passed the re-read of the
+stored goldens. It left seven open questions in the ledger, two marked as decisions for me:
+whether a held prompt should end a case as a refusal instead of a timeout, and whether a
+recognised error screen should do the same. It also warned that its new result screen may
+match a step in an older case.
+
+It reported its own slip: one decision was logged after the keystroke it covered, because the
+first write left out a field, and the ledger entry says so. It did not call the Skeptic, since
+it proposed no mismatch classification.
+
+Credits: 90.36. Time: 26 min.

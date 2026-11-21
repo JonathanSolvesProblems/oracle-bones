@@ -1,39 +1,41 @@
 {
   "screens": {
     "title": {
-      "visits": 25,
+      "visits": 66,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 24,
+      "visits": 65,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 18,
+      "visits": 68,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 12,
+      "visits": 60,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_result": {
-      "visits": 12,
-      "keys_tried": []
+      "visits": 19,
+      "keys_tried": [
+        "{F7}"
+      ]
     },
     "irr_editor": {
-      "visits": 6,
+      "visits": 32,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -44,58 +46,105 @@
     "stray_listing": {
       "visits": 6,
       "keys_tried": []
+    },
+    "nd_irr_result": {
+      "visits": 8,
+      "keys_tried": []
+    },
+    "irr_bank_rejected": {
+      "visits": 8,
+      "keys_tried": []
     }
   },
   "fields": {
     "in_left_slope": {
-      "cases": 2
+      "cases": 5
     },
     "in_right_slope": {
-      "cases": 2
+      "cases": 5
     },
     "in_bottom_width": {
-      "cases": 2
+      "cases": 5
     },
     "in_n": {
-      "cases": 2
+      "cases": 5
     },
     "in_discharge": {
-      "cases": 2
+      "cases": 5
     },
     "depth": {
-      "cases": 2
+      "cases": 9
     },
     "in_slope": {
-      "cases": 2
+      "cases": 5
     },
     "area": {
-      "cases": 2
+      "cases": 9
     },
     "wet_perimeter": {
-      "cases": 2
+      "cases": 9
     },
     "velocity": {
-      "cases": 2
+      "cases": 5
     },
     "hyd_radius": {
-      "cases": 2
+      "cases": 9
     },
     "top_width": {
-      "cases": 2
+      "cases": 9
     },
     "froude": {
-      "cases": 2
+      "cases": 9
     },
     "flow_type": {
-      "cases": 2
+      "cases": 9
+    },
+    "in_bank_left": {
+      "cases": 4
+    },
+    "in_bank_right": {
+      "cases": 4
+    },
+    "in_n_left": {
+      "cases": 4
+    },
+    "in_n_channel": {
+      "cases": 4
+    },
+    "in_n_right": {
+      "cases": 4
+    },
+    "in_irr_discharge": {
+      "cases": 4
+    },
+    "in_irr_slope": {
+      "cases": 4
+    },
+    "ws_elev": {
+      "cases": 4
+    },
+    "chan_velocity": {
+      "cases": 4
     }
   },
   "cases": {
-    "nd-trap": {
-      "result": 2,
+    "nd-irr": {
+      "result": 4,
       "rejected": 0,
       "error": 0,
       "observed": 0
+    },
+    "nd-trap": {
+      "result": 5,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "obs-bankreject": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 2
     },
     "obs-menudrop": {
       "result": 0,
@@ -103,14 +152,390 @@
       "error": 0,
       "observed": 1
     },
+    "obs-negnstall": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-negreturn": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 2
+    },
     "obs-nodata": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-zerohold": {
       "result": 0,
       "rejected": 0,
       "error": 0,
       "observed": 1
     }
   },
-  "unanswered": [],
+  "unanswered": [
+    {
+      "run_id": "20261121-165639-9da1f1",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "trapezoid",
+        "inputs": {
+          "left_slope": "3",
+          "right_slope": "2",
+          "bottom_width": "10",
+          "n": ".035",
+          "discharge": "-1",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_trap_result']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261121-165639-9da1f1/final.txt",
+      "at": "2026-11-21T16:56:39Z"
+    },
+    {
+      "run_id": "20261121-165641-ab4f64",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "trapezoid",
+        "inputs": {
+          "left_slope": "3",
+          "right_slope": "2",
+          "bottom_width": "10",
+          "n": ".035",
+          "discharge": "300",
+          "slope": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_trap_result']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261121-165641-ab4f64/final.txt",
+      "at": "2026-11-21T16:56:41Z"
+    },
+    {
+      "run_id": "20261121-165743-2917c3",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "trapezoid",
+        "inputs": {
+          "right_slope": "2",
+          "discharge": "300",
+          "left_slope": "3",
+          "bottom_width": "10",
+          "slope": ".005",
+          "n": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_trap_result']",
+      "waited_for": "nd_trap_form",
+      "capture": "oracle/out/runs/20261121-165743-2917c3/final.txt",
+      "at": "2026-11-21T16:57:43Z"
+    },
+    {
+      "run_id": "20261121-171013-fb0fd4",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "irregular",
+        "inputs": {
+          "elev_33": "9.6",
+          "elev_32": "9.4",
+          "elev_31": "9.2",
+          "elev_30": "9.1",
+          "sta_28": "270",
+          "sta_27": "260",
+          "elev_39": "11.8",
+          "n_right": ".08",
+          "sta_29": "280",
+          "elev_38": "11.2",
+          "sta_24": "230",
+          "elev_37": "10.7",
+          "sta_23": "220",
+          "elev_36": "10.3",
+          "sta_26": "250",
+          "elev_35": "10",
+          "sta_25": "240",
+          "elev_34": "9.8",
+          "sta_31": "300",
+          "sta_30": "290",
+          "sta_33": "320",
+          "sta_32": "310",
+          "discharge": "2500",
+          "n_left": ".06",
+          "elev_22": "1.7",
+          "elev_21": "1.5",
+          "elev_20": "1.8",
+          "sta_39": "380",
+          "elev_29": "8.9",
+          "sta_38": "370",
+          "elev_28": "8.7",
+          "elev_27": "8.4",
+          "elev_26": "7.6",
+          "sta_35": "340",
+          "slope": ".002",
+          "elev_25": "5.8",
+          "sta_34": "330",
+          "elev_24": "3.9",
+          "sta_37": "360",
+          "elev_23": "2.4",
+          "sta_36": "350",
+          "n_channel": ".035",
+          "sta_40": "390",
+          "elev_11": "9.3",
+          "elev_10": "9.5",
+          "bank_right": "255",
+          "sta_09": "80",
+          "sta_06": "50",
+          "elev_19": "2.6",
+          "sta_05": "40",
+          "elev_18": "4.1",
+          "sta_08": "70",
+          "elev_17": "6.2",
+          "sta_07": "60",
+          "elev_16": "7.9",
+          "sta_02": "10",
+          "elev_15": "8.5",
+          "sta_01": "0",
+          "elev_14": "8.8",
+          "sta_04": "30",
+          "elev_13": "9",
+          "sta_03": "20",
+          "elev_12": "9.2",
+          "sta_11": "100",
+          "sta_10": "90",
+          "bank_left": "155",
+          "elev_40": "12.5",
+          "elev_08": "9.8",
+          "sta_17": "160",
+          "elev_07": "9.9",
+          "sta_16": "150",
+          "elev_06": "10.1",
+          "sta_19": "180",
+          "elev_05": "10.4",
+          "sta_18": "170",
+          "elev_04": "10.7",
+          "sta_13": "120",
+          "elev_03": "11.1",
+          "sta_12": "110",
+          "elev_02": "11.6",
+          "sta_15": "140",
+          "elev_01": "12",
+          "sta_14": "130",
+          "sta_20": "190",
+          "sta_22": "210",
+          "sta_21": "200",
+          "elev_09": "9.6"
+        }
+      },
+      "reason": "waited 10.0s for prompt bank_right",
+      "waited_for": "irr_editor",
+      "capture": "oracle/out/runs/20261121-171013-fb0fd4/final.txt",
+      "at": "2026-11-21T17:10:14Z"
+    },
+    {
+      "run_id": "20261121-171145-3e44a3",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "irregular",
+        "inputs": {
+          "elev_33": "9.6",
+          "elev_32": "9.4",
+          "elev_31": "9.2",
+          "elev_30": "9.1",
+          "sta_28": "270",
+          "sta_27": "260",
+          "elev_39": "11.8",
+          "n_right": ".08",
+          "sta_29": "280",
+          "elev_38": "11.2",
+          "sta_24": "230",
+          "elev_37": "10.7",
+          "sta_23": "220",
+          "elev_36": "10.3",
+          "sta_26": "250",
+          "elev_35": "10",
+          "sta_25": "240",
+          "elev_34": "9.8",
+          "sta_31": "300",
+          "sta_30": "290",
+          "sta_33": "320",
+          "sta_32": "310",
+          "discharge": "2500",
+          "n_left": ".06",
+          "elev_22": "1.7",
+          "elev_21": "1.5",
+          "elev_20": "1.8",
+          "sta_39": "380",
+          "elev_29": "8.9",
+          "sta_38": "370",
+          "elev_28": "8.7",
+          "elev_27": "8.4",
+          "elev_26": "7.6",
+          "sta_35": "340",
+          "slope": ".002",
+          "elev_25": "5.8",
+          "sta_34": "330",
+          "elev_24": "3.9",
+          "sta_37": "360",
+          "elev_23": "2.4",
+          "sta_36": "350",
+          "n_channel": ".035",
+          "sta_40": "390",
+          "elev_11": "9.3",
+          "elev_10": "9.5",
+          "bank_right": "260",
+          "sta_09": "80",
+          "sta_06": "50",
+          "elev_19": "2.6",
+          "sta_05": "40",
+          "elev_18": "4.1",
+          "sta_08": "70",
+          "elev_17": "6.2",
+          "sta_07": "60",
+          "elev_16": "7.9",
+          "sta_02": "10",
+          "elev_15": "8.5",
+          "sta_01": "0",
+          "elev_14": "8.8",
+          "sta_04": "30",
+          "elev_13": "9",
+          "sta_03": "20",
+          "elev_12": "9.2",
+          "sta_11": "100",
+          "sta_10": "90",
+          "bank_left": "155",
+          "elev_40": "12.5",
+          "elev_08": "9.8",
+          "sta_17": "160",
+          "elev_07": "9.9",
+          "sta_16": "150",
+          "elev_06": "10.1",
+          "sta_19": "180",
+          "elev_05": "10.4",
+          "sta_18": "170",
+          "elev_04": "10.7",
+          "sta_13": "120",
+          "elev_03": "11.1",
+          "sta_12": "110",
+          "elev_02": "11.6",
+          "sta_15": "140",
+          "elev_01": "12",
+          "sta_14": "130",
+          "sta_20": "190",
+          "sta_22": "210",
+          "sta_21": "200",
+          "elev_09": "9.6"
+        }
+      },
+      "reason": "waited 10.0s for prompt bank_right",
+      "waited_for": "irr_bank_rejected",
+      "capture": "oracle/out/runs/20261121-171145-3e44a3/final.txt",
+      "at": "2026-11-21T17:11:45Z"
+    },
+    {
+      "run_id": "20261121-171150-6d217d",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "irregular",
+        "inputs": {
+          "elev_33": "9.6",
+          "elev_32": "9.4",
+          "elev_31": "9.2",
+          "elev_30": "9.1",
+          "sta_28": "270",
+          "sta_27": "260",
+          "elev_39": "11.8",
+          "n_right": ".08",
+          "sta_29": "280",
+          "elev_38": "11.2",
+          "sta_24": "230",
+          "elev_37": "10.7",
+          "sta_23": "220",
+          "elev_36": "10.3",
+          "sta_26": "250",
+          "elev_35": "10",
+          "sta_25": "240",
+          "elev_34": "9.8",
+          "sta_31": "300",
+          "sta_30": "290",
+          "sta_33": "320",
+          "sta_32": "310",
+          "discharge": "2500",
+          "n_left": ".06",
+          "elev_22": "1.7",
+          "elev_21": "1.5",
+          "elev_20": "1.8",
+          "sta_39": "380",
+          "elev_29": "8.9",
+          "sta_38": "370",
+          "elev_28": "8.7",
+          "elev_27": "8.4",
+          "elev_26": "7.6",
+          "sta_35": "340",
+          "slope": ".002",
+          "elev_25": "5.8",
+          "sta_34": "330",
+          "elev_24": "3.9",
+          "sta_37": "360",
+          "elev_23": "2.4",
+          "sta_36": "350",
+          "n_channel": ".035",
+          "sta_40": "390",
+          "elev_11": "9.3",
+          "elev_10": "9.5",
+          "bank_right": "255",
+          "sta_09": "80",
+          "sta_06": "50",
+          "elev_19": "2.6",
+          "sta_05": "40",
+          "elev_18": "4.1",
+          "sta_08": "70",
+          "elev_17": "6.2",
+          "sta_07": "60",
+          "elev_16": "7.9",
+          "sta_02": "10",
+          "elev_15": "8.5",
+          "sta_01": "0",
+          "elev_14": "8.8",
+          "sta_04": "30",
+          "elev_13": "9",
+          "sta_03": "20",
+          "elev_12": "9.2",
+          "sta_11": "100",
+          "sta_10": "90",
+          "bank_left": "150",
+          "elev_40": "12.5",
+          "elev_08": "9.8",
+          "sta_17": "160",
+          "elev_07": "9.9",
+          "sta_16": "150",
+          "elev_06": "10.1",
+          "sta_19": "180",
+          "elev_05": "10.4",
+          "sta_18": "170",
+          "elev_04": "10.7",
+          "sta_13": "120",
+          "elev_03": "11.1",
+          "sta_12": "110",
+          "elev_02": "11.6",
+          "sta_15": "140",
+          "elev_01": "12",
+          "sta_14": "130",
+          "sta_20": "190",
+          "sta_22": "210",
+          "sta_21": "200",
+          "elev_09": "9.6"
+        }
+      },
+      "reason": "waited 10.0s for prompt n_left",
+      "waited_for": "irr_bank_rejected",
+      "capture": "oracle/out/runs/20261121-171150-6d217d/final.txt",
+      "at": "2026-11-21T17:11:50Z"
+    }
+  ],
   "unknown_screens": [],
   "nondeterminism": [],
   "rerecords": [
@@ -147,7 +572,7 @@
     },
     {
       "profile_path": "keys",
-      "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys"
+      "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
     },
     {
       "profile_path": "screens[title]",
@@ -158,24 +583,24 @@
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
     },
     {
-      "profile_path": "screens[nd_trap_result]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: results fill the form; Print <F5> appears"
-    },
-    {
-      "profile_path": "screens[nd_trap_form]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: one prompt at a time on row 20"
-    },
-    {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
     },
     {
-      "profile_path": "screens[irr_editor]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor"
+      "profile_path": "screens[irr_bank_rejected]",
+      "source": "20261121-171013-fb0fd4: a left bank station of 155 with no ground point at 155 shows this on row 24; RIGHT is not yet seen"
     },
     {
-      "profile_path": "flows[normal_depth/trapezoid]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: title Enter, menu 3 Enter, shape T Enter, six inputs, Enter"
+      "profile_path": "screens[nd_irr_result]",
+      "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder) and oracle/goldens/captures/obs-nodata-000001/screen-20.txt: after Begin, results fill rows 18, 20 and 21 of the editor box and row 24 is blank"
+    },
+    {
+      "profile_path": "screens[irr_editor]",
+      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor; prompts from oracle/goldens/captures/obs-nodata-000001/screen-03.txt and screen-12.txt to screen-19.txt and session dd8286a4 on 2026-11-21"
+    },
+    {
+      "profile_path": "flows[normal_depth/irregular]",
+      "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder): title Enter, menu 3 Enter, shape I Enter, 40 station and elevation pairs each followed by Enter (the editor leaves ground-point entry by itself after the 40th), two bank stations, three n values, discharge, slope, Enter"
     },
     {
       "profile_path": "ranges[left_slope]",
@@ -225,7 +650,435 @@
       ]
     }
   },
-  "open_questions": [],
-  "decisions": [],
-  "stopped": null
+  "open_questions": [
+    {
+      "id": "Q-001",
+      "question": "Harness finding, for a person: 0 at any of the six trapezoid prompts holds the prompt and leaves the screen byte-identical (no message), so no rejected screen can be mapped by marker and every generated case with a 0 waits the full 10 s and times out. Should the runner gain an outcome for 'prompt held' (same prompt and same hash after Enter), and should ranges[*].boundaries keep 0 (and left/right slope min 0) given that 0 is never accepted?",
+      "evidence": [
+        "obs-zerohold-000001",
+        "batch-20261121-164751-274bff",
+        "20261121-164744-b832b8"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:01:21Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-002",
+      "question": "With Manning's n -1, Begin Calculations leaves the screen unchanged for at least 10 s. Is QUICK-2 hung in its solver, or waiting for a key? What does F7, F2 or a second Enter do from there?",
+      "evidence": [
+        "obs-negnstall-000001",
+        "20261121-165743-2917c3",
+        "20261121-164750-b814eb"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:01:23Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-003",
+      "question": "With discharge -1 or slope -1, Begin returns to the shape menu with no message. Why (an error trapped and swallowed?), and are the inputs kept if T is chosen again? The returned shape menu has a stray shadow row on row 0 (hash 0453fe... versus 0f3f15... on first entry); is that the same stray-row effect as design question 5, and does it ever move a field region?",
+      "evidence": [
+        "obs-negreturn-000001",
+        "obs-negreturn-000002",
+        "oracle/goldens/captures/obs-negreturn-000002/screen-10.txt"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:01:25Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-004",
+      "question": "Is the hold rule 'value equals 0' or something wider? Untested: empty Enter, non-numeric text, small values such as .0001 or -.5, and n or slope values that overflow their print field. Only 0, '.000' and -1 were tried.",
+      "evidence": [
+        "obs-zerohold-000001",
+        "nd-trap-000003"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:01:26Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-005",
+      "question": "Harness finding, for a person: a screen of kind 'rejected' (irr_bank_rejected) is identified while a flow waits for its next prompt, but the case does not end there; it times out with message null. Should the flow wait also stop on cases._stop_screens, so a bank-station rejection records as outcome rejected with its message?",
+      "evidence": [
+        "20261121-171145-3e44a3",
+        "20261121-171150-6d217d"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:12:13Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-006",
+      "question": "At discharge 8000 on the 40-point section, WS ELEV 12.22 is above the left end point (elevation 12 at station 0) and no warning is shown (Top Wid 386 of a 390 ft section). What does QUICK-2 assume past the end points (vertical walls?), and does it ever warn? Also: what does Enter do after the bank-station ERROR, and is there a limit beyond 40 points (F3 Insert GrPt is not a verified key)?",
+      "evidence": [
+        "20261121-170949-0e0e84",
+        "nd-irr-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:12:15Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-007",
+      "question": "obs-nodata-000001's later steps (after Begin, F6 and the save prompts) expect irr_editor. nd_irr_result now sits ahead of irr_editor; its marker excludes screens containing 'Enter' or 'Press', which should keep the F6 prompts on irr_editor, but the step right after Begin (keys {F6}) now sees a screen that reads as nd_irr_result. The re-read checks final screens only, so a --replay of obs-nodata-000001 may fail at that step. Does it, and should that control's step expect nd_irr_result?",
+      "evidence": [
+        "obs-nodata-000001",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "nd-irr-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-21T17:15:59Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    }
+  ],
+  "decisions": [
+    {
+      "n": 1,
+      "saw": "Ledger has no decisions or open questions. Design question 1: 6 of 8 cases in batch seed 20261120 timed out, each with a 0 or -1 input. The profile maps no rejected screen for nd_trap_form.",
+      "chose": "probe_screen",
+      "why": "No screen for a rejected input is known, so a case cannot end on one. An interactive session on the trapezoid form shows what the program draws after 0 or -1 at each prompt, which is what a marker would need.",
+      "evidence": [],
+      "at": "2026-11-21T16:50:51Z"
+    },
+    {
+      "n": 2,
+      "saw": "Session: left slope -1 is accepted, echoed '-1.0', and Begin gives a result screen (depth 4.81, area 59.6, top width 14.8). Batch logs: right slope 0, bottom width 0 and discharge 0 each leave the form hash unchanged after Enter (same prompt, no message); n -1 is accepted, echoed '%-1.0000', and Begin leaves the screen unchanged.",
+      "chose": "probe_screen",
+      "why": "Seven of the twelve 0/-1 combinations are still unseen (left 0, right -1, width -1, n 0, discharge -1, slope 0, slope -1). Probing each prompt in one session is cheaper than a batch that waits 10 s per stuck case. Also need to know whether a stuck prompt takes a valid value afterwards (re-prompt) or hangs.",
+      "evidence": [
+        "batch-20261121-164751-274bff",
+        "20261121-164744-b832b8",
+        "20261121-164750-b814eb",
+        "20261121-164743-974184",
+        "20261121-164748-4c2552"
+      ],
+      "at": "2026-11-21T16:52:17Z"
+    },
+    {
+      "n": 3,
+      "saw": "Session: 0 holds the prompt with an unchanged screen at left slope, n (both '0' and '.000') and slope; batch logs show the same for right slope, bottom width and discharge. A valid value typed after the held 0 is taken by the same prompt. -1 is accepted at all six prompts; n and slope echo '%-1.0000'. With left 3, right -1, width -1, n .035, discharge -1, slope -1, Begin returned to the shape menu with no message.",
+      "chose": "probe_screen",
+      "why": "A held prompt with no message gives no screen a rejected marker can match, so 0 cannot be mapped as a rejected outcome (harness finding). It can still be cited through a behaviour case with every screen captured; the design requires an exploratory run showing exactly the screens the case expects, so I run the sequence (0 then a valid value at each of the six prompts) in this session first. Note: this entry was written after the T{Enter} that reopened the form, because the first write was refused for a missing op.",
+      "evidence": [
+        "batch-20261121-164751-274bff",
+        "20261121-164744-b832b8",
+        "20261121-164743-974184",
+        "20261121-164748-4c2552",
+        "20261121-164750-b814eb"
+      ],
+      "at": "2026-11-21T16:54:23Z"
+    },
+    {
+      "n": 4,
+      "saw": "Session 47f8dd7a (no run folder is written for sessions): typing 0 then a valid value at each of the six trapezoid prompts holds each prompt on 0 and takes the valid value; ends on Begin Calculations. -1 is accepted at entry everywhere; left -1 alone gives a result (depth 4.81); n -1 alone stalls at Begin (run 20261121-164750-b814eb); right, width, discharge and slope -1 together return to the shape menu.",
+      "chose": "run_case",
+      "why": "What -1 does at Begin is known only for left slope alone and n alone. One exploratory case per remaining input (right, width, discharge, slope at -1, others as nd-trap-000001) separates which input sends the program back to the shape menu. Each case that disproves 'every -1 except n computes' narrows the rule.",
+      "evidence": [
+        "20261121-164750-b814eb",
+        "20261121-164744-b832b8",
+        "nd-trap-000001"
+      ],
+      "at": "2026-11-21T16:56:15Z"
+    },
+    {
+      "n": 5,
+      "saw": "Exploratory, others as nd-trap-000001: right -1 result depth 4.29 (5b1e8f); width -1 result depth 5.04 (4db6bd); left -1 result depth 4.81 (87c871, same as session); n -1 form unchanged after Begin (2917c3, same as batch b814eb); discharge -1 (9da1f1) and slope -1 (ab4f64) return to the shape menu after Begin with no message. 0 at any prompt holds that prompt with an unchanged screen.",
+      "chose": "change_profile",
+      "why": "The held prompt, the stall on n -1 and the return to the shape menu show no screen a rejected marker could match without also matching normal screens (shape_menu is step 3 of every flow; the held form is identical to the form before the key). So these are mapped as behaviour cases in controls, with every screen captured: obs-zerohold-000001 (0 then a valid value at all six prompts), obs-negreturn-000001 (discharge -1), obs-negreturn-000002 (slope -1), obs-negnstall-000001 (n -1). No new screens; the re-read should pass.",
+      "evidence": [
+        "20261121-165628-5b1e8f",
+        "20261121-165628-4db6bd",
+        "20261121-165631-87c871",
+        "20261121-165743-2917c3",
+        "20261121-165639-9da1f1",
+        "20261121-165641-ab4f64",
+        "20261121-164750-b814eb",
+        "20261121-164744-b832b8",
+        "20261121-164743-974184",
+        "20261121-164748-4c2552"
+      ],
+      "at": "2026-11-21T16:58:16Z"
+    },
+    {
+      "n": 6,
+      "saw": "Profile now holds four new behaviour cases in controls (obs-zerohold-000001, obs-negreturn-000001, obs-negreturn-000002, obs-negnstall-000001). Left slope -1 with nd-trap-000001's other inputs gave depth 4.81 twice (session 47f8dd7a and run 20261121-165631-87c871).",
+      "chose": "record_case",
+      "why": "Recording the left -1 case gives the first citable result case and makes the recorder store the four new controls first. If the recorded printed values differ from 87c871, neither is cited.",
+      "evidence": [
+        "20261121-165631-87c871"
+      ],
+      "at": "2026-11-21T16:58:54Z"
+    },
+    {
+      "n": 7,
+      "saw": "nd-trap-000003 (left -1) matches run 87c871 on every printed field. The four controls were stored and their transcripts match the session and runs: 0 steps keep the hash; discharge -1 and slope -1 end on shape_menu (hash 0453fe...); n -1 keeps the Begin screen hash for 10 s.",
+      "chose": "record_case",
+      "why": "Right -1 (5b1e8f) and width -1 (4db6bd) gave results once each; recording each gives the second sighting and a citation.",
+      "evidence": [
+        "nd-trap-000003",
+        "obs-zerohold-000001",
+        "obs-negreturn-000001",
+        "obs-negreturn-000002",
+        "obs-negnstall-000001",
+        "20261121-165628-5b1e8f",
+        "20261121-165628-4db6bd"
+      ],
+      "at": "2026-11-21T17:00:11Z"
+    },
+    {
+      "n": 8,
+      "saw": "nd-trap-000004 (right -1, depth 4.29) and nd-trap-000005 (width -1, depth 5.04) match runs 5b1e8f and 4db6bd on every printed field. title, shape_menu, nd_trap_form, nd_trap_result and the normal_depth/trapezoid flow are still marked unobserved although recorded cases now show each of them.",
+      "chose": "change_profile",
+      "why": "Design rule 3: a recorded case that shows a screen replaces unobserved with cite. This changes no marker, region or order, so the re-read should pass and the ledger's unobserved list shrinks to what is truly unrecorded.",
+      "evidence": [
+        "nd-trap-000003",
+        "nd-trap-000004",
+        "nd-trap-000005",
+        "obs-zerohold-000001"
+      ],
+      "at": "2026-11-21T17:00:59Z"
+    },
+    {
+      "n": 9,
+      "saw": "Each of these was seen at least twice, one sighting recorded: 0 holds all six prompts (obs-zerohold-000001); -1 accepted at all six; left, right and width -1 compute results (nd-trap-000003..5); n -1 stalls at Begin (obs-negnstall-000001); discharge and slope -1 return to the shape menu (obs-negreturn-000001, -000002); n and slope -1 echo '%-1.0000' (captures screen-09 of obs-negnstall-000001 and obs-negreturn-000002).",
+      "chose": "write_requirement",
+      "why": "Task 2.1 gate: first criteria in the solver spec, each citing a case recorded in this run. Values written as printed. '.000' for n was seen only in the session, so it stays out.",
+      "evidence": [
+        "obs-zerohold-000001",
+        "obs-negnstall-000001",
+        "obs-negreturn-000001",
+        "obs-negreturn-000002",
+        "nd-trap-000003",
+        "nd-trap-000004",
+        "nd-trap-000005"
+      ],
+      "at": "2026-11-21T17:01:48Z"
+    },
+    {
+      "n": 10,
+      "saw": "Task 2.1 criteria written, citing cases recorded in this run. Design question 2 (irregular section of about 40 points) is untouched; obs-nodata-000001 stores 26 screens of the irregular editor for 4 points, n values .05/.035/.05 and two station-like values 10 and 20.",
+      "chose": "probe_screen",
+      "why": "Reading the stored captures costs no emulator time and shows the editor's labels, which say whether n is taken per overbank and how bank stations are set, before I boot a session to try 40 points.",
+      "evidence": [
+        "obs-nodata-000001"
+      ],
+      "at": "2026-11-21T17:02:24Z"
+    },
+    {
+      "n": 11,
+      "saw": "obs-nodata-000001 captures: the irregular editor shows 4 STAT/ELEV pairs per row on rows 4-14 (44 slots on one page); after F10 it asks 'Enter  LEFT  Channel Bank Station', then Right, then Manning's n Left, Channel, Right, Discharge, Slope; Enter computes and fills WS ELEV, Area, Top Wid, Hyd R, Flow Type, Chan Vel, Wet Per, Frd #, Depth. The editor shows 'F1 }HELP'.",
+      "chose": "probe_screen",
+      "why": "Whether the editor takes 40 points in a row, how it wraps, and whether bank stations must equal ground-point stations can only be seen by entering them. An interactive session shows each screen before I commit to an 80-step flow.",
+      "evidence": [
+        "obs-nodata-000001",
+        "oracle/goldens/captures/obs-nodata-000001/screen-03.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-12.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt"
+      ],
+      "at": "2026-11-21T17:03:19Z"
+    },
+    {
+      "n": 12,
+      "saw": "Session dd8286a4 (no run folder): 40 points (stations 0 to 390 by 10) entered as station Enter, elevation Enter, four per row on rows 4-13; after the 40th elevation the editor went straight to 'Enter  LEFT  Channel Bank Station' with no F10. Banks 150 and 260 echo as '150.0' and '260.0'. Three n prompts (LEFT, CHANNEL, RIGHT Manning's n Value) echo '0.0600', '0.0350', '0.0800'. With discharge 2500 and slope .002, Enter printed WS ELEV 8.60, Depth 7.1, Area 493, Top Wid 130, Hyd R 3.8, Flow Type SUBCRITICAL, Chan Vel 5.1, Wet Per 131, Frd # 0.46. Prompt texts read from obs-nodata-000001 screens 12-19.",
+      "chose": "change_profile",
+      "why": "No flow exists for normal_depth/irregular and no result screen is mapped for the editor, so the 40-point case cannot be run or recorded. Adding: shape code irr, prompts on irr_editor, a nd_irr_result screen ahead of irr_editor (its marker excludes any screen showing 'Enter' or 'Press', so the F6 and Begin screens stay irr_editor), and a flow with one input step per station and elevation.",
+      "evidence": [
+        "obs-nodata-000001",
+        "oracle/goldens/captures/obs-nodata-000001/screen-12.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-15.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-21.txt"
+      ],
+      "at": "2026-11-21T17:06:42Z"
+    },
+    {
+      "n": 13,
+      "saw": "Run 20261121-170823-2e626e through the new normal_depth/irregular flow ended on nd_irr_result with the same printed values as session dd8286a4 (WS ELEV 8.60, Depth 7.1, Area 493, Top Wid 130, Hyd R 3.8, SUBCRITICAL, Chan Vel 5.1, Wet Per 131, Frd # 0.46). The profile re-read passed.",
+      "chose": "record_case",
+      "why": "Seen twice; recording gives the citation task 2.2 asks for.",
+      "evidence": [
+        "20261121-170823-2e626e"
+      ],
+      "at": "2026-11-21T17:08:36Z"
+    },
+    {
+      "n": 14,
+      "saw": "nd-irr-000001 recorded, identical to run 2e626e. The editor takes three n values (LEFT, CHANNEL, RIGHT) and two bank stations, but at Q 2500 the water (8.60) barely reaches past either bank (7.9 at 150, 8.4 at 260), so a change in an overbank n may not show.",
+      "chose": "run_case",
+      "why": "To test 'the overbank n values are used', raise Q to 8000 so both overbanks are wide and wet, then change only n_left to .2, then only n_right to .2. If WS ELEV stays the same the rule is false. Separately, banks 155 and 255 (not ground-point stations) test whether a bank must sit on a ground point.",
+      "evidence": [
+        "nd-irr-000001"
+      ],
+      "at": "2026-11-21T17:09:17Z"
+    },
+    {
+      "n": 15,
+      "saw": "Q 8000: base WS ELEV 12.22 (0e0e84); n_left .2 gives 12.52 (88135f); n_right .2 gives 12.37 (35d6ab), so both overbank n values change the answer. Left bank 155 (no ground point at 155) timed out (fb0fd4) on row 24 'ERROR! LEFT Bank Station DOES NOT MATCH a Ground Point.  Press <ENTER>', with the bank fields blank.",
+      "chose": "change_profile",
+      "why": "This is a real rejection screen with a message, so it can be mapped: screen irr_bank_rejected, kind rejected, marker on 'Bank Station DOES NOT MATCH a Ground Point', message region row 24 col 5 width 71, placed ahead of nd_irr_result and irr_editor (both markers are more general; the result marker already excludes 'Press'). Then the same case should end rejected with that message.",
+      "evidence": [
+        "20261121-170949-0e0e84",
+        "20261121-170954-88135f",
+        "20261121-171001-35d6ab",
+        "20261121-171013-fb0fd4"
+      ],
+      "at": "2026-11-21T17:10:59Z"
+    },
+    {
+      "n": 16,
+      "saw": "With irr_bank_rejected mapped, left 155 (3e44a3) and right 255 (6d217d) were both identified as irr_bank_rejected, but each case ran on to wait for the next prompt and timed out, with message null. Right reads 'ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point. Press <ENTER>'.",
+      "chose": "change_profile",
+      "why": "The runner does not stop on a rejected screen while waiting for a flow prompt, so these cannot be recorded as rejected outcomes; that is a harness question. They can be cited as behaviour cases ending on irr_bank_rejected: obs-bankreject-000001 (left 155) and obs-bankreject-000002 (right 255), points typed four per step as in session dd8286a4.",
+      "evidence": [
+        "20261121-171145-3e44a3",
+        "20261121-171150-6d217d",
+        "20261121-171013-fb0fd4"
+      ],
+      "at": "2026-11-21T17:12:11Z"
+    },
+    {
+      "n": 17,
+      "saw": "Two bank-rejection behaviour cases added to controls. The Q 8000 runs (0e0e84 base, 88135f n_left .2, 35d6ab n_right .2) were each seen once.",
+      "chose": "record_case",
+      "why": "Recording the three Q 8000 cases gives the second sighting and the citation for 'each overbank n changes the answer'. The first call also records the two controls; if either fails to reproduce, the call stores nothing and I learn that before writing any criterion on them.",
+      "evidence": [
+        "20261121-170949-0e0e84",
+        "20261121-170954-88135f",
+        "20261121-171001-35d6ab",
+        "20261121-171145-3e44a3",
+        "20261121-171150-6d217d"
+      ],
+      "at": "2026-11-21T17:12:55Z"
+    },
+    {
+      "n": 18,
+      "saw": "nd-irr-000002/3/4 match runs 0e0e84, 88135f, 35d6ab on every printed field. obs-bankreject-000001 and -000002 stored; their last captures show the LEFT and RIGHT ERROR lines, and obs-bankreject-000001 screen-13 shows the LEFT bank prompt right after the 40th point.",
+      "chose": "change_profile",
+      "why": "Design rule 3: irr_bank_rejected, nd_irr_result, irr_editor and the normal_depth/irregular flow are now shown by recorded cases, so their unobserved notes become cites. No marker, region or order changes.",
+      "evidence": [
+        "nd-irr-000001",
+        "nd-irr-000002",
+        "nd-irr-000003",
+        "nd-irr-000004",
+        "obs-bankreject-000001",
+        "obs-bankreject-000002"
+      ],
+      "at": "2026-11-21T17:14:53Z"
+    },
+    {
+      "n": 19,
+      "saw": "Irregular Normal Depth on a 40-point section: seen in session dd8286a4 and runs 2e626e, 0e0e84, 88135f, 35d6ab, fb0fd4, 3e44a3, 6d217d, then recorded as nd-irr-000001..000004 and obs-bankreject-000001..000002 with identical output.",
+      "chose": "write_requirement",
+      "why": "Task 2.2 asks for a cited answer to: does it take separate n for left overbank, channel and right overbank (yes, three prompts, and each overbank n changes WS ELEV), and how are bank stations set (typed as stations after the points; a station with no ground point is rejected). Each criterion has a recorded case and a second sighting.",
+      "evidence": [
+        "nd-irr-000001",
+        "nd-irr-000002",
+        "nd-irr-000003",
+        "nd-irr-000004",
+        "obs-bankreject-000001",
+        "obs-bankreject-000002",
+        "obs-nodata-000001"
+      ],
+      "at": "2026-11-21T17:15:16Z"
+    },
+    {
+      "n": 20,
+      "saw": "Tasks 2.1 and 2.2 are answered with recorded cases: 0 holds each trapezoid prompt; -1 is accepted and computed, stalled or returned depending on the field; the irregular editor takes 40 points, two bank stations that must match ground points, and three n values that each change the answer. Open questions Q-001 and Q-005 need a person's harness decision. Q-002, Q-003, Q-004, Q-006 and Q-007 go past what tasks 2.1 and 2.2 asked, and fit task 3 better than this run. The coverage report's unobserved list predates the last citation-only profile edit (no case has run since), so it still lists irr_editor, nd_irr_result, irr_bank_rejected and flows[normal_depth/irregular], which the profile now cites.",
+      "chose": "stop",
+      "why": "Tasks 2.1 and 2.2 are answered with recorded cases: 0 holds each trapezoid prompt; -1 is accepted and computed, stalled or returned depending on the field; the irregular editor takes 40 points, two bank stations that must match ground points, and three n values that each change the answer. Open questions Q-001 and Q-005 need a person's harness decision. Q-002, Q-003, Q-004, Q-006 and Q-007 go past what tasks 2.1 and 2.2 asked, and fit task 3 better than this run. The coverage report's unobserved list predates the last citation-only profile edit (no case has run since), so it still lists irr_editor, nd_irr_result, irr_bank_rejected and flows[normal_depth/irregular], which the profile now cites.",
+      "evidence": [],
+      "at": "2026-11-21T17:16:12Z"
+    }
+  ],
+  "stopped": {
+    "why": "Tasks 2.1 and 2.2 are answered with recorded cases: 0 holds each trapezoid prompt; -1 is accepted and computed, stalled or returned depending on the field; the irregular editor takes 40 points, two bank stations that must match ground points, and three n values that each change the answer. Open questions Q-001 and Q-005 need a person's harness decision. Q-002, Q-003, Q-004, Q-006 and Q-007 go past what tasks 2.1 and 2.2 asked, and fit task 3 better than this run. The coverage report's unobserved list predates the last citation-only profile edit (no case has run since), so it still lists irr_editor, nd_irr_result, irr_bank_rejected and flows[normal_depth/irregular], which the profile now cites.",
+    "decision": 20,
+    "at": "2026-11-21T17:16:12Z",
+    "coverage": {
+      "unexercised_fields": [],
+      "untried_keys": {},
+      "unobserved_profile_facts": [
+        {
+          "profile_path": "entry",
+          "source": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
+        },
+        {
+          "profile_path": "keys",
+          "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
+        },
+        {
+          "profile_path": "screens[title]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
+        },
+        {
+          "profile_path": "screens[shape_menu]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
+        },
+        {
+          "profile_path": "screens[stray_listing]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+        },
+        {
+          "profile_path": "screens[irr_bank_rejected]",
+          "source": "20261121-171013-fb0fd4: a left bank station of 155 with no ground point at 155 shows this on row 24; RIGHT is not yet seen"
+        },
+        {
+          "profile_path": "screens[nd_irr_result]",
+          "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder) and oracle/goldens/captures/obs-nodata-000001/screen-20.txt: after Begin, results fill rows 18, 20 and 21 of the editor box and row 24 is blank"
+        },
+        {
+          "profile_path": "screens[irr_editor]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor; prompts from oracle/goldens/captures/obs-nodata-000001/screen-03.txt and screen-12.txt to screen-19.txt and session dd8286a4 on 2026-11-21"
+        },
+        {
+          "profile_path": "flows[normal_depth/irregular]",
+          "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder): title Enter, menu 3 Enter, shape I Enter, 40 station and elevation pairs each followed by Enter (the editor leaves ground-point entry by itself after the 40th), two bank stations, three n values, discharge, slope, Enter"
+        },
+        {
+          "profile_path": "ranges[left_slope]",
+          "source": "starting range for the generator, not yet observed"
+        },
+        {
+          "profile_path": "ranges[right_slope]",
+          "source": "starting range for the generator, not yet observed"
+        },
+        {
+          "profile_path": "ranges[bottom_width]",
+          "source": "starting range for the generator, not yet observed"
+        },
+        {
+          "profile_path": "ranges[n]",
+          "source": "starting range for the generator, not yet observed"
+        },
+        {
+          "profile_path": "ranges[discharge]",
+          "source": "starting range for the generator, not yet observed"
+        },
+        {
+          "profile_path": "ranges[slope]",
+          "source": "starting range for the generator, not yet observed"
+        }
+      ],
+      "untriaged_mismatches": [],
+      "unanswered_runs": 6,
+      "unknown_screens": 0,
+      "nondeterministic_cases": 0
+    }
+  }
 }

@@ -1,0 +1,134 @@
+{
+  "id": "obs-bankreject-000001",
+  "control": true,
+  "expected_screen": "irr_bank_rejected",
+  "mode": "normal_depth",
+  "shape": "irregular",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "1",
+  "profile_sha256": "3bbb14383279762e6c97e556cf01052ef53288eed27550dc05e4a825f1cf492b",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "I{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b"
+    },
+    {
+      "step": 4,
+      "expect": "irr_editor",
+      "keys": "0{Enter}12{Enter}10{Enter}11.6{Enter}20{Enter}11.1{Enter}30{Enter}10.7{Enter}",
+      "screen_hash_before": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b",
+      "resend": false,
+      "screen_hash_after": "74941d70f168413432afe13ff194442165b1c90bd3cc3fe4c38e56d58748fe7e"
+    },
+    {
+      "step": 5,
+      "expect": "irr_editor",
+      "keys": "40{Enter}10.4{Enter}50{Enter}10.1{Enter}60{Enter}9.9{Enter}70{Enter}9.8{Enter}",
+      "screen_hash_before": "74941d70f168413432afe13ff194442165b1c90bd3cc3fe4c38e56d58748fe7e",
+      "resend": false,
+      "screen_hash_after": "9910373bca557aedcdfbdb10dc79da130dceecd80674ead56d81546f9e9ee42c"
+    },
+    {
+      "step": 6,
+      "expect": "irr_editor",
+      "keys": "80{Enter}9.6{Enter}90{Enter}9.5{Enter}100{Enter}9.3{Enter}110{Enter}9.2{Enter}",
+      "screen_hash_before": "9910373bca557aedcdfbdb10dc79da130dceecd80674ead56d81546f9e9ee42c",
+      "resend": false,
+      "screen_hash_after": "421c478696ccbea8ab6b1d184d2cd424729497273c6ec3a7dd1baf151c43fab7"
+    },
+    {
+      "step": 7,
+      "expect": "irr_editor",
+      "keys": "120{Enter}9{Enter}130{Enter}8.8{Enter}140{Enter}8.5{Enter}150{Enter}7.9{Enter}",
+      "screen_hash_before": "421c478696ccbea8ab6b1d184d2cd424729497273c6ec3a7dd1baf151c43fab7",
+      "resend": false,
+      "screen_hash_after": "998dd03650090bb1cfe80cfa8e80af46babb2da7bb0fc07936fd5de6e2805b21"
+    },
+    {
+      "step": 8,
+      "expect": "irr_editor",
+      "keys": "160{Enter}6.2{Enter}170{Enter}4.1{Enter}180{Enter}2.6{Enter}190{Enter}1.8{Enter}",
+      "screen_hash_before": "998dd03650090bb1cfe80cfa8e80af46babb2da7bb0fc07936fd5de6e2805b21",
+      "resend": false,
+      "screen_hash_after": "f4d948ccb8e9e34f8f8e1b96530313724f85f3a5815757158996af276a3ed55d"
+    },
+    {
+      "step": 9,
+      "expect": "irr_editor",
+      "keys": "200{Enter}1.5{Enter}210{Enter}1.7{Enter}220{Enter}2.4{Enter}230{Enter}3.9{Enter}",
+      "screen_hash_before": "f4d948ccb8e9e34f8f8e1b96530313724f85f3a5815757158996af276a3ed55d",
+      "resend": false,
+      "screen_hash_after": "9ed3d9a32b64d518182f351fef6feecf581215ae2730da30f5ad863f19f95abb"
+    },
+    {
+      "step": 10,
+      "expect": "irr_editor",
+      "keys": "240{Enter}5.8{Enter}250{Enter}7.6{Enter}260{Enter}8.4{Enter}270{Enter}8.7{Enter}",
+      "screen_hash_before": "9ed3d9a32b64d518182f351fef6feecf581215ae2730da30f5ad863f19f95abb",
+      "resend": false,
+      "screen_hash_after": "58ab55b54a347536b34c471597b876ef084130e1149bc76551f6ad303c8be507"
+    },
+    {
+      "step": 11,
+      "expect": "irr_editor",
+      "keys": "280{Enter}8.9{Enter}290{Enter}9.1{Enter}300{Enter}9.2{Enter}310{Enter}9.4{Enter}",
+      "screen_hash_before": "58ab55b54a347536b34c471597b876ef084130e1149bc76551f6ad303c8be507",
+      "resend": false,
+      "screen_hash_after": "e8310628f02348d2952abcb5d3f6c07bbc0b7ffd15ec7d10d38ecd5356504995"
+    },
+    {
+      "step": 12,
+      "expect": "irr_editor",
+      "keys": "320{Enter}9.6{Enter}330{Enter}9.8{Enter}340{Enter}10{Enter}350{Enter}10.3{Enter}",
+      "screen_hash_before": "e8310628f02348d2952abcb5d3f6c07bbc0b7ffd15ec7d10d38ecd5356504995",
+      "resend": false,
+      "screen_hash_after": "3fcbba500471bf74700e22f740451aefe98a639291149c1380ff20854ed16dc0"
+    },
+    {
+      "step": 13,
+      "expect": "irr_editor",
+      "keys": "360{Enter}10.7{Enter}370{Enter}11.2{Enter}380{Enter}11.8{Enter}390{Enter}12.5{Enter}",
+      "screen_hash_before": "3fcbba500471bf74700e22f740451aefe98a639291149c1380ff20854ed16dc0",
+      "resend": false,
+      "screen_hash_after": "30d8cda4a803291e3f54e74c362f0bc3cf1d9b325b830bf04a19105e1876ea89"
+    },
+    {
+      "step": 14,
+      "expect": "irr_editor",
+      "keys": "155{Enter}",
+      "screen_hash_before": "30d8cda4a803291e3f54e74c362f0bc3cf1d9b325b830bf04a19105e1876ea89",
+      "resend": false,
+      "screen_hash_after": "8f41a811d41237b81878b6df1879f2e6512d433e35b63a6a972770a0069259dd"
+    }
+  ],
+  "capture_path": "oracle/goldens/captures/obs-bankreject-000001/",
+  "files": [],
+  "recorded_at": "2026-11-21T17:13:21Z"
+}

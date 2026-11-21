@@ -1,0 +1,142 @@
+{
+  "id": "obs-zerohold-000001",
+  "control": true,
+  "expected_screen": "nd_trap_form",
+  "mode": "normal_depth",
+  "shape": "trapezoid",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "1",
+  "profile_sha256": "ef076ba1215fbb4620263ee537990123e840d40e932296fcf6fd0419530f4b0b",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "T{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "5a4540710da0e0199df8b80120f66dc10e60bca0c9326ca3c72171c736d281ff"
+    },
+    {
+      "step": 4,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "5a4540710da0e0199df8b80120f66dc10e60bca0c9326ca3c72171c736d281ff",
+      "resend": false,
+      "screen_hash_after": "5a4540710da0e0199df8b80120f66dc10e60bca0c9326ca3c72171c736d281ff"
+    },
+    {
+      "step": 5,
+      "expect": "nd_trap_form",
+      "keys": "3{Enter}",
+      "screen_hash_before": "5a4540710da0e0199df8b80120f66dc10e60bca0c9326ca3c72171c736d281ff",
+      "resend": false,
+      "screen_hash_after": "73a90fe66aad1605a2caf71973bf5b80e8ad01ca598ea5fe6b1b8308f7750885"
+    },
+    {
+      "step": 6,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "73a90fe66aad1605a2caf71973bf5b80e8ad01ca598ea5fe6b1b8308f7750885",
+      "resend": false,
+      "screen_hash_after": "73a90fe66aad1605a2caf71973bf5b80e8ad01ca598ea5fe6b1b8308f7750885"
+    },
+    {
+      "step": 7,
+      "expect": "nd_trap_form",
+      "keys": "2{Enter}",
+      "screen_hash_before": "73a90fe66aad1605a2caf71973bf5b80e8ad01ca598ea5fe6b1b8308f7750885",
+      "resend": false,
+      "screen_hash_after": "adb76486d71192f6143254bd223c15fac2539d2f7aaba4c90ae39e1158c27c54"
+    },
+    {
+      "step": 8,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "adb76486d71192f6143254bd223c15fac2539d2f7aaba4c90ae39e1158c27c54",
+      "resend": false,
+      "screen_hash_after": "adb76486d71192f6143254bd223c15fac2539d2f7aaba4c90ae39e1158c27c54"
+    },
+    {
+      "step": 9,
+      "expect": "nd_trap_form",
+      "keys": "10{Enter}",
+      "screen_hash_before": "adb76486d71192f6143254bd223c15fac2539d2f7aaba4c90ae39e1158c27c54",
+      "resend": false,
+      "screen_hash_after": "a8661cbac2456459001a96ebeea83e39b07710d9602f06abb2643dfe76393385"
+    },
+    {
+      "step": 10,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "a8661cbac2456459001a96ebeea83e39b07710d9602f06abb2643dfe76393385",
+      "resend": false,
+      "screen_hash_after": "a8661cbac2456459001a96ebeea83e39b07710d9602f06abb2643dfe76393385"
+    },
+    {
+      "step": 11,
+      "expect": "nd_trap_form",
+      "keys": ".035{Enter}",
+      "screen_hash_before": "a8661cbac2456459001a96ebeea83e39b07710d9602f06abb2643dfe76393385",
+      "resend": false,
+      "screen_hash_after": "843c59784e764285d62586c6dd14212a3faff703bfa4c180a545c3978ec16256"
+    },
+    {
+      "step": 12,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "843c59784e764285d62586c6dd14212a3faff703bfa4c180a545c3978ec16256",
+      "resend": false,
+      "screen_hash_after": "843c59784e764285d62586c6dd14212a3faff703bfa4c180a545c3978ec16256"
+    },
+    {
+      "step": 13,
+      "expect": "nd_trap_form",
+      "keys": "300{Enter}",
+      "screen_hash_before": "843c59784e764285d62586c6dd14212a3faff703bfa4c180a545c3978ec16256",
+      "resend": false,
+      "screen_hash_after": "29f5a5f62f2f6c1bb8429d6653daff4e8d54e2cd865257fdb4a1b238ee856d89"
+    },
+    {
+      "step": 14,
+      "expect": "nd_trap_form",
+      "keys": "0{Enter}",
+      "screen_hash_before": "29f5a5f62f2f6c1bb8429d6653daff4e8d54e2cd865257fdb4a1b238ee856d89",
+      "resend": false,
+      "screen_hash_after": "29f5a5f62f2f6c1bb8429d6653daff4e8d54e2cd865257fdb4a1b238ee856d89"
+    },
+    {
+      "step": 15,
+      "expect": "nd_trap_form",
+      "keys": ".005{Enter}",
+      "screen_hash_before": "29f5a5f62f2f6c1bb8429d6653daff4e8d54e2cd865257fdb4a1b238ee856d89",
+      "resend": false,
+      "screen_hash_after": "e82d5895946620051b749356541ba7f08cf8347dfe949c3175407209e258f053"
+    }
+  ],
+  "capture_path": "oracle/goldens/captures/obs-zerohold-000001/",
+  "files": [],
+  "recorded_at": "2026-11-21T16:59:28Z"
+}
