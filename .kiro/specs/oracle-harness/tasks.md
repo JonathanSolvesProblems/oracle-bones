@@ -97,8 +97,9 @@
     - _Requirements: 14.1_
 
 - [ ] 10. Hooks
-  - [ ] 10.1 Write `scripts/guard_goldens.py`, which reads the hook's stdin JSON and exits with code 2, message on stderr, for any write under `oracle/goldens/`
+  - [x] 10.1 Write `scripts/guard_goldens.py`, which reads the hook's stdin JSON and exits with code 2, message on stderr, for any write under `oracle/goldens/`
     - First dump one real stdin payload to `oracle/out/hook-stdin.json` to see where the write tool puts the path.
+    - Payload seen 2026-11-21 from a temporary hook on a scratch file: `tool_input.path`, an absolute Windows path, with `cwd` alongside. The guard reads every path-like key in `tool_input` and is tested with piped JSON, including through PowerShell, where exit code 2 survives.
     - _Requirements: 10.1_
   - [ ] 10.2 Write `scripts/oracle_quick.py` (golden check, then the quick comparison) and `scripts/ledger_status.py` (coverage from the ledger alone)
     - _Requirements: 10.4, 11.6, 13.5_
