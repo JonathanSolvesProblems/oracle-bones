@@ -344,7 +344,14 @@ or rewrites the Exhumer's sections (`open_questions`, `decisions`, `stopped`, `u
 `quickset.json` is built by `oracle/record.py --build-quickset`: the control cases that are
 not behaviour cases, then a seeded, even spread over every mode and shape pair in the
 profile, up to 200 in total. No `observed` golden is ever listed. Pairs
-with no goldens are written under `uncovered` and reported on every quick run.
+with no goldens are written under `uncovered` and reported on every quick run. A pair is any
+mode and shape the profile has codes for; each uncovered entry says whether a flow is mapped
+for it yet.
+
+When the harness cannot compare (exit 4), a `mismatches.json` left by an earlier run is
+removed, so it is never read as this run's answer, and the `compare` tool fails with
+`golden_check_failed` or `invalid_arguments` and the reason, instead of returning counts.
+The rebuild's stderr goes to `oracle/out/runs/compare-<run-id>/stderr.txt`.
 
 ### MCP server (`oracle/mcp_server.py`, `oracle/tools.py`, `oracle/schemas.py`, `oracle/errors.py`)
 

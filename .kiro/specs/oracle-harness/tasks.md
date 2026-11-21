@@ -75,14 +75,15 @@
   - [x] 7.7 Property 2: replay a sample of goldens and check they match and write nothing under `oracle/goldens/`
     - _Requirements: 7.1, 7.4, 9.1_
 
-- [ ] 8. Comparison
-  - [ ] 8.1 Write `scripts/check_goldens.py`, which prints the stated limit on pass. Property 8.
+- [x] 8. Comparison
+  - [x] 8.1 Write `scripts/check_goldens.py`, which prints the stated limit on pass. Property 8.
     - _Requirements: 10.3_
-  - [ ] 8.2 Write the rebuild contract runner in `oracle/compare.py` with stub rebuilds that answer, crash, hang and print bad JSON. Property 10.
+  - [x] 8.2 Write the rebuild contract runner in `oracle/compare.py` with stub rebuilds that answer, crash, hang and print bad JSON. Property 10.
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
-  - [ ] 8.3 Write the comparator: golden check first, skip `observed` goldens, outcome then trimmed or raw fields, `mismatches.json` rewritten every run, summary by field, ledger update, exit codes 0, 1, 3, 4. Property 9.
+  - [x] 8.3 Write the comparator: golden check first, skip `observed` goldens, outcome then trimmed or raw fields, `mismatches.json` rewritten every run, summary by field, ledger update, exit codes 0, 1, 3, 4. Property 9.
     - _Requirements: 10.4, 11.1, 11.2, 11.3, 11.4, 11.5_
-  - [ ] 8.4 Build `oracle/quickset.json` (control cases except behaviour cases, plus an even spread over every mode and shape, 200 in total, uncovered pairs listed) and the full set; time the quick set on the development laptop
+  - [x] 8.4 Build `oracle/quickset.json` (control cases except behaviour cases, plus an even spread over every mode and shape, 200 in total, uncovered pairs listed) and the full set; time the quick set on the development laptop
+    - Built 2026-11-21 from the goldens stored so far: 9 cases (normal_depth/trapezoid 5, normal_depth/irregular 4), not 200. Uncovered: every channel_capacity, critical_depth and step_backwater pair, none with a flow mapped yet. Timed at 0.3 s end to end with the stub rebuild; time it again with the real solver once rebuild.command is set.
     - _Requirements: 11.6, 11.7_
 
 - [x] 9. Serve over MCP

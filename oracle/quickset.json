@@ -1,0 +1,47 @@
+{
+  "note": "Built by python -m oracle.record --build-quickset from stored goldens. Do not edit.",
+  "seed": 1,
+  "size": 200,
+  "count": 9,
+  "cases": [
+    "nd-irr-000001",
+    "nd-irr-000002",
+    "nd-irr-000003",
+    "nd-irr-000004",
+    "nd-trap-000001",
+    "nd-trap-000002",
+    "nd-trap-000003",
+    "nd-trap-000004",
+    "nd-trap-000005"
+  ],
+  "by_pair": {
+    "normal_depth/irregular": 4,
+    "normal_depth/trapezoid": 5
+  },
+  "uncovered": [
+    {
+      "pair": "channel_capacity/irregular",
+      "flow_mapped": false
+    },
+    {
+      "pair": "channel_capacity/trapezoid",
+      "flow_mapped": false
+    },
+    {
+      "pair": "critical_depth/irregular",
+      "flow_mapped": false
+    },
+    {
+      "pair": "critical_depth/trapezoid",
+      "flow_mapped": false
+    },
+    {
+      "pair": "step_backwater/irregular",
+      "flow_mapped": false
+    },
+    {
+      "pair": "step_backwater/trapezoid",
+      "flow_mapped": false
+    }
+  ]
+}

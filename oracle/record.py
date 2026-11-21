@@ -5,6 +5,7 @@
   python -m oracle.record --rerecord nd-trap-000001  replace one golden, logged in `rerecords`
   python -m oracle.record --replay [CASE_ID ...]     rerun goldens (all when none named) and compare;
                                                      stores nothing
+  python -m oracle.record --build-quickset           write oracle/quickset.json from stored goldens
 
 Replacing a golden is possible only here. The MCP tools reach the create-only path.
 Exit codes: 0 done, 1 a harness failure, a case that could not be recorded, or a replay that differs.
@@ -28,11 +29,28 @@ def main(argv=None):
     g.add_argument("--rerecord", metavar="CASE_ID", help="replace one golden by rerunning its inputs")
     g.add_argument("--seed", type=int, help="record a generated batch from this seed")
     g.add_argument("--replay", nargs="*", metavar="CASE_ID", help="rerun goldens and compare (all when none named)")
+    g.add_argument("--build-quickset", action="store_true", help="write oracle/quickset.json from stored goldens")
+    ap.add_argument("--quickset-seed", type=int, default=1, help="seed for the quick set's spread")
     ap.add_argument("--count", type=int, default=0, help="cases in the batch (with --seed)")
     ap.add_argument("--modes", nargs="*", help="limit the batch to these modes")
     ap.add_argument("--shapes", nargs="*", help="limit the batch to these shapes")
     args = ap.parse_args(argv)
 
+    if args.build_quickset:  # reads stored goldens only; needs no container
+        from . import compare
+        try:
+            prof = profile_mod.load(args.profile)
+        except OracleError as e:
+            print("%s: %s" % (e.category, e.message), file=sys.stderr)
+            return 1
+        qs = compare.build_quickset(prof, Recorder().store, seed=args.quickset_seed)
+        path = compare.write_quickset(qs)
+        print("wrote %s: %d case(s) of %d" % (path.name, qs["count"], qs["size"]))
+        for k, n in qs["by_pair"].items():
+            print("  %-32s %d" % (k, n))
+        for u in qs["uncovered"]:
+            print("  uncovered: %s%s" % (u["pair"], "" if u["flow_mapped"] else " (no flow mapped yet)"))
+        return 0
     if not sandbox.docker_available():
         print("Docker is not running. Start Docker Desktop and try again.", file=sys.stderr)
         return 1

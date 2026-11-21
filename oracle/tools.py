@@ -22,7 +22,17 @@ from .runner import keys as keys_mod
 from .schemas import LEDGER_OPS, TOOLS, output_schema
 from .sessions import SessionManager
 
-COMPARE_UNAVAILABLE = "compare is not available yet: the comparator is built in task 8"
+
+
+def _compare(which, case_ids=None):
+    """The compare tool: the same function scripts/oracle_quick.py runs. When the harness
+    cannot compare (exit code 4) the tool fails, with the reason, instead of returning counts."""
+    from . import compare
+    out = compare.run(which, case_ids)
+    if out["exit_code"] == 4:
+        raise OracleError(out["category"], out["note"], {"problems": out["problems"][:50]})
+
+    return compare.tool_output(out)
 
 
 class Oracle:
@@ -31,7 +41,7 @@ class Oracle:
         self.default_profile = default_profile or os.environ.get("ORACLE_TARGET") or str(paths.DEFAULT_PROFILE)
         self.session_profiles = {}
         self.recorder = Recorder(cfg=self.manager.cfg)  # create-only: never replaces a golden
-        self.comparator = None  # set by task 8
+        self.comparator = _compare
 
     # ---- helpers ------------------------------------------------------------------------
 
@@ -182,9 +192,8 @@ class Oracle:
                 "uncovered": ["%s/%s" % (u["mode"], u["shape"]) for u in uncovered]}
 
     def compare(self, set, case_ids=None):
-        if self.comparator is None:
-            raise OracleError("invalid_arguments", COMPARE_UNAVAILABLE)
         return self.comparator(set, case_ids)
+
 
     def ledger_read(self, section=None):
         led = ledger.read()
