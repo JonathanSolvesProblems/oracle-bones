@@ -47,7 +47,7 @@ oracle/
   screen.py  session.py  cases.py  runs.py      screen reading, one session, one case, run logs
   sessions.py  ledger.py  generator.py          session manager, ledger, seeded cases
   recorder.py  record.py  compare.py  manifest.py   (tasks 7 and 8)
-  tools.py  mcp_server.py  schemas.py  errors.py    the eight tools, stdio protocol, schemas, errors
+  tools.py  mcp_server.py  schemas.py  errors.py    the nine tools, stdio protocol, schemas, errors
   tests/                    unit, property and live tests; tests/captures/ holds screen fixtures
   quickset.json             the 200 quick-set case ids
   goldens/
@@ -338,7 +338,8 @@ and `structuredContent`, with `isError` set for error replies. The session manag
 after `initialize`, which is when orphaned containers are removed. `tools.py` holds the tools
 without any protocol code, so tests call them directly. Each tool's input and output schema lives in `schemas.py` and is checked on
 every call and every reply. Tool fields are as in Requirement 14.3. `send_keys` caps
-`timeout_s` at the profile's `wait_timeout_s`. `compare` runs the same function as the script.
+`timeout_s` at the profile's `wait_timeout_s`. `ledger_write` (exhume-loop Requirement 2) checks its evidence and
+writes through `ledger.update_exhumer`. `compare` runs the same function as the script.
 `record: true` goes to the recorder's create-only function; no tool takes a case id.
 
 Errors are one exception class carrying `category`, `message`, `retryable` and `detail`.

@@ -1,8 +1,9 @@
-"""The eight oracle tools. Protocol-free, so they can be tested without an MCP client.
+"""The nine oracle tools. Protocol-free, so they can be tested without an MCP client.
 
 Every function takes the parsed arguments and returns a dict that matches its output schema,
 or raises OracleError. No tool accepts golden content, printed field values, a case id to
-write, or a path under oracle/goldens/.
+write, or a path under oracle/goldens/ to write. ledger_write takes case ids and capture paths
+only as evidence, checks that they exist, and writes only results/ledger.json.
 """
 
 import json
@@ -12,13 +13,13 @@ import traceback
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import cases, generator, ledger, paths, runs, sandbox, screen
+from . import cases, evidence, generator, ledger, paths, runs, sandbox, screen
 from .recorder import Recorder
 from . import profile as profile_mod
 from .errors import OracleError
 from .jsonschema_lite import validate
 from .runner import keys as keys_mod
-from .schemas import TOOLS, output_schema
+from .schemas import LEDGER_OPS, TOOLS, output_schema
 from .sessions import SessionManager
 
 COMPARE_UNAVAILABLE = "compare is not available yet: the comparator is built in task 8"
@@ -182,6 +183,54 @@ class Oracle:
         if section not in led:
             raise OracleError("invalid_arguments", "no ledger section %r" % section, {"sections": sorted(led)})
         return {section: led[section]}
+
+    def ledger_write(self, op, **args):
+        """The Exhumer's sections, through ledger.update_exhumer (exhume-loop Requirement 2)."""
+        required, optional = LEDGER_OPS[op]
+        missing = [k for k in required if k not in args]
+        extra = [k for k in args if k not in required + optional]
+        if missing or extra:
+            raise OracleError("invalid_arguments", "wrong fields for op %s" % op,
+                              {"missing": missing, "unexpected": extra, "required": list(required),
+                               "optional": list(optional)})
+        ev = list(args.get("evidence", []))
+        bad = evidence.problems(ev)
+        if bad:
+            raise OracleError("invalid_arguments", "evidence that does not exist", {"evidence": bad})
+        if op == "decide":
+            entry = ledger.decide(args["saw"], args["chose"], args["why"], ev)
+        elif op == "ask":
+            entry = ledger.ask(args["question"], ev)
+        elif op == "answer":
+            entry = ledger.answer(args["question_id"], args["answer"], ev)
+        elif op == "stop":
+            entry = ledger.stop(args["why"], self._profile())
+        elif op == "understood":
+            prof = self._profile()
+            mapped = sorted({f["name"] for s in prof["screens"] for f in s.get("fields", [])})
+            if args["field"] not in mapped:
+                raise OracleError("invalid_arguments", "the profile maps no field %s" % args["field"],
+                                  {"fields": mapped})
+            if args["value"] and not any(evidence.kind(e) == "case" for e in ev):
+                raise OracleError("invalid_arguments", "understood: true needs a case id among the evidence")
+            entry = ledger.set_understood(args["field"], args["value"], ev)
+        elif op == "keys_untried":
+            prof = self._profile()
+            ids = [s["id"] for s in prof["screens"]]
+            if args["screen"] not in ids:
+                raise OracleError("invalid_arguments", "the profile lists no screen %s" % args["screen"],
+                                  {"screens": ids})
+            notes = []
+            for k in args["keys"]:
+                parsed = keys_mod.parse(k)  # raises invalid_arguments on bad notation
+                if len(parsed) != 1:
+                    raise OracleError("invalid_arguments", "keys_untried takes one key per entry: %r" % k)
+                if parsed[0].notation() not in notes:
+                    notes.append(parsed[0].notation())
+            entry = ledger.set_keys_untried(args["screen"], notes)
+        else:
+            entry = ledger.triage(args["field"], args["classification"], args["status"], args["why"], ev)
+        return {"op": op, "entry": entry}
 
     def shutdown(self, session_id=None):
         if session_id is None:

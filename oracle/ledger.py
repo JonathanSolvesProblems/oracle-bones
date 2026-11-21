@@ -3,7 +3,11 @@
 The harness writes its own sections through update(), which takes a file lock, reads the
 current file, applies a change, and replaces the file atomically. It never changes the
 Exhumer's sections: open_questions, decisions, stopped, each field's `understood`, each
-screen's `keys_untried`, and each mismatch's `status`.
+screen's `keys_untried`, and each mismatch's triage (`status`, `classification`, `why`,
+`evidence`).
+
+The Exhumer writes those sections through update_exhumer(), under the same lock, and it never
+changes a harness section. The ledger_write MCP tool is its only caller.
 """
 
 import copy
@@ -44,15 +48,42 @@ def read():
     return base
 
 
+# Keys the Exhumer owns inside harness sections.
+EXHUMER_KEYS = {
+    "fields": ("understood", "understood_evidence"),
+    "screens": ("keys_untried",),
+    "mismatches": ("status", "classification", "why", "evidence"),
+}
+
+
 def _exhumer_view(led):
     """Everything in the ledger the harness must not change."""
-    return {
-        "sections": {k: led.get(k) for k in EXHUMER_SECTIONS},
-        "understood": {k: v.get("understood") for k, v in led.get("fields", {}).items() if "understood" in v},
-        "keys_untried": {k: v.get("keys_untried") for k, v in led.get("screens", {}).items() if "keys_untried" in v},
-        "status": {k: v.get("status") for k, v in led.get("mismatches", {}).items()
-                   if v.get("status") not in (None, "untriaged")},
-    }
+    view = {"sections": {k: led.get(k) for k in EXHUMER_SECTIONS}}
+    for section, keys in EXHUMER_KEYS.items():
+        view[section] = {}
+        for name, entry in led.get(section, {}).items():
+            mine = {k: entry[k] for k in keys if k in entry}
+            if section == "mismatches" and mine.get("status") == "untriaged":
+                del mine["status"]  # the harness sets the starting status
+            if mine:
+                view[section][name] = mine
+    return view
+
+
+def _harness_view(led):
+    """Everything in the ledger the Exhumer must not change."""
+    view = {}
+    for k in HARNESS_SECTIONS:
+        value = copy.deepcopy(led.get(k))
+        if k in EXHUMER_KEYS:
+            stripped = {}
+            for name, entry in (value or {}).items():
+                rest = {f: v for f, v in entry.items() if f not in EXHUMER_KEYS[k]}
+                if rest:
+                    stripped[name] = rest
+            value = stripped
+        view[k] = value
+    return view
 
 
 @contextmanager
@@ -106,11 +137,28 @@ def update(change):
             raise OracleError("internal", "a harness ledger update tried to change the Exhumer's sections")
         for key in ("unanswered", "unknown_screens", "nondeterminism", "rerecords"):
             led[key] = led[key][-LIST_CAP:]
-        p = path()
-        tmp = p.with_suffix(".tmp")
-        tmp.write_text(json.dumps(led, indent=2, sort_keys=False) + "\n", encoding="utf-8", newline="\n")
-        _retry(lambda: os.replace(tmp, p))
-        return led
+        return _write(led)
+
+
+def update_exhumer(change):
+    """Apply change(ledger) to the Exhumer's sections, atomically. The only way ledger_write
+    writes, so the ledger keeps one writer module and one lock."""
+    with _lock():
+        led = read()
+        before = _harness_view(led)
+        result = change(led)
+        if _harness_view(led) != before:
+            raise OracleError("internal", "an Exhumer ledger update tried to change a harness section")
+        _write(led)
+        return result
+
+
+def _write(led):
+    p = path()
+    tmp = p.with_suffix(".tmp")
+    tmp.write_text(json.dumps(led, indent=2, sort_keys=False) + "\n", encoding="utf-8", newline="\n")
+    _retry(lambda: os.replace(tmp, p))
+    return led
 
 
 # ---- harness writers ---------------------------------------------------------------------
@@ -123,9 +171,12 @@ def record_run(screens_seen, keys_by_screen):
     """Screens the harness observed in one run, and the keys it sent on each."""
     def change(led):
         for sid in screens_seen:
-            led["screens"].setdefault(sid, {"visits": 0, "keys_tried": []})["visits"] += 1
+            entry = led["screens"].setdefault(sid, {})
+            entry["visits"] = entry.get("visits", 0) + 1
+            entry.setdefault("keys_tried", [])
         for sid, ks in keys_by_screen.items():
-            entry = led["screens"].setdefault(sid, {"visits": 0, "keys_tried": []})
+            entry = led["screens"].setdefault(sid, {})
+            entry.setdefault("visits", 0)
             entry.setdefault("keys_tried", [])
             for k in ks:
                 if k not in entry["keys_tried"]:
@@ -188,6 +239,84 @@ def set_mismatches(by_field, run_at):
             entry["last_run"] = run_at
             entry.setdefault("status", "untriaged")
     return update(change)
+
+
+# ---- Exhumer writers (exhume-loop Requirement 2), called only by the ledger_write tool -----
+
+def _append_decision(led, saw, chose, why, evidence):
+    n = max([d.get("n", 0) for d in led["decisions"]] + [0]) + 1
+    entry = {"n": n, "saw": saw, "chose": chose, "why": why, "evidence": list(evidence), "at": _now()}
+    led["decisions"].append(entry)
+    return entry
+
+
+def decide(saw, chose, why, evidence):
+    def change(led):
+        led["stopped"] = None  # a decision after a stop means a new run has begun
+        return _append_decision(led, saw, chose, why, evidence)
+    return update_exhumer(change)
+
+
+def ask(question, evidence):
+    def change(led):
+        n = max([int(q["id"][2:]) for q in led["open_questions"]] + [0]) + 1
+        entry = {"id": "Q-%03d" % n, "question": question, "evidence": list(evidence), "status": "open",
+                 "asked_at": _now(), "answer": None, "answer_evidence": [], "answered_at": None}
+        led["open_questions"].append(entry)
+        return entry
+    return update_exhumer(change)
+
+
+def answer(question_id, text, evidence):
+    def change(led):
+        q = next((q for q in led["open_questions"] if q["id"] == question_id), None)
+        if q is None:
+            raise OracleError("invalid_arguments", "no open question %s" % question_id,
+                              {"open": [x["id"] for x in led["open_questions"] if x["status"] == "open"]})
+        if q["status"] != "open":
+            raise OracleError("invalid_arguments", "question %s is already answered" % question_id)
+        q.update({"status": "answered", "answer": text, "answer_evidence": list(evidence),
+                  "answered_at": _now()})
+        return q
+    return update_exhumer(change)
+
+
+def stop(why, profile=None):
+    """Record a stop with the coverage report computed now, from the ledger alone."""
+    def change(led):
+        d = _append_decision(led, why, "stop", why, [])
+        led["stopped"] = {"why": why, "decision": d["n"], "at": d["at"], "coverage": coverage(led, profile)}
+        return led["stopped"]
+    return update_exhumer(change)
+
+
+def set_understood(field, value, evidence):
+    def change(led):
+        entry = led["fields"].setdefault(field, {})
+        entry["understood"] = bool(value)
+        entry["understood_evidence"] = list(evidence)
+        return {"field": field, "understood": entry["understood"], "evidence": entry["understood_evidence"]}
+    return update_exhumer(change)
+
+
+def set_keys_untried(screen, keys):
+    def change(led):
+        entry = led["screens"].setdefault(screen, {})
+        entry["keys_untried"] = list(keys)
+        return {"screen": screen, "keys_untried": entry["keys_untried"]}
+    return update_exhumer(change)
+
+
+def triage(field, classification, status, why, evidence):
+    def change(led):
+        entry = led["mismatches"].get(field)
+        if entry is None:
+            raise OracleError("invalid_arguments", "no mismatch entry for field %s" % field,
+                              {"fields": sorted(led["mismatches"])})
+        entry.update({"status": status, "classification": classification, "why": why,
+                      "evidence": list(evidence)})
+        return dict(entry, field=field)
+    return update_exhumer(change)
 
 
 # ---- coverage report (Requirement 13.5) --------------------------------------------------

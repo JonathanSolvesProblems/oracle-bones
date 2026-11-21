@@ -237,7 +237,7 @@ session.
 
 #### Acceptance Criteria
 
-1. THE SYSTEM SHALL expose `boot_target`, `read_screen`, `send_keys`, `run_case`, `run_batch`, `compare`, `ledger_read`, and `shutdown` over stdio.
+1. THE SYSTEM SHALL expose `boot_target`, `read_screen`, `send_keys`, `run_case`, `run_batch`, `compare`, `ledger_read`, `ledger_write`, and `shutdown` over stdio. `ledger_write` writes only the Exhumer's ledger sections and is specified in exhume-loop Requirement 2.
 2. THE SYSTEM SHALL use tool names matching `^[a-zA-Z][a-zA-Z0-9_]*$`.
 3. THE SYSTEM SHALL declare an input and output JSON Schema for every tool, with these fields:
 
@@ -250,6 +250,7 @@ session.
    | `run_batch` | `seed`, `count`, `modes`, `shapes` (optional), `record` (default false) | `batch_id`, `cases_run`, `recorded`, `timeouts`, `unknown_screens`, `nondeterministic`, `cases_per_minute`, `report_path` |
    | `compare` | `set` (`quick` or `full`), `case_ids` (optional) | `total`, `matched`, `by_kind`, `by_field`, `uncovered`, `report_path`, `exit_code` |
    | `ledger_read` | `section` (optional) | the ledger, or that section |
+   | `ledger_write` | `op` and the fields that operation takes (exhume-loop Requirement 2) | `op`, `entry` |
    | `shutdown` | `session_id` (optional; all sessions when absent) | `closed` |
 
    where `screen` is `{rows, hash, cursor, screen_id or null, unknown, prompt or null, fields}`.

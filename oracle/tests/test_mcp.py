@@ -15,10 +15,11 @@ from oracle.jsonschema_lite import validate
 from oracle.mcp_server import Server
 from oracle.schemas import ERROR, TOOLS, output_schema
 
-EXPECTED = ["boot_target", "read_screen", "send_keys", "run_case", "run_batch", "compare", "ledger_read", "shutdown"]
+EXPECTED = ["boot_target", "read_screen", "send_keys", "run_case", "run_batch", "compare", "ledger_read",
+            "ledger_write", "shutdown"]
 
 
-def test_eight_tools_with_valid_names():
+def test_nine_tools_with_valid_names():
     assert sorted(TOOLS) == sorted(EXPECTED)
     for name in TOOLS:
         assert re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", name)
@@ -134,6 +135,12 @@ def test_tools_end_to_end_over_stdio(live, tmp_path):
         assert tool("compare", set="quick")["error"]["category"] == "invalid_arguments"
         cov = tool("ledger_read", section="coverage")
         assert "unexercised_fields" in cov
+        note = tool("ledger_write", op="decide", saw="the trapezoid printed 3.27", chose="record_case",
+                    why="cite it", evidence=[rec["case_id"], rec["run_id"]])
+        assert note["entry"]["n"] == 1
+        assert tool("ledger_write", op="ask", question="q", evidence=["nd-trap-000999"])["error"]["category"] == \
+            "invalid_arguments"
+        assert tool("ledger_read", section="decisions")["decisions"][0]["chose"] == "record_case"
         assert tool("shutdown") == {"closed": []}
     finally:
         proc.stdin.close()

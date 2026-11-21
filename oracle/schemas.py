@@ -1,4 +1,4 @@
-"""Input and output JSON Schemas for the eight MCP tools (Requirement 14.3).
+"""Input and output JSON Schemas for the nine MCP tools (oracle-harness Requirement 14.3).
 
 Every reply is checked against its tool's output schema before it is sent. A failure reply is
 {"error": {category, message, retryable, detail}} and is part of every output schema.
@@ -39,6 +39,21 @@ FILES = {"type": "array", "items": {"type": "object", "required": ["path", "sha2
                                     "properties": {"path": {"type": "string"}, "sha256": {"type": "string"}}}}
 STRMAP = {"type": "object", "additionalProperties": {"type": "string"}}
 INTMAP = {"type": "object", "additionalProperties": {"type": "integer"}}
+
+
+# ledger_write: each operation and the fields it takes (required, optional).
+LEDGER_OPS = {
+    "decide": (("saw", "chose", "why"), ("evidence",)),
+    "ask": (("question",), ("evidence",)),
+    "answer": (("question_id", "answer"), ("evidence",)),
+    "stop": (("why",), ()),
+    "understood": (("field", "value"), ("evidence",)),
+    "keys_untried": (("screen", "keys"), ()),
+    "triage": (("field", "classification", "status", "why"), ("evidence",)),
+}
+# The Exhumer's actions (exhume-loop design, "The decision"); stop has its own operation.
+DECISIONS = ("probe_screen", "run_case", "read_help", "change_profile", "record_case", "write_requirement",
+             "triage", "ask_skeptic")
 
 
 def _ok(props, required):
@@ -121,6 +136,31 @@ TOOLS = {
                        "fields, untried keys, unobserved profile facts and untriaged mismatches.",
         "input": {"type": "object", "additionalProperties": False,
                   "properties": {"section": {"type": "string", "pattern": NAME}}},
+        "output": {"type": "object"},
+    },
+    "ledger_write": {
+        "description": "Write the Exhumer's own ledger sections. op decide: saw, chose, why, evidence. "
+                       "op ask: question, evidence. op answer: question_id, answer, evidence. op stop: why "
+                       "(the coverage report is added for you). op understood: field, value, evidence (a case "
+                       "id is required when value is true). op keys_untried: screen, keys. op triage: field, "
+                       "classification, status, why, evidence. Evidence is a list of case ids, capture paths, "
+                       "run ids and batch ids, and each must exist. Never edit results/ledger.json as a file.",
+        "input": {"type": "object", "additionalProperties": False, "required": ["op"],
+                  "properties": {
+                      "op": {"enum": list(LEDGER_OPS)},
+                      "saw": {"type": "string", "minLength": 1},
+                      "chose": {"enum": list(DECISIONS)},
+                      "why": {"type": "string", "minLength": 1},
+                      "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                      "question": {"type": "string", "minLength": 1},
+                      "question_id": {"type": "string", "pattern": r"^Q-\d{3,}$"},
+                      "answer": {"type": "string", "minLength": 1},
+                      "field": {"type": "string", "pattern": NAME},
+                      "value": {"type": "boolean"},
+                      "screen": {"type": "string", "pattern": NAME},
+                      "keys": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                      "classification": {"enum": ["spec_error", "display_rule", "haunting"]},
+                      "status": {"enum": ["proposed", "accepted", "disputed"]}}},
         "output": {"type": "object"},
     },
     "shutdown": {

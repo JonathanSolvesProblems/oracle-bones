@@ -16,5 +16,6 @@ format:
 - cases: the ids you ran
 - reason: one or two sentences
 
-You cannot edit files. Do not fix anything. If the claim survives, say so, and do not add
+You cannot edit files, and you do not call `ledger_write`: the Exhumer records your verdict.
+Do not fix anything. If the claim survives, say so, and do not add
 further suggestions.

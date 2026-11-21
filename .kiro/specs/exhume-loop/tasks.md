@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. Before the first live run
-  - [ ] 1.1 Add `ledger_write`: `ledger.update_exhumer` and one writer per operation in `oracle/ledger.py`, the tool and its schema in `oracle/tools.py` and `oracle/schemas.py`, evidence checks against the goldens store, the manifest and `oracle/out/runs/`, and `stopped` with the coverage report. Properties 2 and 3.
+  - [x] 1.1 Add `ledger_write`: `ledger.update_exhumer` and one writer per operation in `oracle/ledger.py`, the tool and its schema in `oracle/tools.py` and `oracle/schemas.py`, evidence checks against the goldens store, the manifest and `oracle/out/runs/`, and `stopped` with the coverage report. Properties 2 and 3.
     - Amend oracle-harness Requirement 14 and its design for the ninth tool, and update the MCP tests.
     - Tell the Exhumer in `.kiro/agents/exhumer.md` to record every choice with `ledger_write` and never edit the ledger file; tell the Skeptic not to call it.
     - _Requirements: 1.2, 1.4, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 4.7, 7.1_
