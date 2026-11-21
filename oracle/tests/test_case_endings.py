@@ -31,6 +31,7 @@ class FakeSession:
     """react(keys, rows, sends) returns the rows shown after keys are sent."""
     react = None
     first = None
+    late = None  # late(rows) -> rows shown once the hold window has passed, or None
 
     def __init__(self, prof, cfg=None, server_id=None, setup=None):
         self.profile = prof
@@ -62,13 +63,23 @@ class FakeSession:
                                 "screen_hash_after": self.last["hash"]})
         return screen_mod.describe(self.profile, self.last)
 
+    def confirm_unchanged(self, unchanged_hash):
+        self.waits.append(("confirm", unchanged_hash))
+        later = type(self).late(self.last["rows"]) if type(self).late else None
+        if later is not None:
+            self.last = snap(later)
+        self.transcript[-1]["screen_hash_after"] = self.last["hash"]
+        return screen_mod.describe(self.profile, self.last)
+
     def changed_files(self):
         return []
 
 
-def use(monkeypatch, first, react):
-    fake = type("Fake", (FakeSession,), {"first": first, "react": staticmethod(react)})
+def use(monkeypatch, first, react, late=None):
+    fake = type("Fake", (FakeSession,), {"first": first, "react": staticmethod(react),
+                                         "late": staticmethod(late) if late else None})
     monkeypatch.setattr(cases, "Session", fake)
+    return fake
 
 
 def trap_inputs(**over):
@@ -151,3 +162,29 @@ def test_a_rejected_screen_ends_a_prompt_wait_with_its_message(monkeypatch):
     assert got["message"] and "Bank Station" in got["message"]
     assert got.get("held_prompt") is None
     assert got["transcript"][-1]["keys"].startswith("255")
+
+
+def test_a_slow_program_is_not_held(monkeypatch):
+    # The value is accepted, but the screen changes only after the change window: the hold
+    # confirmation sees the change and the case goes on to its result.
+    shots = captures("nd-trap-000001")
+    g = STORE.load("nd-trap-000001")
+    by_hash = {screen_mod.hash_rows(r): r for r in shots}
+    pending = {}
+
+    def react(keys, rows, i):
+        nxt = by_hash[g["transcript"][i]["screen_hash_after"]]
+        if i == 3:  # left slope: nothing visible within the change window
+            pending["rows"] = nxt
+            return rows
+        return nxt
+
+    def late(rows):
+        return pending.pop("rows", None)
+
+    use(monkeypatch, shots[0], react, late)
+    got = cases.run(PROFILE, "normal_depth", "trapezoid", dict(g["inputs"]))
+    assert got["outcome"] == "result" and got.get("held_prompt") is None
+    assert got["printed"] == g["printed"]
+    t = got["transcript"]
+    assert all(a["screen_hash_after"] == b["screen_hash_before"] for a, b in zip(t, t[1:]))

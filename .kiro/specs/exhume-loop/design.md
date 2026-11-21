@@ -163,7 +163,11 @@ The Exhumer edits `oracle/targets/quick2.json` with its write tool. The rules:
 ### Re-read (`oracle/reread.py`)
 
 `reread.check(profile, store)` reads each stored golden's final capture (the last
-`screen-NN.txt` in its capture folder) and reads it again under the given profile with the same
+`screen-NN.txt` in its capture folder), and the captured screen each transcript step started
+from (found by its before hash), which must read as the step's `expect`, first match in profile
+order. Goldens with `"screens": "all"` (control cases and MCP-recorded cases) must hold every
+step's screen; batch goldens keep only the final screen, so only steps that start from it are
+read. Each of these screens is read under the given profile with the same
 functions the case runner uses (`screen.identify`, `screen.fields`, `screen.message` and the
 outcome rule in `cases._ending`). It returns one difference per golden whose screen id (for a
 behaviour case), outcome, printed fields or message differ from what is stored. It starts no
@@ -313,5 +317,6 @@ golden's screen, fails it and names that golden.
   ledger except review in version control.
 - Recording a new behaviour case needs a recording call for some case, because missing control
   cases are recorded at the start of `run_case` or `run_batch` with `record: true`.
-- The re-read checks final screens only. A profile change that alters how an earlier screen of
-  a flow is recognised shows up in the next live run, not in the re-read.
+- The re-read reads every step only where the capture holds that step's screen. For batch
+  goldens, which keep the final screen, a profile change that alters how an earlier screen of a
+  flow is recognised shows up in the next live run or replay, not in the re-read.

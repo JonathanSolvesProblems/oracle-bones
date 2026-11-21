@@ -145,7 +145,7 @@ reproduce them, so that tests run fast and offline and every stored answer can b
 3. WHEN a case id is recorded again THE SYSTEM SHALL replace its golden and captures only through the runner's command line, and log the old and new hashes in the ledger's `rerecords`. No MCP tool SHALL replace a golden.
 4. WHEN a case is recorded THE SYSTEM SHALL store: case id, mode, shape, inputs as typed strings, outcome, each field's raw text exactly as printed, the program's message for `rejected` and `error` outcomes, seed, generator version, emu2 commit, profile version and profile sha256, archive sha256, keystroke transcript, capture path, files written (Requirement 9), and the time recorded.
 5. WHEN a case times out or ends on an unknown screen THE SYSTEM SHALL log it to the ledger and the run log, and SHALL NOT store it as a golden.
-6. WHEN a case is recorded THE SYSTEM SHALL save its capture under `oracle/goldens/captures/<case-id>/`: the final screen for every case, and every screen for control cases.
+6. WHEN a case is recorded THE SYSTEM SHALL save its capture under `oracle/goldens/captures/<case-id>/`: every screen for control cases and for cases recorded one at a time through MCP (`run_case` with `record: true`), which requirements cite; the final screen for cases from a generated batch, whose transcript still holds the hash of every screen.
 7. THE SYSTEM SHALL generate cases from a seeded generator whose ranges and boundary values the profile states. The same seed and generator version SHALL produce the same cases.
 8. WHEN a batch runs THE SYSTEM SHALL run cases in parallel containers up to the concurrency limit, and report cases per minute.
 9. THE SYSTEM SHALL assign case ids before cases are dispatched, so that parallel order cannot change which inputs get which id.
@@ -247,7 +247,7 @@ session.
    | `read_screen` | `session_id` | `screen` |
    | `send_keys` | `session_id`, `keys` (notation in 5.2), `expect` (optional screen or prompt id), `timeout_s` (optional, capped by the profile) | `screen`, `resends` |
    | `run_case` | `mode`, `shape`, `inputs`, `record` (default false) | `run_id`, `case_id` (when recorded), `outcome`, `printed`, `message`, `files`, `capture_path` |
-   | `run_batch` | `seed`, `count`, `modes`, `shapes` (optional), `record` (default false) | `batch_id`, `cases_run`, `recorded`, `timeouts`, `unknown_screens`, `nondeterministic`, `cases_per_minute`, `report_path` |
+   | `run_batch` | `seed`, `count`, `modes`, `shapes` (optional), `record` (default false) | `batch_id`, `cases_run`, `recorded`, `timeouts`, `unknown_screens`, `nondeterministic`, `cases_per_minute`, `report_path`, `uncovered` (mode/shape pairs with an input that has no range, so none were drawn) |
    | `compare` | `set` (`quick` or `full`), `case_ids` (optional) | `total`, `matched`, `by_kind`, `by_field`, `uncovered`, `report_path`, `exit_code` |
    | `ledger_read` | `section` (optional) | the ledger, or that section |
    | `ledger_write` | `op` and the fields that operation takes (exhume-loop Requirement 2) | `op`, `entry` |

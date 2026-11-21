@@ -82,10 +82,16 @@ def test_golden_holds_everything_requirement_7_4_lists(rec, prof):
     assert obs["outcome"] == "observed" and obs["expected_screen"] == "stray_listing" and obs["printed"] == {}
 
 
-def test_captures_final_screen_for_cases_and_every_screen_for_controls(rec, prof):
+def test_captures_every_screen_for_controls_and_mcp_cases_and_the_final_one_for_batches(rec, prof):
+    from oracle import recorder
     rec.create(prof, "normal_depth", "trapezoid", INPUTS)
     cap = rec.store.captures_dir
-    assert sorted(p.name for p in (cap / "nd-trap-000003").glob("screen-*.txt")) == ["screen-00.txt"]
+    assert sorted(p.name for p in (cap / "nd-trap-000003").glob("screen-*.txt")) == ["screen-00.txt", "screen-01.txt"]
+    assert rec.store.load("nd-trap-000003")["screens"] == "all"
+    batch_job = {"id": "nd-trap-000009", "control": None, "seed": 4}
+    assert recorder.captures_all(batch_job) is False
+    got = {"final": ["b"], "screens": [{"rows": ["a"]}, {"rows": ["b"]}]}
+    assert recorder.capture_screens(got, recorder.captures_all(batch_job)) == [["b"]]
     assert sorted(p.name for p in (cap / "nd-trap-000001").glob("screen-*.txt")) == ["screen-00.txt", "screen-01.txt"]
     assert (cap / "nd-trap-000003" / "files" / "QUICK2" / "HEC2.DAT").read_bytes() == b"dat"
     left = [p for p in rec.store.root.rglob("*") if ".tmp" in p.name or ".old-" in p.name]

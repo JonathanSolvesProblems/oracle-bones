@@ -1,7 +1,11 @@
 """Re-read stored goldens under a profile (exhume-loop Requirement 4.3).
 
 When the profile changes, every stored golden's captured final screen is read again with the
-same functions the case runner uses. A profile that reads any golden differently would change
+same functions the case runner uses, and so is the screen at every transcript step: the screen
+a step started from (its before hash) must read as the screen that step expected, first match
+in profile order, the same rule the case runner uses to end a case. Goldens with every screen
+captured (control cases and cases recorded through MCP) must have a capture for every step;
+generated batch goldens keep only the final screen, so only steps that start from it are read. A profile that reads any golden differently would change
 what that golden means, so the tools refuse to run the program until it reads them all as
 stored. Starts no container and writes nothing.
 """
@@ -14,6 +18,50 @@ from .profile import screen_by_id
 from .recorder import Store
 
 _SCREEN = re.compile(r"^screen-(\d+)\.txt$")
+
+
+def _rows(path):
+    text = path.read_text(encoding="utf-8")
+    return text[:-1].split("\n") if text.endswith("\n") else text.split("\n")
+
+
+def captured(store, cid):
+    """{screen hash: rows} for every screen in a golden's capture."""
+    d = store.captures_dir / cid
+    out = {}
+    if d.exists():
+        for p in d.glob("screen-*.txt"):
+            if _SCREEN.match(p.name):
+                rows = _rows(p)
+                out[screen_mod.hash_rows(rows)] = rows
+    return out
+
+
+def every_screen(golden):
+    """Whether the golden's capture holds every screen. Goldens stored before the `screens`
+    field existed captured every screen only for control cases."""
+    if "screens" in golden:
+        return golden["screens"] == "all"
+    return bool(golden.get("control"))
+
+
+def step_differences(profile, golden, shots):
+    """Steps whose starting screen reads as a different screen than the step expected."""
+    out = []
+    for t in golden["transcript"]:
+        if not t.get("expect"):
+            continue
+        rows = shots.get(t["screen_hash_before"])
+        if rows is None:
+            if every_screen(golden):
+                out.append({"case_id": golden["id"], "what": "step %d capture" % t["step"],
+                            "stored": t["screen_hash_before"], "reread": None})
+            continue
+        sid = screen_mod.identify(profile, rows)[0]
+        if sid != t["expect"]:
+            out.append({"case_id": golden["id"], "what": "step %d screen_id" % t["step"],
+                        "stored": t["expect"], "reread": sid})
+    return out
 
 
 def final_rows(store, cid):
@@ -58,6 +106,7 @@ def differences(profile, store=None):
         if rows is None:
             out.append({"case_id": g["id"], "what": "capture", "stored": "a final screen", "reread": None})
             continue
+        out.extend(step_differences(profile, g, captured(store, g["id"])))
         got = read_as(profile, g, rows)
         if g["outcome"] == "observed":
             if got["screen_id"] != g["expected_screen"]:

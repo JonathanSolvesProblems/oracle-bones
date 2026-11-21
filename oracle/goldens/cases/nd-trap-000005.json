@@ -30,11 +30,12 @@
     "flow_type": "  SUBCRITICAL   "
   },
   "message": null,
+  "held_prompt": null,
   "seed": null,
   "generator_version": null,
   "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
-  "profile_version": "1",
-  "profile_sha256": "ef076ba1215fbb4620263ee537990123e840d40e932296fcf6fd0419530f4b0b",
+  "profile_version": "2",
+  "profile_sha256": "4913fa616e9d638a3ee40fefac055b8b481c25f30428732701c2c33ad81fed1c",
   "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
   "transcript": [
     {
@@ -118,7 +119,8 @@
       "screen_hash_after": "38637034fcba24fe92bc60ac40e435cac070f517471933f0f3317afed53644f1"
     }
   ],
+  "screens": "all",
   "capture_path": "oracle/goldens/captures/nd-trap-000005/",
   "files": [],
-  "recorded_at": "2026-11-21T17:00:19Z"
+  "recorded_at": "2026-11-21T21:31:35Z"
 }

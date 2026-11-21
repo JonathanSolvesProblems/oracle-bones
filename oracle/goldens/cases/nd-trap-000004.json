@@ -30,11 +30,12 @@
     "flow_type": "  SUBCRITICAL   "
   },
   "message": null,
+  "held_prompt": null,
   "seed": null,
   "generator_version": null,
   "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
-  "profile_version": "1",
-  "profile_sha256": "ef076ba1215fbb4620263ee537990123e840d40e932296fcf6fd0419530f4b0b",
+  "profile_version": "2",
+  "profile_sha256": "4913fa616e9d638a3ee40fefac055b8b481c25f30428732701c2c33ad81fed1c",
   "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
   "transcript": [
     {
@@ -59,7 +60,7 @@
       "keys": "T{Enter}",
       "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
       "resend": false,
-      "screen_hash_after": "f2a8ad4af5213a7aa5d86df23ac3e53c76e02356987e24b6e710dd7f6fffb48e"
+      "screen_hash_after": "5a4540710da0e0199df8b80120f66dc10e60bca0c9326ca3c72171c736d281ff"
     },
     {
       "step": 4,
@@ -118,7 +119,8 @@
       "screen_hash_after": "44ce60227a899ff88df0b3f1a7da4dc327c9d1a512443289d1647abddde04ce5"
     }
   ],
+  "screens": "all",
   "capture_path": "oracle/goldens/captures/nd-trap-000004/",
   "files": [],
-  "recorded_at": "2026-11-21T17:00:18Z"
+  "recorded_at": "2026-11-21T21:31:27Z"
 }

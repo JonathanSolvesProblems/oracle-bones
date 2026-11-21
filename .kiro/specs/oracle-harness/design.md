@@ -234,14 +234,23 @@ equal. `screen_hash_after` is the screen once it has settled after the keys: the
 to `send` is taken before the program redraws, so the host waits for the hash to change from
 `screen_hash_before` and then stay quiet for `settle_ms`. If it does not change within four
 times `settle_ms` (the window the resend check uses), the after hash is the unchanged screen.
-In a stored golden, each step's after hash is the next step's before hash.
+That settle can end in a pause between the echo of typed keys and the program's reaction to
+them: in `nd-trap-000004` (recorded in parallel) the screen settled on the shape menu with `T`
+echoed, and the form was drawn after it. So when the next wait succeeds, the screen it settled
+on becomes the previous step's after hash, because that is where the keys led. In a stored
+golden, each step's after hash is the next step's before hash.
+
+Before a form input is ended as held, the host confirms the hold with a second, longer wait
+for a change (`limits.hold_confirm_ms` in the profile, 2000 for QUICK-2). Only inputs that
+really hold pay for it; a program that is only slow goes on to its next prompt.
 
 A case ends as `rejected` in two ways (decided 2026-11-21, ledger Q-005 and Q-001). A screen
 the profile marks as `rejected` or `error` that appears at any wait, including a wait for the
 next prompt, ends the case with the outcome of its kind and the message it printed. A form
 input whose screen settles unchanged on the same prompt after the value is sent (a held
 prompt) ends the case as `rejected` with no message; the golden names the prompt in
-`held_prompt`, and the re-read checks that the final screen still shows it. Behaviour cases
+`held_prompt`, and the re-read checks that the final screen still shows it. The hold is
+confirmed as described above before the case ends. Behaviour cases
 with their own steps are not ended by a held prompt.
 
 Resend applies only on screens with `"resend": true`: if the hash is unchanged after the

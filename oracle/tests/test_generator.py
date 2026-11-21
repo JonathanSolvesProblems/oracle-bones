@@ -37,3 +37,12 @@ def test_typed_like_the_manual():
     assert generator._fmt(0.035, 3) == ".035"
     assert generator._fmt(300.2, 0) == "300"
     assert generator._fmt(10.0, 1) == "10"
+
+
+def test_pairs_without_every_range_are_uncovered_and_never_drawn():
+    ready, uncovered = generator.split_pairs(PROF)
+    for u in uncovered:
+        assert u["missing_ranges"] == generator.missing_ranges(PROF, u["mode"], u["shape"]) != []
+        assert (u["mode"], u["shape"]) not in ready
+    drawn = {(c["mode"], c["shape"]) for c in generator.generate(PROF, 3, 200)}
+    assert drawn <= set(ready)

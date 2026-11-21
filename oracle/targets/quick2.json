@@ -1,6 +1,6 @@
 {
   "name": "quick2",
-  "version": "1",
+  "version": "2",
   "archive": {
     "url": "https://web.archive.org/web/20121224173859id_/https://www.fema.gov/library/file?type=publishedFile&file=q2v1.zip&fileid=c76207a0-fe30-11df-a023-001cc4568fb6",
     "file": "q2v1.zip",
@@ -46,7 +46,8 @@
     "settle_ms": 150,
     "wait_timeout_s": 10,
     "case_time_limit_s": 60,
-    "retry_limit": 3
+    "retry_limit": 3,
+    "hold_confirm_ms": 2000
   },
   "keys": {
     "list": [
@@ -259,7 +260,7 @@
     {
       "id": "nd_irr_result",
       "kind": "result",
-      "marker": "(?s)\\A(?!.*(?:Enter|Press)).*NORMAL\\s+DEPTH.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d",
+      "marker": "(?s)\\A(?!.*(?:Enter|Press|SAVING\\s+FILE)).*NORMAL\\s+DEPTH.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d",
       "fields": [
         {"name": "in_bank_left", "row": 16, "col": 37, "width": 9},
         {"name": "in_bank_right", "row": 16, "col": 67, "width": 9},
@@ -282,7 +283,9 @@
         "nd-irr-000001",
         "nd-irr-000002",
         "nd-irr-000003",
-        "nd-irr-000004"
+        "nd-irr-000004",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-24.txt"
       ]
     },
     {
@@ -673,7 +676,7 @@
           "keys": "{Enter}"
         },
         {
-          "expect": "irr_editor",
+          "expect": "nd_irr_result",
           "keys": "{F6}"
         },
         {

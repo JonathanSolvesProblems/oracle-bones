@@ -113,11 +113,12 @@
     "froude": "   0.46  "
   },
   "message": null,
+  "held_prompt": null,
   "seed": null,
   "generator_version": null,
   "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
-  "profile_version": "1",
-  "profile_sha256": "bba99e14286aea8224971530a56680f58ad56f2370625d87336e0fb423bbb7de",
+  "profile_version": "2",
+  "profile_sha256": "4913fa616e9d638a3ee40fefac055b8b481c25f30428732701c2c33ad81fed1c",
   "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
   "transcript": [
     {
@@ -849,7 +850,8 @@
       "screen_hash_after": "81c2d6fcbb4bd8ccc6036c1fe0b77c278bc972cebdb606df015bab21fb99a745"
     }
   ],
+  "screens": "all",
   "capture_path": "oracle/goldens/captures/nd-irr-000001/",
   "files": [],
-  "recorded_at": "2026-11-21T17:09:06Z"
+  "recorded_at": "2026-11-21T21:32:07Z"
 }

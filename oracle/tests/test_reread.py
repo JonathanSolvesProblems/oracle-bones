@@ -37,8 +37,11 @@ def printing(field, shape="trapezoid"):
             if g["outcome"] != "observed" and g["shape"] == shape and field in g["printed"]}
 
 
-def final_shows(text):
-    return {g["id"] for g in STORE.all() if text in "\n".join(reread.final_rows(STORE, g["id"]))}
+def any_shows(pattern):
+    """Goldens with a captured screen, final or at a step, that the pattern matches."""
+    import re
+    return {g["id"] for g in STORE.all()
+            if any(re.search(pattern, "\n".join(rows), re.M) for rows in reread.captured(STORE, g["id"]).values())}
 
 
 def test_current_profile_reads_every_golden_as_stored():
@@ -75,12 +78,26 @@ def test_a_screen_moved_ahead_of_a_goldens_screen_fails(tmp_path):
     data["screens"].insert(0, {"id": "thief", "kind": "other", "marker": "TRAPEZOIDAL CHANNEL",
                                "unobserved": "test"})
     diffs = reread.differences(load(tmp_path, data), STORE)
-    assert {d["case_id"] for d in diffs} == final_shows("TRAPEZOIDAL CHANNEL") >= {"nd-trap-000001", "nd-trap-000002"}
+    assert {d["case_id"] for d in diffs} == any_shows("TRAPEZOIDAL CHANNEL") >= {"nd-trap-000001", "nd-trap-000002"}
     assert any(d["what"] == "outcome" and d["reread"] == "unknown_screen" for d in diffs)
     data = base()
     data["screens"].insert(0, {"id": "thief", "kind": "other", "marker": "MAIN\\s+MENU", "unobserved": "test"})
     diffs = reread.differences(load(tmp_path, data, "q.json"), STORE)
-    assert {(d["case_id"], d["what"]) for d in diffs} == {("obs-menudrop-000001", "screen_id")}
+    assert ("obs-menudrop-000001", "screen_id") in {(d["case_id"], d["what"]) for d in diffs}
+    assert {d["case_id"] for d in diffs} == any_shows("MAIN\\s+MENU")
+    assert all(d["reread"] == "thief" for d in diffs)
+
+
+def test_every_step_is_read_not_only_the_final_screen(tmp_path):
+    """Q-007: a result marker that also matched the screen after Begin in obs-nodata-000001
+    passed while only final screens were read. Loosening nd_irr_result back to its earlier
+    marker makes the step that saves the file read as a result again."""
+    data = base()
+    screen(data, "nd_irr_result")["marker"] = \
+        "(?s)\\A(?!.*(?:Enter|Press)).*NORMAL\\s+DEPTH.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d"
+    diffs = reread.differences(load(tmp_path, data), STORE)
+    assert {(d["case_id"], d["what"], d["reread"]) for d in diffs} == \
+        {("obs-nodata-000001", "step 25 screen_id", "nd_irr_result")}
 
 
 def test_a_removed_screen_fails(tmp_path):

@@ -188,10 +188,17 @@ def fingerprint(got):
             "files": {f["path"]: f["sha256"] for f in got.get("files", [])}}
 
 
-def capture_screens(got, control):
-    """Every screen for a control case, the final screen for any other case."""
+def captures_all(job):
+    """Every screen is captured for control cases and for cases recorded through MCP one at a
+    time, which requirements cite. Generated batch cases keep only the final screen; their
+    transcript still holds the hash of every screen."""
+    return job.get("control") is not None or job.get("seed") is None
+
+
+def capture_screens(got, every):
+    """Every screen when `every`, else the final screen."""
     final = got.get("final") or []
-    if not control:
+    if not every:
         return [final]
     screens = [s["rows"] for s in got.get("screens", [])]
     if not screens or screens[-1] != final:
@@ -212,7 +219,7 @@ class Recorder:
         try:
             return cases.run(profile, job["mode"], job["shape"], job["inputs"], control=job.get("control"),
                              cfg=self.cfg, server_id=manager.server_id if manager else None,
-                             capture_all=job.get("control") is not None)
+                             capture_all=captures_all(job))
         finally:
             if manager is not None:
                 manager.release()
@@ -241,6 +248,7 @@ class Recorder:
             "profile_version": profile["version"], "profile_sha256": profile["_sha256"],
             "archive_sha256": profile["archive"]["sha256"],
             "transcript": got["transcript"],
+            "screens": "all" if captures_all(job) else "final",
             "capture_path": self.store.capture_rel(job["id"]),
             "files": got.get("files", []),
             "recorded_at": _now(),
@@ -265,7 +273,7 @@ class Recorder:
 
     def _store(self, profile, job, got, replace=False):
         golden = self.golden(profile, job, got)
-        self.store.write(golden, capture_screens(got, job.get("control")), got.get("drive_files", {}), replace)
+        self.store.write(golden, capture_screens(got, captures_all(job)), got.get("drive_files", {}), replace)
         return golden
 
     @staticmethod
@@ -412,7 +420,8 @@ class Recorder:
             self.store.release([j["id"] for j in jobs])
         results.sort(key=lambda r: r["generated_id"])
         self.update_coverage()
-        return self._batch_report(seed, count, controls, results, started)
+        return self._batch_report(seed, count, controls, results, started,
+                                  {"uncovered": generator.split_pairs(profile, modes, shapes)[1]})
 
     def _batch_report(self, seed, count, controls, results, started, extra=None):
         minutes = max((time.monotonic() - started) / 60, 1e-9)
@@ -434,6 +443,8 @@ class Recorder:
                "determinism_checked": True, "by_outcome": by_outcome,
                "cases_per_minute": round(done / minutes, 1), "report_path": runs.rel(report)}
         out.update({k: v for k, v in (extra or {}).items() if k in out})
+        if extra and "uncovered" in extra:
+            out["uncovered"] = ["%s/%s" % (u["mode"], u["shape"]) for u in extra["uncovered"]]
         return out
 
     # ---- replace (command line only) ----------------------------------------------------

@@ -1,25 +1,25 @@
+                              Q U I C K - 2                                     
+                                                                                
+                              VERSION   1.0                                     
+                                                                                
+                                  _____                                         
+                                   ___                                          
+                                    _                                           
+                               ║_________║                                      
+                               ║▒▒▒▒▒▒▒▒▒║                                      
+                               ║▒▒▒▒▒▒▒▒▒║                                      
+                               ║▒▒▒▒▒▒▒▒▒║                                      
+                               ╚═════════╝                                      
                                                                                 
                                                                                 
-           ╔═════════════════════════════════════════════════════╗              
-           ║                    NORMAL  DEPTH                    ║██            
-           ║                 TRAPEZOIDAL CHANNEL                 ║██            
-           ║                                                     ║██            
-           ║                   INPUT VARIABLES                   ║██            
-           ║                                                     ║██            
-           ║ L Side Slope (H:V) 3.0:1   R Side Slope (H:V) 2.0:1 ║██            
-           ║ Bottom Width (ft)   -1.0   Manning's n       0.0350 ║██            
-           ║ Discharge (cfs)      300   Depth (ft)          5.04 ║██            
-           ║ Slope (ft/ft)     0.0050                            ║██            
-           ╟─────────────────────────────────────────────────────╢██            
-           ║                  OUTPUT VARIABLES                   ║██            
-           ║                                                     ║██            
-           ║ Area (sq ft)        58.4   Wet Perimeter (ft)  26.2 ║██            
-           ║ Velocity (ft/s)      5.1   Hyd Radius (ft)      2.2 ║██            
-           ║ Top Width (ft)      24.2   Froude #             0.6 ║██            
-           ║                            Flow Type  SUBCRITICAL   ║██            
-           ╟─────────────────────────────────────────────────────╢██            
-           ║ Begin Calculations  <Enter>                         ║██            
-           ║ Print               <F5>           New Shape  <F9>  ║██            
-           ║ <- Back Tab         <F2>           Main Menu  <F7>  ║██            
-           ╚═════════════════════════════════════════════════════╝██            
-            ████████████████████████████████████████████████████████            
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

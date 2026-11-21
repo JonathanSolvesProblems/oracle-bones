@@ -79,7 +79,8 @@
         "settle_ms": {"type": "integer", "minimum": 10},
         "wait_timeout_s": {"type": "number", "minimum": 0.1},
         "case_time_limit_s": {"type": "number", "minimum": 1},
-        "retry_limit": {"type": "integer", "minimum": 0}
+        "retry_limit": {"type": "integer", "minimum": 0},
+        "hold_confirm_ms": {"type": "integer", "minimum": 0}
       }
     },
     "keys": {

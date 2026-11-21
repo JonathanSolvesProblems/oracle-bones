@@ -42,6 +42,24 @@ def pairs(profile, modes=None, shapes=None):
     return out
 
 
+def missing_ranges(profile, mode, shape):
+    """The pair's form inputs that have no range in the profile."""
+    return [n for n in cases_mod.flow_inputs(profile, mode, shape) if n not in profile["ranges"]]
+
+
+def split_pairs(profile, modes=None, shapes=None):
+    """(pairs the generator can draw from, [{mode, shape, missing_ranges}] it cannot). A pair is
+    drawn only when every one of its inputs has a range; ranges come from evidence."""
+    ready, uncovered = [], []
+    for mode, shape in pairs(profile, modes, shapes):
+        missing = missing_ranges(profile, mode, shape)
+        if missing:
+            uncovered.append({"mode": mode, "shape": shape, "missing_ranges": missing})
+        else:
+            ready.append((mode, shape))
+    return ready, uncovered
+
+
 def case_prefix(profile, mode, shape):
     return "%s-%s" % (profile["codes"]["modes"][mode], profile["codes"]["shapes"][shape])
 
@@ -57,21 +75,22 @@ def next_sequences(profile, existing_ids):
 
 
 def generate(profile, seed, count, modes=None, shapes=None, existing_ids=()):
-    """Return `count` cases: [{id, mode, shape, inputs, seed, generator_version}]."""
+    """Return `count` cases: [{id, mode, shape, inputs, seed, generator_version}], drawn only from
+    pairs whose inputs all have ranges (see split_pairs for the others)."""
     if count < 0:
         raise OracleError("invalid_arguments", "count must be zero or more")
     rnd = random.Random("%s/%s" % (GENERATOR_VERSION, seed))
-    choices = pairs(profile, modes, shapes)
+    choices, uncovered = split_pairs(profile, modes, shapes)
+    if not choices and count:
+        raise OracleError("invalid_arguments", "no chosen mode and shape has a range for every input",
+                          {"uncovered": uncovered})
     nxt = next_sequences(profile, existing_ids)
     out = []
     for _ in range(count):
         mode, shape = choices[rnd.randrange(len(choices))]
         inputs = {}
         for name in cases_mod.flow_inputs(profile, mode, shape):
-            rng = profile["ranges"].get(name)
-            if rng is None:
-                raise OracleError("profile_invalid", "no range for input %r" % name)
-            inputs[name] = _draw(rnd, rng)
+            inputs[name] = _draw(rnd, profile["ranges"][name])
         prefix = case_prefix(profile, mode, shape)
         seq = nxt.get(prefix, 1)
         nxt[prefix] = seq + 1

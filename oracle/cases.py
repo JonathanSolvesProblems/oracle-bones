@@ -90,8 +90,13 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, ca
                 desc = s.send(keys, expect=expect)
                 keep(desc)
                 if "input" in st and "prompt" in st and desc["hash"] == before["hash"]:
-                    out.update(_held(desc, st["prompt"]))
-                    break
+                    # Unchanged after the change window: confirm with the longer hold window,
+                    # so a program that is only slow is not stored as rejected.
+                    desc = s.confirm_unchanged(before["hash"])
+                    keep(desc)
+                    if desc["hash"] == before["hash"]:
+                        out.update(_held(desc, st["prompt"]))
+                        break
         except OracleError as e:
             if e.category not in ("timeout", "input_ignored"):
                 raise

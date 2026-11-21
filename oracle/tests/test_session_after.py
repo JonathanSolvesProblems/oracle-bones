@@ -121,3 +121,16 @@ def test_a_stop_screen_ends_a_prompt_wait():
     assert desc["screen_id"] == "irr_bank_rejected"
     marker = next(x["marker"] for x in s.profile["screens"] if x["id"] == "irr_bank_rejected")
     assert marker in runner.ops[0]["any"]
+
+
+def test_a_wait_after_an_echo_pause_becomes_the_steps_after_hash():
+    """nd-trap-000004: the settle after T{Enter} ended on the shape menu with T echoed; the
+    program drew the form after that. The next wait's screen is where the keys led."""
+    runner = FakeRunner("SHAPE MENU", then="SHAPE MENU T")
+    s = _session(runner)
+    s.send("T{Enter}", expect="shape_menu")
+    assert s.transcript[-1]["screen_hash_after"] == _snap("SHAPE MENU T")["hash"]
+    runner.screen = _snap("FORM")  # drawn after the settle window
+    s.wait(None)
+    assert s.transcript[-1]["screen_hash_after"] == _snap("FORM")["hash"]
+    assert s.last["hash"] == _snap("FORM")["hash"]

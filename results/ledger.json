@@ -1,41 +1,41 @@
 {
   "screens": {
     "title": {
-      "visits": 68,
+      "visits": 112,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 67,
+      "visits": 111,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 70,
+      "visits": 115,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 61,
+      "visits": 79,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_result": {
-      "visits": 19,
+      "visits": 33,
       "keys_tried": [
         "{F7}"
       ]
     },
     "irr_editor": {
-      "visits": 33,
+      "visits": 65,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -44,15 +44,17 @@
       ]
     },
     "stray_listing": {
-      "visits": 6,
+      "visits": 13,
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 8,
-      "keys_tried": []
+      "visits": 31,
+      "keys_tried": [
+        "{F6}"
+      ]
     },
     "irr_bank_rejected": {
-      "visits": 9,
+      "visits": 11,
       "keys_tried": []
     }
   },
@@ -562,6 +564,150 @@
       "old": "9fa696c1697af20aef420095ac281950ad6a5da927116ce638dcc522686a1b46",
       "new": "1adf1624d386e9d2a1947dfaa4ef35bbd85aed96192800019f2e961c088d58a2",
       "at": "2026-11-21T11:57:32Z"
+    },
+    {
+      "case_id": "obs-nodata-000001",
+      "old": "1adf1624d386e9d2a1947dfaa4ef35bbd85aed96192800019f2e961c088d58a2",
+      "new": "3018e305d1e2499be520affab591ffe01eae0ad938f3df623217efc0910365ac",
+      "at": "2026-11-21T18:13:21Z"
+    },
+    {
+      "case_id": "nd-trap-000003",
+      "old": "a4d64c1b3f8435de90a25c252bb474acb81e39c176b9770f1a005f2d126f4f9f",
+      "new": "c6edb8c65e6808abcba07b2fbf4f2439a94d353c452ead4b93fa415655e44c61",
+      "at": "2026-11-21T18:13:28Z"
+    },
+    {
+      "case_id": "nd-trap-000004",
+      "old": "820d4f0219780cd44c3764bef70da999a93caf778dd50537ad1f08ff46e6a00c",
+      "new": "debb52d83e96c655a915f8de92f077c2aa607a79c9f3ffdc51bfbbce2bcc8ff3",
+      "at": "2026-11-21T18:13:35Z"
+    },
+    {
+      "case_id": "nd-trap-000005",
+      "old": "11948b65bdff21160ce1a7b7c244d48215982ebef51181a5b153b1c910277880",
+      "new": "7de181744434c7783fd0e8edfac9754a5c3812370562db23285444adcc0ec44d",
+      "at": "2026-11-21T18:13:42Z"
+    },
+    {
+      "case_id": "nd-irr-000001",
+      "old": "60f34ff7f5bd7d05f69a4c280e832a38b2d1c1013f4006248dfcf98f321a2847",
+      "new": "57a0fe0cb69195d88e032569e77720a8b977d5d26d084ed837b8f051c9402fa3",
+      "at": "2026-11-21T18:14:08Z"
+    },
+    {
+      "case_id": "nd-irr-000002",
+      "old": "1a68499f648364af9318b8285bf1e090612eae7d8aa2253b968216e2802aac54",
+      "new": "e72566663bd0397e717491c221de15c152355cf1656b9ef5487b32847d1dc570",
+      "at": "2026-11-21T18:14:34Z"
+    },
+    {
+      "case_id": "nd-irr-000003",
+      "old": "78c37a3b6fcdae07e8d5f8313514e4cde0ec3b94a531c5a3cedb1cb2d41c492b",
+      "new": "33bab48c7c333006f7eb589764db718815c54c4827677923199d5209d4825d5a",
+      "at": "2026-11-21T18:14:59Z"
+    },
+    {
+      "case_id": "nd-irr-000004",
+      "old": "96e4ae28e2f4d2f9de15a6b3fd9c18da4a61e4da81265c4703314935573c2c39",
+      "new": "ddf3a300ad7b5dcba9d06b032e3a17354a0a0e097c459182dd0a0823fbfacc45",
+      "at": "2026-11-21T18:15:25Z"
+    },
+    {
+      "case_id": "obs-nodata-000001",
+      "old": "3018e305d1e2499be520affab591ffe01eae0ad938f3df623217efc0910365ac",
+      "new": "66aa4800c79cd95dbfdc42329dba5124484a76011a3f20cb443c9710513e87b4",
+      "at": "2026-11-21T21:27:52Z"
+    },
+    {
+      "case_id": "nd-trap-000003",
+      "old": "c6edb8c65e6808abcba07b2fbf4f2439a94d353c452ead4b93fa415655e44c61",
+      "new": "150fa5e2a25b3d36e96164c56c1052b7a9f931484fd01d984b245d48353d0c4a",
+      "at": "2026-11-21T21:27:59Z"
+    },
+    {
+      "case_id": "nd-trap-000004",
+      "old": "debb52d83e96c655a915f8de92f077c2aa607a79c9f3ffdc51bfbbce2bcc8ff3",
+      "new": "864ecaee8afe2ef124b0df2de1f280d4181fe8e7bd69ef2a86f4d528f457c33b",
+      "at": "2026-11-21T21:28:05Z"
+    },
+    {
+      "case_id": "nd-trap-000005",
+      "old": "7de181744434c7783fd0e8edfac9754a5c3812370562db23285444adcc0ec44d",
+      "new": "031f1f79745978f2dd12920be90518128a8bf0070e39f679a2171b73f0bd9e14",
+      "at": "2026-11-21T21:28:15Z"
+    },
+    {
+      "case_id": "nd-irr-000001",
+      "old": "57a0fe0cb69195d88e032569e77720a8b977d5d26d084ed837b8f051c9402fa3",
+      "new": "0df807c869c85e86ed22c98b849d73ad0edca65338f2c0e80f42908d5cd28042",
+      "at": "2026-11-21T21:28:48Z"
+    },
+    {
+      "case_id": "nd-irr-000002",
+      "old": "e72566663bd0397e717491c221de15c152355cf1656b9ef5487b32847d1dc570",
+      "new": "f4ea27bcfdf012388c83936b5e0018fe7c0c663f627ef6cd57ce78d9bed3a3f6",
+      "at": "2026-11-21T21:29:25Z"
+    },
+    {
+      "case_id": "nd-irr-000003",
+      "old": "33bab48c7c333006f7eb589764db718815c54c4827677923199d5209d4825d5a",
+      "new": "9f9c2f480dceff79e765dba13c63607f6aa9f5dcc0c11acb47768342203673d3",
+      "at": "2026-11-21T21:30:06Z"
+    },
+    {
+      "case_id": "nd-irr-000004",
+      "old": "ddf3a300ad7b5dcba9d06b032e3a17354a0a0e097c459182dd0a0823fbfacc45",
+      "new": "9898f45c091537e0c28702acaaca86ba442c106d5f2c0476f4110760bf28e99a",
+      "at": "2026-11-21T21:30:37Z"
+    },
+    {
+      "case_id": "obs-nodata-000001",
+      "old": "66aa4800c79cd95dbfdc42329dba5124484a76011a3f20cb443c9710513e87b4",
+      "new": "8b1c79bf124fdf007fbaaa16758bba4bebaf73c571b3c619eae8407cf92d998d",
+      "at": "2026-11-21T21:31:11Z"
+    },
+    {
+      "case_id": "nd-trap-000003",
+      "old": "150fa5e2a25b3d36e96164c56c1052b7a9f931484fd01d984b245d48353d0c4a",
+      "new": "8868dd581a7c8e01bb78ba3f00ca1ed92a79ce1fad0326f7111c175a1601484c",
+      "at": "2026-11-21T21:31:20Z"
+    },
+    {
+      "case_id": "nd-trap-000004",
+      "old": "864ecaee8afe2ef124b0df2de1f280d4181fe8e7bd69ef2a86f4d528f457c33b",
+      "new": "bd7cd957138f5bbc336c5acd41e6e75c7eb38c69c4c7ee7467025e9e32950868",
+      "at": "2026-11-21T21:31:28Z"
+    },
+    {
+      "case_id": "nd-trap-000005",
+      "old": "031f1f79745978f2dd12920be90518128a8bf0070e39f679a2171b73f0bd9e14",
+      "new": "09e478fa23bb1c439b5889ea09665741e38317ca8ea5600a0ebfe4f9eb0c857d",
+      "at": "2026-11-21T21:31:35Z"
+    },
+    {
+      "case_id": "nd-irr-000001",
+      "old": "0df807c869c85e86ed22c98b849d73ad0edca65338f2c0e80f42908d5cd28042",
+      "new": "ed3bc5a9af5cb04ab5637226765d9bff7e5bb96fb148ff96ae084f7022b7ba0a",
+      "at": "2026-11-21T21:32:08Z"
+    },
+    {
+      "case_id": "nd-irr-000002",
+      "old": "f4ea27bcfdf012388c83936b5e0018fe7c0c663f627ef6cd57ce78d9bed3a3f6",
+      "new": "c6d8be052db44ef5dda0e86e0eff03c738783269d44197f75574949eba44a0ae",
+      "at": "2026-11-21T21:32:50Z"
+    },
+    {
+      "case_id": "nd-irr-000003",
+      "old": "9f9c2f480dceff79e765dba13c63607f6aa9f5dcc0c11acb47768342203673d3",
+      "new": "f44fb6e1becccf85f1996196183891200e559320c0360e2e35eddcb653632256",
+      "at": "2026-11-21T21:33:14Z"
+    },
+    {
+      "case_id": "nd-irr-000004",
+      "old": "9898f45c091537e0c28702acaaca86ba442c106d5f2c0476f4110760bf28e99a",
+      "new": "8c1a8462030d15080e7ededda841324103b56970e5daf559f56cfc69d15dc1d4",
+      "at": "2026-11-21T21:33:41Z"
     }
   ],
   "mismatches": {},

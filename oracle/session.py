@@ -141,7 +141,31 @@ class Session:
                                   {"screen": desc})
             raise OracleError("timeout", "waited %.1fs for %s" % (t, screen_ids or "a change"),
                               {"screen": desc, "waited_for": screen_ids, "prompt": prompt_id})
+        self._arrived(snap)
         return desc
+
+    def _arrived(self, snap):
+        """A wait succeeded on this screen. The settle after a send can end in a pause between
+        the echo of typed keys and the program's reaction to them (seen in nd-trap-000004: the
+        shape menu with T echoed, then the form). The screen a wait then settles on is where
+        those keys led, so it becomes the last step's after hash. This keeps each step's after
+        hash equal to the next step's before hash."""
+        if self.transcript:
+            self.transcript[-1]["screen_hash_after"] = snap["hash"]
+
+    def confirm_unchanged(self, unchanged_hash):
+        """After a send left the screen as it was, wait the profile's longer hold window for a
+        change. Returns the screen: unchanged if the program really held, else the screen it
+        settled on afterwards."""
+        window_s = self.limits.get("hold_confirm_ms", 2000) / 1000
+        t = self._bounded(None)
+        snap = self._call({"op": "wait", "any": [], "changed_from": unchanged_hash,
+                           "settle_ms": self.limits["settle_ms"], "timeout_s": min(t, window_s)}, t)
+        if snap.get("hash") != unchanged_hash:
+            snap = self._settle_after({"hash": unchanged_hash})
+        self.last = snap
+        self.transcript[-1]["screen_hash_after"] = snap["hash"]
+        return screen.describe(self.profile, snap)
 
     def wait_prompt(self, screen_id, prompt_id, timeout_s=None, stops=()):
         """Wait for a prompt; prompts on the same screen are distinguished by their pattern.
@@ -160,6 +184,7 @@ class Session:
         while not re.search(pat, screen.text_of(snap["rows"]), re.M) or stopped(snap):
             if stopped(snap):
                 self.last = snap
+                self._arrived(snap)
                 return screen.describe(self.profile, snap)
             left = deadline - time.monotonic()
             if left <= 0 or snap.get("exited") is not None:
@@ -170,6 +195,7 @@ class Session:
             snap = self._call({"op": "wait", "any": [pat] + stop_markers, "changed_from": None,
                                "settle_ms": self.limits["settle_ms"], "timeout_s": min(left, t)}, left)
         self.last = snap
+        self._arrived(snap)
         return screen.describe(self.profile, snap)
 
     # ---- input --------------------------------------------------------------------------

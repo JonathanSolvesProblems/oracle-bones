@@ -8,11 +8,12 @@
   "outcome": "observed",
   "printed": {},
   "message": null,
+  "held_prompt": null,
   "seed": null,
   "generator_version": null,
   "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
-  "profile_version": "1",
-  "profile_sha256": "e83ad7cf1561cadb3f7f08c575baeacea77e493472fdfe589dcaa9feb9f13346",
+  "profile_version": "2",
+  "profile_sha256": "4913fa616e9d638a3ee40fefac055b8b481c25f30428732701c2c33ad81fed1c",
   "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
   "transcript": [
     {
@@ -177,7 +178,7 @@
     },
     {
       "step": 21,
-      "expect": "irr_editor",
+      "expect": "nd_irr_result",
       "keys": "{F6}",
       "screen_hash_before": "73029853971b85bca9202c3eee605c64f1dcde41aac69bd0d635bfee1a2cb32e",
       "resend": false,
@@ -216,7 +217,8 @@
       "screen_hash_after": "8cb532b8a750a3ee622e6916b785a257947a04a240aa295b508dd1768e230960"
     }
   ],
+  "screens": "all",
   "capture_path": "oracle/goldens/captures/obs-nodata-000001/",
   "files": [],
-  "recorded_at": "2026-11-21T11:57:31Z"
+  "recorded_at": "2026-11-21T21:31:11Z"
 }

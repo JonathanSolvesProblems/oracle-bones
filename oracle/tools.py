@@ -171,12 +171,15 @@ class Oracle:
         batch_id = "batch-" + runs.new_run_id()
         report = paths.RUNS / (batch_id + ".json")
         report.parent.mkdir(parents=True, exist_ok=True)
+        uncovered = generator.split_pairs(prof, modes, shapes)[1]
         report.write_text(json.dumps({"seed": seed, "count": count, "generator_version": generator.GENERATOR_VERSION,
-                                      "record": False, "results": results}, indent=2) + "\n", encoding="utf-8")
+                                      "record": False, "uncovered": uncovered, "results": results},
+                                     indent=2) + "\n", encoding="utf-8")
         return {"batch_id": batch_id, "cases_run": len(results), "recorded": 0,
                 "timeouts": by_outcome.get("timeout", 0), "unknown_screens": by_outcome.get("unknown_screen", 0),
                 "nondeterministic": 0, "determinism_checked": False, "by_outcome": by_outcome,
-                "cases_per_minute": round(len(results) / minutes, 1), "report_path": runs.rel(report)}
+                "cases_per_minute": round(len(results) / minutes, 1), "report_path": runs.rel(report),
+                "uncovered": ["%s/%s" % (u["mode"], u["shape"]) for u in uncovered]}
 
     def compare(self, set, case_ids=None):
         if self.comparator is None:
