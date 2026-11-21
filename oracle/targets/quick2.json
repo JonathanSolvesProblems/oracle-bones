@@ -51,6 +51,7 @@
   "keys": {
     "list": [
       "{Enter}",
+      "{F1}",
       "{F2}",
       "{F5}", "{F6}",
       "{F7}",
@@ -66,7 +67,7 @@
       "C",
       "I"
     ],
-    "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys"
+    "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
   },
   "codes": {
     "modes": {

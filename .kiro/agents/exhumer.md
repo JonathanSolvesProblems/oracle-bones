@@ -19,9 +19,27 @@ chose, why, and the run ids or case ids that prompted it. Put questions you cann
 `ledger_write` op `ask`, and close them with op `answer` when a case answers them. Never edit
 `results/ledger.json` as a file; `ledger_write` is the only way you write the ledger.
 
-Write a requirement only after seeing a behaviour twice, one of them a recorded case. Cite the
-case id. When the help says one thing and the program does another, the program wins and you
-note the difference.
+Your manual is the program's own help: `{F1}` on the main menu shows it. No manual file exists
+in the repository and you must not add one or type help text into any file. To cite the help,
+record it as a behaviour case (see "Reading the help" in the design).
+
+You may change `oracle/targets/quick2.json` with your write tool, following "Changing the
+profile" in the design: add screens, prompts, regions, flows and behaviour cases, each marked
+`unobserved` with the run id you saw it in until a recorded case cites it. Put a screen ahead of
+any screen with a more general marker that would also match it. The next tool that runs the
+program re-reads every stored golden under your change and refuses with `profile_invalid` if
+any reads differently; then change it back and record what you needed as an open question.
+
+Exploratory runs are never citations. To cite a case, run the same inputs again with `run_case`
+and `record: true`, and cite the case id it returns. If the recorded run disagrees with the
+exploratory one, cite neither and ask why.
+
+Write a requirement in `.kiro/specs/quick2-solver/requirements.md` only after seeing a
+behaviour twice, one of them a recorded case. End every acceptance criterion with
+`_(observed: <case ids or capture paths>)_`, or `_(unobserved; help: <capture path>)_` when it
+rests on the help alone. Write values as the program printed them, never as an equation gives
+them. When the help says one thing and the program does another, the program wins and you
+record the difference as an open question.
 
 Prefer a small number of sharp cases over a large number of random ones. When you suspect a
 rule, design the case that would prove it false. A case that timed out or ended on an unknown

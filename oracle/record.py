@@ -15,7 +15,7 @@ import json
 import sys
 
 from . import profile as profile_mod
-from . import sandbox
+from . import reread, sandbox
 from .errors import OracleError
 from .recorder import Recorder
 
@@ -39,6 +39,8 @@ def main(argv=None):
     try:
         prof = profile_mod.load(args.profile)
         rec = Recorder()
+        if args.controls or args.seed is not None:
+            reread.check(prof, rec.store)  # a person repairs goldens with --rerecord, so it skips this
         if args.controls:
             out = rec.ensure_controls(prof)
             rec.update_coverage()

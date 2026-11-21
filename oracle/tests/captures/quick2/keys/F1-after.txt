@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+ ╔═════════════════════════════════════════════════════════════════════════╗    
+ ║                          MAIN MENU HELP SCREEN                          ║██  
+ ║                                                                         ║██  
+ ║ 1. CRITICAL DEPTH: This option should be used to determine a Base Flood ║██  
+ ║     Elevation (BFE)  if a previous  calculation using  the Normal Depth ║██  
+ ║     option computed a  depth that  was  determined to be SUPERCRITICAL. ║██  
+ ║     Super Critical  depths are generally not  accepted for use as BFEs. ║██  
+ ║                                                                         ║██  
+ ║ 2. CHANNEL CAPACITY: This option is  used to  determine  a rating curve ║██  
+ ║     for a cross section.  The program computes a discharge based on the ║██  
+ ║     entered depth. Repeating with other depths produces a rating curve. ║██  
+ ║     A BFE may be determined by interpolation with the correct discharge.║██  
+ ║                                                                         ║██  
+ ║ 3. NORMAL DEPTH: This is the  usual option  to use in determining BFEs. ║██  
+ ║     The user should  watch the Flow Type message  to make sure that the ║██  
+ ║     calculation is CRITICAL or SUBCRITICAL.  Use Option 1 if SUPERCRIT. ║██  
+ ║                                                                         ║██  
+ ║ 4. STEP-BACKWATER: This option should be used to calculate BFEs if more ║██  
+ ║     than  one cross section  is warranted  to  cover the  extent of the ║██  
+ ║     property.  Generally if the  property parallels  more than 500 feet ║██  
+ ║     of a flooding source this option should be used.                    ║██  
+ ╚═════════════════════════════════════════════════════════════════════════╝██  
+  Press <Enter> to continue███████████████████████████████████████████████████  

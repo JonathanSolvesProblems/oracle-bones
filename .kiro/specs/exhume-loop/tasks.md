@@ -1,11 +1,11 @@
 # Implementation Plan
 
-- [ ] 1. Before the first live run
+- [x] 1. Before the first live run
   - [x] 1.1 Add `ledger_write`: `ledger.update_exhumer` and one writer per operation in `oracle/ledger.py`, the tool and its schema in `oracle/tools.py` and `oracle/schemas.py`, evidence checks against the goldens store, the manifest and `oracle/out/runs/`, and `stopped` with the coverage report. Properties 2 and 3.
     - Amend oracle-harness Requirement 14 and its design for the ninth tool, and update the MCP tests.
     - Tell the Exhumer in `.kiro/agents/exhumer.md` to record every choice with `ledger_write` and never edit the ledger file; tell the Skeptic not to call it.
     - _Requirements: 1.2, 1.4, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 4.7, 7.1_
-  - [ ] 1.2 Make profile changes and citations safe: `oracle/reread.py` run from the tools and the recording command line (Property 4), F1 verified with a before and after capture and added to the profile's keys, and `scripts/check_traceability.py` (Property 1)
+  - [x] 1.2 Make profile changes and citations safe: `oracle/reread.py` run from the tools and the recording command line (Property 4), F1 verified with a before and after capture and added to the profile's keys, and `scripts/check_traceability.py` (Property 1)
     - Tell the Exhumer in `.kiro/agents/exhumer.md` how to read the help, change the profile, turn a finding into a citable case, and cite it.
     - _Requirements: 1.3, 1.5, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 5.1, 5.3, 5.4, 5.5, 6.2, 6.3, 6.4, 6.5_
 

@@ -247,10 +247,12 @@ These are questions, not answers. None belongs in the solver spec until observed
    solver stop at a tolerance? At 3.27 ft the channel carries 297.2 cfs, not 300.
 4. **Constants and precision.** 1.486 or 1.49 for Manning's constant? Single precision, as
    compiled QuickBASIC suggests?
-5. **After the help.** When Enter left the help, the main menu was read one row lower than
-   before, with "Press <Enter> to continue" left on row 0 (exploratory run, 2026-11-21). Is
-   that the program, or a terminal scroll in emu2? Until it is known, no flow should pass
-   through the help, because every field region after it could be off by one row.
+5. **After the help.** The help fills rows 2 to 24, with "Press <Enter> to continue" on row
+   24. When Enter left it, the main menu came back on the same rows as before, but "Press
+   <Enter> to continue" was left on row 0, so the screen no longer matches the main menu seen
+   before the help (exploratory runs, 2026-11-21, not recorded). Is that the program, or a
+   terminal scroll in emu2? Does any later screen keep the stray row, and does it ever move a
+   field region?
 
 ## Correctness Properties
 

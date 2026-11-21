@@ -32,6 +32,7 @@ VERIFIED = {
     "literal": "oracle/tests/captures/quick2/trap_result_300.txt",
     "{Enter}": "oracle/tests/captures/quick2/trap_result_300.txt",
     # Each pair of captures shows the screen before and after the key (task 4.4).
+    "{F1}": "oracle/tests/captures/quick2/keys/F1-after.txt",   # on the main menu: the help (MAINHLP.EXE)
     "{F2}": "oracle/tests/captures/quick2/keys/F2-after.txt",   # back to the previous prompt
     "{F5}": "oracle/tests/captures/quick2/keys/F5-after.txt",   # print; the screen changes
     "{F6}": "oracle/tests/captures/quick2/keys/F6-after.txt",   # save; asks for the drive letter

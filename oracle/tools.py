@@ -13,7 +13,7 @@ import traceback
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import cases, evidence, generator, ledger, paths, runs, sandbox, screen
+from . import cases, evidence, generator, ledger, paths, reread, runs, sandbox, screen
 from .recorder import Recorder
 from . import profile as profile_mod
 from .errors import OracleError
@@ -43,6 +43,15 @@ class Oracle:
         if not os.path.exists(p):
             raise OracleError("invalid_arguments", "no target profile %s" % (name or self.default_profile))
         return profile_mod.load(p)
+
+    def _running_profile(self, name=None):
+        """The profile for a tool that runs the program. Whenever its sha256 changes, every
+        stored golden is re-read under it first (exhume-loop Requirement 4.3)."""
+        prof = self._profile(name)
+        if getattr(self, "_reread_sha", None) != prof["_sha256"]:
+            reread.check(prof, self.recorder.store)
+            self._reread_sha = prof["_sha256"]
+        return prof
 
     def _need_docker(self):
         if not sandbox.docker_available():
@@ -79,7 +88,7 @@ class Oracle:
     # ---- tools --------------------------------------------------------------------------
 
     def boot_target(self, profile=None):
-        prof = self._profile(profile)
+        prof = self._running_profile(profile)
         self._need_docker()
         s = self.manager.start(prof)
         self.session_profiles[s.id] = prof
@@ -125,7 +134,7 @@ class Oracle:
         return {"screen": self._screen(desc), "resends": s.resends - resends_before}
 
     def run_case(self, mode, shape, inputs, record=False):
-        prof = self._profile()
+        prof = self._running_profile()
         self._need_docker()
         if record:
             return self.recorder.create(prof, mode, shape, inputs, manager=self.manager)
@@ -136,7 +145,7 @@ class Oracle:
         return out
 
     def run_batch(self, seed, count, modes=None, shapes=None, record=False):
-        prof = self._profile()
+        prof = self._running_profile()
         self._need_docker()
         if record:
             return self.recorder.create_batch(prof, seed, count, modes, shapes, manager=self.manager)
