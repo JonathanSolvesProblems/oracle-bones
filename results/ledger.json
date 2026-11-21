@@ -876,11 +876,16 @@
         "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
         "nd-irr-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-21T17:15:59Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Yes, the replay would have failed there, and the re-read could not see it. The screen right after Begin (screen-20) is a real normal-depth result, so the user chose to make the control's step 21 expect nd_irr_result. The step that saves the file (screen-24, 'SAVING FILE') must stay irr_editor, so nd_irr_result's marker now also excludes 'SAVING FILE'. The re-read now reads the screen each transcript step started from and requires the first match to be the step's expect. Profile version 2; obs-nodata-000001 was rerecorded from the command line, and every golden replays the same (commit 185c4fa).",
+      "answer_evidence": [
+        "obs-nodata-000001",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-24.txt",
+        "20261121-213654-f8dcd0"
+      ],
+      "answered_at": "2026-11-21T22:06:39Z"
     }
   ],
   "decisions": [
@@ -1140,81 +1145,19 @@
       "why": "Tasks 2.1 and 2.2 are answered with recorded cases: 0 holds each trapezoid prompt; -1 is accepted and computed, stalled or returned depending on the field; the irregular editor takes 40 points, two bank stations that must match ground points, and three n values that each change the answer. Open questions Q-001 and Q-005 need a person's harness decision. Q-002, Q-003, Q-004, Q-006 and Q-007 go past what tasks 2.1 and 2.2 asked, and fit task 3 better than this run. The coverage report's unobserved list predates the last citation-only profile edit (no case has run since), so it still lists irr_editor, nd_irr_result, irr_bank_rejected and flows[normal_depth/irregular], which the profile now cites.",
       "evidence": [],
       "at": "2026-11-21T17:16:12Z"
+    },
+    {
+      "n": 21,
+      "saw": "The answer to Q-007 says a replay of obs-nodata-000001 would have failed under the old profile. That replay was never run. The runner's wait accepts a screen when the expected screen is among the matches, so it would most likely have passed. The gap was in the re-read, which read final screens only.",
+      "chose": "triage",
+      "why": "Correct the record: whether the old replay failed is unknown. The fix stands: under a strict every-step reading, steps 21 and 25 read as nd_irr_result, and both now read as expected.",
+      "evidence": [
+        "obs-nodata-000001",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-24.txt"
+      ],
+      "at": "2026-11-21T22:06:53Z"
     }
   ],
-  "stopped": {
-    "why": "Tasks 2.1 and 2.2 are answered with recorded cases: 0 holds each trapezoid prompt; -1 is accepted and computed, stalled or returned depending on the field; the irregular editor takes 40 points, two bank stations that must match ground points, and three n values that each change the answer. Open questions Q-001 and Q-005 need a person's harness decision. Q-002, Q-003, Q-004, Q-006 and Q-007 go past what tasks 2.1 and 2.2 asked, and fit task 3 better than this run. The coverage report's unobserved list predates the last citation-only profile edit (no case has run since), so it still lists irr_editor, nd_irr_result, irr_bank_rejected and flows[normal_depth/irregular], which the profile now cites.",
-    "decision": 20,
-    "at": "2026-11-21T17:16:12Z",
-    "coverage": {
-      "unexercised_fields": [],
-      "untried_keys": {},
-      "unobserved_profile_facts": [
-        {
-          "profile_path": "entry",
-          "source": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
-        },
-        {
-          "profile_path": "keys",
-          "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
-        },
-        {
-          "profile_path": "screens[title]",
-          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
-        },
-        {
-          "profile_path": "screens[shape_menu]",
-          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
-        },
-        {
-          "profile_path": "screens[stray_listing]",
-          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-        },
-        {
-          "profile_path": "screens[irr_bank_rejected]",
-          "source": "20261121-171013-fb0fd4: a left bank station of 155 with no ground point at 155 shows this on row 24; RIGHT is not yet seen"
-        },
-        {
-          "profile_path": "screens[nd_irr_result]",
-          "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder) and oracle/goldens/captures/obs-nodata-000001/screen-20.txt: after Begin, results fill rows 18, 20 and 21 of the editor box and row 24 is blank"
-        },
-        {
-          "profile_path": "screens[irr_editor]",
-          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor; prompts from oracle/goldens/captures/obs-nodata-000001/screen-03.txt and screen-12.txt to screen-19.txt and session dd8286a4 on 2026-11-21"
-        },
-        {
-          "profile_path": "flows[normal_depth/irregular]",
-          "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder): title Enter, menu 3 Enter, shape I Enter, 40 station and elevation pairs each followed by Enter (the editor leaves ground-point entry by itself after the 40th), two bank stations, three n values, discharge, slope, Enter"
-        },
-        {
-          "profile_path": "ranges[left_slope]",
-          "source": "starting range for the generator, not yet observed"
-        },
-        {
-          "profile_path": "ranges[right_slope]",
-          "source": "starting range for the generator, not yet observed"
-        },
-        {
-          "profile_path": "ranges[bottom_width]",
-          "source": "starting range for the generator, not yet observed"
-        },
-        {
-          "profile_path": "ranges[n]",
-          "source": "starting range for the generator, not yet observed"
-        },
-        {
-          "profile_path": "ranges[discharge]",
-          "source": "starting range for the generator, not yet observed"
-        },
-        {
-          "profile_path": "ranges[slope]",
-          "source": "starting range for the generator, not yet observed"
-        }
-      ],
-      "untriaged_mismatches": [],
-      "unanswered_runs": 6,
-      "unknown_screens": 0,
-      "nondeterministic_cases": 0
-    }
-  }
+  "stopped": null
 }
