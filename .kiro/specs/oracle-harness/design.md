@@ -230,7 +230,11 @@ sequences is unknown and stays unverified until tested.
 For each form input the host waits for the expected prompt, sends the value and `{Enter}`, and
 appends a transcript step `{step, expect, keys, screen_hash_before, screen_hash_after,
 resend}`. Transcript steps carry no wall-clock time, so transcripts of two identical runs are
-equal.
+equal. `screen_hash_after` is the screen once it has settled after the keys: the runner's reply
+to `send` is taken before the program redraws, so the host waits for the hash to change from
+`screen_hash_before` and then stay quiet for `settle_ms`. If it does not change within four
+times `settle_ms` (the window the resend check uses), the after hash is the unchanged screen.
+In a stored golden, each step's after hash is the next step's before hash.
 
 Resend applies only on screens with `"resend": true`: if the hash is unchanged after the
 settle time, the same key is sent again, up to `retry_limit`, each one logged as `resend: true`.

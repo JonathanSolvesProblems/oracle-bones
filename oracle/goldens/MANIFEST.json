@@ -51,9 +51,9 @@
     "captures/obs-nodata-000001/screen-23.txt": "77241a91f4ecb4d01b280a753d739e246607218a778b0438761b12e922afe765",
     "captures/obs-nodata-000001/screen-24.txt": "d5fadf555cbd356e8437e215479aa74fa2c64f9bef81f38302bc8dc2c46e2850",
     "captures/obs-nodata-000001/screen-25.txt": "2443e1b18e8e7dcbbec920e06f0a85c599f14bbed4c51fd640c519f80a3e047f",
-    "cases/nd-trap-000001.json": "59db3338f03bf9043d4a75d8d5cfda0dd41bc6d04b1134301a10cc7a2df0c2ee",
-    "cases/nd-trap-000002.json": "5c5e55b653ffdf8320d7de61c7e827e0e385d39a5e2a8dae2f55b545bcb6a030",
-    "cases/obs-menudrop-000001.json": "2c72b1649a6c8d5e7af51ca4175ae1979206652316732d6ee7673d82b620cefe",
-    "cases/obs-nodata-000001.json": "9fa696c1697af20aef420095ac281950ad6a5da927116ce638dcc522686a1b46"
+    "cases/nd-trap-000001.json": "724c1dd16fb0fff962ba4b6fc8330acde4d5c2195680301fc41adb5f6fb391d3",
+    "cases/nd-trap-000002.json": "644e27333ac5caf4438ebd9019825138f80f82751535cd40fd89a7f66c1083d4",
+    "cases/obs-menudrop-000001.json": "1347700ab5710abb1b744d5381d00d6a493a0579d5327b0907ff37b862c24464",
+    "cases/obs-nodata-000001.json": "1adf1624d386e9d2a1947dfaa4ef35bbd85aed96192800019f2e961c088d58a2"
   }
 }

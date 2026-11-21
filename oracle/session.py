@@ -198,9 +198,31 @@ class Session:
                 self.transcript.append({"step": len(self.transcript) + 1, "expect": expect, "keys": notation,
                                         "screen_hash_before": before["hash"], "resend": True})
                 self.last = self._call({"op": "send", "chunks": chunks}, 5)
-        step_after = self.last["hash"]
-        self.transcript[-1]["screen_hash_after"] = step_after
+        if not allow:
+            self.last = self._settle_after(before)
+        self.transcript[-1]["screen_hash_after"] = self.last["hash"]
         return screen.describe(self.profile, self.last)
+
+    def _change_window_s(self):
+        """How long a screen may stay unchanged after keys before it counts as not reacting.
+        The same window the resend check uses."""
+        return self.limits["settle_ms"] / 1000 * 4
+
+    def _settle_after(self, before):
+        """The screen once it has settled after a send. The snapshot that "send" returns is
+        taken before the program redraws, so it cannot be used as the after screen. Wait for
+        the screen to change from `before` and then stay quiet for the settle time; if it does
+        not change within the change window, the after screen is the unchanged screen, settled."""
+        settle = self.limits["settle_ms"]
+        t = self._bounded(None)
+        snap = self._call({"op": "wait", "any": [], "changed_from": before["hash"] if before else None,
+                           "settle_ms": settle, "timeout_s": min(t, self._change_window_s())}, t)
+        if not snap.get("matched") and snap.get("exited") is None:
+            # Unchanged, or changed but still drawing when the window closed: wait for quiet.
+            t = self._bounded(None)
+            snap = self._call({"op": "wait", "any": [], "changed_from": None,
+                               "settle_ms": settle, "timeout_s": t}, t)
+        return snap
 
     # ---- end ----------------------------------------------------------------------------
 

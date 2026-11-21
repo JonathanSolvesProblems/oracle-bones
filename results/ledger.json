@@ -1,39 +1,39 @@
 {
   "screens": {
     "title": {
-      "visits": 13,
+      "visits": 25,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 12,
+      "visits": 24,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 9,
+      "visits": 18,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 6,
+      "visits": 12,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_result": {
-      "visits": 6,
+      "visits": 12,
       "keys_tried": []
     },
     "irr_editor": {
-      "visits": 3,
+      "visits": 6,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -42,7 +42,7 @@
       ]
     },
     "stray_listing": {
-      "visits": 3,
+      "visits": 6,
       "keys_tried": []
     }
   },
@@ -113,7 +113,32 @@
   "unanswered": [],
   "unknown_screens": [],
   "nondeterminism": [],
-  "rerecords": [],
+  "rerecords": [
+    {
+      "case_id": "nd-trap-000001",
+      "old": "59db3338f03bf9043d4a75d8d5cfda0dd41bc6d04b1134301a10cc7a2df0c2ee",
+      "new": "724c1dd16fb0fff962ba4b6fc8330acde4d5c2195680301fc41adb5f6fb391d3",
+      "at": "2026-11-21T11:56:57Z"
+    },
+    {
+      "case_id": "nd-trap-000002",
+      "old": "5c5e55b653ffdf8320d7de61c7e827e0e385d39a5e2a8dae2f55b545bcb6a030",
+      "new": "644e27333ac5caf4438ebd9019825138f80f82751535cd40fd89a7f66c1083d4",
+      "at": "2026-11-21T11:57:04Z"
+    },
+    {
+      "case_id": "obs-menudrop-000001",
+      "old": "2c72b1649a6c8d5e7af51ca4175ae1979206652316732d6ee7673d82b620cefe",
+      "new": "1347700ab5710abb1b744d5381d00d6a493a0579d5327b0907ff37b862c24464",
+      "at": "2026-11-21T11:57:12Z"
+    },
+    {
+      "case_id": "obs-nodata-000001",
+      "old": "9fa696c1697af20aef420095ac281950ad6a5da927116ce638dcc522686a1b46",
+      "new": "1adf1624d386e9d2a1947dfaa4ef35bbd85aed96192800019f2e961c088d58a2",
+      "at": "2026-11-21T11:57:32Z"
+    }
+  ],
   "mismatches": {},
   "unobserved": [
     {

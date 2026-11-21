@@ -187,3 +187,40 @@ It built the seeded case generator (task 7.1) early because the MCP batch tool n
 said so.
 
 Credits: 210.88. Time: 1 h 9 min 47 s.
+
+## 2026-11-21, session 3: recording goldens
+
+Settings: Default agent, Claude Opus 5.5, Approve for me. A new session, because the long one
+had made every step cost more.
+
+> Continue the oracle-harness spec in .kiro/specs/oracle-harness: tasks 7.2 to 7.7, so the
+> control cases are recorded as goldens and the profile cites them instead of the spike. The
+> earlier session's three spec changes are accepted: the clock that starts at a fixed date and
+> then runs, the corrected menu finding, and the narrower no-DATA case.
+>
+> Commit after each task with a short plain message, no tool or AI names. docs/build-log.md has
+> an update from me; include it in your first commit. Only stop to ask me if a problem would
+> change what the spec promises. Stop after 7.7.
+
+Kiro built the recorder, the goldens manifest, the determinism sample, parallel batches and
+replay, one commit per task. 98 tests pass.
+
+- **The four control cases are goldens,** each run twice with both runs agreeing, every screen
+  captured: depth 3.27 and 4.22 for the trapezoid, the stray listing without the DATA folder,
+  and "3" typed on the title screen, which never reaches the main menu.
+- **The profile cites them.** Drive layout, screen size and the menu's resend flag (now off)
+  point at recorded cases instead of the spike. A new test fails if any citation points at a
+  case that is not stored. 15 profile facts are still marked unobserved, for the Exhumer.
+- **Its own decisions:** a control case that differs stops the run and stores none of them;
+  tests record into a scratch goldens folder so they never touch the real ones; ledger counts
+  are grouped by case prefix, so behaviour cases stay apart from depth cases.
+- **A bug it found in its own work:** the suite failed now and then because Windows briefly
+  refuses to recreate the ledger's lock file while it is being deleted. Ledger writes now retry.
+
+A live batch of 8 generated cases ran at 23.3 cases per minute, and 6 of the 8 timed out. Every
+case that timed out held a boundary input (0 or -1), and the profile has no screen yet for a
+rejected input, so each one waited the full 10 seconds. Kiro said so rather than reporting the
+speed as is: most of a 10,000-case run would time out the same way until the Exhumer maps
+those screens.
+
+Credits: 41.46. Time: 38 min 35 s.
