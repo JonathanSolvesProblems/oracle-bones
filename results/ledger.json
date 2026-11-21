@@ -1,28 +1,28 @@
 {
   "screens": {
     "title": {
-      "visits": 66,
+      "visits": 68,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 65,
+      "visits": 67,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 68,
+      "visits": 70,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 60,
+      "visits": 61,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -35,7 +35,7 @@
       ]
     },
     "irr_editor": {
-      "visits": 32,
+      "visits": 33,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -52,7 +52,7 @@
       "keys_tried": []
     },
     "irr_bank_rejected": {
-      "visits": 8,
+      "visits": 9,
       "keys_tried": []
     }
   },
@@ -587,22 +587,6 @@
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
     },
     {
-      "profile_path": "screens[irr_bank_rejected]",
-      "source": "20261121-171013-fb0fd4: a left bank station of 155 with no ground point at 155 shows this on row 24; RIGHT is not yet seen"
-    },
-    {
-      "profile_path": "screens[nd_irr_result]",
-      "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder) and oracle/goldens/captures/obs-nodata-000001/screen-20.txt: after Begin, results fill rows 18, 20 and 21 of the editor box and row 24 is blank"
-    },
-    {
-      "profile_path": "screens[irr_editor]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: irregular channel ground point editor; prompts from oracle/goldens/captures/obs-nodata-000001/screen-03.txt and screen-12.txt to screen-19.txt and session dd8286a4 on 2026-11-21"
-    },
-    {
-      "profile_path": "flows[normal_depth/irregular]",
-      "source": "exploratory session dd8286a4 on 2026-11-21 (sessions write no run folder): title Enter, menu 3 Enter, shape I Enter, 40 station and elevation pairs each followed by Enter (the editor leaves ground-point entry by itself after the 40th), two bank stations, three n values, discharge, slope, Enter"
-    },
-    {
       "profile_path": "ranges[left_slope]",
       "source": "starting range for the generator, not yet observed"
     },
@@ -659,11 +643,14 @@
         "batch-20261121-164751-274bff",
         "20261121-164744-b832b8"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-21T17:01:21Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Decided by the user: a held prompt (the screen settles unchanged on the same prompt after a form value is sent) ends the case as outcome rejected with no message; the golden names the prompt in held_prompt. 0 stays in the generator's boundaries, because the rebuild has to hold a 0 too. Built in commit 77b5d4f. Live check: left slope 0 on the trapezoid form now ends as rejected, message null, instead of a 10 s timeout. Behaviour cases with their own steps, such as obs-zerohold-000001, are not ended early.",
+      "answer_evidence": [
+        "20261121-175942-7f65b9",
+        "obs-zerohold-000001"
+      ],
+      "answered_at": "2026-11-21T18:00:18Z"
     },
     {
       "id": "Q-002",
@@ -713,11 +700,14 @@
         "20261121-171145-3e44a3",
         "20261121-171150-6d217d"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-21T17:12:13Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Decided by the user: a screen the profile marks as rejected or error ends the case where it appears, including during the wait for the next prompt, with the message it printed. Built in commit 77b5d4f: the prompt wait now also stops on the profile's stop screens. Live check: the 40-point section with right bank 255 now ends as outcome rejected on irr_bank_rejected with message 'ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point. Press <ENTER>' instead of timing out.",
+      "answer_evidence": [
+        "20261121-180004-c1ef4f",
+        "obs-bankreject-000002"
+      ],
+      "answered_at": "2026-11-21T18:00:18Z"
     },
     {
       "id": "Q-006",
