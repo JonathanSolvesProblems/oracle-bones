@@ -124,8 +124,8 @@ def test_tools_end_to_end_over_stdio(live, tmp_path):
         rec = tool("run_case", mode="normal_depth", shape="trapezoid", inputs=inputs, record=True)
         assert rec["recorded"] is True and rec["case_id"] == "nd-trap-000003", rec
         controls = sorted(p.stem for p in (tmp_path / "goldens" / "cases").glob("*.json"))
-        assert controls == ["nd-trap-000001", "nd-trap-000002", "nd-trap-000003", "obs-menudrop-000001",
-                            "obs-nodata-000001"]
+        listed = [c["id"] for c in json.loads(paths.DEFAULT_PROFILE.read_text(encoding="utf-8"))["controls"]]
+        assert controls == sorted(listed + ["nd-trap-000003"])
         again = tool("run_case", mode="normal_depth", shape="trapezoid", inputs=inputs, record=True)
         assert again["case_id"] == "nd-trap-000004"  # a new id, never a replacement
         wrong = tool("run_case", mode="normal_depth", shape="trapezoid", inputs={"left_slope": "3"})

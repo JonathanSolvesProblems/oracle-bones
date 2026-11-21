@@ -236,6 +236,14 @@ to `send` is taken before the program redraws, so the host waits for the hash to
 times `settle_ms` (the window the resend check uses), the after hash is the unchanged screen.
 In a stored golden, each step's after hash is the next step's before hash.
 
+A case ends as `rejected` in two ways (decided 2026-11-21, ledger Q-005 and Q-001). A screen
+the profile marks as `rejected` or `error` that appears at any wait, including a wait for the
+next prompt, ends the case with the outcome of its kind and the message it printed. A form
+input whose screen settles unchanged on the same prompt after the value is sent (a held
+prompt) ends the case as `rejected` with no message; the golden names the prompt in
+`held_prompt`, and the re-read checks that the final screen still shows it. Behaviour cases
+with their own steps are not ended by a held prompt.
+
 Resend applies only on screens with `"resend": true`: if the hash is unchanged after the
 settle time, the same key is sent again, up to `retry_limit`, each one logged as `resend: true`.
 Then `input_ignored`. The cause of the dropped menu input is investigated separately
@@ -362,6 +370,7 @@ traceback saved to the run log rather than sent to the caller.
   "outcome": "result",
   "printed": {"depth": "  3.27", "...": "raw text of every mapped field"},
   "message": null,
+  "held_prompt": null,
   "seed": null, "generator_version": null,
   "emu2_commit": "<sha>", "profile_version": "1", "profile_sha256": "<sha>",
   "archive_sha256": "<sha>",

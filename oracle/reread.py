@@ -35,6 +35,13 @@ def read_as(profile, golden, rows):
     if sid is None:
         return {"outcome": "unknown_screen", "printed": {}, "message": None}
     sdef = screen_by_id(profile, sid)
+    held = golden.get("held_prompt")
+    if held:
+        # A held input: the final screen must still show the prompt that held.
+        pat = next((p["pattern"] for p in sdef.get("prompts", []) if p["id"] == held), None)
+        if pat is None or not re.search(pat, screen_mod.text_of(rows), re.M):
+            return {"outcome": "unknown_screen", "printed": {}, "message": None}
+        return {"outcome": "rejected", "printed": screen_mod.fields(sdef, rows), "message": None}
     kind = sdef["kind"]
     outcome = kind if kind in ("result", "rejected", "error") else "unknown_screen"
     printed = screen_mod.fields(sdef, rows) if outcome != "unknown_screen" else {}

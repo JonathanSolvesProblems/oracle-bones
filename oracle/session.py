@@ -143,22 +143,31 @@ class Session:
                               {"screen": desc, "waited_for": screen_ids, "prompt": prompt_id})
         return desc
 
-    def wait_prompt(self, screen_id, prompt_id, timeout_s=None):
-        """Wait for a prompt; prompts on the same screen are distinguished by their pattern."""
+    def wait_prompt(self, screen_id, prompt_id, timeout_s=None, stops=()):
+        """Wait for a prompt; prompts on the same screen are distinguished by their pattern.
+        A settled screen that reads as one of `stops` ends the wait early and is returned."""
         sdef = screen_by_id(self.profile, screen_id)
         pat = next(x["pattern"] for x in sdef.get("prompts", []) if x["id"] == prompt_id)
+        stop_markers = [screen_by_id(self.profile, sid)["marker"] for sid in stops]
         t = self._bounded(timeout_s)
-        snap = self._call({"op": "wait", "any": [sdef["marker"]] if sdef["marker"] else [], "changed_from": None,
-                           "settle_ms": self.limits["settle_ms"], "timeout_s": t}, t)
+        snap = self._call({"op": "wait", "any": ([sdef["marker"]] if sdef["marker"] else []) + stop_markers,
+                           "changed_from": None, "settle_ms": self.limits["settle_ms"], "timeout_s": t}, t)
         deadline = time.monotonic() + t
-        while not re.search(pat, screen.text_of(snap["rows"]), re.M):
+
+        def stopped(s):
+            return s.get("matched") and screen.identify(self.profile, s["rows"])[0] in stops
+
+        while not re.search(pat, screen.text_of(snap["rows"]), re.M) or stopped(snap):
+            if stopped(snap):
+                self.last = snap
+                return screen.describe(self.profile, snap)
             left = deadline - time.monotonic()
             if left <= 0 or snap.get("exited") is not None:
                 self.last = snap
                 raise OracleError("timeout", "waited %.1fs for prompt %s" % (t, prompt_id),
                                   {"screen": screen.describe(self.profile, snap), "waited_for": [screen_id],
                                    "prompt": prompt_id})
-            snap = self._call({"op": "wait", "any": [pat], "changed_from": None,
+            snap = self._call({"op": "wait", "any": [pat] + stop_markers, "changed_from": None,
                                "settle_ms": self.limits["settle_ms"], "timeout_s": min(left, t)}, left)
         self.last = snap
         return screen.describe(self.profile, snap)

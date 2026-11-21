@@ -235,6 +235,7 @@ class Recorder:
             "outcome": got["outcome"],
             "printed": got.get("printed", {}),
             "message": got.get("message"),
+            "held_prompt": got.get("held_prompt"),
             "seed": job.get("seed"), "generator_version": job.get("generator_version"),
             "emu2_commit": self.cfg["emu2"]["commit"],
             "profile_version": profile["version"], "profile_sha256": profile["_sha256"],
@@ -475,6 +476,8 @@ class Recorder:
                 "files": {f["path"]: f["sha256"] for f in g["files"]}}
         have = fingerprint(got)
         diffs = [{"what": k, "golden": want[k], "replay": have[k]} for k in want if want[k] != have[k]]
+        if g.get("held_prompt") != got.get("held_prompt"):
+            diffs.append({"what": "held_prompt", "golden": g.get("held_prompt"), "replay": got.get("held_prompt")})
         if g["outcome"] == "observed" and got.get("screen_id") != g["expected_screen"]:
             diffs.append({"what": "screen_id", "golden": g["expected_screen"], "replay": got.get("screen_id")})
         return {"case_id": cid, "run_id": run_id, "match": not diffs, "differences": diffs}

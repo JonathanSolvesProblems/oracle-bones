@@ -105,3 +105,19 @@ def test_stored_transcripts_chain():
         t = json.loads(f.read_text(encoding="utf-8"))["transcript"]
         for a, b in zip(t, t[1:]):
             assert a["screen_hash_after"] == b["screen_hash_before"], (f.name, a["step"])
+
+
+def test_a_stop_screen_ends_a_prompt_wait():
+    """A screen of kind rejected that appears while a prompt is awaited is returned at once,
+    and the wait asks the runner for its marker as well as the prompt's screen."""
+    from oracle.recorder import Store
+    rows = (Store(paths.REPO_GOLDENS).captures_dir / "obs-bankreject-000002" / "screen-15.txt") \
+        .read_text(encoding="utf-8")[:-1].split("\n")
+    runner = FakeRunner("x")
+    runner.screen = dict(runner.screen, rows=rows,
+                         hash=hashlib.sha256("\n".join(rows).encode()).hexdigest(), quiet_ms=1000)
+    s = _session(runner)
+    desc = s.wait_prompt("irr_editor", "n_left", timeout_s=1, stops=["irr_bank_rejected"])
+    assert desc["screen_id"] == "irr_bank_rejected"
+    marker = next(x["marker"] for x in s.profile["screens"] if x["id"] == "irr_bank_rejected")
+    assert marker in runner.ops[0]["any"]

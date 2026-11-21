@@ -2,6 +2,11 @@
 
 A run ends in one of: result, rejected, error, observed (the program answered), or timeout,
 unknown_screen (the harness got no answer). Only the first group may ever be stored.
+
+A case is rejected in two ways: a screen the profile marks as rejected or error appears at any
+wait, and ends the case with the message it printed; or a form input is held, meaning the
+screen settles unchanged on the same prompt after the value is sent, which ends the case with
+no message and names the held prompt.
 """
 
 from . import screen as screen_mod
@@ -73,7 +78,7 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, ca
                     break
                 expect = st["expect"]
                 if "prompt" in st:
-                    desc = s.wait_prompt(expect, st["prompt"])
+                    desc = s.wait_prompt(expect, st["prompt"], stops=stops)
                 else:
                     desc = s.wait([expect] + stops, settle_ms=0 if st.get("immediate") else None)
                 keep(desc)
@@ -81,8 +86,12 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, ca
                     out.update(_ending(profile, desc, observed))
                     break
                 keys = (inputs[st["input"]] + st.get("then", "")) if "input" in st else st["keys"]
+                before = desc
                 desc = s.send(keys, expect=expect)
                 keep(desc)
+                if "input" in st and "prompt" in st and desc["hash"] == before["hash"]:
+                    out.update(_held(desc, st["prompt"]))
+                    break
         except OracleError as e:
             if e.category not in ("timeout", "input_ignored"):
                 raise
@@ -136,6 +145,13 @@ def _ending(profile, desc, observed):
     else:
         out["outcome"] = "unknown_screen"
     return out
+
+
+def _held(desc, prompt_id):
+    """A form input the program refused without a message: after the value and its keys, the
+    screen settled unchanged on the same prompt. The case ends there as rejected."""
+    return {"outcome": "rejected", "screen_id": desc["screen_id"], "final": desc["rows"],
+            "message": None, "printed": desc["fields"], "held_prompt": prompt_id}
 
 
 def check_control(profile, control, got):
