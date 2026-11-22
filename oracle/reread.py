@@ -83,6 +83,12 @@ def read_as(profile, golden, rows):
     if sid is None:
         return {"outcome": "unknown_screen", "printed": {}, "message": None}
     sdef = screen_by_id(profile, sid)
+    stuck = golden.get("stuck_screen")
+    if stuck:
+        # The program stayed on a stuck screen (Q-015): the final screen must still read as it.
+        if sid != stuck or not sdef.get("stuck"):
+            return {"outcome": "unknown_screen", "printed": {}, "message": None}
+        return {"outcome": "error", "printed": {}, "message": None}
     held = golden.get("held_prompt")
     if held:
         # A held input: the final screen must still show the prompt that held.

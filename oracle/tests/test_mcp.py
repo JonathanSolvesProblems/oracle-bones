@@ -110,7 +110,7 @@ def test_tools_end_to_end_over_stdio(live, tmp_path):
         assert boot["screen"]["screen_id"] == "title"
         assert tool("send_keys", session_id=sid, keys="{Enter}", expect="main_menu")["screen"]["screen_id"] == "main_menu"
         assert tool("send_keys", session_id=sid, keys="3{Enter}", expect="shape_menu")["screen"]["screen_id"] == "shape_menu"
-        bad = tool("send_keys", session_id=sid, keys="{F3}")
+        bad = tool("send_keys", session_id=sid, keys="{F4}")
         assert bad["error"]["category"] == "unsupported_key"
         assert tool("read_screen", session_id=sid)["screen"]["screen_id"] == "shape_menu"
         assert tool("shutdown", session_id=sid) == {"closed": [sid]}

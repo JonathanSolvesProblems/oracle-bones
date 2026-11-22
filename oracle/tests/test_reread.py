@@ -1,4 +1,4 @@
-﻿"""Property 4 (exhume-loop): a profile change must read every stored golden as stored.
+"""Property 4 (exhume-loop): a profile change must read every stored golden as stored.
 
 Runs on the committed goldens, without Docker.
 """

@@ -47,15 +47,18 @@
     "wait_timeout_s": 10,
     "case_time_limit_s": 60,
     "retry_limit": 3,
-    "hold_confirm_ms": 2000
+    "hold_confirm_ms": 2000,
+    "stuck_confirm_ms": 20000
   },
   "keys": {
     "list": [
       "{Enter}",
       "{F1}",
       "{F2}",
+      "{F3}",
       "{F5}", "{F6}",
       "{F7}",
+      "{F8}",
       "{F9}",
       "{F10}",
       "1",
@@ -68,7 +71,7 @@
       "C",
       "I"
     ],
-    "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
+    "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21; F3 in the ground-points editor inserts a point, key capture oracle/tests/captures/quick2/keys/F3-after.txt, and F8 on the Step-Backwater result shows SAVING TEMPORARY FILE, key capture oracle/tests/captures/quick2/keys/F8-after.txt, 2026-11-22"
   },
   "codes": {
     "modes": {
@@ -262,8 +265,9 @@
     {
       "id": "irr_working",
       "kind": "other",
+      "stuck": true,
       "marker": "GROUND\\s+POINTS[\\s\\S]*W o r k i n g",
-      "unobserved": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
+      "cite": ["obs-irronept-000001", "nd-irr-000026"]
     },
     {
       "id": "irr_station_rejected",
@@ -1510,6 +1514,57 @@
       ],
       "expect": {"outcome": "observed", "screen_id": "nd_irr_result"},
       "source": "session 64ab4b1a on 2026-11-22 (sessions write no run folder): two ground points and F10 compute WS ELEV 7.60, Depth 5.6, with EXTENDED CROSS SECTION"
+    },
+    {
+      "id": "obs-irronept-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["irr_working"]}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_working"},
+      "source": "sessions b018e73c and d2c32fcf on 2026-11-22 and run 20261122-175134-d1f6a5: one ground point, F10 and Begin show 'W o r k i n g  ..........' and stay there; oracle/out/probe_working.py on 2026-11-22 watched it for 30 s, same text, never quiet for more than about 75 ms (Q-015)"
+    },
+    {
+      "id": "obs-bankexact-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "10.04{Enter}2{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}"},
+        {"expect": "irr_editor", "keys": "10{Enter}"},
+        {"expect": "irr_bank_rejected", "keys": "{Enter}"},
+        {"expect": "irr_editor", "keys": "10.04{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["nd_irr_result"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_irr_result"},
+      "source": "session 6001ff05 on 2026-11-22 and oracle/out/probe_bankexact.py on 2026-11-22 (no run folder): bank 10 does not match ground station 10.04 (ERROR line), Enter returns to the RIGHT bank prompt with the LEFT bank -50.0 kept, and 10.04 is then taken; Begin computes WS ELEV 4.70 (Q-013, Q-017)"
     },
     {
       "id": "obs-irrelev-000001",

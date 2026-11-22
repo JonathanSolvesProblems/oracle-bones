@@ -1,4 +1,4 @@
-﻿"""Session ids, the concurrency limit, idle sweeping, and container cleanup.
+"""Session ids, the concurrency limit, idle sweeping, and container cleanup.
 
 One SessionManager per server process. It writes oracle/out/servers/<uuid>.pid so that a
 later server can tell which labelled containers belong to a server that is no longer running.

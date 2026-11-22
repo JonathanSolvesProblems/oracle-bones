@@ -188,3 +188,219 @@ def test_a_slow_program_is_not_held(monkeypatch):
     assert got["printed"] == g["printed"]
     t = got["transcript"]
     assert all(a["screen_hash_after"] == b["screen_hash_before"] for a, b in zip(t, t[1:]))
+
+
+# ---- Q-015: a screen the program never leaves --------------------------------------------
+
+def working_rows():
+    """The two-point editor with row 24 as QUICK-2 shows it while it spins (session b018e73c)."""
+    rows = list(captures("obs-irrtwopt-000001")[12])
+    rows[24] = rows[24][:3] + "\u2551 W o r k i n g  .........." + " " * 49 + "\u2551   "
+    return rows[:24] + [rows[24][:len(captures("obs-irrtwopt-000001")[12][24])]]
+
+
+def two_point_inputs():
+    return {"sta_01": "0", "elev_01": "10", "sta_02": "10", "elev_02": "2", "bank_left": "0", "bank_right": "10",
+            "n_left": ".05", "n_channel": ".035", "n_right": ".05", "discharge": "100", "slope": ".005"}
+
+
+def stuck_session(monkeypatch, still, after=None):
+    """Every send changes the editor; Begin shows the working screen, which never settles."""
+    shots = captures("obs-irrtwopt-000001")
+    steps = cases.steps_for(PROFILE, "normal_depth", "irregular", inputs=two_point_inputs())
+    begin = len([s for s in steps if "end" not in s]) - 1
+    menus = iter(shots[1:4])
+
+    def react(keys, rows, i):
+        if i < 3:
+            return next(menus)
+        if i == begin:
+            return working_rows()
+        return rows[:-1] + [("point %d" % i).ljust(len(rows[-1]))]
+
+    fake = use(monkeypatch, shots[0], react)
+    from oracle.errors import OracleError
+
+    def wait(self, screen_ids, settle_ms=None):
+        self.waits.append(("wait", list(screen_ids)))
+        desc = screen_mod.describe(self.profile, self.last)
+        if desc["screen_id"] == "irr_working":
+            raise OracleError("timeout", "waited 10.0s for %s" % screen_ids, {"screen": desc})
+        return desc
+
+    def still_on(self, sid, window_s):
+        self.waits.append(("still_on", sid, window_s))
+        if not still and after is not None:
+            self.last = snap(after)
+        return still
+
+    fake.wait = wait
+    fake.still_on = still_on
+    return fake
+
+
+def test_a_run_still_on_the_working_screen_ends_as_an_error_naming_it(monkeypatch):
+    use_ = stuck_session(monkeypatch, still=True)
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "error"
+    assert got["stuck_screen"] == "irr_working" and got["screen_id"] == "irr_working"
+    assert got["message"] is None and got["printed"] == {}
+    golden = {"outcome": "error", "printed": {}, "message": None, "stuck_screen": "irr_working"}
+    assert reread.read_as(PROFILE, golden, got["final"]) == {"outcome": "error", "printed": {}, "message": None}
+    # A stored stuck golden whose final screen no longer reads as the working screen fails the re-read.
+    assert reread.read_as(PROFILE, golden, captures("obs-irrtwopt-000001")[13])["outcome"] == "unknown_screen"
+
+
+def test_a_slow_program_that_leaves_the_working_screen_goes_on(monkeypatch):
+    stuck_session(monkeypatch, still=False, after=captures("obs-irrtwopt-000001")[13])
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "result" and got.get("stuck_screen") is None
+
+
+def test_no_time_left_to_confirm_stays_a_timeout(monkeypatch):
+    stuck_session(monkeypatch, still=None)
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "timeout"
+
+
+# ---- Q-017: behaviour cases pass through the rejected screens they expect -----------------
+
+def test_a_behaviour_case_continues_past_a_rejected_screen_it_expects(monkeypatch):
+    station = captures("obs-irrstation-000001")
+    twopt = captures("obs-irrtwopt-000001")
+    order = iter(station[1:6] + [twopt[4]])
+    control = {"id": "obs-test-000001", "mode": "normal_depth", "shape": "irregular", "inputs": {},
+               "steps": [{"expect": "title", "keys": "{Enter}"},
+                         {"expect": "main_menu", "keys": "3{Enter}"},
+                         {"expect": "shape_menu", "keys": "I{Enter}"},
+                         {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+                         {"expect": "irr_editor", "keys": "-60{Enter}"},
+                         {"expect": "irr_station_rejected", "keys": "0{Enter}"},
+                         {"end": ["irr_editor"]}],
+               "expect": {"outcome": "observed", "screen_id": "irr_editor"}}
+    use(monkeypatch, station[0], lambda keys, rows, i: next(order))
+    got = cases.run(PROFILE, "normal_depth", "irregular", {}, control=control)
+    assert got["outcome"] == "observed" and got["screen_id"] == "irr_editor"
+    assert "irr_station_rejected" in got["visited"]
+    assert [t["keys"] for t in got["transcript"]][-1] == "0{Enter}"
+
+
+def test_a_generated_case_still_ends_on_a_rejected_screen(monkeypatch):
+    station = captures("obs-irrstation-000001")
+    order = iter(station[1:6])
+    use(monkeypatch, station[0], lambda keys, rows, i: next(order))
+    inputs = two_point_inputs()
+    inputs.update(sta_01="-50", sta_02="-60")
+    got = cases.run(PROFILE, "normal_depth", "irregular", inputs)
+    assert got["outcome"] == "rejected" and got["screen_id"] == "irr_station_rejected"
+
+# ---- Q-015: a screen the program never leaves ---------------------------------------------
+
+def working_rows():
+    """The two-point editor before Begin with row 24 as QUICK-2 shows it while it spins
+    (sessions b018e73c and d2c32fcf)."""
+    rows = list(captures("obs-irrtwopt-000001")[12])
+    width = len(rows[24])
+    text = rows[24][:3] + "\u2551 W o r k i n g  .........."
+    rows[24] = (text + " " * width)[:width - 4] + "\u2551   "
+    return rows
+
+
+def two_point_inputs():
+    return {"sta_01": "0", "elev_01": "10", "sta_02": "10", "elev_02": "2", "bank_left": "0", "bank_right": "10",
+            "n_left": ".05", "n_channel": ".035", "n_right": ".05", "discharge": "100", "slope": ".005"}
+
+
+def stuck_session(monkeypatch, still, after=None):
+    """Every send changes the editor; Begin shows the working screen, which never settles."""
+    shots = captures("obs-irrtwopt-000001")
+    steps = cases.steps_for(PROFILE, "normal_depth", "irregular", inputs=two_point_inputs())
+    begin = len([s for s in steps if "end" not in s]) - 1
+    menus = iter(shots[1:4])
+
+    def react(keys, rows, i):
+        if i < 3:
+            return next(menus)
+        if i == begin:
+            return working_rows()
+        return rows[:-1] + [("point %d" % i).ljust(len(rows[-1]))]
+
+    fake = use(monkeypatch, shots[0], react)
+    from oracle.errors import OracleError
+
+    def wait(self, screen_ids, settle_ms=None):
+        self.waits.append(("wait", list(screen_ids)))
+        desc = screen_mod.describe(self.profile, self.last)
+        if desc["screen_id"] == "irr_working":
+            raise OracleError("timeout", "waited 10.0s for %s" % screen_ids, {"screen": desc})
+        return desc
+
+    def still_on(self, sid, window_s):
+        self.waits.append(("still_on", sid, window_s))
+        if not still and after is not None:
+            self.last = snap(after)
+        return still
+
+    fake.wait = wait
+    fake.still_on = still_on
+    return fake
+
+
+def test_the_working_screen_reads_as_irr_working():
+    assert screen_mod.identify(PROFILE, working_rows())[0] == "irr_working"
+
+
+def test_a_run_still_on_the_working_screen_ends_as_an_error_naming_it(monkeypatch):
+    stuck_session(monkeypatch, still=True)
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "error"
+    assert got["stuck_screen"] == "irr_working" and got["screen_id"] == "irr_working"
+    assert got["message"] is None and got["printed"] == {}
+    golden = {"outcome": "error", "printed": {}, "message": None, "stuck_screen": "irr_working"}
+    assert reread.read_as(PROFILE, golden, got["final"]) == {"outcome": "error", "printed": {}, "message": None}
+    # A stuck golden whose final screen no longer reads as the working screen fails the re-read.
+    assert reread.read_as(PROFILE, golden, captures("obs-irrtwopt-000001")[13])["outcome"] == "unknown_screen"
+
+
+def test_a_slow_program_that_leaves_the_working_screen_goes_on(monkeypatch):
+    stuck_session(monkeypatch, still=False, after=captures("obs-irrtwopt-000001")[13])
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "result" and got.get("stuck_screen") is None
+
+
+def test_no_time_left_to_confirm_stays_a_timeout(monkeypatch):
+    stuck_session(monkeypatch, still=None)
+    got = cases.run(PROFILE, "normal_depth", "irregular", two_point_inputs())
+    assert got["outcome"] == "timeout"
+
+
+# ---- Q-017: behaviour cases pass through the rejected screens they expect ------------------
+
+def test_a_behaviour_case_continues_past_a_rejected_screen_it_expects(monkeypatch):
+    station = captures("obs-irrstation-000001")
+    twopt = captures("obs-irrtwopt-000001")
+    order = iter(station[1:6] + [twopt[4]])
+    control = {"id": "obs-test-000001", "mode": "normal_depth", "shape": "irregular", "inputs": {},
+               "steps": [{"expect": "title", "keys": "{Enter}"},
+                         {"expect": "main_menu", "keys": "3{Enter}"},
+                         {"expect": "shape_menu", "keys": "I{Enter}"},
+                         {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+                         {"expect": "irr_editor", "keys": "-60{Enter}"},
+                         {"expect": "irr_station_rejected", "keys": "0{Enter}"},
+                         {"end": ["irr_editor"]}],
+               "expect": {"outcome": "observed", "screen_id": "irr_editor"}}
+    use(monkeypatch, station[0], lambda keys, rows, i: next(order))
+    got = cases.run(PROFILE, "normal_depth", "irregular", {}, control=control)
+    assert got["outcome"] == "observed" and got["screen_id"] == "irr_editor"
+    assert "irr_station_rejected" in got["visited"]
+    assert got["transcript"][-1]["keys"] == "0{Enter}"
+
+
+def test_a_generated_case_still_ends_on_a_rejected_screen(monkeypatch):
+    station = captures("obs-irrstation-000001")
+    order = iter(station[1:6])
+    use(monkeypatch, station[0], lambda keys, rows, i: next(order))
+    inputs = two_point_inputs()
+    inputs.update(sta_01="-50", sta_02="-60")
+    got = cases.run(PROFILE, "normal_depth", "irregular", inputs)
+    assert got["outcome"] == "rejected" and got["screen_id"] == "irr_station_rejected"

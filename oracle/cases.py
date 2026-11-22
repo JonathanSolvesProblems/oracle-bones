@@ -45,8 +45,10 @@ def _trim_points(flow, inputs):
     pts = flow["points"]
     given = [point_number(flow, k) for k in inputs]
     count = max([n for n in given if n is not None] or [0])
-    if not pts["min"] <= count <= pts["max"]:
-        raise OracleError("invalid_arguments", "a section needs %d to %d points; got %d" % (pts["min"], pts["max"], count),
+    # `min` is the fewest points that compute, which the generator draws from; a case may give
+    # fewer, down to one, to see what the program does with them (Q-015).
+    if not 1 <= count <= pts["max"]:
+        raise OracleError("invalid_arguments", "a section needs 1 to %d points; got %d" % (pts["max"], count),
                           {"points": count})
     out, last = [], None
     for st in flow["steps"]:
@@ -105,17 +107,23 @@ def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, ca
         try:
             for st in steps:
                 if "end" in st:
-                    desc = s.wait(st["end"] + stops, settle_ms=st.get("hold_ms"))
+                    desc = _wait_or_stuck(profile, s, lambda: s.wait(st["end"] + stops, settle_ms=st.get("hold_ms")))
                     keep(desc)
-                    out.update(_ending(profile, desc, observed))
+                    out.update(_stuck(desc, observed) if desc.get("stuck") else _ending(profile, desc, observed))
                     break
                 expect = st["expect"]
+                # A behaviour case whose step expects a stop screen goes on past it (Q-017).
+                step_stops = [x for x in stops if not (observed and x == expect)]
                 if "prompt" in st:
-                    desc = s.wait_prompt(expect, st["prompt"], stops=stops)
+                    desc = _wait_or_stuck(profile, s, lambda: s.wait_prompt(expect, st["prompt"], stops=step_stops))
                 else:
-                    desc = s.wait([expect] + stops, settle_ms=0 if st.get("immediate") else None)
+                    desc = _wait_or_stuck(profile, s, lambda: s.wait(
+                        [expect] + step_stops, settle_ms=0 if st.get("immediate") else None))
                 keep(desc)
-                if desc["screen_id"] in stops:
+                if desc.get("stuck"):
+                    out.update(_stuck(desc, observed))
+                    break
+                if desc["screen_id"] in step_stops:
                     out.update(_ending(profile, desc, observed))
                     break
                 keys = (inputs[st["input"]] + st.get("then", "")) if "input" in st else st["keys"]
@@ -182,6 +190,44 @@ def _ending(profile, desc, observed):
         out["printed"] = desc["fields"]
     else:
         out["outcome"] = "unknown_screen"
+    return out
+
+
+def _wait_or_stuck(profile, session, wait):
+    """Run a wait. When it times out on a screen the profile marks `stuck` (one the program
+    can stay on while it keeps redrawing, so it never settles), watch that screen for the
+    profile's `limits.stuck_confirm_ms`. If the program leaves it, the wait runs again: it was
+    only slow. If it is still there at the end, return the screen marked stuck (Q-015)."""
+    try:
+        return wait()
+    except OracleError as e:
+        if e.category != "timeout":
+            raise
+        sid = (e.detail.get("screen") or {}).get("screen_id")
+        if not sid or not screen_by_id(profile, sid).get("stuck"):
+            raise
+        window_ms = profile["limits"].get("stuck_confirm_ms")
+        if not window_ms:
+            raise
+        still = session.still_on(sid, window_ms / 1000)
+        if still is None:
+            raise  # no time left in the case to tell slow from stuck
+        if not still:
+            return wait()
+        desc = screen_mod.describe(profile, session.last)
+        desc["stuck"] = True
+        return desc
+
+
+def _stuck(desc, observed):
+    """The program stayed on a stuck screen past the confirmation wait. A case ends as an
+    error naming the screen in `stuck_screen`, with no message, since the program printed
+    none; a behaviour case ends as observed on that screen."""
+    out = {"screen_id": desc["screen_id"], "final": desc["rows"]}
+    if observed:
+        out["outcome"] = "observed"
+        return out
+    out.update(outcome="error", message=None, printed={}, stuck_screen=desc["screen_id"])
     return out
 
 

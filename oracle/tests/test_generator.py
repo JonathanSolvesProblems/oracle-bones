@@ -1,4 +1,4 @@
-﻿"""Property 3: generator reproducibility, and ids fixed before dispatch."""
+"""Property 3: generator reproducibility, and ids fixed before dispatch."""
 
 from hypothesis import given, strategies as st
 
@@ -155,6 +155,9 @@ def test_fewer_points_end_entry_with_f10_after_the_last_one():
     assert names[at + 1] == "{F10}" and names[at + 2] == "bank_left"
     import pytest
     from oracle.errors import OracleError
+    one = cases.steps_for(PROF, "normal_depth", "irregular",
+                          inputs={k: v for k, v in full.items() if cases.point_number(flow, k) in (None, 1)})
+    assert [s.get("input") or s.get("keys") for s in one][4:7] == ["elev_01", "{F10}", "bank_left"]
     with pytest.raises(OracleError):
         cases.steps_for(PROF, "normal_depth", "irregular",
-                        inputs={k: v for k, v in full.items() if cases.point_number(flow, k) in (None, 1)})
+                        inputs={k: v for k, v in full.items() if cases.point_number(flow, k) is None})

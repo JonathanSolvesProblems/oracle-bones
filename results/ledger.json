@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 507,
+      "visits": 514,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 508,
+      "visits": 515,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 510,
+      "visits": 517,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -37,7 +37,7 @@
       ]
     },
     "irr_editor": {
-      "visits": 166,
+      "visits": 176,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -58,13 +58,13 @@
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 70,
+      "visits": 73,
       "keys_tried": [
         "{F6}"
       ]
     },
     "irr_bank_rejected": {
-      "visits": 15,
+      "visits": 18,
       "keys_tried": [
         "{Enter}"
       ]
@@ -151,7 +151,7 @@
       "keys_tried": []
     },
     "irr_working": {
-      "visits": 1,
+      "visits": 5,
       "keys_tried": []
     },
     "sb_start": {
@@ -352,7 +352,7 @@
     "nd-irr": {
       "result": 24,
       "rejected": 1,
-      "error": 0,
+      "error": 1,
       "observed": 0
     },
     "nd-rect": {
@@ -373,6 +373,12 @@
       "error": 0,
       "observed": 0
     },
+    "obs-bankexact": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
     "obs-bankreject": {
       "result": 0,
       "rejected": 0,
@@ -392,6 +398,12 @@
       "observed": 1
     },
     "obs-irrelev": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-irronept": {
       "result": 0,
       "rejected": 0,
       "error": 0,
@@ -1984,7 +1996,7 @@
     },
     {
       "profile_path": "keys",
-      "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
+      "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21; F3 in the ground-points editor inserts a point, key capture oracle/tests/captures/quick2/keys/F3-after.txt, and F8 on the Step-Backwater result shows SAVING TEMPORARY FILE, key capture oracle/tests/captures/quick2/keys/F8-after.txt, 2026-11-22"
     },
     {
       "profile_path": "screens[title]",
@@ -2223,11 +2235,15 @@
         "obs-bankreject-000002",
         "nd-irr-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T15:46:07Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Both parts. Enter after the bank ERROR: recorded as behaviour case obs-bankexact-000001. Bank 10 does not match ground station 10.04 (irr_bank_rejected, 'ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point'); Enter returns to the RIGHT bank prompt with the LEFT bank -50.0 kept, 10.04 is then taken, and Begin computes (nd_irr_result). More than 40 points: F3 is verified and in the profile's keys. With the 40 Grapevine points typed and F2 twice back to the first point, F3 inserted a point shown as 0 0 before it and the list grew to 41 points, the last (500, 615.76) moving to a new row 14 (oracle/tests/captures/quick2/keys/F3-before.txt, oracle/tests/captures/quick2/keys/F3-after.txt). So the editor holds a 41st point; whether QUICK-2 computes with more than 40 is not observed. With 3 points typed, F3 at the fourth station showed -3 in that field, and typing 30 replaced it (probe, no run folder); what -3 means is not known.",
+      "answer_evidence": [
+        "obs-bankexact-000001",
+        "obs-bankreject-000002",
+        "nd-irr-000006"
+      ],
+      "answered_at": "2026-11-22T22:23:24Z"
     },
     {
       "id": "Q-014",
@@ -2255,11 +2271,15 @@
       "evidence": [
         "20261122-175134-d1f6a5"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T17:52:10Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Decided by the user and built: a case still on irr_working after a confirmation wait ends as outcome error with no message and the screen named in the golden's stuck_screen; a behaviour case ends as observed on it. The profile marks irr_working stuck and limits.stuck_confirm_ms is 20000: after the 10 s wait times out on that screen, the runner looks every 0.5 s for 20 s, and if any look reads as another screen it waits again (slow, not stuck). The program does keep writing while it spins: watched for 30 s the text and hash stayed the same but the screen was never quiet for more than about 75 ms, so it never settled for the 150 ms settle time. Recorded: obs-irronept-000001 (observed, irr_working) and nd-irr-000026 (one ground point, outcome error, stuck_screen irr_working, 49 s). The re-read checks that a stuck golden's final screen still reads as that screen. A case with too little of its 60 s left to watch the full 20 s stays a timeout.",
+      "answer_evidence": [
+        "obs-irronept-000001",
+        "nd-irr-000026",
+        "20261122-175134-d1f6a5"
+      ],
+      "answered_at": "2026-11-22T22:23:24Z"
     },
     {
       "id": "Q-016",
@@ -2282,11 +2302,14 @@
         "obs-bankreject-000002",
         "obs-irrstation-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T18:01:35Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Decided by the user and built: in a behaviour case, a step whose expect names a stop screen (kind rejected or error) waits for that screen and goes on past it; every other case still ends at the first stop screen. Recorded: obs-bankexact-000001 passes through irr_bank_rejected, sends Enter, and ends observed on nd_irr_result.",
+      "answer_evidence": [
+        "obs-bankexact-000001",
+        "20261122-180112-3ccee6"
+      ],
+      "answered_at": "2026-11-22T22:23:24Z"
     },
     {
       "id": "Q-018",
@@ -2322,11 +2345,13 @@
         "sb-irr-000001",
         "sb-irr-000003"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T18:07:49Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "F8 is verified and in the profile's keys. Key capture: on the Step-Backwater result for the Grapevine section (inputs of sb-irr-000002), F8 left every field as it was and put 'SAVING TEMPORARY FILE' on row 24 (oracle/tests/captures/quick2/keys/F8-before.txt, oracle/tests/captures/quick2/keys/F8-after.txt). In a follow-up probe (oracle/out/probe_f8_f3.py, no run folder) the screen still showed that line 20 s later and wrote no file; Enter then showed 'Saving Input Data into HEC-2 FORMAT as C:\\QUICK2\\HEC2.DAT'. No second-section form was reached in that probe, so the second part, a second-section block in the step_backwater flow, is left for the Exhumer to map from what follows these screens.",
+      "answer_evidence": [
+        "sb-irr-000002"
+      ],
+      "answered_at": "2026-11-22T22:23:24Z"
     },
     {
       "id": "Q-021",

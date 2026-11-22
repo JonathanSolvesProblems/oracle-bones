@@ -167,6 +167,24 @@ class Session:
         self.transcript[-1]["screen_hash_after"] = snap["hash"]
         return screen.describe(self.profile, snap)
 
+    def still_on(self, screen_id, window_s, poll_s=0.5):
+        """Watch the screen for window_s, whether or not it settles. True when every look read
+        as screen_id, False as soon as one did not, None when the case has too little time
+        left to watch the whole window. The last look is kept in self.last and becomes the
+        last step's after hash."""
+        if self.remaining() < window_s:
+            return None
+        end = time.monotonic() + window_s
+        while True:
+            snap = self.snapshot()
+            if snap.get("exited") is not None or screen.identify(self.profile, snap["rows"])[0] != screen_id:
+                return False
+            if time.monotonic() >= end:
+                if self.transcript:
+                    self.transcript[-1]["screen_hash_after"] = snap["hash"]
+                return True
+            time.sleep(min(poll_s, max(0.0, end - time.monotonic())))
+
     def wait_prompt(self, screen_id, prompt_id, timeout_s=None, stops=()):
         """Wait for a prompt; prompts on the same screen are distinguished by their pattern.
         A settled screen that reads as one of `stops` ends the wait early and is returned."""

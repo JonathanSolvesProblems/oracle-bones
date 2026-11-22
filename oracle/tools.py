@@ -1,4 +1,4 @@
-﻿"""The nine oracle tools. Protocol-free, so they can be tested without an MCP client.
+"""The nine oracle tools. Protocol-free, so they can be tested without an MCP client.
 
 Every function takes the parsed arguments and returns a dict that matches its output schema,
 or raises OracleError. No tool accepts golden content, printed field values, a case id to

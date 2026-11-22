@@ -1,4 +1,4 @@
-﻿"""Seeded case generator. The same seed, range set and GENERATOR_VERSION always give the same
+"""Seeded case generator. The same seed, range set and GENERATOR_VERSION always give the same
 cases.
 
 Two range sets. `accepted` draws from what each prompt accepts and prints, mixed with each

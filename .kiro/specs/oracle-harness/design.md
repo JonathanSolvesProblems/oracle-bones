@@ -253,6 +253,18 @@ prompt) ends the case as `rejected` with no message; the golden names the prompt
 confirmed as described above before the case ends. Behaviour cases
 with their own steps are not ended by a held prompt.
 
+A behaviour case whose step expects a `rejected` or `error` screen waits for that screen and goes
+on past it; other cases still end at the first such screen (decided 2026-11-22, ledger Q-017).
+
+A screen the profile marks `"stuck": true` is one the program can stay on while it keeps
+redrawing, so it never settles (QUICK-2's irr_working). When a wait times out on such a screen,
+the host watches it for `limits.stuck_confirm_ms` (20000 for QUICK-2) whether or not it settles.
+If any look reads as another screen the wait runs again, since the program was only slow. If it
+is still there at the end, the case ends as `error` with no message, and the golden names the
+screen in `stuck_screen`; a behaviour case ends as `observed` on it. The re-read checks that the
+final screen still reads as that screen. A case with too little time left to watch the whole
+window stays a timeout (decided 2026-11-22, ledger Q-015).
+
 Resend applies only on screens with `"resend": true`: if the hash is unchanged after the
 settle time, the same key is sent again, up to `retry_limit`, each one logged as `resend: true`.
 Then `input_ignored`. The cause of the dropped menu input is investigated separately
@@ -267,7 +279,13 @@ strings, and mixes in each listed boundary value. With `range_set="practical"` i
 each range's `practical` bounds (per shape where the profile gives `shapes`, for example pipes
 against open channels), falls back to the accepted range where no practical bounds exist, mixes
 in no boundary values, and seeds `random.Random` with a key that names the set, so accepted draws
-are unchanged. Every case and golden carries `range_set`. Ids are assigned here: the next free sequence
+are unchanged. Generator version 2 (2026-11-22, ledger Q-014) changed only the practical set:
+a flow's `fit` redraws pipe cases so they fit their pipe (depth under a share of the diameter,
+discharge under a share of a full-pipe or critical discharge), and a flow that lists recorded
+`sections` is drawn by varying them (a subset of their points that keeps the lowest, stretched,
+shifted and rescaled, banks on two of the chosen stations as typed). A flow's `points` block lets
+a case give fewer points than the flow's steps: the runner keeps the steps of the points given
+and sends `end_keys` after the last of them. Every case and golden carries `range_set`. Ids are assigned here: the next free sequence
 for `<mode code>-<shape code>`, read from the existing goldens, so ids are fixed before
 dispatch.
 

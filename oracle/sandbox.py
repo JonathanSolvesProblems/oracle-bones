@@ -1,4 +1,4 @@
-﻿"""Containers and temporary drives.
+"""Containers and temporary drives.
 
 Each case or interactive session gets a fresh temporary directory outside the repository,
 filled with the profile's drive layout and a copy of the unpacked program. It is the only

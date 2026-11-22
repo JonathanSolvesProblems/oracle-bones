@@ -1,4 +1,4 @@
-﻿"""Sessions: ids, the concurrency limit, idle sweep, and no leftovers (Property 12)."""
+"""Sessions: ids, the concurrency limit, idle sweep, and no leftovers (Property 12)."""
 
 import json
 import subprocess

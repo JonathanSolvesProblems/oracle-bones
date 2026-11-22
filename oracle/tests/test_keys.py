@@ -62,7 +62,7 @@ def test_esc_sequences_are_sent_alone():
 
 def test_unverified_key_refused():
     with pytest.raises(OracleError) as e:
-        keys.check_verified(keys.parse("{F3}"))
+        keys.check_verified(keys.parse("{F4}"))
     assert e.value.category == "unsupported_key"
 
 

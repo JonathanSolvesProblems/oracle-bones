@@ -1,4 +1,4 @@
-﻿"""Property 11 (sandbox arguments) and temporary drive handling. No Docker needed."""
+"""Property 11 (sandbox arguments) and temporary drive handling. No Docker needed."""
 
 import os
 from pathlib import Path

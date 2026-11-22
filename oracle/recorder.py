@@ -1,4 +1,4 @@
-﻿"""The only code that writes under oracle/goldens/.
+"""The only code that writes under oracle/goldens/.
 
 A recording run runs a case in a fresh container and stores what the binary printed. A
 timeout or an unknown final screen goes to the run log and the ledger and is never stored.
@@ -243,6 +243,7 @@ class Recorder:
             "printed": got.get("printed", {}),
             "message": got.get("message"),
             "held_prompt": got.get("held_prompt"),
+            "stuck_screen": got.get("stuck_screen"),
             "seed": job.get("seed"), "generator_version": job.get("generator_version"),
             "range_set": job.get("range_set"),
             "emu2_commit": self.cfg["emu2"]["commit"],
@@ -490,8 +491,9 @@ class Recorder:
                 "files": {f["path"]: f["sha256"] for f in g["files"]}}
         have = fingerprint(got)
         diffs = [{"what": k, "golden": want[k], "replay": have[k]} for k in want if want[k] != have[k]]
-        if g.get("held_prompt") != got.get("held_prompt"):
-            diffs.append({"what": "held_prompt", "golden": g.get("held_prompt"), "replay": got.get("held_prompt")})
+        for what in ("held_prompt", "stuck_screen"):
+            if g.get(what) != got.get(what):
+                diffs.append({"what": what, "golden": g.get(what), "replay": got.get(what)})
         if g["outcome"] == "observed" and got.get("screen_id") != g["expected_screen"]:
             diffs.append({"what": "screen_id", "golden": g["expected_screen"], "replay": got.get("screen_id")})
         return {"case_id": cid, "run_id": run_id, "match": not diffs, "differences": diffs}

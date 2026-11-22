@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+  XSEC ID:     0             >> NORMAL   DEPTH <<             GROUND  POINTS    
+  STAT      ELEV      STAT      ELEV      STAT      ELEV      STAT      ELEV    
+  -50       10                                                                  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   ╔════════════════════════════════════════════════════════════════════════╗   
+   ║ CHANNEL BANK STATIONS:      Left                         Right         ║   
+   ║ MANNING'S  N   VALUES:      Left         Channel         Right         ║   
+   ║ CHANNEL     VARIABLES: Discharge         Slope           Depth         ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║ WS ELEV                     Area         Top Wid         Hyd R         ║   
+   ║ Flow Type               Chan Vel         Wet Per         Frd #         ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║F2}<-Back Tab F5}List Files F6}Retrieve File F7}Main Menu F10}Ed/Ex GrPt║   
+   ║ F3}Insert GrPt F4}Delete GrPt                            F1 }HELP      ║   
