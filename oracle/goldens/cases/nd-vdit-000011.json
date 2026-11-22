@@ -1,0 +1,118 @@
+{
+  "id": "nd-vdit-000011",
+  "control": false,
+  "expected_screen": null,
+  "mode": "normal_depth",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "100",
+    "right_slope": "29.4",
+    "n": "3.2192",
+    "discharge": "76624",
+    "slope": "5.995"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "%100",
+    "in_right_slope": "29.4",
+    "in_bottom_width": "    0.0",
+    "in_n": "       3.2192",
+    "in_discharge": "    76624",
+    "depth": "         16.13",
+    "in_slope": "     5.9950",
+    "area": "      %16838",
+    "wet_perimeter": "2087.9",
+    "velocity": "      4.6",
+    "hyd_radius": "      8.1",
+    "top_width": "    2087.6",
+    "froude": "             0.3",
+    "flow_type": "  SUBCRITICAL   "
+  },
+  "message": null,
+  "held_prompt": null,
+  "seed": 101,
+  "generator_version": "1",
+  "range_set": "accepted",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "94c7eae94a38f0b4bfb895e693d2d3849410c283f1d4919a44bd454efd6822d2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "abe1c4af1ca9b255bf8eb40120253f9c881e0e317915d779a16aa495af8a0e99"
+    },
+    {
+      "step": 4,
+      "expect": "nd_reg_form",
+      "keys": "100{Enter}",
+      "screen_hash_before": "abe1c4af1ca9b255bf8eb40120253f9c881e0e317915d779a16aa495af8a0e99",
+      "resend": false,
+      "screen_hash_after": "8cee81f8257c42ac2f3b69dbea8f4bf145683286247c307a39acc627cf6c503c"
+    },
+    {
+      "step": 5,
+      "expect": "nd_reg_form",
+      "keys": "29.4{Enter}",
+      "screen_hash_before": "8cee81f8257c42ac2f3b69dbea8f4bf145683286247c307a39acc627cf6c503c",
+      "resend": false,
+      "screen_hash_after": "9b4d1805499731716acff5e281dfef7cb55f40d2387a280f49e722474425bc34"
+    },
+    {
+      "step": 6,
+      "expect": "nd_reg_form",
+      "keys": "3.2192{Enter}",
+      "screen_hash_before": "9b4d1805499731716acff5e281dfef7cb55f40d2387a280f49e722474425bc34",
+      "resend": false,
+      "screen_hash_after": "8ccb054bce20130b057842eed1c407fa09059b5a11c42d247a14551cdc3fd762"
+    },
+    {
+      "step": 7,
+      "expect": "nd_reg_form",
+      "keys": "76624{Enter}",
+      "screen_hash_before": "8ccb054bce20130b057842eed1c407fa09059b5a11c42d247a14551cdc3fd762",
+      "resend": false,
+      "screen_hash_after": "a18bd2380503baac47e79e99c02927aa2095cbc6e469d726422910110ce47cc5"
+    },
+    {
+      "step": 8,
+      "expect": "nd_reg_form",
+      "keys": "5.995{Enter}",
+      "screen_hash_before": "a18bd2380503baac47e79e99c02927aa2095cbc6e469d726422910110ce47cc5",
+      "resend": false,
+      "screen_hash_after": "ea868d8a513902dae2dad753f84821838626cb723105ae09771bf2f11724f88e"
+    },
+    {
+      "step": 9,
+      "expect": "nd_reg_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "ea868d8a513902dae2dad753f84821838626cb723105ae09771bf2f11724f88e",
+      "resend": false,
+      "screen_hash_after": "e9e841d7fe5b59bb88705b89845ffcac9f25c4c48815b739723bf29260a31c61"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/nd-vdit-000011/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:14:46Z"
+}

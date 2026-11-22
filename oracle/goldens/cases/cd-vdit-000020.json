@@ -1,0 +1,119 @@
+{
+  "id": "cd-vdit-000020",
+  "control": false,
+  "expected_screen": null,
+  "mode": "critical_depth",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "46.7",
+    "right_slope": "20.3",
+    "n": ".0877",
+    "discharge": "97807",
+    "slope": "3.9529"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "46.7",
+    "in_right_slope": "20.3",
+    "in_bottom_width": "    0.0",
+    "in_n": "       0.0877",
+    "in_discharge": "    97807",
+    "depth": "         14.00",
+    "in_slope": "     3.9529",
+    "critical_slope": "    0.0577",
+    "area": "      6566.0",
+    "wet_perimeter": " 938.5",
+    "velocity": "     15.0",
+    "hyd_radius": "      7.0",
+    "top_width": "     938.0",
+    "froude": "             1.0",
+    "flow_type": "  CRITICAL      "
+  },
+  "message": null,
+  "held_prompt": null,
+  "seed": 103,
+  "generator_version": "1",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "94c7eae94a38f0b4bfb895e693d2d3849410c283f1d4919a44bd454efd6822d2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "1{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "0a4007baf6b434741f5ada7768ebc9f843ccc20dfecd2ed908c5042d511ff182"
+    },
+    {
+      "step": 4,
+      "expect": "cd_form",
+      "keys": "46.7{Enter}",
+      "screen_hash_before": "0a4007baf6b434741f5ada7768ebc9f843ccc20dfecd2ed908c5042d511ff182",
+      "resend": false,
+      "screen_hash_after": "6e9c581f4896cd88d6acff78e438ef49b626e8e4218020fcc6881569cdd2d24a"
+    },
+    {
+      "step": 5,
+      "expect": "cd_form",
+      "keys": "20.3{Enter}",
+      "screen_hash_before": "6e9c581f4896cd88d6acff78e438ef49b626e8e4218020fcc6881569cdd2d24a",
+      "resend": false,
+      "screen_hash_after": "ff8c21419098de65e0be12b9d9a54fcff3086c20f6eeb6158787ef0f9d3c632a"
+    },
+    {
+      "step": 6,
+      "expect": "cd_form",
+      "keys": ".0877{Enter}",
+      "screen_hash_before": "ff8c21419098de65e0be12b9d9a54fcff3086c20f6eeb6158787ef0f9d3c632a",
+      "resend": false,
+      "screen_hash_after": "a6ae51ac8ab8656a15cd7a15fafffeedfdd6f87c9524d5392bc0b19665a1b710"
+    },
+    {
+      "step": 7,
+      "expect": "cd_form",
+      "keys": "97807{Enter}",
+      "screen_hash_before": "a6ae51ac8ab8656a15cd7a15fafffeedfdd6f87c9524d5392bc0b19665a1b710",
+      "resend": false,
+      "screen_hash_after": "eae9a714b8f0f367c943c83cb73caf5b8310c2329e5e64e5c74b9f5e211e8e71"
+    },
+    {
+      "step": 8,
+      "expect": "cd_form",
+      "keys": "3.9529{Enter}",
+      "screen_hash_before": "eae9a714b8f0f367c943c83cb73caf5b8310c2329e5e64e5c74b9f5e211e8e71",
+      "resend": false,
+      "screen_hash_after": "c67c182bf7b9c160af5f28028524a0004293d886c5225d8ae74be1b7765ad964"
+    },
+    {
+      "step": 9,
+      "expect": "cd_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "c67c182bf7b9c160af5f28028524a0004293d886c5225d8ae74be1b7765ad964",
+      "resend": false,
+      "screen_hash_after": "343c9aab6c451b957323a95845f0c6ccb6243681b78f6f63eefd753e03f063e1"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cd-vdit-000020/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:18:06Z"
+}

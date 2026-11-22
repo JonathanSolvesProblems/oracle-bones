@@ -494,3 +494,28 @@ across Grapevine Branch in Cabell County, West Virginia, a FEMA Zone A stream, f
 regression equations in USGS SIR 2025-5110); and a slope and bank stations labelled as
 estimates. Every service call is listed in the file. It is a data file, not code: the Exhumer
 records it through QUICK-2 before the solver is graded on it.
+
+## 2026-11-22, the quick set at 200
+
+Q-011 answered: the generator now has a practical range beside the accepted one, and each
+practical bound names a published source. Manning's n for open channels is 0.011 to 0.500 and
+for pipes 0.008 to 0.033, and pipe diameter is 0.667 to 15 ft, all from the tables Chow (1959)
+and AISI (1980) give as reproduced in the USACE HEC-RAS Hydraulic Reference Manual (Tables 3-1,
+6-1 and 6-2). No published bound was found for side slopes, bottom width, depth, discharge or
+bed slope, so the practical set keeps their accepted ranges.
+
+Four batches recorded 180 new goldens (216 stored): 96 from practical ranges, 84 from accepted
+ranges, 36 timeouts not stored. Recording ran at 25 to 27 cases per minute; the four batches
+took 8.6 minutes. The rebuilt quick set holds 200 cases: 2 control cases, 96 practical, 102
+accepted, across all 12 regular pairs and the irregular section. With a stand-in rebuild that
+answers from the goldens, the quick comparison of all 200 took 0.5 s (no solver exists yet, so
+this times the harness, not a rebuild).
+
+What is missing:
+- **Circles barely produce results.** Every practical circle draw failed (19 timeouts, 7
+  rejections), because discharge and depth have no practical bound and a small pipe cannot hold
+  them. The quick set's 24 circle cases hold 6 results. Open as Q-014, next to Q-010.
+- **The irregular section is not generated.** Its 40 station and elevation pairs, bank stations
+  and three n values have no ranges, so the quick set holds only its 5 recorded nd-irr goldens.
+- **Uncovered pairs**, with no flow mapped: channel capacity and critical depth on the
+  irregular section, and step backwater on all five shapes.

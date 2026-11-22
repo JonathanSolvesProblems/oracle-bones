@@ -1,0 +1,118 @@
+{
+  "id": "cc-vdit-000013",
+  "control": false,
+  "expected_screen": null,
+  "mode": "channel_capacity",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "99.5",
+    "right_slope": "16.9",
+    "n": "7.5977",
+    "depth": "506.79",
+    "slope": "8.9802"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "99.5",
+    "in_right_slope": "16.9",
+    "in_bottom_width": "    0.0",
+    "in_n": "       7.5977",
+    "discharge": "   %35140",
+    "in_depth": "        506.79",
+    "in_slope": "     8.9802",
+    "area": "      %14947",
+    "wet_perimeter": "%59007",
+    "velocity": "     23.5",
+    "hyd_radius": "    253.3",
+    "top_width": "    %58990",
+    "froude": "             0.3",
+    "flow_type": "  SUBCRITICAL   "
+  },
+  "message": null,
+  "held_prompt": null,
+  "seed": 104,
+  "generator_version": "1",
+  "range_set": "accepted",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "94c7eae94a38f0b4bfb895e693d2d3849410c283f1d4919a44bd454efd6822d2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "2{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387"
+    },
+    {
+      "step": 4,
+      "expect": "cc_form",
+      "keys": "99.5{Enter}",
+      "screen_hash_before": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387",
+      "resend": false,
+      "screen_hash_after": "37f79575e2625d9551a102820af61ad69fa60dcd5fd62b62ab5b44966496dd2c"
+    },
+    {
+      "step": 5,
+      "expect": "cc_form",
+      "keys": "16.9{Enter}",
+      "screen_hash_before": "37f79575e2625d9551a102820af61ad69fa60dcd5fd62b62ab5b44966496dd2c",
+      "resend": false,
+      "screen_hash_after": "4db763ec3033a36f83b7847f2c81a2e792595375da8218ef2780ffb7d36ddf4f"
+    },
+    {
+      "step": 6,
+      "expect": "cc_form",
+      "keys": "7.5977{Enter}",
+      "screen_hash_before": "4db763ec3033a36f83b7847f2c81a2e792595375da8218ef2780ffb7d36ddf4f",
+      "resend": false,
+      "screen_hash_after": "d955d010e06721a5f9ee47e6c7e02c52f6e0fa141c2fffad5b8627c06738bf49"
+    },
+    {
+      "step": 7,
+      "expect": "cc_form",
+      "keys": "506.79{Enter}",
+      "screen_hash_before": "d955d010e06721a5f9ee47e6c7e02c52f6e0fa141c2fffad5b8627c06738bf49",
+      "resend": false,
+      "screen_hash_after": "5e8430f2803e91b3be1ce4b7e18f35abc989ffe44c8b3fca3130894621b66f8e"
+    },
+    {
+      "step": 8,
+      "expect": "cc_form",
+      "keys": "8.9802{Enter}",
+      "screen_hash_before": "5e8430f2803e91b3be1ce4b7e18f35abc989ffe44c8b3fca3130894621b66f8e",
+      "resend": false,
+      "screen_hash_after": "8a93cd7f0130248f7608736caf3e2b06819e6db530e05ac435b7a72ebacde517"
+    },
+    {
+      "step": 9,
+      "expect": "cc_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "8a93cd7f0130248f7608736caf3e2b06819e6db530e05ac435b7a72ebacde517",
+      "resend": false,
+      "screen_hash_after": "265600b0f55b687f408cbaaf34ae54039d08635b029deb754acfc5bf942a4c25"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cc-vdit-000013/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:18:27Z"
+}

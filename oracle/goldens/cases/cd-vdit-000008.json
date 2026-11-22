@@ -1,0 +1,119 @@
+{
+  "id": "cd-vdit-000008",
+  "control": false,
+  "expected_screen": null,
+  "mode": "critical_depth",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "90.8",
+    "right_slope": "45",
+    "n": "5.833",
+    "discharge": "61315",
+    "slope": "8.0905"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "90.8",
+    "in_right_slope": "45.0",
+    "in_bottom_width": "    0.0",
+    "in_n": "       5.8330",
+    "in_discharge": "    61315",
+    "depth": "          8.72",
+    "in_slope": "     8.0905",
+    "critical_slope": "    %304.3",
+    "area": "      5166.2",
+    "wet_perimeter": "1184.7",
+    "velocity": "     11.9",
+    "hyd_radius": "      4.4",
+    "top_width": "    1184.5",
+    "froude": "             1.0",
+    "flow_type": "  CRITICAL      "
+  },
+  "message": null,
+  "held_prompt": null,
+  "seed": 101,
+  "generator_version": "1",
+  "range_set": "accepted",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "94c7eae94a38f0b4bfb895e693d2d3849410c283f1d4919a44bd454efd6822d2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "1{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "0a4007baf6b434741f5ada7768ebc9f843ccc20dfecd2ed908c5042d511ff182"
+    },
+    {
+      "step": 4,
+      "expect": "cd_form",
+      "keys": "90.8{Enter}",
+      "screen_hash_before": "0a4007baf6b434741f5ada7768ebc9f843ccc20dfecd2ed908c5042d511ff182",
+      "resend": false,
+      "screen_hash_after": "ef9aac2e9eca041521d221ef19900ea088e8d6dd3b8464b6c0c795cf0175be1c"
+    },
+    {
+      "step": 5,
+      "expect": "cd_form",
+      "keys": "45{Enter}",
+      "screen_hash_before": "ef9aac2e9eca041521d221ef19900ea088e8d6dd3b8464b6c0c795cf0175be1c",
+      "resend": false,
+      "screen_hash_after": "64c0973d5670f17a3fb303e496cf709481e4e00c67b6d28457948c3b7f3b0332"
+    },
+    {
+      "step": 6,
+      "expect": "cd_form",
+      "keys": "5.833{Enter}",
+      "screen_hash_before": "64c0973d5670f17a3fb303e496cf709481e4e00c67b6d28457948c3b7f3b0332",
+      "resend": false,
+      "screen_hash_after": "22420d4c70cd92ca4a8d34151f26e913f923c54822b87a9d7d9deda136a46c39"
+    },
+    {
+      "step": 7,
+      "expect": "cd_form",
+      "keys": "61315{Enter}",
+      "screen_hash_before": "22420d4c70cd92ca4a8d34151f26e913f923c54822b87a9d7d9deda136a46c39",
+      "resend": false,
+      "screen_hash_after": "0afaacc63b653026131d9dd2cb025d1b73427b513b13c742a7da89f2de4d831e"
+    },
+    {
+      "step": 8,
+      "expect": "cd_form",
+      "keys": "8.0905{Enter}",
+      "screen_hash_before": "0afaacc63b653026131d9dd2cb025d1b73427b513b13c742a7da89f2de4d831e",
+      "resend": false,
+      "screen_hash_after": "582be80ea31377815280c933b01bd592d08dbeebd78dd0ec29e26e941aa2d2f7"
+    },
+    {
+      "step": 9,
+      "expect": "cd_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "582be80ea31377815280c933b01bd592d08dbeebd78dd0ec29e26e941aa2d2f7",
+      "resend": false,
+      "screen_hash_after": "6f3eb7ed8bf7dbaa02a3191e40546aa67e0ffc3ff1ad18dc6d6dac6996c5215d"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cd-vdit-000008/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:14:19Z"
+}

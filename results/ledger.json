@@ -1,28 +1,28 @@
 {
   "screens": {
     "title": {
-      "visits": 180,
+      "visits": 401,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 181,
+      "visits": 402,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 184,
+      "visits": 412,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 89,
+      "visits": 103,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -30,7 +30,7 @@
       ]
     },
     "nd_trap_result": {
-      "visits": 35,
+      "visits": 48,
       "keys_tried": [
         "{F7}"
       ]
@@ -59,14 +59,14 @@
       "keys_tried": []
     },
     "cd_form": {
-      "visits": 18,
+      "visits": 101,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "cd_result": {
-      "visits": 9,
+      "visits": 63,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -83,7 +83,7 @@
       ]
     },
     "cc_form": {
-      "visits": 33,
+      "visits": 97,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -91,7 +91,7 @@
       ]
     },
     "cc_result": {
-      "visits": 13,
+      "visits": 50,
       "keys_tried": [
         "{F7}"
       ],
@@ -102,14 +102,14 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 15,
+      "visits": 75,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_circ_result": {
-      "visits": 2,
+      "visits": 3,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -127,7 +127,7 @@
       ]
     },
     "nd_reg_result": {
-      "visits": 10,
+      "visits": 43,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -138,46 +138,46 @@
   },
   "fields": {
     "in_left_slope": {
-      "cases": 14
+      "cases": 148
     },
     "in_right_slope": {
-      "cases": 14
+      "cases": 148
     },
     "in_bottom_width": {
-      "cases": 14
+      "cases": 148
     },
     "in_n": {
-      "cases": 19
+      "cases": 154
     },
     "in_discharge": {
-      "cases": 14
+      "cases": 113
     },
     "depth": {
-      "cases": 19
+      "cases": 118
     },
     "in_slope": {
-      "cases": 19
+      "cases": 154
     },
     "area": {
-      "cases": 24
+      "cases": 159
     },
     "wet_perimeter": {
-      "cases": 24
+      "cases": 159
     },
     "velocity": {
-      "cases": 19
+      "cases": 154
     },
     "hyd_radius": {
-      "cases": 24
+      "cases": 159
     },
     "top_width": {
-      "cases": 24
+      "cases": 159
     },
     "froude": {
-      "cases": 24
+      "cases": 159
     },
     "flow_type": {
-      "cases": 24
+      "cases": 159
     },
     "in_bank_left": {
       "cases": 5
@@ -207,73 +207,73 @@
       "cases": 5
     },
     "critical_slope": {
-      "cases": 6
+      "cases": 58
     },
     "in_diameter": {
-      "cases": 5
+      "cases": 6
     },
     "max_discharge": {
-      "cases": 5
+      "cases": 6
     },
     "discharge": {
-      "cases": 5
+      "cases": 41
     },
     "in_depth": {
-      "cases": 5
+      "cases": 41
     }
   },
   "cases": {
     "cc-circ": {
       "result": 2,
-      "rejected": 0,
+      "rejected": 13,
       "error": 0,
       "observed": 0
     },
     "cc-rect": {
-      "result": 1,
-      "rejected": 0,
+      "result": 12,
+      "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "cc-trap": {
-      "result": 1,
-      "rejected": 0,
+      "result": 17,
+      "rejected": 5,
       "error": 0,
       "observed": 0
     },
     "cc-vdit": {
-      "result": 1,
-      "rejected": 0,
+      "result": 10,
+      "rejected": 2,
       "error": 0,
       "observed": 0
     },
     "cd-circ": {
       "result": 2,
-      "rejected": 0,
+      "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "cd-rect": {
-      "result": 2,
-      "rejected": 0,
+      "result": 19,
+      "rejected": 1,
       "error": 0,
       "observed": 0
     },
     "cd-trap": {
-      "result": 1,
-      "rejected": 0,
+      "result": 19,
+      "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "cd-vdit": {
-      "result": 1,
-      "rejected": 0,
+      "result": 18,
+      "rejected": 5,
       "error": 0,
       "observed": 0
     },
     "nd-circ": {
-      "result": 1,
-      "rejected": 0,
+      "result": 2,
+      "rejected": 2,
       "error": 0,
       "observed": 0
     },
@@ -284,20 +284,20 @@
       "observed": 0
     },
     "nd-rect": {
-      "result": 1,
-      "rejected": 0,
+      "result": 21,
+      "rejected": 4,
       "error": 0,
       "observed": 0
     },
     "nd-trap": {
-      "result": 5,
-      "rejected": 0,
+      "result": 18,
+      "rejected": 1,
       "error": 0,
       "observed": 0
     },
     "nd-vdit": {
-      "result": 1,
-      "rejected": 0,
+      "result": 14,
+      "rejected": 3,
       "error": 0,
       "observed": 0
     },
@@ -747,6 +747,622 @@
       "waited_for": "cc_form",
       "capture": "oracle/out/runs/20261122-154349-fcbcb6/final.txt",
       "at": "2026-11-22T15:43:49Z"
+    },
+    {
+      "run_id": "20261122-171010-dcebad",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "11.9",
+          "n": ".0167",
+          "discharge": "392364",
+          "slope": "6.6366"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171010-dcebad/final.txt",
+      "at": "2026-11-22T17:10:11Z"
+    },
+    {
+      "run_id": "20261122-171013-aed644",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "8.2",
+          "n": ".0199",
+          "discharge": "566002",
+          "slope": "7.0308"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171013-aed644/final.txt",
+      "at": "2026-11-22T17:10:13Z"
+    },
+    {
+      "run_id": "20261122-171019-e9a980",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "4.7",
+          "n": ".0088",
+          "discharge": "214546",
+          "slope": "7.2767"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171019-e9a980/final.txt",
+      "at": "2026-11-22T17:10:19Z"
+    },
+    {
+      "run_id": "20261122-171040-5cc166",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "4.1",
+          "n": ".0249",
+          "discharge": "626674",
+          "slope": "6.3106"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171040-5cc166/final.txt",
+      "at": "2026-11-22T17:10:41Z"
+    },
+    {
+      "run_id": "20261122-171043-ee2e19",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "10.3",
+          "n": ".0178",
+          "discharge": "385177",
+          "slope": "9.2046"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171043-ee2e19/final.txt",
+      "at": "2026-11-22T17:10:44Z"
+    },
+    {
+      "run_id": "20261122-171105-caba6a",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "9",
+          "n": ".021",
+          "discharge": "4655",
+          "slope": "1.3286"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171105-caba6a/final.txt",
+      "at": "2026-11-22T17:11:06Z"
+    },
+    {
+      "run_id": "20261122-171114-c2fa44",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "12.7",
+          "n": ".0243",
+          "discharge": "194568",
+          "slope": "1.8087"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171114-c2fa44/final.txt",
+      "at": "2026-11-22T17:11:14Z"
+    },
+    {
+      "run_id": "20261122-171140-2bdb68",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "6.4",
+          "n": ".028",
+          "discharge": "392463",
+          "slope": "7.0477"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171140-2bdb68/final.txt",
+      "at": "2026-11-22T17:11:41Z"
+    },
+    {
+      "run_id": "20261122-171205-5717ae",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "6.6",
+          "n": ".0257",
+          "discharge": "248929",
+          "slope": "1.0337"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171205-5717ae/final.txt",
+      "at": "2026-11-22T17:12:06Z"
+    },
+    {
+      "run_id": "20261122-171230-5bb0c7",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "14.7",
+          "n": ".0168",
+          "discharge": "606028",
+          "slope": "3.4967"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171230-5bb0c7/final.txt",
+      "at": "2026-11-22T17:12:30Z"
+    },
+    {
+      "run_id": "20261122-171235-cc96a5",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "11.4",
+          "n": ".0158",
+          "discharge": "310642",
+          "slope": ".2599"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171235-cc96a5/final.txt",
+      "at": "2026-11-22T17:12:35Z"
+    },
+    {
+      "run_id": "20261122-171239-6603c5",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "7.8",
+          "n": ".028",
+          "discharge": "649433",
+          "slope": "7.1772"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171239-6603c5/final.txt",
+      "at": "2026-11-22T17:12:39Z"
+    },
+    {
+      "run_id": "20261122-171255-a175d0",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "14.8",
+          "n": ".0158",
+          "discharge": "270750",
+          "slope": "7.814"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171255-a175d0/final.txt",
+      "at": "2026-11-22T17:12:56Z"
+    },
+    {
+      "run_id": "20261122-171258-127f27",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "13.2",
+          "n": ".0111",
+          "discharge": "121377",
+          "slope": ".6636"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171258-127f27/final.txt",
+      "at": "2026-11-22T17:12:58Z"
+    },
+    {
+      "run_id": "20261122-171313-b8d4fe",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "4.4",
+          "n": ".0095",
+          "discharge": "878644",
+          "slope": "8.0844"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171313-b8d4fe/final.txt",
+      "at": "2026-11-22T17:13:13Z"
+    },
+    {
+      "run_id": "20261122-171331-12edff",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "14.6",
+          "n": ".0317",
+          "discharge": "857871",
+          "slope": "1.8716"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171331-12edff/final.txt",
+      "at": "2026-11-22T17:13:32Z"
+    },
+    {
+      "run_id": "20261122-171331-9edb91",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "7.9",
+          "n": ".0106",
+          "discharge": "296434",
+          "slope": ".8915"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171331-9edb91/final.txt",
+      "at": "2026-11-22T17:13:32Z"
+    },
+    {
+      "run_id": "20261122-171333-8c3e21",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "4.8",
+          "n": ".0242",
+          "discharge": "747420",
+          "slope": ".5605"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171333-8c3e21/final.txt",
+      "at": "2026-11-22T17:13:34Z"
+    },
+    {
+      "run_id": "20261122-171340-712fd1",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "9.3",
+          "n": ".0316",
+          "discharge": "259403",
+          "slope": "8.789"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171340-712fd1/final.txt",
+      "at": "2026-11-22T17:13:40Z"
+    },
+    {
+      "run_id": "20261122-171426-510cdf",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "rectangle",
+        "inputs": {
+          "bottom_width": "7505.1",
+          "n": ".5492",
+          "discharge": "977696",
+          "slope": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_reg_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171426-510cdf/final.txt",
+      "at": "2026-11-22T17:14:27Z"
+    },
+    {
+      "run_id": "20261122-171428-d7e72d",
+      "case": {
+        "mode": "channel_capacity",
+        "shape": "v_ditch",
+        "inputs": {
+          "left_slope": "55.7",
+          "right_slope": "35.5",
+          "n": "1.3467",
+          "depth": "-1",
+          "slope": "6.141"
+        }
+      },
+      "reason": "waited 10.0s for ['cc_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171428-d7e72d/final.txt",
+      "at": "2026-11-22T17:14:29Z"
+    },
+    {
+      "run_id": "20261122-171440-a4d68c",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "5526.6",
+          "n": "7.3921",
+          "discharge": "715178",
+          "slope": "7.9952"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171440-a4d68c/final.txt",
+      "at": "2026-11-22T17:14:40Z"
+    },
+    {
+      "run_id": "20261122-171450-9d1022",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "rectangle",
+        "inputs": {
+          "bottom_width": "-1",
+          "n": "6.7965",
+          "discharge": "1234567",
+          "slope": "7.9485"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_reg_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171450-9d1022/final.txt",
+      "at": "2026-11-22T17:14:51Z"
+    },
+    {
+      "run_id": "20261122-171451-915d52",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "2444.6",
+          "n": "7.261",
+          "discharge": "905355",
+          "slope": "4.7828"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171451-915d52/final.txt",
+      "at": "2026-11-22T17:14:52Z"
+    },
+    {
+      "run_id": "20261122-171507-a300ea",
+      "case": {
+        "mode": "channel_capacity",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "7875.3",
+          "n": "8.1935",
+          "depth": "109.04",
+          "slope": "8.1124"
+        }
+      },
+      "reason": "waited 10.0s for ['cc_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cc_form",
+      "capture": "oracle/out/runs/20261122-171507-a300ea/final.txt",
+      "at": "2026-11-22T17:15:08Z"
+    },
+    {
+      "run_id": "20261122-171512-a15625",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "v_ditch",
+        "inputs": {
+          "left_slope": "-1",
+          "right_slope": "32.3",
+          "n": ".3082",
+          "discharge": "194518",
+          "slope": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_reg_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171512-a15625/final.txt",
+      "at": "2026-11-22T17:15:13Z"
+    },
+    {
+      "run_id": "20261122-171530-b0e8a8",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "4968.7",
+          "n": ".8108",
+          "discharge": "7006",
+          "slope": "2.2072"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171530-b0e8a8/final.txt",
+      "at": "2026-11-22T17:15:30Z"
+    },
+    {
+      "run_id": "20261122-171537-b189bc",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "919.7",
+          "n": "3.6715",
+          "discharge": "658463",
+          "slope": "8.1384"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171537-b189bc/final.txt",
+      "at": "2026-11-22T17:15:37Z"
+    },
+    {
+      "run_id": "20261122-171538-54b07b",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "6621.9",
+          "n": "3.8487",
+          "discharge": "-1",
+          "slope": "6.3429"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171538-54b07b/final.txt",
+      "at": "2026-11-22T17:15:38Z"
+    },
+    {
+      "run_id": "20261122-171543-04c43a",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "2481.7",
+          "n": "7.1526",
+          "discharge": "717180",
+          "slope": "4.7899"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-171543-04c43a/final.txt",
+      "at": "2026-11-22T17:15:44Z"
+    },
+    {
+      "run_id": "20261122-171617-bfe2a3",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "trapezoid",
+        "inputs": {
+          "left_slope": "17",
+          "right_slope": "58.3",
+          "bottom_width": "7156.5",
+          "n": ".0521",
+          "discharge": "-1",
+          "slope": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171617-bfe2a3/final.txt",
+      "at": "2026-11-22T17:16:17Z"
+    },
+    {
+      "run_id": "20261122-171644-0f5ac8",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "8976.7",
+          "n": "8.3556",
+          "discharge": "355778",
+          "slope": "2.6686"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171644-0f5ac8/final.txt",
+      "at": "2026-11-22T17:16:45Z"
+    },
+    {
+      "run_id": "20261122-171657-ecfdf7",
+      "case": {
+        "mode": "channel_capacity",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "9982",
+          "n": "5.1731",
+          "depth": "576.29",
+          "slope": ".7029"
+        }
+      },
+      "reason": "waited 10.0s for ['cc_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cc_form",
+      "capture": "oracle/out/runs/20261122-171657-ecfdf7/final.txt",
+      "at": "2026-11-22T17:16:58Z"
+    },
+    {
+      "run_id": "20261122-171707-cbdd3e",
+      "case": {
+        "mode": "channel_capacity",
+        "shape": "rectangle",
+        "inputs": {
+          "bottom_width": "3607.5",
+          "n": "1.0157",
+          "depth": "44.92",
+          "slope": "-1"
+        }
+      },
+      "reason": "waited 10.0s for ['cc_result', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261122-171707-cbdd3e/final.txt",
+      "at": "2026-11-22T17:17:07Z"
+    },
+    {
+      "run_id": "20261122-171708-805d62",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "7460.4",
+          "n": ".0157",
+          "discharge": "595344",
+          "slope": "4.6036"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171708-805d62/final.txt",
+      "at": "2026-11-22T17:17:09Z"
+    },
+    {
+      "run_id": "20261122-171724-85aa11",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "8917.5",
+          "n": "4.6158",
+          "discharge": "417808",
+          "slope": "3.4473"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-171724-85aa11/final.txt",
+      "at": "2026-11-22T17:17:24Z"
     }
   ],
   "unknown_screens": [
@@ -1240,6 +1856,19 @@
       ],
       "status": "open",
       "asked_at": "2026-11-22T15:46:07Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-014",
+      "question": "Every circle case drawn from the practical ranges failed: 12 cd-circ and 7 nd-circ timed out at the form after Begin, and 7 cc-circ were rejected (batch b63fa5). Only n and diameter have practical bounds; discharge and depth keep their accepted ranges (up to 999999 cfs and 999.99 ft), so a 0.7 to 15 ft pipe meets flows and depths it cannot hold. The quick set's 24 circle cases hold 6 results and 18 rejections. Is a pipe beyond capacity what makes QUICK-2 hang (see Q-010), and is there a published source that would bound discharge or depth for pipes, so the practical set can reach a circle result?",
+      "evidence": [
+        "batch-20261122-171342-b63fa5",
+        "batch-20261122-171725-c448b7"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T17:22:34Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
