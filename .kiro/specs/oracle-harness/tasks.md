@@ -105,6 +105,7 @@
     - _Requirements: 10.4, 11.6, 13.5_
   - [ ] 10.3 Set `enabled` to true in the four files in `.kiro/hooks/`, and test the refusal by asking Kiro to edit a golden
     - Confirm on Windows that the block happens; PowerShell may not pass exit code 2 through.
+    - 2026-11-21: all four enabled. Exit code 2 through PowerShell is confirmed with piped JSON. The live refusal of a chat edit is left open on purpose: it is to happen on camera during the solver build.
     - _Requirements: 10.1_
 
 - [ ] 11. Full set

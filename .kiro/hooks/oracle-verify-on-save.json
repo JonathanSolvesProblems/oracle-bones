@@ -8,7 +8,7 @@
       "matcher": "app[/\\\\]src[/\\\\](solver|format)[/\\\\].*\\.ts$",
       "action": { "type": "command", "command": "python scripts/oracle_quick.py" },
       "timeout": 120,
-      "enabled": false
+      "enabled": true
     }
   ]
 }

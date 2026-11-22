@@ -3,12 +3,12 @@
   "hooks": [
     {
       "name": "guard-goldens",
-      "description": "Refuses any agent edit under oracle/goldens/. Exit code 2 blocks the tool call and sends stderr to the agent; any other nonzero code only warns. Test the block on Windows before relying on it. Goldens come from the binary, never from a text edit.",
+      "description": "Refuses any agent edit under oracle/goldens/. The guard exits 2 to refuse, which blocks the tool call and sends its stderr to the agent; it exits 0 otherwise. Tested with piped JSON, including through PowerShell (oracle/tests/test_guard.py). Goldens come from the binary, never from a text edit.",
       "trigger": "PreToolUse",
       "matcher": "write",
       "action": { "type": "command", "command": "python scripts/guard_goldens.py" },
       "timeout": 10,
-      "enabled": false
+      "enabled": true
     }
   ]
 }
