@@ -244,6 +244,7 @@ class Recorder:
             "message": got.get("message"),
             "held_prompt": got.get("held_prompt"),
             "seed": job.get("seed"), "generator_version": job.get("generator_version"),
+            "range_set": job.get("range_set"),
             "emu2_commit": self.cfg["emu2"]["commit"],
             "profile_version": profile["version"], "profile_sha256": profile["_sha256"],
             "archive_sha256": profile["archive"]["sha256"],
@@ -405,13 +406,14 @@ class Recorder:
         out.pop("determinism")  # a differing second run is in the ledger's nondeterminism
         return out
 
-    def create_batch(self, profile, seed, count, modes=None, shapes=None, manager=None):
+    def create_batch(self, profile, seed, count, modes=None, shapes=None, manager=None, range_set="accepted"):
         ledger.set_unobserved(profile_mod.unobserved(profile))
         started = time.monotonic()
         controls = self.ensure_controls(profile, manager)
         with self.store.lock:
             jobs = generator.generate(profile, seed, count, modes, shapes,
-                                      existing_ids=self.store.taken_ids() + [c["id"] for c in profile["controls"]])
+                                      existing_ids=self.store.taken_ids() + [c["id"] for c in profile["controls"]],
+                                      range_set=range_set)
             self.store.reserve([j["id"] for j in jobs])
         try:
             results = self.parallel(profile, [dict(j, control=None) for j in jobs], manager,
@@ -421,7 +423,7 @@ class Recorder:
         results.sort(key=lambda r: r["generated_id"])
         self.update_coverage()
         return self._batch_report(seed, count, controls, results, started,
-                                  {"uncovered": generator.split_pairs(profile, modes, shapes)[1]})
+                                  {"uncovered": generator.split_pairs(profile, modes, shapes)[1], "range_set": range_set})
 
     def _batch_report(self, seed, count, controls, results, started, extra=None):
         minutes = max((time.monotonic() - started) / 60, 1e-9)
@@ -457,7 +459,8 @@ class Recorder:
         if old["control"] and control is None:
             raise OracleError("invalid_arguments", "%s is a control case the profile no longer lists" % cid)
         job = {"id": cid, "mode": old["mode"], "shape": old["shape"], "inputs": dict(old["inputs"]),
-               "control": control, "seed": old.get("seed"), "generator_version": old.get("generator_version")}
+               "control": control, "seed": old.get("seed"), "generator_version": old.get("generator_version"),
+               "range_set": old.get("range_set")}
         got, run_id, d, diffs = self.attempt(profile, job, manager)
         if diffs:
             raise OracleError("internal", "harness failure: control case %s differs from the profile; "

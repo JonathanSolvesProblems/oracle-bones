@@ -154,12 +154,13 @@ class Oracle:
         out.pop("resends", None)
         return out
 
-    def run_batch(self, seed, count, modes=None, shapes=None, record=False):
+    def run_batch(self, seed, count, modes=None, shapes=None, record=False, ranges="accepted"):
         prof = self._running_profile()
         self._need_docker()
         if record:
-            return self.recorder.create_batch(prof, seed, count, modes, shapes, manager=self.manager)
-        batch = generator.generate(prof, seed, count, modes, shapes)
+            return self.recorder.create_batch(prof, seed, count, modes, shapes, manager=self.manager,
+                                             range_set=ranges)
+        batch = generator.generate(prof, seed, count, modes, shapes, range_set=ranges)
         started = time.monotonic()
 
         def one(c):
@@ -183,7 +184,7 @@ class Oracle:
         report.parent.mkdir(parents=True, exist_ok=True)
         uncovered = generator.split_pairs(prof, modes, shapes)[1]
         report.write_text(json.dumps({"seed": seed, "count": count, "generator_version": generator.GENERATOR_VERSION,
-                                      "record": False, "uncovered": uncovered, "results": results},
+                                      "range_set": ranges, "record": False, "uncovered": uncovered, "results": results},
                                      indent=2) + "\n", encoding="utf-8")
         return {"batch_id": batch_id, "cases_run": len(results), "recorded": 0,
                 "timeouts": by_outcome.get("timeout", 0), "unknown_screens": by_outcome.get("unknown_screen", 0),

@@ -1,7 +1,10 @@
-"""Seeded case generator. The same seed and GENERATOR_VERSION always give the same cases.
+"""Seeded case generator. The same seed, range set and GENERATOR_VERSION always give the same
+cases.
 
-Values come from the profile's ranges, formatted as typed strings, mixed with each field's
-listed boundary values. Case ids are assigned here, before any case runs, so parallel order
+Two range sets. `accepted` draws from what each prompt accepts and prints, mixed with each
+field's listed boundary values. `practical` draws from a range's `practical` bounds, which cite
+a published source (a judgement, not an observation), with no boundary values; a field with no
+practical bounds keeps its accepted range. Values are formatted as typed strings. Case ids are assigned here, before any case runs, so parallel order
 cannot change which inputs get which id.
 """
 
@@ -12,7 +15,8 @@ from . import cases as cases_mod
 from .errors import OracleError
 
 GENERATOR_VERSION = "1"
-BOUNDARY_SHARE = 0.15  # roughly one input in seven is a boundary value
+BOUNDARY_SHARE = 0.15  # roughly one input in seven is a boundary value (accepted set only)
+RANGE_SETS = ("accepted", "practical")
 
 
 def _fmt(value, decimals):
@@ -24,7 +28,21 @@ def _fmt(value, decimals):
     return text or "0"
 
 
-def _draw(rnd, rng):
+def practical_bounds(rng, shape):
+    """(min, max) of the practical range for this shape, or None when the range has none."""
+    prac = rng.get("practical")
+    if not prac:
+        return None
+    p = prac.get("shapes", {}).get(shape, prac)
+    return p["min"], p["max"]
+
+
+def _draw(rnd, rng, range_set="accepted", shape=None):
+    if range_set == "practical":
+        bounds = practical_bounds(rng, shape)
+        if bounds:
+            return _fmt(rnd.uniform(*bounds), rng["decimals"])
+        return _fmt(rnd.uniform(rng["min"], rng["max"]), rng["decimals"])
     if rng.get("boundaries") and rnd.random() < BOUNDARY_SHARE:
         return rnd.choice(rng["boundaries"])
     return _fmt(rnd.uniform(rng["min"], rng["max"]), rng["decimals"])
@@ -74,12 +92,16 @@ def next_sequences(profile, existing_ids):
     return nxt
 
 
-def generate(profile, seed, count, modes=None, shapes=None, existing_ids=()):
-    """Return `count` cases: [{id, mode, shape, inputs, seed, generator_version}], drawn only from
-    pairs whose inputs all have ranges (see split_pairs for the others)."""
+def generate(profile, seed, count, modes=None, shapes=None, existing_ids=(), range_set="accepted"):
+    """Return `count` cases: [{id, mode, shape, inputs, seed, generator_version, range_set}], drawn
+    only from pairs whose inputs all have ranges (see split_pairs for the others). The accepted
+    set draws exactly what generator version 1 drew before range sets existed."""
     if count < 0:
         raise OracleError("invalid_arguments", "count must be zero or more")
-    rnd = random.Random("%s/%s" % (GENERATOR_VERSION, seed))
+    if range_set not in RANGE_SETS:
+        raise OracleError("invalid_arguments", "ranges must be one of %s" % ", ".join(RANGE_SETS))
+    key = "%s/%s" % (GENERATOR_VERSION, seed)
+    rnd = random.Random(key if range_set == "accepted" else "%s/%s" % (key, range_set))
     choices, uncovered = split_pairs(profile, modes, shapes)
     if not choices and count:
         raise OracleError("invalid_arguments", "no chosen mode and shape has a range for every input",
@@ -90,10 +112,10 @@ def generate(profile, seed, count, modes=None, shapes=None, existing_ids=()):
         mode, shape = choices[rnd.randrange(len(choices))]
         inputs = {}
         for name in cases_mod.flow_inputs(profile, mode, shape):
-            inputs[name] = _draw(rnd, profile["ranges"][name])
+            inputs[name] = _draw(rnd, profile["ranges"][name], range_set, shape)
         prefix = case_prefix(profile, mode, shape)
         seq = nxt.get(prefix, 1)
         nxt[prefix] = seq + 1
         out.append({"id": "%s-%06d" % (prefix, seq), "mode": mode, "shape": shape, "inputs": inputs,
-                    "seed": seed, "generator_version": GENERATOR_VERSION})
+                    "seed": seed, "generator_version": GENERATOR_VERSION, "range_set": range_set})
     return out

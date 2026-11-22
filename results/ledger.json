@@ -1206,11 +1206,15 @@
         "obs-fieldedge-000001",
         "obs-fieldover-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T15:46:04Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Yes, answered by the user: the generator now has a practical range beside the accepted one. A practical range is a judgement, so each bound names a published source, never a value the project chose; where no source was found the practical set keeps the accepted range. Sources used: (1) n for open channels (v_ditch, rectangle, trapezoid): 0.011 to 0.500, the least minimum and greatest maximum of Chow (1959) Table 5-6 as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.6, Table 3-1 (https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.6/basic-data-requirements/geometric-data/energy-loss-coefficients). (2) n for the circle (pipes): 0.008 to 0.033, from Chow (1959) as reproduced in HEC-RAS Hydraulic Reference Manual 6.5, Table 6-1 (closed conduits flowing partly full, 0.008 to 0.030) and AISI (1980) Table 6-2 (corrugated metal pipe, up to 0.033) (https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient). (3) diameter: 0.667 to 15 ft, the 8 in. to 180 in. diameters listed in the same Table 6-2. No source was found for side slopes, bottom width, depth, discharge or bed slope, so those keep their accepted ranges in the practical set. Practical draws carry no boundary values. The quick set takes about half its non-control cases from goldens drawn from practical ranges and half from the rest; the full set keeps every golden. The bounds and sources are in the profile under ranges[n].practical and ranges[diameter].practical.",
+      "answer_evidence": [
+        "batch-20261122-154350-36ee68",
+        "obs-fieldedge-000001",
+        "obs-fieldover-000001"
+      ],
+      "answered_at": "2026-11-22T16:18:36Z"
     },
     {
       "id": "Q-012",

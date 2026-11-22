@@ -176,11 +176,49 @@ def test_quickset_holds_controls_and_a_spread_and_never_an_observed_golden():
     assert compare.build_quickset(PROFILE, STORE) == qs  # seeded
 
 
-def test_the_spread_is_even_when_goldens_exceed_the_size():
-    qs = compare.build_quickset(PROFILE, STORE, size=4)
-    assert qs["cases"][:2] == ["nd-trap-000001", "nd-trap-000002"] or \
-        {"nd-trap-000001", "nd-trap-000002"} <= set(qs["cases"])
-    assert qs["by_pair"] == {"normal_depth/irregular": 1, "normal_depth/trapezoid": 3}
+class _FakeStore:
+    def __init__(self, goldens):
+        self._goldens = goldens
+
+    def all(self):
+        return list(self._goldens)
+
+
+_FAKE_PROFILE = {"controls": [{"id": "nd-trap-000001"}, {"id": "obs-edge-000001"}],
+                 "codes": {"modes": {"normal_depth": "nd", "critical_depth": "cd"},
+                           "shapes": {"trapezoid": "trap", "circle": "circ"}},
+                 "flows": {"normal_depth/trapezoid": {}, "critical_depth/circle": {}, "critical_depth/trapezoid": {}}}
+
+
+def _fake(cid, mode, shape, range_set=None, outcome="result"):
+    return {"id": cid, "mode": mode, "shape": shape, "range_set": range_set, "outcome": outcome}
+
+
+def _fake_goldens(practical_per_pair=6):
+    out = [_fake("nd-trap-000001", "normal_depth", "trapezoid"),
+           _fake("obs-edge-000001", "normal_depth", "trapezoid", outcome="observed")]
+    seq = 2
+    for mode, shape, code in (("normal_depth", "trapezoid", "nd-trap"), ("critical_depth", "circle", "cd-circ")):
+        for rs, n in (("accepted", 6), ("practical", practical_per_pair)):
+            for _ in range(n):
+                out.append(_fake("%s-%06d" % (code, seq), mode, shape, rs))
+                seq += 1
+    return out
+
+
+def test_the_quick_set_splits_half_practical_half_accepted_and_spreads_evenly():
+    qs = compare.build_quickset(_FAKE_PROFILE, _FakeStore(_fake_goldens()), size=9)
+    assert "nd-trap-000001" in qs["cases"] and "obs-edge-000001" not in qs["cases"]
+    assert qs["by_range_set"] == {"control": 1, "practical": 4, "accepted": 4}
+    assert qs["by_pair"] == {"critical_depth/circle": 4, "normal_depth/trapezoid": 5}
+    assert qs["uncovered"] == [{"pair": "critical_depth/trapezoid", "flow_mapped": True},
+                               {"pair": "normal_depth/circle", "flow_mapped": False}]
+    assert compare.build_quickset(_FAKE_PROFILE, _FakeStore(_fake_goldens()), size=9) == qs  # seeded
+
+
+def test_the_accepted_half_fills_in_when_practical_goldens_run_out():
+    qs = compare.build_quickset(_FAKE_PROFILE, _FakeStore(_fake_goldens(practical_per_pair=1)), size=11)
+    assert qs["by_range_set"] == {"control": 1, "practical": 2, "accepted": 8}
 
 
 def test_committed_quickset_is_current():

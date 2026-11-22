@@ -96,6 +96,17 @@ def consistency_errors(profile):
             errors.append("controls[%s]: obs- ids and the observed outcome go together" % c["id"])
         if is_obs and "screen_id" not in c["expect"]:
             errors.append("controls[%s]: a behaviour case needs expect.screen_id" % c["id"])
+    for name, rng in profile["ranges"].items():
+        prac = rng.get("practical")
+        if not prac:
+            continue
+        for where, p in [("practical", prac)] + [("practical.shapes[%s]" % s, v)
+                                                 for s, v in prac.get("shapes", {}).items()]:
+            if not rng["min"] <= p["min"] <= p["max"] <= rng["max"]:
+                errors.append("ranges[%s].%s: must lie inside the accepted range" % (name, where))
+        for s in prac.get("shapes", {}):
+            if s not in profile["codes"]["shapes"]:
+                errors.append("ranges[%s].practical.shapes[%s]: shape has no code" % (name, s))
     return errors
 
 

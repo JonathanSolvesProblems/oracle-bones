@@ -93,35 +93,51 @@ def all_pairs(profile):
 
 def build_quickset(profile, store, seed=1, size=QUICK_SIZE):
     """The quick set (Requirement 11.6): every control case that is not a behaviour case, then
-    an even, seeded spread over every mode and shape pair, taking one golden from each pair in
-    turn until `size` is reached or the goldens run out. No `observed` golden is listed. Pairs
-    with no goldens are listed as uncovered, with whether the profile maps a flow for them."""
+    the rest split about half and half between goldens drawn from practical ranges and all
+    other goldens (accepted ranges, typed cases). Within each half the spread is even and
+    seeded over every mode and shape pair, taking one golden from each pair in turn. When one
+    half runs out the other fills its place. No `observed` golden is listed. Pairs with no
+    goldens are listed as uncovered, with whether the profile maps a flow for them."""
     import random
     goldens = [g for g in store.all() if g["outcome"] != "observed"]
     control_ids = {c["id"] for c in profile["controls"] if not c["id"].startswith("obs-")}
     chosen = sorted(g["id"] for g in goldens if g["id"] in control_ids)[:size]
     rnd = random.Random("quickset/%s" % seed)
-    pools = {}
+    pools = {"practical": {}, "accepted": {}}
     for g in sorted(goldens, key=lambda g: g["id"]):
         if g["id"] not in control_ids:
-            pools.setdefault("%s/%s" % (g["mode"], g["shape"]), []).append(g["id"])
-    for ids in pools.values():
-        rnd.shuffle(ids)
-    order = sorted(pools)
-    while len(chosen) < size and any(pools[k] for k in order):
-        for k in order:
-            if pools[k] and len(chosen) < size:
-                chosen.append(pools[k].pop())
+            half = "practical" if g.get("range_set") == "practical" else "accepted"
+            pools[half].setdefault("%s/%s" % (g["mode"], g["shape"]), []).append(g["id"])
+    for half in ("practical", "accepted"):
+        for k in sorted(pools[half]):
+            rnd.shuffle(pools[half][k])
+
+    def spread(half, limit):
+        got, p = [], pools[half]
+        order = sorted(p)
+        while len(got) < limit and any(p[k] for k in order):
+            for k in order:
+                if p[k] and len(got) < limit:
+                    got.append(p[k].pop())
+        return got
+
+    room = size - len(chosen)
+    chosen += spread("practical", room // 2)
+    chosen += spread("accepted", size - len(chosen))
+    chosen += spread("practical", size - len(chosen))
     covered = {"%s/%s" % (g["mode"], g["shape"]) for g in goldens}
-    by_pair = {}
+    by_pair, by_range_set = {}, {"control": 0, "practical": 0, "accepted": 0}
     for g in goldens:
         if g["id"] in chosen:
             k = "%s/%s" % (g["mode"], g["shape"])
             by_pair[k] = by_pair.get(k, 0) + 1
+            half = ("control" if g["id"] in control_ids
+                    else "practical" if g.get("range_set") == "practical" else "accepted")
+            by_range_set[half] += 1
     uncovered = [{"pair": k, "flow_mapped": k in profile["flows"]} for k in all_pairs(profile) if k not in covered]
     return {"note": "Built by python -m oracle.record --build-quickset from stored goldens. Do not edit.",
             "seed": seed, "size": size, "count": len(chosen), "cases": sorted(chosen),
-            "by_pair": dict(sorted(by_pair.items())), "uncovered": uncovered}
+            "by_pair": dict(sorted(by_pair.items())), "by_range_set": by_range_set, "uncovered": uncovered}
 
 
 def write_quickset(qs, path=None):

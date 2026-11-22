@@ -851,6 +851,8 @@
       "max": 9.9999,
       "decimals": 4,
       "boundaries": [".000", "-1", "12.5"],
+      "practical": {"min": 0.011, "max": 0.5, "source": ["Chow (1959), Open-Channel Hydraulics, Table 5-6, as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.6, Table 3-1 Manning's n Values (natural streams, flood plains, lined and excavated channels): least minimum 0.011 (concrete trowel finish, glazed brick, smooth steel), greatest maximum 0.500 (vegetal lining). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.6/basic-data-requirements/geometric-data/energy-loss-coefficients"],
+        "shapes": {"circle": {"min": 0.008, "max": 0.033, "source": ["Chow (1959), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-1 Manning's n for Closed Conduits Flowing Partly Full: least minimum 0.008 (Lucite), greatest maximum 0.030 (corrugated metal storm drain, cemented rubble masonry). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient", "AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: greatest value 0.033 (6 x 2 in. corrugations, 60 in. diameter, unpaved). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]}}},
       "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negnstall-000001"]
     },
     "discharge": {
@@ -865,6 +867,7 @@
       "max": 9999.9,
       "decimals": 1,
       "boundaries": ["0", "-1"],
+      "practical": {"min": 0.667, "max": 15, "source": ["AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: diameters listed from 8 in. (0.667 ft) to 180 in. (15 ft). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]},
       "cite": ["obs-fieldedge-000002", "cd-circ-000001"]
     },
     "depth": {

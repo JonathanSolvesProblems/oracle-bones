@@ -263,7 +263,11 @@ Then `input_ignored`. The cause of the dropped menu input is investigated separa
 `generate(seed, count, modes, shapes)` uses `random.Random(seed)` only, with a
 `GENERATOR_VERSION` constant raised on any change to the output. For each mode and shape pair
 in the profile's forms it draws in-range values from the profile's `ranges`, formatted as typed
-strings, and mixes in each listed boundary value. Ids are assigned here: the next free sequence
+strings, and mixes in each listed boundary value. With `range_set="practical"` it draws from
+each range's `practical` bounds (per shape where the profile gives `shapes`, for example pipes
+against open channels), falls back to the accepted range where no practical bounds exist, mixes
+in no boundary values, and seeds `random.Random` with a key that names the set, so accepted draws
+are unchanged. Every case and golden carries `range_set`. Ids are assigned here: the next free sequence
 for `<mode code>-<shape code>`, read from the existing goldens, so ids are fixed before
 dispatch.
 
