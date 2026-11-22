@@ -495,7 +495,33 @@ regression equations in USGS SIR 2025-5110); and a slope and bank stations label
 estimates. Every service call is listed in the file. It is a data file, not code: the Exhumer
 records it through QUICK-2 before the solver is graded on it.
 
-## 2026-11-22, the quick set at 200
+## 2026-11-22, session 8: practical ranges and the quick set at 200
+
+Settings: Default agent, Claude Opus 5.5, effort Medium, Approve for me. A new session. Kiro
+wrote the body of this entry itself; I added the prompt and the credits.
+
+> The Exhumer's task 3.1 run is done but not committed. I ran check_traceability.py (51
+> criteria, 0 problems) and check_goldens.py (passes). Work through these in order, then stop.
+>
+> 1. Commit the run as it stands, in one commit: the profile, the new goldens and manifest, the
+>    ledger, .kiro/specs/quick2-solver/requirements.md and docs/build-log.md.
+>
+> 2. Q-011, my answer: yes, a practical range beside the accepted one. A practical range is a
+>    judgement, so each bound cites a named published source (for example a published table of
+>    Manning's n for natural channels and for pipes), never a value we chose; where no source
+>    exists, keep the accepted range. The quick set draws about half its cases from practical
+>    ranges and half from accepted ranges, since the strange edges are where QUICK-2 surprises;
+>    the full set keeps the accepted ranges. Close Q-011 in the ledger with the sources.
+>
+> 3. Rebuild the quick set toward 200 cases now that every regular pair and the irregular
+>    section are mapped. Record what's missing, list any uncovered pairs, and time it.
+>
+> 4. The guard-goldens hook runs on every tool call, MCP calls included. If Kiro's hook format
+>    allows it, match it to the file-write tools only. Shell commands never carried a path for
+>    it to read, and the manifest check covers them. Say what you changed.
+>
+> Commit after each task with a short plain message, no tool or AI names. Only stop to ask me if
+> a problem would change what a spec promises.
 
 Q-011 answered: the generator now has a practical range beside the accepted one, and each
 practical bound names a published source. Manning's n for open channels is 0.011 to 0.500 and
@@ -519,3 +545,87 @@ What is missing:
   and three n values have no ranges, so the quick set holds only its 5 recorded nd-irr goldens.
 - **Uncovered pairs**, with no flow mapped: channel capacity and critical depth on the
   irregular section, and step backwater on all five shapes.
+
+The guard hook had been set to match `write`, which Kiro reads as a regular expression against
+tool ids, so it also fired on every MCP call whose name contains "write", such as
+`ledger_write`. It now names the file-write tools exactly, with a test that it matches those and
+not the shell, read or MCP tools. During the session the shell went silent for minutes at a time
+and recovered right after this change; Kiro said that points at the hook but is not confirmed.
+
+Credits: 56.98. Time: 1 h 24 min 47 s.
+
+## 2026-11-22, session 9: a real stream, the irregular editor, and Step-Backwater
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5, effort High, Approve for me. A new
+session. The agent cannot browse, so I gave it the Manning's n rows from Chow's table and asked
+it to mark them as an assumption; the next Default session checks them against the manual.
+
+> Three jobs, in this order. Stop when the next question isn't worth its credits.
+>
+> 1. A real section. realdata/huntington-section-01.json is a 40-point cross-section of
+>    Grapevine Branch, a FEMA Zone A stream in Cabell County, West Virginia, cut from USGS 3DEP
+>    lidar, with the 100-year flow from USGS StreamStats (1,200 cfs), a slope estimate (0.0035)
+>    and suggested bank stations (179.49 and 230.77). Its sources and caveats are in the file.
+>    Manning's n isn't in it, and nobody has seen the site, so use these rows from Chow (1959),
+>    as reproduced in the HEC-RAS Hydraulic Reference Manual Table 3-1, and mark them as an
+>    assumption: channel, "minor stream, clean, winding, some pools and shoals", 0.033 / 0.040 /
+>    0.045 (minimum / normal / maximum); both overbanks, "floodplain, light brush and trees, in
+>    summer", 0.040 / 0.060 / 0.080. Record Normal Depth cases at all-minimum, all-normal and
+>    all-maximum. Describe the section and its sources in the requirement text, the way
+>    Requirement 3 describes the 40-point section, and write criteria citing the cases.
+>
+> 2. Evidence for the irregular section's ranges, so the generator can draw it: the fewest
+>    points it takes and how entry ends before 40, whether stations must increase, and what the
+>    station, elevation and bank fields accept. Then Q-013.
+>
+> 3. Step-Backwater (task 3.2): map its forms and flow, record sharp cases, and write criteria.
+>    Then Q-012 if it's worth it.
+>
+> When you stop, list the criteria you wrote with their case ids, and the questions you left.
+
+The spec went from 51 to 73 acceptance criteria. I ran the traceability check afterwards: 73
+criteria, 0 problems.
+
+- **The first real answer.** For Grapevine Branch at its 100-year flow, QUICK-2 printed a water
+  surface of 594.37 ft at normal n, 593.98 at the table's minimum and 594.65 at its maximum. For
+  context only, not a grade: West Virginia's statewide 1% flood model puts the water at about
+  595 ft at this spot, by a different method and an unknown discharge.
+- **The agent corrected its own earlier work.** Criterion 3.11, written in session 7, said no
+  warning appears when the water rises above the ends of a section. Rereading the captures it
+  had cited, it found "EXTENDED CROSS SECTION" on row 24 of every one, rewrote 3.11 and added
+  3.13. The ledger answer to Q-006 makes the same wrong claim and cannot be edited, so the
+  correction is its own logged decision.
+- **What the irregular editor accepts:** as few as 2 points (F10 ends entry), stations that
+  must strictly increase or it prints "Stations ... are NOT INCREASING !", a negative first
+  station, a 0 elevation shown but not taken, and a negative one that sends the cursor back to
+  that point's station. Bank stations must match a ground station exactly as typed: 230.8, the
+  value QUICK-2 itself printed for the bank 230.77, is rejected.
+- **Step-Backwater, first section.** Started from a slope, it gives the same water surface as
+  Normal Depth (8.60 and 594.37), but prints two decimals where Normal Depth prints one. Every
+  later section needs F8, a key the harness has not verified, so the agent stopped there and
+  asked.
+- **A question that matters for real sections (Q-021).** Started at 596 ft on Grapevine Branch,
+  Step-Backwater printed a top width of 206 ft. That fits only if QUICK-2 also fills a low area
+  on the right overbank that a 597.93 ft rise cuts off from the channel; leaving it dry would
+  give about 148. The data file already warned that area may not carry flow, and QUICK-2 has no
+  input to say so.
+
+It left the decisions that need a person as questions: verifying F8 and F3, a run that hangs on
+"Working" with fewer than two points, and behaviour cases that stop at the first error screen.
+
+Credits: 144.42. Time: 33 min 28 s.
+
+It asked whether to spend two more runs on Q-021, and I said yes:
+
+> Yes, run Q-021. Write the criterion if it holds, then stop.
+
+It chose 3,000 cfs to put the water between the floor of the cut-off area (595.75 ft) and the
+rise that cuts it off (597.93 ft). QUICK-2 printed a water surface of 596.37 ft and a top width
+of 219 ft. At that level the ground crosses the water twice: 151.4 ft around the channel and
+67.7 ft over the cut-off area. 219 is their sum; the channel alone would print about 151. So
+QUICK-2 counts every part of the section below the water surface as flowing, connected or not,
+and has no input to exclude an area that cannot carry flow. The agent wrote criterion 9.7 and
+said plainly what the case does not show: how much of the area and wetted perimeter the pocket
+adds.
+
+Credits: 9.76. Time: 1 min 52 s.

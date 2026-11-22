@@ -110,6 +110,15 @@
       "cite": ["cd-vdit-000001", "cc-rect-000001", "nd-trap-000003", "nd-circ-000001", "nd-irr-000001"]
     },
     {
+      "id": "sb_start",
+      "kind": "form",
+      "marker": "Starting Water Surface Elevation Method",
+      "prompts": [
+        {"id": "sb_start", "pattern": "Enter a Slope or an Elevation:"}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    {
       "id": "nd_trap_result",
       "kind": "result",
       "marker": "NORMAL\\s+DEPTH[\\s\\S]*TRAPEZOIDAL CHANNEL[\\s\\S]*Print\\s+<F5>",
@@ -251,6 +260,19 @@
       "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
     },
     {
+      "id": "irr_working",
+      "kind": "other",
+      "marker": "GROUND\\s+POINTS[\\s\\S]*W o r k i n g",
+      "unobserved": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
+    },
+    {
+      "id": "irr_station_rejected",
+      "kind": "rejected",
+      "marker": "ERROR\\s+\\.\\.\\.\\s+Stations[\\s\\S]*are NOT INCREASING",
+      "message": {"row": 24, "col": 5, "width": 71},
+      "cite": ["obs-irrelev-000001", "obs-irrstation-000001"]
+    },
+    {
       "id": "irr_bank_rejected",
       "kind": "rejected",
       "marker": "ERROR!\\s+(?:LEFT|RIGHT)\\s+Bank Station DOES NOT MATCH a Ground Point",
@@ -259,6 +281,49 @@
         "obs-bankreject-000001",
         "obs-bankreject-000002"
       ]
+    },
+    {
+      "id": "sb_result",
+      "kind": "result",
+      "marker": "(?s)\\A(?!.*(?:Enter|Press|SAVING\\s+FILE)).*STEP\\s+-\\s+BACKWATER.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d",
+      "fields": [
+        {"name": "in_bank_left", "row": 16, "col": 37, "width": 9},
+        {"name": "in_bank_right", "row": 16, "col": 67, "width": 9},
+        {"name": "in_n_left", "row": 17, "col": 37, "width": 9},
+        {"name": "in_n_channel", "row": 17, "col": 53, "width": 9},
+        {"name": "in_n_right", "row": 17, "col": 67, "width": 9},
+        {"name": "in_len_left", "row": 18, "col": 37, "width": 9},
+        {"name": "in_len_channel", "row": 18, "col": 53, "width": 9},
+        {"name": "in_len_right", "row": 18, "col": 67, "width": 9},
+        {"name": "in_contraction", "row": 19, "col": 37, "width": 9},
+        {"name": "in_expansion", "row": 19, "col": 53, "width": 8},
+        {"name": "in_sb_discharge", "row": 19, "col": 68, "width": 8},
+        {"name": "ws_elev", "row": 20, "col": 12, "width": 20},
+        {"name": "depth", "row": 20, "col": 37, "width": 9},
+        {"name": "top_width", "row": 20, "col": 53, "width": 9},
+        {"name": "k_ratio", "row": 20, "col": 68, "width": 8},
+        {"name": "eg_elev", "row": 21, "col": 12, "width": 14},
+        {"name": "flow_regime", "row": 21, "col": 37, "width": 9},
+        {"name": "chan_velocity", "row": 21, "col": 53, "width": 9},
+        {"name": "froude", "row": 21, "col": 68, "width": 8}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    {
+      "id": "sb_editor",
+      "kind": "form",
+      "marker": "STEP\\s+-\\s+BACKWATER[\\s\\S]*GROUND\\s+POINTS",
+      "prompts": [
+        {"id": "grpt", "pattern": "F3\\}Insert GrPt"},
+        {"id": "bank_left", "pattern": "Enter\\s+LEFT\\s+Channel Bank Station"},
+        {"id": "bank_right", "pattern": "Enter\\s+RIGHT\\s+Channel Bank Station"},
+        {"id": "n_left", "pattern": "Enter\\s+LEFT\\s+Manning's n Value"},
+        {"id": "n_channel", "pattern": "Enter\\s+CHANNEL\\s+Manning's n Value"},
+        {"id": "n_right", "pattern": "Enter\\s+RIGHT\\s+Manning's n Value"},
+        {"id": "irr_discharge", "pattern": "Enter Discharge"},
+        {"id": "irr_begin", "pattern": "TO BEGIN CALCULATIONS\\s+Press\\s+<Enter>"}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
     },
     {
       "id": "nd_irr_result",
@@ -661,6 +726,102 @@
         "nd-irr-000003",
         "nd-irr-000004"
       ]
+    },
+    "step_backwater/irregular": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "4{Enter}"},
+        {"expect": "sb_start", "prompt": "sb_start", "input": "sb_start", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_01", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_01", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_02", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_02", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_03", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_03", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_04", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_04", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_05", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_05", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_06", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_06", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_07", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_07", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_08", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_08", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_09", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_09", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_10", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_10", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_11", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_11", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_12", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_12", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_13", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_13", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_14", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_14", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_15", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_15", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_16", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_16", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_17", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_17", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_18", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_18", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_19", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_19", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_20", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_20", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_21", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_21", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_22", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_22", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_23", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_23", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_24", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_24", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_25", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_25", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_26", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_26", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_27", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_27", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_28", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_28", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_29", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_29", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_30", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_30", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_31", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_31", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_32", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_32", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_33", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_33", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_34", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_34", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_35", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_35", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_36", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_36", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_37", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_37", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_38", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_38", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_39", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_39", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_40", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_40", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "bank_left", "input": "bank_left", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "bank_right", "input": "bank_right", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_left", "input": "n_left", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_channel", "input": "n_channel", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_right", "input": "n_right", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "irr_discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "irr_begin", "keys": "{Enter}"},
+        {"end": ["sb_result"]}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
     },
     "critical_depth/v_ditch": {
       "steps": [
@@ -1308,6 +1469,66 @@
       ],
       "expect": {"outcome": "observed", "screen_id": "nd_trap_form"},
       "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): .04 (echo 0.0) and .00001 (echo 0.0000) are taken, not held; 1234567 echoes %1234567"
+    },
+    {
+      "id": "obs-irrtwopt-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}10{Enter}2{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": "10{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["nd_irr_result"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_irr_result"},
+      "source": "session 64ab4b1a on 2026-11-22 (sessions write no run folder): two ground points and F10 compute WS ELEV 7.60, Depth 5.6, with EXTENDED CROSS SECTION"
+    },
+    {
+      "id": "obs-irrelev-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "20{Enter}0{Enter}"},
+        {"expect": "irr_editor", "keys": "5{Enter}"},
+        {"expect": "irr_editor", "keys": "30{Enter}-2{Enter}"},
+        {"expect": "irr_editor", "keys": "35{Enter}3{Enter}"},
+        {"expect": "irr_editor", "keys": "35{Enter}"},
+        {"end": ["irr_station_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_station_rejected"},
+      "source": "session 619da0d3 on 2026-11-22 (sessions write no run folder): elevation 0 is held, elevation -2 sends the cursor back to that point's station, and an equal station prints NOT INCREASING"
+    },
+    {
+      "id": "obs-irrstation-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "-60{Enter}"},
+        {"end": ["irr_station_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_station_rejected"},
+      "source": "session 6001ff05 on 2026-11-22 (sessions write no run folder): first station -50 is taken; -60 after it prints 'ERROR ... Stations -50  , -60  are NOT INCREASING !'"
     }
   ]
 }

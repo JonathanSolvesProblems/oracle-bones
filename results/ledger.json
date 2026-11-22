@@ -1,24 +1,25 @@
 {
   "screens": {
     "title": {
-      "visits": 401,
+      "visits": 450,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 402,
+      "visits": 451,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 412,
+      "visits": 453,
       "keys_tried": [
         "literal",
-        "{Enter}"
+        "{Enter}",
+        "{F10}"
       ]
     },
     "nd_trap_form": {
@@ -36,12 +37,20 @@
       ]
     },
     "irr_editor": {
-      "visits": 67,
+      "visits": 144,
       "keys_tried": [
         "literal",
         "{Enter}",
         "{F10}",
         "{F6}"
+      ],
+      "keys_untried": [
+        "{F1}",
+        "{F2}",
+        "{F3}",
+        "{F4}",
+        "{F5}",
+        "{F8}"
       ]
     },
     "stray_listing": {
@@ -49,14 +58,16 @@
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 33,
+      "visits": 48,
       "keys_tried": [
         "{F6}"
       ]
     },
     "irr_bank_rejected": {
-      "visits": 11,
-      "keys_tried": []
+      "visits": 15,
+      "keys_tried": [
+        "{Enter}"
+      ]
     },
     "cd_form": {
       "visits": 101,
@@ -83,7 +94,7 @@
       ]
     },
     "cc_form": {
-      "visits": 97,
+      "visits": 99,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -102,7 +113,7 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 75,
+      "visits": 77,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -134,6 +145,40 @@
         "{F2}",
         "{F9}"
       ]
+    },
+    "irr_station_rejected": {
+      "visits": 12,
+      "keys_tried": []
+    },
+    "irr_working": {
+      "visits": 1,
+      "keys_tried": []
+    },
+    "sb_start": {
+      "visits": 7,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "sb_editor": {
+      "visits": 7,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "sb_result": {
+      "visits": 7,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F2}",
+        "{F5}",
+        "{F6}",
+        "{F7}",
+        "{F8}",
+        "{F10}"
+      ]
     }
   },
   "fields": {
@@ -153,58 +198,58 @@
       "cases": 113
     },
     "depth": {
-      "cases": 118
+      "cases": 125
     },
     "in_slope": {
       "cases": 154
     },
     "area": {
-      "cases": 159
+      "cases": 163
     },
     "wet_perimeter": {
-      "cases": 159
+      "cases": 163
     },
     "velocity": {
       "cases": 154
     },
     "hyd_radius": {
-      "cases": 159
+      "cases": 163
     },
     "top_width": {
-      "cases": 159
+      "cases": 166
     },
     "froude": {
-      "cases": 159
+      "cases": 166
     },
     "flow_type": {
-      "cases": 159
+      "cases": 163
     },
     "in_bank_left": {
-      "cases": 5
+      "cases": 12
     },
     "in_bank_right": {
-      "cases": 5
+      "cases": 12
     },
     "in_n_left": {
-      "cases": 5
+      "cases": 12
     },
     "in_n_channel": {
-      "cases": 5
+      "cases": 12
     },
     "in_n_right": {
-      "cases": 5
+      "cases": 12
     },
     "in_irr_discharge": {
-      "cases": 5
+      "cases": 9
     },
     "in_irr_slope": {
-      "cases": 5
+      "cases": 9
     },
     "ws_elev": {
-      "cases": 5
+      "cases": 12
     },
     "chan_velocity": {
-      "cases": 5
+      "cases": 12
     },
     "critical_slope": {
       "cases": 58
@@ -220,12 +265,39 @@
     },
     "in_depth": {
       "cases": 41
+    },
+    "in_len_left": {
+      "cases": 3
+    },
+    "in_len_channel": {
+      "cases": 3
+    },
+    "in_len_right": {
+      "cases": 3
+    },
+    "in_contraction": {
+      "cases": 3
+    },
+    "in_expansion": {
+      "cases": 3
+    },
+    "in_sb_discharge": {
+      "cases": 3
+    },
+    "k_ratio": {
+      "cases": 3
+    },
+    "eg_elev": {
+      "cases": 3
+    },
+    "flow_regime": {
+      "cases": 3
     }
   },
   "cases": {
     "cc-circ": {
       "result": 2,
-      "rejected": 13,
+      "rejected": 14,
       "error": 0,
       "observed": 0
     },
@@ -273,13 +345,13 @@
     },
     "nd-circ": {
       "result": 2,
-      "rejected": 2,
+      "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "nd-irr": {
-      "result": 5,
-      "rejected": 0,
+      "result": 9,
+      "rejected": 1,
       "error": 0,
       "observed": 0
     },
@@ -314,6 +386,24 @@
       "observed": 2
     },
     "obs-fieldover": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-irrelev": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-irrstation": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-irrtwopt": {
       "result": 0,
       "rejected": 0,
       "error": 0,
@@ -354,6 +444,12 @@
       "rejected": 0,
       "error": 0,
       "observed": 1
+    },
+    "sb-irr": {
+      "result": 3,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
     }
   },
   "unanswered": [
@@ -1363,6 +1459,218 @@
       "waited_for": "nd_reg_form",
       "capture": "oracle/out/runs/20261122-171724-85aa11/final.txt",
       "at": "2026-11-22T17:17:24Z"
+    },
+    {
+      "run_id": "20261122-175134-d1f6a5",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "irregular",
+        "inputs": {}
+      },
+      "reason": "waited 10.0s for ['irr_working', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "irr_working",
+      "capture": "oracle/out/runs/20261122-175134-d1f6a5/final.txt",
+      "at": "2026-11-22T17:51:35Z"
+    },
+    {
+      "run_id": "20261122-180000-23e5ea",
+      "case": {
+        "mode": "step_backwater",
+        "shape": "irregular",
+        "inputs": {
+          "sb_start": ".002",
+          "sta_01": "0",
+          "elev_01": "12",
+          "sta_02": "10",
+          "elev_02": "11.6",
+          "sta_03": "20",
+          "elev_03": "11.1",
+          "sta_04": "30",
+          "elev_04": "10.7",
+          "sta_05": "40",
+          "elev_05": "10.4",
+          "sta_06": "50",
+          "elev_06": "10.1",
+          "sta_07": "60",
+          "elev_07": "9.9",
+          "sta_08": "70",
+          "elev_08": "9.8",
+          "sta_09": "80",
+          "elev_09": "9.6",
+          "sta_10": "90",
+          "elev_10": "9.5",
+          "sta_11": "100",
+          "elev_11": "9.3",
+          "sta_12": "110",
+          "elev_12": "9.2",
+          "sta_13": "120",
+          "elev_13": "9",
+          "sta_14": "130",
+          "elev_14": "8.8",
+          "sta_15": "140",
+          "elev_15": "8.5",
+          "sta_16": "150",
+          "elev_16": "7.9",
+          "sta_17": "160",
+          "elev_17": "6.2",
+          "sta_18": "170",
+          "elev_18": "4.1",
+          "sta_19": "180",
+          "elev_19": "2.6",
+          "sta_20": "190",
+          "elev_20": "1.8",
+          "sta_21": "200",
+          "elev_21": "1.5",
+          "sta_22": "210",
+          "elev_22": "1.7",
+          "sta_23": "220",
+          "elev_23": "2.4",
+          "sta_24": "230",
+          "elev_24": "3.9",
+          "sta_25": "240",
+          "elev_25": "5.8",
+          "sta_26": "250",
+          "elev_26": "7.6",
+          "sta_27": "260",
+          "elev_27": "8.4",
+          "sta_28": "270",
+          "elev_28": "8.7",
+          "sta_29": "280",
+          "elev_29": "8.9",
+          "sta_30": "290",
+          "elev_30": "9.1",
+          "sta_31": "300",
+          "elev_31": "9.2",
+          "sta_32": "310",
+          "elev_32": "9.4",
+          "sta_33": "320",
+          "elev_33": "9.6",
+          "sta_34": "330",
+          "elev_34": "9.8",
+          "sta_35": "340",
+          "elev_35": "10",
+          "sta_36": "350",
+          "elev_36": "10.3",
+          "sta_37": "360",
+          "elev_37": "10.7",
+          "sta_38": "370",
+          "elev_38": "11.2",
+          "sta_39": "380",
+          "elev_39": "11.8",
+          "sta_40": "390",
+          "elev_40": "12.5",
+          "bank_left": "150",
+          "bank_right": "260",
+          "n_left": ".06",
+          "n_channel": ".035",
+          "n_right": ".08",
+          "discharge": "2500"
+        }
+      },
+      "reason": "the case exceeded its time limit of 60s",
+      "waited_for": null,
+      "capture": "oracle/out/runs/20261122-180000-23e5ea/final.txt",
+      "at": "2026-11-22T18:00:01Z"
+    },
+    {
+      "run_id": "20261122-180436-589e3d",
+      "case": {
+        "mode": "step_backwater",
+        "shape": "irregular",
+        "inputs": {
+          "elev_33": "9.6",
+          "elev_32": "9.4",
+          "sb_start": "1",
+          "elev_31": "9.2",
+          "elev_30": "9.1",
+          "sta_28": "270",
+          "sta_27": "260",
+          "elev_39": "11.8",
+          "n_right": ".08",
+          "sta_29": "280",
+          "elev_38": "11.2",
+          "sta_24": "230",
+          "elev_37": "10.7",
+          "sta_23": "220",
+          "elev_36": "10.3",
+          "sta_26": "250",
+          "elev_35": "10",
+          "sta_25": "240",
+          "elev_34": "9.8",
+          "sta_31": "300",
+          "sta_30": "290",
+          "sta_33": "320",
+          "sta_32": "310",
+          "discharge": "2500",
+          "n_left": ".06",
+          "elev_22": "1.7",
+          "elev_21": "1.5",
+          "elev_20": "1.8",
+          "sta_39": "380",
+          "elev_29": "8.9",
+          "sta_38": "370",
+          "elev_28": "8.7",
+          "elev_27": "8.4",
+          "elev_26": "7.6",
+          "sta_35": "340",
+          "elev_25": "5.8",
+          "sta_34": "330",
+          "elev_24": "3.9",
+          "sta_37": "360",
+          "elev_23": "2.4",
+          "sta_36": "350",
+          "n_channel": ".035",
+          "sta_40": "390",
+          "elev_11": "9.3",
+          "elev_10": "9.5",
+          "bank_right": "260",
+          "sta_09": "80",
+          "sta_06": "50",
+          "elev_19": "2.6",
+          "sta_05": "40",
+          "elev_18": "4.1",
+          "sta_08": "70",
+          "elev_17": "6.2",
+          "sta_07": "60",
+          "elev_16": "7.9",
+          "sta_02": "10",
+          "elev_15": "8.5",
+          "sta_01": "0",
+          "elev_14": "8.8",
+          "sta_04": "30",
+          "elev_13": "9",
+          "sta_03": "20",
+          "elev_12": "9.2",
+          "sta_11": "100",
+          "sta_10": "90",
+          "bank_left": "150",
+          "elev_40": "12.5",
+          "elev_08": "9.8",
+          "sta_17": "160",
+          "elev_07": "9.9",
+          "sta_16": "150",
+          "elev_06": "10.1",
+          "sta_19": "180",
+          "elev_05": "10.4",
+          "sta_18": "170",
+          "elev_04": "10.7",
+          "sta_13": "120",
+          "elev_03": "11.1",
+          "sta_12": "110",
+          "elev_02": "11.6",
+          "sta_15": "140",
+          "elev_01": "12",
+          "sta_14": "130",
+          "sta_20": "190",
+          "sta_22": "210",
+          "sta_21": "200",
+          "elev_09": "9.6"
+        }
+      },
+      "reason": "waited 10.0s for ['sb_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "sb_result",
+      "capture": "oracle/out/runs/20261122-180436-589e3d/final.txt",
+      "at": "2026-11-22T18:04:36Z"
     }
   ],
   "unknown_screens": [
@@ -1443,6 +1751,24 @@
       "hash": "e21e9d6e403f449a04ef2c70e73fb7268c266dfa7f9735ba2cb597e2617ab77d",
       "capture": "oracle/out/runs/20261122-152119-7464c4/final.txt",
       "at": "2026-11-22T15:21:19Z"
+    },
+    {
+      "run_id": "20261122-175412-bb4052",
+      "hash": "4cf4485f665dacc19d6c021f271a2b6adc58015a217c216c808ec80a9422561e",
+      "capture": "oracle/out/runs/20261122-175412-bb4052/final.txt",
+      "at": "2026-11-22T17:54:12Z"
+    },
+    {
+      "run_id": "20261122-175544-3b3b38",
+      "hash": "4cf4485f665dacc19d6c021f271a2b6adc58015a217c216c808ec80a9422561e",
+      "capture": "oracle/out/runs/20261122-175544-3b3b38/final.txt",
+      "at": "2026-11-22T17:55:44Z"
+    },
+    {
+      "run_id": "20261122-180000-23e5ea",
+      "hash": "d6aa33a9f8e223a6259dc6672872c47220dd1ad88ef98966dd53fc708a5e37db",
+      "capture": "oracle/out/runs/20261122-180000-23e5ea/final.txt",
+      "at": "2026-11-22T18:00:01Z"
     }
   ],
   "nondeterminism": [],
@@ -1633,6 +1959,10 @@
     {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+    },
+    {
+      "profile_path": "screens[irr_working]",
+      "source": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
     }
   ],
   "harness_findings": {
@@ -1840,11 +2170,16 @@
         "cc-circ-000001",
         "obs-smallaccept-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T15:46:06Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Partly answered. A Channel Capacity circle depth larger than the diameter (36 in pipe, depth 4) holds the Depth prompt with no message (cc-circ-000018, held_prompt depth). Diameter 0 on the Normal Depth circle form holds the Diameter prompt with no message (nd-circ-000008, held_prompt diameter). Both are in requirements 8.5 and 8.6. The rest moves to Q-019.",
+      "answer_evidence": [
+        "cc-circ-000018",
+        "nd-circ-000008",
+        "20261122-180701-cc59e2",
+        "20261122-180700-3cc7d6"
+      ],
+      "answered_at": "2026-11-22T18:07:39Z"
     },
     {
       "id": "Q-013",
@@ -1872,6 +2207,102 @@
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
+    },
+    {
+      "id": "Q-015",
+      "question": "Harness finding, for a person: with 1 ground point (and with none), Begin on the irregular editor shows 'W o r k i n g  ..........' and never finishes. The recording of control obs-irronept-000001 (end irr_working, hold 10 s) identified the screen as irr_working (same hash as in session b018e73c) but ended as timeout, 'waited 10.0s for irr_working ...', so nothing was stored. Does the program keep writing to the terminal while it spins, so the screen never settles? Should the runner accept an end screen whose text stays the same for hold_ms even while output continues? Until then the fewest-points rule (2 compute, 0 and 1 hang) rests on sessions for the hang; the control was removed.",
+      "evidence": [
+        "20261122-175134-d1f6a5"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T17:52:10Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-016",
+      "question": "Harness finding, for a person: exploratory run 20261122-180000-23e5ea (step_backwater/irregular, the 40-point section) ended unknown_screen after the 60 s case limit with an empty transcript and a blank final screen, so the program never showed its title. The same inputs ran normally in 20261122-180053-af817d. What made the first container start blank? No value is stated for that run.",
+      "evidence": [
+        "20261122-180000-23e5ea",
+        "20261122-180053-af817d"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T18:01:01Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-017",
+      "question": "Harness finding, for a person: a behaviour control cannot pass through a screen of kind rejected. obs-bankexact-000001 (steps through irr_station_rejected, then irr_bank_rejected, then Enter) ended at its 5th step on irr_station_rejected (run 20261122-180112-3ccee6) and nothing was stored. So Q-013's first part (session 6001ff05: Enter after the bank ERROR returns to the RIGHT bank prompt, keeps the LEFT bank, and the corrected bank is then taken; a station typed after NOT INCREASING replaces the bad one) cannot be recorded. Should behaviour steps whose expect names a stop screen be allowed to continue past it? The control was removed.",
+      "evidence": [
+        "20261122-180112-3ccee6",
+        "obs-bankreject-000002",
+        "obs-irrstation-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T18:01:35Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-018",
+      "question": "Step-Backwater start value 1 on the 40-point section (run 20261122-180436-589e3d) ended as timeout although the screen read as sb_result: the final screen shows 'CRITICAL DEPTH Assumed' on row 24 with result fields filled, and the wait for sb_result did not settle in 10 s (the same pattern as Q-015). No value is stated for this run. Questions: does the program keep writing after 'CRITICAL DEPTH Assumed' (a beep or a redraw)? How does the start prompt decide between a slope and an elevation (.002 and .0035 acted as slopes, 5 and 596 as elevations, 1 is unclear)? Does the row-24 message need a message region on sb_result, and should the runner end on a screen whose text has stopped changing?",
+      "evidence": [
+        "20261122-180436-589e3d",
+        "sb-irr-000001",
+        "sb-irr-000003"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T18:04:50Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-019",
+      "question": "Left over from Q-012: 0 and -1 at the Depth prompt, -1 at Diameter, 0 and -1 at the V-ditch and rectangle prompts, a circle depth equal to the diameter, empty Enter and non-numeric text (also Q-004). The generator's boundary lists already hold 0 and -1 for these fields, so batches may answer the first parts without dedicated cases.",
+      "evidence": [
+        "cc-circ-000018",
+        "nd-circ-000008"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T18:07:38Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-020",
+      "question": "For a person: Step-Backwater past the first section needs F8 (New XSEC), which send_keys refuses as unsupported_key (session 4f914399). Until F8 is verified with a key capture pair and added to keys.list, reach lengths, contraction and expansion coefficients, the step computation and the Flow Regime codes other than M-1 and C-3 cannot be observed. Will F8 be verified, and should the step_backwater flow then grow a second-section block?",
+      "evidence": [
+        "sb-irr-000001",
+        "sb-irr-000003"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T18:07:49Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-021",
+      "question": "With known WS 596 on the Grapevine section, Step-Backwater printed Top Wid 206 (sb-irr-000003). Leaving dry the low ground at 595.32 to 595.75 between stations 346 and 423, which a 597.93 high point at 333.33 cuts off from the channel, would give about 148 ft; filling it gives about 207. So QUICK-2 appears to count every part of the section below the water surface, connected or not. Is that the rule in Normal Depth too, and does the pocket add to Area and Wet Per? A Normal Depth case on the Grapevine section with a discharge that puts WS between 595.75 and 597.93 would test it. The file's caveat calls that area possibly ineffective, which QUICK-2 has no input for.",
+      "evidence": [
+        "sb-irr-000003",
+        "nd-irr-000006"
+      ],
+      "status": "answered",
+      "asked_at": "2026-11-22T18:07:52Z",
+      "answer": "Yes for Normal Depth, in Top Wid. Grapevine, all-normal n, Q 3000, slope .0035 printed WS ELEV 596.37 and Top Wid 219 (nd-irr-000010, same as run 20261122-205702-41b1d8). At 596.37 the ground points give 151.4 ft around the channel (155.77 to 307.13) and 67.7 ft over the cut-off low ground (347.11 to 414.81); 219 is their sum, while the channel alone would print about 151. Requirement 9.7. Wet Per 220 is consistent with the pocket's ground being counted too, but this case does not separate the pocket's share of Area or Wet Per.",
+      "answer_evidence": [
+        "nd-irr-000010",
+        "20261122-205702-41b1d8",
+        "sb-irr-000003"
+      ],
+      "answered_at": "2026-11-22T20:57:58Z"
     }
   ],
   "decisions": [
@@ -2334,15 +2765,264 @@
       "why": "Task 3.1 is done and Q-006 is answered. All 12 regular mode/shape pairs (Critical Depth, Channel Capacity, Normal Depth on V-ditch, rectangle, trapezoid, circle) are mapped in the profile with a form, result screen and flow, each cited by a recorded case seen twice (cd/cc/nd-vdit/rect/trap/circ-000001, plus cd-rect-000002, cd-circ-000002, cc-circ-000002). Requirements 4-8 in the solver spec give the form layouts, prompt orders, and printed values, each citing those cases; requirements 3.11-3.12 answer Q-006 (water above the end points is held by vertical walls that add nothing to the wetted perimeter), citing nd-irr-000005. Input ranges for every prompt are set to what the program accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0/-1/overflow boundaries, each citing the field-edge behaviour cases. The remaining open questions are not worth their credits in this run: Q-008 (CD depth below exact, a candidate haunting) and Q-009 (circle Max Discharge) are classifications best made with Skeptic review when the rebuild first mismatches, not before a line of solver exists; Q-010 (two circle timeouts) and Q-013 (Enter after bank ERROR, >40 points) are narrow edge probes; Q-011 and Q-012 are decisions for a person (practical generator range; untried 0/-1 on the new forms). A person should run scripts/check_traceability.py to confirm the new citations resolve; I have no shell.",
       "evidence": [],
       "at": "2026-11-22T15:47:06Z"
+    },
+    {
+      "n": 36,
+      "saw": "Ledger: normal_depth/irregular flow exists and is cited (nd-irr-000001..5), but only for a synthetic section with whole or one-decimal stations and elevations under 13 ft. The user supplied a real 40-point lidar section (realdata/huntington-section-01.json) with two-decimal stations, elevations 589 to 660 ft, Q 1200, slope .0035, banks 179.49 and 230.77, and Chow n rows to run at min/normal/max.",
+      "chose": "run_case",
+      "why": "First an exploratory run at the all-normal n set (.060/.040/.060) to see whether two-decimal stations and 600-ft elevations are taken and echoed, whether the banks match, and that it ends on nd_irr_result, before recording three cases.",
+      "evidence": [
+        "nd-irr-000001"
+      ],
+      "at": "2026-11-22T17:35:48Z"
+    },
+    {
+      "n": 37,
+      "saw": "Exploratory all-normal Huntington run ended on nd_irr_result: WS ELEV 594.37, Depth 5.2, Area 298, Top Wid 128, Hyd R 2.3, SUBCRITICAL, Chan Vel 5.2, Wet Per 129, Frd # 0.55. Two-decimal stations and 600-ft elevations echo as typed in the GROUND POINTS grid; bank stations 179.49 and 230.77 matched ground points but echo as 179.5 and 230.8.",
+      "chose": "record_case",
+      "why": "Same inputs again with record true to get a citable case for the all-normal set.",
+      "evidence": [
+        "20261122-173625-487672"
+      ],
+      "at": "2026-11-22T17:36:42Z"
+    },
+    {
+      "n": 38,
+      "saw": "nd-irr-000006 (all-normal) printed the same as the exploratory run 20261122-173625-487672.",
+      "chose": "run_case",
+      "why": "Exploratory runs for the all-minimum (.040/.033/.040) and all-maximum (.080/.045/.080) n sets, each to be repeated with record true.",
+      "evidence": [
+        "nd-irr-000006",
+        "20261122-173625-487672"
+      ],
+      "at": "2026-11-22T17:37:23Z"
+    },
+    {
+      "n": 39,
+      "saw": "All-minimum run printed WS ELEV 593.98, Depth 4.8, Area 249; all-maximum printed WS ELEV 594.65, Depth 5.4, Area 333. Both ended on nd_irr_result.",
+      "chose": "record_case",
+      "why": "Repeat both with record true so the min and max criteria have citations.",
+      "evidence": [
+        "20261122-173801-f56dc2",
+        "20261122-173807-dcfde4"
+      ],
+      "at": "2026-11-22T17:38:11Z"
+    },
+    {
+      "n": 40,
+      "saw": "nd-irr-000007 (all-minimum) and nd-irr-000008 (all-maximum) printed the same as their exploratory runs; nd-irr-000006 likewise for all-normal. Each behaviour seen twice, once recorded.",
+      "chose": "write_requirement",
+      "why": "Write Requirement 9 describing the Grapevine Branch section, its sources and the assumed Chow n rows, with one criterion per n set and one for the bank echo.",
+      "evidence": [
+        "nd-irr-000006",
+        "nd-irr-000007",
+        "nd-irr-000008",
+        "20261122-173625-487672",
+        "20261122-173801-f56dc2",
+        "20261122-173807-dcfde4"
+      ],
+      "at": "2026-11-22T17:39:04Z"
+    },
+    {
+      "n": 41,
+      "saw": "Requirement 9 written from nd-irr-000006/7/8. Job 2 needs the irregular editor's limits; only 4-point (obs-nodata-000001, F10) and 40-point entries have been seen, all with increasing stations and positive values.",
+      "chose": "probe_screen",
+      "why": "Probe the irregular editor interactively: F10 after 1 and 2 points, a decreasing station, 0/negative/oversized station and elevation, to learn what to put into behaviour cases. Sessions are cheaper than one run per guess.",
+      "evidence": [
+        "obs-nodata-000001",
+        "nd-irr-000001"
+      ],
+      "at": "2026-11-22T17:39:44Z"
+    },
+    {
+      "n": 42,
+      "saw": "Session probe of the irregular editor: 1 point + F10 is taken, banks 0/0 accepted, Begin shows 'W o r k i n g ..........' on row 24 and never finishes (watched past 10 s). A decreasing station prints 'ERROR ... Stations  20  ,  10  are NOT INCREASING !' on row 24 and keeps the cursor on that station; the next valid station replaces it. Negative station -5 is taken as typed and gets the same NOT INCREASING error. Elevation 0 is echoed but holds the field; elevation -2 blanks the field and sends the cursor back to that point's station. Banks 30 (left) and 20 (right) on a 4-point section are accepted; the result prints Chan Vel 0.0 and 'EXTENDED CROSS SECTION' on row 24 (WS 5.44 above the right end at 5). The stored captures of nd-irr-000002, -000003, -000004 and -000005 also show 'EXTENDED CROSS SECTION' on row 24, which contradicts requirement 3.11 ('show no warning') and the Q-006 answer.",
+      "chose": "write_requirement",
+      "why": "Requirement 3.11 is contradicted by its own cited capture; the program wins. Correct 3.11 and add a criterion for the row-24 line, citing the stored captures (nd_irr_result has no message region, and adding one would change how the stored goldens read, so the captures are the citation). Sessions write no run folder, so the editor findings still need recorded behaviour cases.",
+      "evidence": [
+        "oracle/goldens/captures/nd-irr-000005/screen-91.txt",
+        "oracle/goldens/captures/nd-irr-000002/screen-92.txt",
+        "oracle/goldens/captures/nd-irr-000001/screen-91.txt",
+        "nd-irr-000005",
+        "nd-irr-000002"
+      ],
+      "at": "2026-11-22T17:43:07Z"
+    },
+    {
+      "n": 43,
+      "saw": "Sessions (no run folder): 0 points + F10 and 1 point + F10 both reach the bank prompt and hang on 'W o r k i n g ..........' after Begin; 2 points (0,10),(10,2) compute WS ELEV 7.60 with EXTENDED CROSS SECTION. Equal stations (35, 35) and decreasing ones (-50, -60) print 'ERROR ... Stations ... are NOT INCREASING !' and the next station typed replaces the bad one. Station -50, elevation 12345.678, station 1.234 and elevation 99999 are taken and shown as typed. Bank -50 matches station -50; bank 10 does not match station 10.04 (ERROR line) although banks echo with one decimal; Enter after the ERROR returns to the RIGHT bank prompt with the LEFT bank kept, and 10.04 is then accepted (Q-013 first part). With no ground points a bank of 5 is accepted.",
+      "chose": "change_profile",
+      "why": "No screen maps the station error or the Working hang, so cases would end on irr_editor or time out. Add irr_station_rejected (kind rejected, before irr_editor) and irr_working (kind other, before nd_irr_result and irr_editor), both unobserved, plus four behaviour controls that replay exactly the session sequences: two points computing, one point hanging, held/negative elevations with equal stations, and decreasing negative stations. The bank-exactness and Enter-after-ERROR control passes through a stop screen mid-case, so it goes in after the others are recorded.",
+      "evidence": [
+        "nd-irr-000002",
+        "obs-bankreject-000002"
+      ],
+      "at": "2026-11-22T17:49:38Z"
+    },
+    {
+      "n": 44,
+      "saw": "Profile with irr_working, irr_station_rejected and four new controls passed the re-read. Exploratory Grapevine run with bank_right 230.8 (the printed echo of 230.77) ended rejected on irr_bank_rejected: 'ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point. Press <ENTER>'.",
+      "chose": "record_case",
+      "why": "Record the same inputs: it proves through the flow that the bank must equal a ground station exactly, not its printed value, and the recording call first records the four new behaviour controls.",
+      "evidence": [
+        "20261122-175055-8a71ae",
+        "nd-irr-000006"
+      ],
+      "at": "2026-11-22T17:51:01Z"
+    },
+    {
+      "n": 45,
+      "saw": "obs-irrtwopt-000001, obs-irrelev-000001 and obs-irrstation-000001 recorded with the same screen hashes as the sessions; nd-irr-000009 (Grapevine, bank_right 230.8) recorded as rejected with the RIGHT bank ERROR, same as run 20261122-175055-8a71ae. obs-irronept-000001 could not be recorded (Q-015).",
+      "chose": "change_profile",
+      "why": "irr_station_rejected now cites the two recorded controls. Add obs-bankexact-000001 (bank 10 vs station 10.04, Enter after the ERROR, Q-013) last, because it passes through two stop screens mid-case and may not reproduce; the next recording call will try it.",
+      "evidence": [
+        "obs-irrtwopt-000001",
+        "obs-irrelev-000001",
+        "obs-irrstation-000001",
+        "nd-irr-000009",
+        "20261122-175055-8a71ae"
+      ],
+      "at": "2026-11-22T17:53:47Z"
+    },
+    {
+      "n": 46,
+      "saw": "Step-Backwater (main menu 4) has no screens, flow or cases in the profile; task 3.2 asks for it.",
+      "chose": "probe_screen",
+      "why": "Map the Step-Backwater screens and prompts interactively before writing any flow.",
+      "evidence": [],
+      "at": "2026-11-22T17:53:54Z"
+    },
+    {
+      "n": 47,
+      "saw": "Step-Backwater: 4 shows 'Starting Water Surface Elevation Method' with one prompt 'Enter a Slope or an Elevation:'; then a STEP - BACKWATER ground-points editor (read as irr_editor by the profile) asks points, banks, three n values and Discharge only, and Begin prints WS ELEV, Depth, Top Wid, Kratio, EG ELEV, Flow Regime, ChanVel, Froud#. Slope .002 on a 4-point section gave WS ELEV 4.32, Flow Regime M-1; elevation 5 gave WS ELEV 5.00, Depth 4.00. F8 New XSEC, needed for a second section, is refused as unsupported_key.",
+      "chose": "change_profile",
+      "why": "Add sb_start, sb_result and sb_editor (before nd_irr_result and irr_editor, after the rejected screens) and a 40-point step_backwater/irregular flow, all unobserved. A first-section case with a slope start on the 40-point section can be held against nd-irr-000001 to test whether the slope start is Normal Depth.",
+      "evidence": [
+        "nd-irr-000001"
+      ],
+      "at": "2026-11-22T17:57:05Z"
+    },
+    {
+      "n": 48,
+      "saw": "Step-Backwater first section on the 40-point section with slope start .002, banks 150/260, n .06/.035/.08, Q 2500 printed WS ELEV 8.60, Depth 7.10, Top Wid 130, Kratio 1.00, EG ELEV 9.01, Flow Regime M-1, ChanVel 5.11, Froud# 0.46; reach-length and loss-coefficient fields blank. Normal Depth on the same inputs (nd-irr-000001) printed WS ELEV 8.60, Depth 7.1, Chan Vel 5.1, Frd # 0.46.",
+      "chose": "record_case",
+      "why": "Record the same inputs for a citation; this call also tries the pending obs-bankexact-000001 control.",
+      "evidence": [
+        "20261122-180053-af817d",
+        "nd-irr-000001"
+      ],
+      "at": "2026-11-22T18:01:03Z"
+    },
+    {
+      "n": 49,
+      "saw": "sb-irr-000001 recorded and printed the same as 20261122-180053-af817d; its WS ELEV 8.60 equals nd-irr-000001.",
+      "chose": "run_case",
+      "why": "Two Grapevine first-section cases: slope start .0035 with the all-normal n set, to hold against nd-irr-000006 on real data; and a known WS 596, which lies above the isolated low ground behind the raised strip on the right overbank (595.32 to 595.75 between stations 346 and 423, cut off by 597.93 at 333.33). Top Wid near 148 would mean QUICK-2 leaves that pocket dry; near 207 would mean it fills it. That case would prove either rule false.",
+      "evidence": [
+        "sb-irr-000001",
+        "nd-irr-000006"
+      ],
+      "at": "2026-11-22T18:02:20Z"
+    },
+    {
+      "n": 50,
+      "saw": "Grapevine SB slope .0035: WS ELEV 594.37 (same as nd-irr-000006), Depth 5.15, Top Wid 128, EG 594.73, M-1, ChanVel 5.21, Froud# 0.55. Grapevine SB known WS 596: WS ELEV 596.00, Depth 6.78, Top Wid 206, EG 596.11, M-1, ChanVel 3.09, Froud# 0.29. Top Wid 206 is near the 207 that counts the isolated pocket behind the 597.93 strip, not the 148 that leaves it dry.",
+      "chose": "record_case",
+      "why": "Record both for citations.",
+      "evidence": [
+        "20261122-180250-42e0ef",
+        "20261122-180256-0d0e1d",
+        "nd-irr-000006"
+      ],
+      "at": "2026-11-22T18:03:05Z"
+    },
+    {
+      "n": 51,
+      "saw": "sb-irr-000002 and sb-irr-000003 recorded, same as their exploratory runs. One prompt takes both a slope and an elevation; nothing seen says how the program tells them apart.",
+      "chose": "run_case",
+      "why": "Start value 1 on the 40-point section (thalweg 1.5): read as a slope it gives a shallow supercritical depth with WS above 1.5; read as an elevation it is below the thalweg. Either outcome rules out one reading.",
+      "evidence": [
+        "sb-irr-000001",
+        "sb-irr-000003"
+      ],
+      "at": "2026-11-22T18:03:47Z"
+    },
+    {
+      "n": 52,
+      "saw": "Requirements 10 and 11 written from obs-irrtwopt-000001, obs-irrelev-000001, obs-irrstation-000001, nd-irr-000009 and sb-irr-000001..3; Step-Backwater beyond the first section is blocked on F8. Q-012 lists untried boundaries on the regular forms.",
+      "chose": "run_case",
+      "why": "Two sharp Q-012 cases a reviewer could meet: Channel Capacity on a 36 in circle with depth 4 ft, more than the 3 ft diameter, and Normal Depth on a circle with diameter 0, the hold rule's only untested shape. The other Q-012 boundaries are already in the generator's boundary lists and will come up in batches.",
+      "evidence": [
+        "cc-circ-000001",
+        "obs-zerohold-000001"
+      ],
+      "at": "2026-11-22T18:06:22Z"
+    },
+    {
+      "n": 53,
+      "saw": "CC circle 36 in with depth 4 ended rejected, held at the depth prompt, no message (run 20261122-180701-cc59e2). ND circle with diameter 0 ended rejected, held at the diameter prompt, no message (run 20261122-180700-3cc7d6).",
+      "chose": "record_case",
+      "why": "Record both so the hold of a depth larger than the pipe and of a zero diameter can be cited.",
+      "evidence": [
+        "20261122-180701-cc59e2",
+        "20261122-180700-3cc7d6"
+      ],
+      "at": "2026-11-22T18:07:11Z"
+    },
+    {
+      "n": 54,
+      "saw": "All three jobs are done as far as the harness allows. Job 1: Grapevine min/normal/max recorded (nd-irr-000006/7/8) and Requirement 9 written. Job 2: fewest points that compute (2), how entry ends (F10), strictly increasing stations, held zero elevation, bounced negative elevation, negative stations and exact bank matching are recorded and in Requirement 10; the one-point hang and Enter-after-ERROR can't be recorded until the runner changes (Q-015, Q-017); more than 40 points needs F3 verified (Q-013). Job 3: Step-Backwater first section recorded (sb-irr-000001/2/3) and in Requirement 11; later sections need F8 verified (Q-020). Q-012's two practical cases are recorded (cc-circ-000018, nd-circ-000008). The remaining open questions need a person (keys, runner behaviour) or would be answered by batches already planned (Q-019). The one probe still worth running is Q-021, the cut-off pocket, and it is left for the user to call.",
+      "chose": "stop",
+      "why": "All three jobs are done as far as the harness allows. Job 1: Grapevine min/normal/max recorded (nd-irr-000006/7/8) and Requirement 9 written. Job 2: fewest points that compute (2), how entry ends (F10), strictly increasing stations, held zero elevation, bounced negative elevation, negative stations and exact bank matching are recorded and in Requirement 10; the one-point hang and Enter-after-ERROR can't be recorded until the runner changes (Q-015, Q-017); more than 40 points needs F3 verified (Q-013). Job 3: Step-Backwater first section recorded (sb-irr-000001/2/3) and in Requirement 11; later sections need F8 verified (Q-020). Q-012's two practical cases are recorded (cc-circ-000018, nd-circ-000008). The remaining open questions need a person (keys, runner behaviour) or would be answered by batches already planned (Q-019). The one probe still worth running is Q-021, the cut-off pocket, and it is left for the user to call.",
+      "evidence": [],
+      "at": "2026-11-22T18:08:11Z"
+    },
+    {
+      "n": 55,
+      "saw": "User asked to run Q-021. sb-irr-000003 (known WS 596) printed Top Wid 206 on the Grapevine section, near the width that fills the cut-off pocket between stations 346 and 423.",
+      "chose": "run_case",
+      "why": "Normal Depth on the Grapevine section, all-normal n, slope .0035, discharge 3000, chosen to put WS ELEV between 595.75 and 596.42. The printed WS fixes both widths from the ground points: the main channel crossing alone, or that plus the pocket crossing. The printed Top Wid can match only one.",
+      "evidence": [
+        "sb-irr-000003",
+        "nd-irr-000006"
+      ],
+      "at": "2026-11-22T20:56:36Z"
+    },
+    {
+      "n": 56,
+      "saw": "Exploratory ND Grapevine, Q 3000: WS ELEV 596.37, Depth 7.2, Area 623, Top Wid 219, Hyd R 2.8, SUBCRITICAL, Chan Vel 7.0, Wet Per 220, Frd # 0.62. At 596.37 the ground points give a main-channel crossing of 155.77 to 307.13 (151.4 ft) and a pocket crossing of 347.11 to 414.81 (67.7 ft); 151.4 + 67.7 = 219.1. Main alone would print about 151.",
+      "chose": "record_case",
+      "why": "The printed Top Wid fits only the pocket-filled width, so the rule holds for Normal Depth; record the same inputs for the citation.",
+      "evidence": [
+        "20261122-205702-41b1d8",
+        "sb-irr-000003"
+      ],
+      "at": "2026-11-22T20:57:21Z"
+    },
+    {
+      "n": 57,
+      "saw": "Q-021 answered by nd-irr-000010 and written as Requirement 9.7, as the user asked. The remaining open questions need a person (F3 and F8 key verification, runner behaviour on screens that never settle or pass through rejected screens) or are left to planned batches (Q-019).",
+      "chose": "stop",
+      "why": "Q-021 answered by nd-irr-000010 and written as Requirement 9.7, as the user asked. The remaining open questions need a person (F3 and F8 key verification, runner behaviour on screens that never settle or pass through rejected screens) or are left to planned batches (Q-019).",
+      "evidence": [],
+      "at": "2026-11-22T20:57:59Z"
     }
   ],
   "stopped": {
-    "why": "Task 3.1 is done and Q-006 is answered. All 12 regular mode/shape pairs (Critical Depth, Channel Capacity, Normal Depth on V-ditch, rectangle, trapezoid, circle) are mapped in the profile with a form, result screen and flow, each cited by a recorded case seen twice (cd/cc/nd-vdit/rect/trap/circ-000001, plus cd-rect-000002, cd-circ-000002, cc-circ-000002). Requirements 4-8 in the solver spec give the form layouts, prompt orders, and printed values, each citing those cases; requirements 3.11-3.12 answer Q-006 (water above the end points is held by vertical walls that add nothing to the wetted perimeter), citing nd-irr-000005. Input ranges for every prompt are set to what the program accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0/-1/overflow boundaries, each citing the field-edge behaviour cases. The remaining open questions are not worth their credits in this run: Q-008 (CD depth below exact, a candidate haunting) and Q-009 (circle Max Discharge) are classifications best made with Skeptic review when the rebuild first mismatches, not before a line of solver exists; Q-010 (two circle timeouts) and Q-013 (Enter after bank ERROR, >40 points) are narrow edge probes; Q-011 and Q-012 are decisions for a person (practical generator range; untried 0/-1 on the new forms). A person should run scripts/check_traceability.py to confirm the new citations resolve; I have no shell.",
-    "decision": 35,
-    "at": "2026-11-22T15:47:06Z",
+    "why": "Q-021 answered by nd-irr-000010 and written as Requirement 9.7, as the user asked. The remaining open questions need a person (F3 and F8 key verification, runner behaviour on screens that never settle or pass through rejected screens) or are left to planned batches (Q-019).",
+    "decision": 57,
+    "at": "2026-11-22T20:57:59Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
+        "irr_editor": [
+          "{F1}",
+          "{F2}",
+          "{F3}",
+          "{F4}",
+          "{F5}",
+          "{F8}"
+        ],
         "cd_result": [
           "{F5}",
           "{F2}"
@@ -2371,6 +3051,14 @@
           "{F5}",
           "{F2}",
           "{F9}"
+        ],
+        "sb_result": [
+          "{F2}",
+          "{F5}",
+          "{F6}",
+          "{F7}",
+          "{F8}",
+          "{F10}"
         ]
       },
       "unobserved_profile_facts": [
@@ -2389,11 +3077,15 @@
         {
           "profile_path": "screens[stray_listing]",
           "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+        },
+        {
+          "profile_path": "screens[irr_working]",
+          "source": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
         }
       ],
       "untriaged_mismatches": [],
-      "unanswered_runs": 8,
-      "unknown_screens": 13,
+      "unanswered_runs": 47,
+      "unknown_screens": 16,
       "nondeterministic_cases": 0
     }
   }

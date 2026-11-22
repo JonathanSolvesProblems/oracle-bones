@@ -70,8 +70,9 @@ section" below.
 8. WHEN Begin Calculations is pressed for the 40-point section with banks 150 and 260, n values .06, .035 and .08, and discharge 8000 THE SYSTEM SHALL print WS ELEV `12.22`, Depth `10.7`, Area `1544`, Top Wid `386`, Hyd R `4.0`, Flow Type `SUBCRITICAL`, Chan Vel `7.6`, Wet Per `387` and Frd # `0.62`. _(observed: nd-irr-000002)_
 9. WHEN the case of criterion 8 is run with the LEFT n changed from .06 to .2 and nothing else changed THE SYSTEM SHALL print WS ELEV `12.52`, Depth `11.0`, Area `1657`, Top Wid `390`, Hyd R `4.2`, Flow Type `SUBCRITICAL`, Chan Vel `7.8`, Wet Per `391` and Frd # `0.63`. _(observed: nd-irr-000003, nd-irr-000002)_
 10. WHEN the case of criterion 8 is run with the RIGHT n changed from .08 to .2 and nothing else changed THE SYSTEM SHALL print WS ELEV `12.37`, Depth `10.9`, Area `1599`, Top Wid `388`, Hyd R `4.1`, Flow Type `SUBCRITICAL`, Chan Vel `7.7`, Wet Per `389` and Frd # `0.62`. _(observed: nd-irr-000004, nd-irr-000002)_
-11. WHEN Begin Calculations is pressed for the 40-point section with banks 150 and 260, n values .06, .035 and .08, and discharge 30000 THE SYSTEM SHALL print WS ELEV `19.10`, Depth `17.6`, Area `4226`, Top Wid `390`, Hyd R `10.8`, Flow Type `SUBCRITICAL`, Chan Vel `11.4`, Wet Per `391` and Frd # `0.51`, and show no warning or other screen. _(observed: nd-irr-000005)_
+11. WHEN Begin Calculations is pressed for the 40-point section with banks 150 and 260, n values .06, .035 and .08, and discharge 30000 THE SYSTEM SHALL print WS ELEV `19.10`, Depth `17.6`, Area `4226`, Top Wid `390`, Hyd R `10.8`, Flow Type `SUBCRITICAL`, Chan Vel `11.4`, Wet Per `391` and Frd # `0.51`, and stay on the result screen with no other screen shown. _(observed: nd-irr-000005)_
 12. WHEN the water-surface elevation is above both end points of the section (elevations 12 at station 0 and 12.5 at station 390) THE SYSTEM SHALL print a Top Wid of `390`, the distance from the first to the last station, and a Wet Per of `391`, the same as at WS ELEV `12.52`. _(observed: nd-irr-000005, nd-irr-000003)_
+13. WHEN the computed WS ELEV is above the elevation of the first or the last ground point THE SYSTEM SHALL print "EXTENDED CROSS SECTION" at the right of row 24 of the result screen; at WS ELEV `12.22` (above the left end at 12, below the right end at 12.5) it SHALL print it too, and at WS ELEV `8.60` (below both ends) it SHALL NOT. _(observed: oracle/goldens/captures/nd-irr-000002/screen-92.txt, oracle/goldens/captures/nd-irr-000003/screen-91.txt, oracle/goldens/captures/nd-irr-000004/screen-91.txt, oracle/goldens/captures/nd-irr-000005/screen-91.txt, oracle/goldens/captures/nd-irr-000001/screen-91.txt)_
 
 ### Requirement 4: Forms for the regular shapes
 
@@ -144,3 +145,87 @@ screen in both.
 2. WHEN Side Slope 99.9, Bottom Width 9999.9, Manning's n 9.9999, Depth 999.99 and Slope 9.9999 are entered THE SYSTEM SHALL echo them as `99.9`, `9999.9`, `9.9999`, `999.99` and `9.9999`, with no `%`. _(observed: obs-fieldedge-000001)_
 3. WHEN Diameter 9999.9 and Discharge 999999 are entered THE SYSTEM SHALL echo them as `9999.9` and `999999`, with no `%`. _(observed: obs-fieldedge-000002)_
 4. WHEN a non-zero value too small for its field is entered (Left Side Slope .04, Manning's n .00001, Slope .00001) THE SYSTEM SHALL accept it, not hold the prompt, and echo it as `0.0` or `0.0000`. _(observed: obs-smallaccept-000001)_
+5. WHEN Channel Capacity is run on a Circular Channel with Diameter 36 and a Depth of 4, deeper than the 3 ft pipe THE SYSTEM SHALL hold the Depth prompt with no message. _(observed: cc-circ-000018)_
+6. WHEN 0 is entered at the Diameter prompt of the Normal Depth circle form THE SYSTEM SHALL hold that prompt with no message. _(observed: nd-circ-000008)_
+
+### Requirement 9: Normal Depth on a real lidar section (Grapevine Branch)
+
+**User Story:** As a floodplain permit reviewer, I want Quickened to give the water-surface
+elevation QUICK-2 gives for a real Zone A section cut from lidar, at the low, typical and high
+ends of the published n ranges, so that I can trust it on the sections I actually review.
+
+The section used in these cases is `realdata/huntington-section-01.json`: Grapevine Branch, a
+perennial FEMA Zone A stream (FIRM 54011C) in Cabell County, West Virginia, about 4 miles
+south-east of downtown Huntington. It is a 500 ft line drawn perpendicular to the NHD flowline
+(NHD 58000967), with 40 points 12.82 ft apart, station 0 at the left end looking downstream.
+Each elevation (ft NAVD88) comes from the USGS 3DEP 1 m lidar DEM (project
+WV_FEMAR3_Southcentral_2018_D19) through the USGS Elevation Point Query Service, rounded to two
+decimals. The points, as entered:
+
+0 660.4, 12.82 657.09, 25.64 653.35, 38.46 647.73, 51.28 641.36, 64.1 634.82, 76.92 626.02,
+89.74 619.92, 102.56 613.3, 115.38 607.79, 128.21 603.72, 141.03 601.16, 153.85 596.87,
+166.67 593.53, 179.49 591.78, 192.31 590.79, 205.13 589.22, 217.95 590.99, 230.77 591.95,
+243.59 592.41, 256.41 592.81, 269.23 593.01, 282.05 593.6, 294.87 594.61, 307.69 596.45,
+320.51 597.63, 333.33 597.93, 346.15 596.42, 358.97 595.75, 371.79 595.75, 384.62 595.71,
+397.44 595.32, 410.26 595.59, 423.08 597.79, 435.9 602.38, 448.72 602.3, 461.54 602.04,
+474.36 606.79, 487.18 613.53, 500 615.76.
+
+The other inputs are discharge 1200 cfs, the 1-percent AEP flood from USGS StreamStats
+(regression region GC2081, drainage area 2.70 mi², 90% prediction interval 624 to 2,310 cfs);
+slope .0035, an estimate from the 3DEP thalweg profile along the NHD line, not a survey; and
+bank stations 179.49 and 230.77, the tops of the lidar channel notch, suggested from the profile
+and not a field determination. The file lists its caveats: lidar does not see below the water
+surface, so channel area below it is missing; 12.8 ft spacing makes the banks coarse; the
+discharge is a regional regression estimate.
+
+Manning's n is an assumption: nobody has seen the site. The values are from Chow (1959), as
+reproduced in the HEC-RAS Hydraulic Reference Manual, Table 3-1: channel, "minor stream, clean,
+winding, some pools and shoals", .033 / .040 / .045 (minimum / normal / maximum); both
+overbanks, "floodplain, light brush and trees, in summer", .040 / .060 / .080. The cases run
+all three columns, the same column for channel and both overbanks. It is called "the Grapevine
+section" below.
+
+#### Acceptance Criteria
+
+1. WHEN the Grapevine section's stations and elevations are entered THE SYSTEM SHALL show each in the GROUND POINTS grid as typed, two decimals where two were typed and none where none were (`12.82`, `660.4`, `0`, `500`). _(observed: nd-irr-000006, oracle/goldens/captures/nd-irr-000006/screen-91.txt)_
+2. WHEN bank stations 179.49 and 230.77 are entered for the Grapevine section THE SYSTEM SHALL accept them as matching ground points and echo them as `179.5` and `230.8`. _(observed: nd-irr-000006, nd-irr-000007, nd-irr-000008)_
+3. WHEN Begin Calculations is pressed for the Grapevine section with the all-minimum n values (LEFT .04, CHANNEL .033, RIGHT .04), discharge 1200 and slope .0035 THE SYSTEM SHALL print WS ELEV `593.98`, Depth `4.8`, Area `249`, Top Wid `122`, Hyd R `2.0`, Flow Type `SUBCRITICAL`, Chan Vel `5.9`, Wet Per `122` and Frd # `0.67`. _(observed: nd-irr-000007)_
+4. WHEN Begin Calculations is pressed for the Grapevine section with the all-normal n values (LEFT .06, CHANNEL .04, RIGHT .06), discharge 1200 and slope .0035 THE SYSTEM SHALL print WS ELEV `594.37`, Depth `5.2`, Area `298`, Top Wid `128`, Hyd R `2.3`, Flow Type `SUBCRITICAL`, Chan Vel `5.2`, Wet Per `129` and Frd # `0.55`. _(observed: nd-irr-000006)_
+5. WHEN Begin Calculations is pressed for the Grapevine section with the all-maximum n values (LEFT .08, CHANNEL .045, RIGHT .08), discharge 1200 and slope .0035 THE SYSTEM SHALL print WS ELEV `594.65`, Depth `5.4`, Area `333`, Top Wid `133`, Hyd R `2.5`, Flow Type `SUBCRITICAL`, Chan Vel `4.9`, Wet Per `133` and Frd # `0.50`. _(observed: nd-irr-000008)_
+6. WHEN bank station 230.8, the printed form of the ground station 230.77, is entered as the RIGHT bank of the Grapevine section THE SYSTEM SHALL show "ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point. Press <ENTER>"; a bank station matches only a ground station as entered, not as printed. _(observed: nd-irr-000009)_
+7. WHEN Begin Calculations is pressed for the Grapevine section with the all-normal n values, discharge 3000 and slope .0035 THE SYSTEM SHALL print WS ELEV `596.37`, Depth `7.2`, Area `623`, Top Wid `219`, Hyd R `2.8`, Flow Type `SUBCRITICAL`, Chan Vel `7.0`, Wet Per `220` and Frd # `0.62`. At that elevation the ground points cross the water surface at 155.77 and 307.13 ft around the channel (151.4 ft) and at 347.11 and 414.81 ft around the low ground on the right overbank (67.7 ft), which the 597.93 ft point at station 333.33 cuts off from the channel; Top Wid `219` is their sum, so the cut-off low ground is counted as wet. _(observed: nd-irr-000010)_
+
+### Requirement 10: What the irregular ground-points editor accepts
+
+**User Story:** As a developer, I want Quickened's ground-point entry to take and refuse the same
+points QUICK-2 did, so that the generator can draw sections both programs accept and a mistyped
+section fails the same way in both.
+
+#### Acceptance Criteria
+
+1. WHEN F10 is pressed after the elevation of the second ground point THE SYSTEM SHALL end ground-point entry and show "Enter  LEFT  Channel Bank Station  and Press  <Enter>". _(observed: obs-irrtwopt-000001, oracle/goldens/captures/obs-irrtwopt-000001/screen-05.txt)_
+2. WHEN Normal Depth is run on the two ground points (0, 10) and (10, 2) with bank stations 0 and 10, n values .05, .035 and .05, discharge 100 and slope .005 THE SYSTEM SHALL print WS ELEV `7.60`, Depth `5.6`, Area `20`, Top Wid `7`, Hyd R `2.2`, Flow Type `SUBCRITICAL`, Chan Vel `5.1`, Wet Per `9`, Frd # `0.54` and "EXTENDED CROSS SECTION" on row 24. _(observed: obs-irrtwopt-000001, oracle/goldens/captures/obs-irrtwopt-000001/screen-13.txt)_
+3. WHEN a station equal to the station before it is entered (35 after 35) THE SYSTEM SHALL print "ERROR ... Stations  35  ,  35  are NOT INCREASING !" on row 24. _(observed: obs-irrelev-000001, oracle/goldens/captures/obs-irrelev-000001/screen-09.txt)_
+4. WHEN a station lower than the station before it is entered (-60 after -50) THE SYSTEM SHALL print "ERROR ... Stations -50  , -60  are NOT INCREASING !" on row 24. _(observed: obs-irrstation-000001, oracle/goldens/captures/obs-irrstation-000001/screen-05.txt)_
+5. WHEN the first station is negative (-50) THE SYSTEM SHALL accept it, show it as `-50`, and move to its elevation. _(observed: obs-irrstation-000001, oracle/goldens/captures/obs-irrstation-000001/screen-04.txt)_
+6. WHEN an elevation of 0 is entered THE SYSTEM SHALL show `0` but not take it: the next value typed (5) replaces it as the same point's elevation, and the point after it starts at the next station field. _(observed: obs-irrelev-000001, oracle/goldens/captures/obs-irrelev-000001/screen-05.txt, oracle/goldens/captures/obs-irrelev-000001/screen-06.txt)_
+7. WHEN a negative elevation (-2) is entered THE SYSTEM SHALL blank that elevation and return to the same point's station: the next two values typed (35, 3) become that point's station and elevation. _(observed: obs-irrelev-000001, oracle/goldens/captures/obs-irrelev-000001/screen-07.txt, oracle/goldens/captures/obs-irrelev-000001/screen-08.txt)_
+
+### Requirement 11: Step-Backwater, first cross section
+
+**User Story:** As a floodplain permit reviewer, I want Quickened to start a Step-Backwater run
+the way QUICK-2 did, from a slope or a known water-surface elevation at the downstream section,
+so that the starting water surface matches before any upstream section is added.
+
+Only the first (downstream) section is covered. Adding a second section needs F8 (New XSEC),
+which the harness cannot yet send, so reach lengths, loss coefficients and the step between
+sections are not observed.
+
+#### Acceptance Criteria
+
+1. WHEN Step-Backwater (4) is chosen on the main menu THE SYSTEM SHALL show "Starting Water Surface Elevation Method" with the two choices "NORMAL DEPTH (Slope-Area)" and "KNOWN WATER SURFACE ELEVATION" and one prompt, "Enter a Slope or an Elevation:", and then go to a GROUND POINTS editor titled ">> STEP - BACKWATER <<" without asking for a shape. _(observed: sb-irr-000001, oracle/goldens/captures/sb-irr-000001/screen-02.txt)_
+2. WHEN ground-point entry ends on the first section THE SYSTEM SHALL ask for the LEFT and RIGHT bank stations, the LEFT, CHANNEL and RIGHT n values and the Discharge, then show "TO BEGIN CALCULATIONS     Press  <Enter>", with no slope, reach-length or loss-coefficient prompt, and leave the CHANNEL REACH LENGTHS and LOSS COEFFICIENTS fields blank in the result. _(observed: sb-irr-000001, sb-irr-000002, sb-irr-000003)_
+3. WHEN Begin Calculations is pressed for the 40-point section of Requirement 3 with starting slope .002, banks 150 and 260, n values .06, .035 and .08, and discharge 2500 THE SYSTEM SHALL print WS ELEV `8.60`, Depth `7.10`, Top Wid `130`, Kratio `1.00`, EG ELEV `9.01`, Flow Regime `M-1`, ChanVel `5.11` and Froud# `0.46`; the WS ELEV is the one Normal Depth prints for the same section and slope. _(observed: sb-irr-000001, nd-irr-000001)_
+4. WHEN Begin Calculations is pressed for the Grapevine section (Requirement 9) with starting slope .0035, banks 179.49 and 230.77, n values .06, .04 and .06, and discharge 1200 THE SYSTEM SHALL print WS ELEV `594.37`, Depth `5.15`, Top Wid `128`, Kratio `1.00`, EG ELEV `594.73`, Flow Regime `M-1`, ChanVel `5.21` and Froud# `0.55`; the WS ELEV is the one Normal Depth prints for the same inputs. _(observed: sb-irr-000002, nd-irr-000006)_
+5. WHEN Begin Calculations is pressed for the Grapevine section with known starting elevation 596 and the inputs of criterion 4 otherwise THE SYSTEM SHALL print WS ELEV `596.00`, Depth `6.78`, Top Wid `206`, Kratio `1.00`, EG ELEV `596.11`, Flow Regime `M-1`, ChanVel `3.09` and Froud# `0.29`. _(observed: sb-irr-000003)_
+6. WHEN a Step-Backwater result is shown THE SYSTEM SHALL print WS ELEV, EG ELEV, Depth, ChanVel, Froud# and Kratio with two decimals and Top Wid with none, where Normal Depth on the same section prints Depth and Chan Vel with one decimal (`5.15` against `5.2`, `5.21` against `5.2`). _(observed: sb-irr-000002, nd-irr-000006, sb-irr-000001, nd-irr-000001)_

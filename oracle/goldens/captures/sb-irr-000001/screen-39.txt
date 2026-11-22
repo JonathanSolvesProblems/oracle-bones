@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+  XSEC ID:     0            >> STEP - BACKWATER <<            GROUND  POINTS    
+  STAT      ELEV      STAT      ELEV      STAT      ELEV      STAT      ELEV    
+  0         12        10        11.6      20        11.1      30        10.7    
+  40        10.4      50        10.1      60        9.9       70        9.8     
+  80        9.6       90        9.5       100       9.3       110       9.2     
+  120       9         130       8.8       140       8.5       150       7.9     
+  160       6.2       170       4.1                                             
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   ╔════════════════════════════════════════════════════════════════════════╗   
+   ║ CHANNEL BANK STATIONS:      Left                         Right         ║   
+   ║ MANNING'S  N   VALUES:      Left         Channel         Right         ║   
+   ║ CHANNEL REACH LENGTHS:      Left         Channel         Right         ║   
+   ║ LOSS     COEFFICIENTS: Contractn         Expansn        :Dschrg        ║   
+   ║ WS ELEV                    Depth         Top Wid         Kratio        ║   
+   ║ EG ELEV              Flow Regime         ChanVel         Froud#        ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║F2}<-Back Tab F5}List Files F6}Retrieve File F7}Main Menu F10}Ed/Ex GrPt║   
+   ║ F3}Insert GrPt F4}Delete GrPt                            F1 }HELP      ║   

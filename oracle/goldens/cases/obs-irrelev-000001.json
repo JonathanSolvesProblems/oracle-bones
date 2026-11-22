@@ -1,0 +1,96 @@
+{
+  "id": "obs-irrelev-000001",
+  "control": true,
+  "expected_screen": "irr_station_rejected",
+  "mode": "normal_depth",
+  "shape": "irregular",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "held_prompt": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "c568dc9d3385e9c059b87ec64663548ad864422c6d8629ec7396c7c09753aab2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "I{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b"
+    },
+    {
+      "step": 4,
+      "expect": "irr_editor",
+      "keys": "0{Enter}10{Enter}",
+      "screen_hash_before": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b",
+      "resend": false,
+      "screen_hash_after": "5c84d56a1840def1922004456605a209534980f993f25b4d430808c88036bfe5"
+    },
+    {
+      "step": 5,
+      "expect": "irr_editor",
+      "keys": "20{Enter}0{Enter}",
+      "screen_hash_before": "5c84d56a1840def1922004456605a209534980f993f25b4d430808c88036bfe5",
+      "resend": false,
+      "screen_hash_after": "238112136a8d64765b5d7bf55b49915d1680674e14b48b36d9b89ad1814a08f7"
+    },
+    {
+      "step": 6,
+      "expect": "irr_editor",
+      "keys": "5{Enter}",
+      "screen_hash_before": "238112136a8d64765b5d7bf55b49915d1680674e14b48b36d9b89ad1814a08f7",
+      "resend": false,
+      "screen_hash_after": "f0aaad6440d1759f2b754fac30c683edc7458d99ed5e23d093f0fa3a6299cf02"
+    },
+    {
+      "step": 7,
+      "expect": "irr_editor",
+      "keys": "30{Enter}-2{Enter}",
+      "screen_hash_before": "f0aaad6440d1759f2b754fac30c683edc7458d99ed5e23d093f0fa3a6299cf02",
+      "resend": false,
+      "screen_hash_after": "93a409649e3e5178e2845fa2f6d30c03f5b0dc44fd2782a7c8eb73f6b61727f4"
+    },
+    {
+      "step": 8,
+      "expect": "irr_editor",
+      "keys": "35{Enter}3{Enter}",
+      "screen_hash_before": "93a409649e3e5178e2845fa2f6d30c03f5b0dc44fd2782a7c8eb73f6b61727f4",
+      "resend": false,
+      "screen_hash_after": "df262738a7a3050eb08dc457bb15addc60b9bfaf5d9a2744fed49018c022d365"
+    },
+    {
+      "step": 9,
+      "expect": "irr_editor",
+      "keys": "35{Enter}",
+      "screen_hash_before": "df262738a7a3050eb08dc457bb15addc60b9bfaf5d9a2744fed49018c022d365",
+      "resend": false,
+      "screen_hash_after": "6b2dedd589ba3b7777e72c5e4468cc3d537336b2efd0940972e77345830bc9f2"
+    }
+  ],
+  "screens": "all",
+  "capture_path": "oracle/goldens/captures/obs-irrelev-000001/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:52:42Z"
+}

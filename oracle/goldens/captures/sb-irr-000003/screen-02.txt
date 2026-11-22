@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+           ╔═════════════════════════════════════════════════════╗              
+           ║       Starting Water Surface Elevation Method       ║██            
+           ║                                                     ║██            
+           ║                                          Input      ║██            
+           ║                                    -----------------║██            
+           ║                                                     ║██            
+           ║ NORMAL DEPTH (Slope-Area)                           ║██            
+           ║  Enter the Slope in Ft/Ft          (for ex.   .0025)║██            
+           ║                                                     ║██            
+           ║             OR                                      ║██            
+           ║                                                     ║██            
+           ║ KNOWN WATER SURFACE ELEVATION                       ║██            
+           ║  Enter the known WS Elevation      (for ex.  656.78)║██            
+           ║                                                     ║██            
+           ╚═════════════════════════════════════════════════════╝██            
+            ████████████████████████████████████████████████████████            
+                                                                                
+           Enter a Slope or an Elevation:                                       
+                                                                                
+                                                                                
+                                                                                

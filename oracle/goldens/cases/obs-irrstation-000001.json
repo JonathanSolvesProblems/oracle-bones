@@ -1,0 +1,64 @@
+{
+  "id": "obs-irrstation-000001",
+  "control": true,
+  "expected_screen": "irr_station_rejected",
+  "mode": "normal_depth",
+  "shape": "irregular",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "held_prompt": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "c568dc9d3385e9c059b87ec64663548ad864422c6d8629ec7396c7c09753aab2",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "I{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b"
+    },
+    {
+      "step": 4,
+      "expect": "irr_editor",
+      "keys": "-50{Enter}10{Enter}",
+      "screen_hash_before": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b",
+      "resend": false,
+      "screen_hash_after": "0d942bfbccee3f00a203601f4a78ec90120ac6902f95f72d1f2ad9b42f6d6e8b"
+    },
+    {
+      "step": 5,
+      "expect": "irr_editor",
+      "keys": "-60{Enter}",
+      "screen_hash_before": "0d942bfbccee3f00a203601f4a78ec90120ac6902f95f72d1f2ad9b42f6d6e8b",
+      "resend": false,
+      "screen_hash_after": "cd9151052b8c39c88f56a1054ccd4474ee2843f7fd4080a468044be61a3b08e0"
+    }
+  ],
+  "screens": "all",
+  "capture_path": "oracle/goldens/captures/obs-irrstation-000001/",
+  "files": [],
+  "recorded_at": "2026-11-22T17:52:42Z"
+}
