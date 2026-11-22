@@ -1,5 +1,6 @@
-"""Property 11 (sandbox arguments) and temporary drive handling. No Docker needed."""
+﻿"""Property 11 (sandbox arguments) and temporary drive handling. No Docker needed."""
 
+import os
 from pathlib import Path
 
 from hypothesis import given, strategies as st
@@ -25,6 +26,8 @@ def test_run_args_always_sandboxed(cpus, mem, pids, server, session):
     assert args[args.index("-v") + 1] == "%s:/drive" % drive.resolve()
     assert "--privileged" not in args and ("--cap-drop", "ALL") in pairs
     assert ("--label", "%s=%s" % (sandbox.LABEL_SERVER, server)) in pairs
+    assert ("--label", "%s=%d" % (sandbox.LABEL_PID, os.getpid())) in pairs
+    assert ("--label", "%s=%s" % (sandbox.LABEL_HOST, sandbox.host_id())) in pairs
     assert args[-1] == config.image_tag(cfg)
 
 

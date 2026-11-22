@@ -1,4 +1,4 @@
-"""Containers and temporary drives.
+﻿"""Containers and temporary drives.
 
 Each case or interactive session gets a fresh temporary directory outside the repository,
 filled with the profile's drive layout and a copy of the unpacked program. It is the only
@@ -17,6 +17,18 @@ from .errors import OracleError
 
 LABEL_SERVER = "oracle-bones.server"
 LABEL_SESSION = "oracle-bones.session"
+# The process that started the container and the host it runs on. Pid files live under each
+# checkout's oracle/out/, but labels are seen by every checkout and worktree on this Docker,
+# so a server decides whether a container's owner is still running from these labels.
+LABEL_PID = "oracle-bones.pid"
+LABEL_HOST = "oracle-bones.host"
+
+
+def host_id():
+    """This host as other servers on the same Docker see it. os.name keeps a Windows server and
+    a WSL server apart: their pids are not comparable."""
+    import socket
+    return "%s/%s" % (socket.gethostname(), os.name)
 CONTAINER_USER = "10001:10001"
 
 
@@ -56,17 +68,17 @@ def ensure_image(cfg=None, log=print):
     return tag
 
 
-def launch(cfg, drive, server_id, session_id):
+def launch(cfg, drive, server_id, session_id, owner_pid=None):
     """Start a container whose stdin and stdout speak the runner's JSON-lines protocol."""
     try:
-        return subprocess.Popen(["docker", *run_args(cfg, drive, server_id, session_id)],
+        return subprocess.Popen(["docker", *run_args(cfg, drive, server_id, session_id, owner_pid=owner_pid)],
                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 text=True, encoding="utf-8", bufsize=1)
     except FileNotFoundError:
         raise OracleError("docker_unavailable", "Docker is not installed or not on PATH.")
 
 
-def run_args(cfg, drive, server_id, session_id, name=None):
+def run_args(cfg, drive, server_id, session_id, name=None, owner_pid=None):
     """The full `docker run` argument list. Property 11 checks this function."""
     c = cfg["container"]
     args = ["run", "--rm", "-i",
@@ -79,11 +91,30 @@ def run_args(cfg, drive, server_id, session_id, name=None):
             "--pids-limit", str(c["pids"]),
             "--label", "%s=%s" % (LABEL_SERVER, server_id),
             "--label", "%s=%s" % (LABEL_SESSION, session_id),
+            "--label", "%s=%d" % (LABEL_PID, os.getpid() if owner_pid is None else owner_pid),
+            "--label", "%s=%s" % (LABEL_HOST, host_id()),
             "-v", "%s:/drive" % Path(drive).resolve()]
     if name:
         args += ["--name", name]
     args.append(config.image_tag(cfg))
     return args
+
+
+def container_owners(ids):
+    """{container id: (pid label, host label)}, each None when the container lacks it."""
+    if not ids:
+        return {}
+    r = docker("inspect", "--format",
+               "{{.Id}}\t{{index .Config.Labels \"%s\"}}\t{{index .Config.Labels \"%s\"}}" % (LABEL_PID, LABEL_HOST),
+               *ids, check=False, timeout=60)
+    out = {}
+    for line in r.stdout.splitlines():
+        parts = line.split("\t")
+        if len(parts) == 3:
+            full, pid, host = parts
+            short = next((c for c in ids if full.startswith(c)), full)
+            out[short] = (pid or None, host or None)
+    return out
 
 
 def labelled_containers(label, value=None):
@@ -131,7 +162,9 @@ def pid_alive(pid):
         kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
         handle = kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
         if not handle:
-            return False
+            # 87, invalid parameter: no such process. Anything else, access denied among them,
+            # means a process may exist that this one cannot open: count it as running.
+            return ctypes.get_last_error() != 87
         try:
             code = wintypes.DWORD()
             if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):

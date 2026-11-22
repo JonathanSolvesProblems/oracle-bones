@@ -1,6 +1,8 @@
-"""Sessions: ids, the concurrency limit, idle sweep, and no leftovers (Property 12)."""
+﻿"""Sessions: ids, the concurrency limit, idle sweep, and no leftovers (Property 12)."""
 
 import json
+import subprocess
+import sys
 import time
 import uuid
 
@@ -58,15 +60,17 @@ def test_idle_sweep(live):
 def test_orphans_of_dead_servers_removed_at_start(live):
     cfg = config.load()
     dead_server = str(uuid.uuid4())
+    exited = subprocess.Popen([sys.executable, "-c", "pass"])
+    exited.wait()  # a pid whose process has exited stands for the dead server
     drive = sandbox.make_drive(live, fetch.require_verified(live))
-    proc = sandbox.launch(cfg, drive, dead_server, str(uuid.uuid4()))
+    proc = sandbox.launch(cfg, drive, dead_server, str(uuid.uuid4()), owner_pid=exited.pid)
     try:
         proc.stdin.write(json.dumps({"op": "start", "program": "", "argv": ["sleep", "120"], "env": {},
                                      "rows": 25, "cols": 80, "pty_rows": 27, "frozen_time": None}) + "\n")
         proc.stdin.flush()
         proc.stdout.readline()
         assert containers(sandbox.LABEL_SERVER, dead_server)
-        m = SessionManager(cfg, start_sweeper=False)  # no pid file for dead_server: it is not running
+        m = SessionManager(cfg, start_sweeper=False)  # its owner pid has exited
         try:
             assert not containers(sandbox.LABEL_SERVER, dead_server)
         finally:
@@ -75,6 +79,28 @@ def test_orphans_of_dead_servers_removed_at_start(live):
         proc.kill()
         sandbox.remove_drive(drive)
 
+
+def test_live_server_in_another_checkout_kept(live):
+    """A server in another worktree writes its pid file under that worktree's oracle/out/, which
+    this one cannot see. Its containers carry its pid, which is running, so they stay."""
+    cfg = config.load()
+    other = str(uuid.uuid4())  # no pid file here
+    drive = sandbox.make_drive(live, fetch.require_verified(live))
+    proc = sandbox.launch(cfg, drive, other, str(uuid.uuid4()))  # owned by this running process
+    try:
+        proc.stdin.write(json.dumps({"op": "start", "program": "", "argv": ["sleep", "120"], "env": {},
+                                     "rows": 25, "cols": 80, "pty_rows": 27, "frozen_time": None}) + "\n")
+        proc.stdin.flush()
+        proc.stdout.readline()
+        m = SessionManager(cfg, start_sweeper=False)
+        try:
+            assert containers(sandbox.LABEL_SERVER, other)
+        finally:
+            m.shutdown_all()
+    finally:
+        proc.kill()
+        sandbox.remove_containers([c for c, _ in containers(sandbox.LABEL_SERVER, other)])
+        sandbox.remove_drive(drive)
 
 def test_live_server_containers_kept(live):
     cfg = config.load()

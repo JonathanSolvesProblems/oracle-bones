@@ -1,4 +1,4 @@
-"""Property 4 (exhume-loop): a profile change must read every stored golden as stored.
+﻿"""Property 4 (exhume-loop): a profile change must read every stored golden as stored.
 
 Runs on the committed goldens, without Docker.
 """
@@ -10,6 +10,7 @@ import types
 import pytest
 
 from oracle import paths, profile, reread
+from oracle import screen as screen_mod
 from oracle.errors import OracleError
 from oracle.recorder import Store
 from oracle.tools import Oracle
@@ -31,10 +32,19 @@ def screen(data, sid):
     return next(s for s in data["screens"] if s["id"] == sid)
 
 
-def printing(field, shape="trapezoid"):
-    """Stored goldens of this shape that are not behaviour cases and printed this field."""
-    return {g["id"] for g in STORE.all()
-            if g["outcome"] != "observed" and g["shape"] == shape and field in g["printed"]}
+def printing(field, sid):
+    """Stored goldens, not behaviour cases, whose final screen the committed profile reads as
+    screen `sid` and which printed this field there: the goldens a change to that field's
+    region on that screen must fail on."""
+    current = profile.load()
+    out = set()
+    for g in STORE.all():
+        if g["outcome"] == "observed" or field not in (g.get("printed") or {}):
+            continue
+        rows = reread.final_rows(STORE, g["id"])
+        if rows is not None and screen_mod.identify(current, rows)[0] == sid:
+            out.add(g["id"])
+    return out
 
 
 def any_shows(pattern):
@@ -69,7 +79,7 @@ def test_a_shifted_field_region_fails_on_the_goldens_that_printed_it(tmp_path):
     depth = next(f for f in screen(data, "nd_trap_result")["fields"] if f["name"] == "depth")
     depth["col"] += 1
     diffs = reread.differences(load(tmp_path, data), STORE)
-    assert {d["case_id"] for d in diffs} == printing("depth") >= {"nd-trap-000001", "nd-trap-000002"}
+    assert {d["case_id"] for d in diffs} == printing("depth", "nd_trap_result") >= {"nd-trap-000001", "nd-trap-000002"}
     assert {d["what"] for d in diffs} == {"printed"}
 
 
@@ -119,7 +129,10 @@ def test_tools_refuse_to_run_until_the_profile_reads_the_goldens(tmp_path):
     with pytest.raises(OracleError) as e:
         o._running_profile()
     assert e.value.category == "profile_invalid"
-    assert {d["case_id"] for d in e.value.detail["differences"]} == printing("area")
+    # The error carries at most the first 50 differences, one per golden here.
+    shown = {d["case_id"] for d in e.value.detail["differences"]}
+    expected = printing("area", "nd_trap_result")
+    assert shown <= expected and len(shown) == min(len(expected), 50)
     out = o.call("run_case", {"mode": "normal_depth", "shape": "trapezoid", "inputs": {}})
     assert out["error"]["category"] == "profile_invalid"
     o.default_profile = good["_path"]

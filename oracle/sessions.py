@@ -1,4 +1,4 @@
-"""Session ids, the concurrency limit, idle sweeping, and container cleanup.
+﻿"""Session ids, the concurrency limit, idle sweeping, and container cleanup.
 
 One SessionManager per server process. It writes oracle/out/servers/<uuid>.pid so that a
 later server can tell which labelled containers belong to a server that is no longer running.
@@ -38,22 +38,40 @@ class SessionManager:
     # ---- orphans ------------------------------------------------------------------------
 
     def remove_orphans(self):
-        """Remove containers labelled by a server that is no longer running."""
+        """Remove containers labelled by a server that is no longer running.
+
+        A container's owner is the process in its pid label, on the host in its host label.
+        Containers from another host are kept: their pids cannot be checked from here.
+        Containers whose labels could not be read are kept. Containers started before those
+        labels existed fall back to this checkout's pid file, as before."""
         try:
             found = sandbox.labelled_containers(sandbox.LABEL_SERVER)
+            owners = sandbox.container_owners([c for c, s in found if s != self.server_id])
         except OracleError:
             return []
+        here = sandbox.host_id()
         dead = []
         for cid, server in found:
             if server == self.server_id:
                 continue
             pidfile = self.pid_dir / ("%s.pid" % server)
-            alive = False
-            if pidfile.exists():
+            if cid not in owners:
+                continue  # gone already, or its labels could not be read: keep it
+            pid, host = owners[cid]
+            if pid is not None:
+                if host != here:
+                    continue
                 try:
-                    alive = sandbox.pid_alive(int(pidfile.read_text().strip()))
+                    alive = sandbox.pid_alive(int(pid))
                 except ValueError:
-                    alive = False
+                    continue  # unreadable owner: keep it
+            else:
+                alive = False
+                if pidfile.exists():
+                    try:
+                        alive = sandbox.pid_alive(int(pidfile.read_text().strip()))
+                    except ValueError:
+                        alive = False
             if not alive:
                 dead.append(cid)
                 if pidfile.exists():
