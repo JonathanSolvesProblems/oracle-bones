@@ -1,4 +1,4 @@
-"""The only code that writes under oracle/goldens/.
+﻿"""The only code that writes under oracle/goldens/.
 
 A recording run runs a case in a fresh container and stores what the binary printed. A
 timeout or an unknown final screen goes to the run log and the ledger and is never stored.
@@ -423,7 +423,7 @@ class Recorder:
         results.sort(key=lambda r: r["generated_id"])
         self.update_coverage()
         return self._batch_report(seed, count, controls, results, started,
-                                  {"uncovered": generator.split_pairs(profile, modes, shapes)[1], "range_set": range_set})
+                                  {"uncovered": generator.split_pairs(profile, modes, shapes, range_set)[1], "range_set": range_set})
 
     def _batch_report(self, seed, count, controls, results, started, extra=None):
         minutes = max((time.monotonic() - started) / 60, 1e-9)

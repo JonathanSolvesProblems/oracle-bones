@@ -8,6 +8,14 @@
     "cite": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
     "unobserved": {"type": "string", "minLength": 1},
     "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "share": {
+      "type": "object", "additionalProperties": false, "required": ["max_share"],
+      "properties": {
+        "max_share": {"type": "number", "minimum": 0.01, "maximum": 1},
+        "cite": {"$ref": "#/definitions/cite"},
+        "source": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
     "step": {
       "type": "object",
       "additionalProperties": false,
@@ -141,7 +149,41 @@
         "properties": {
           "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/step"}},
           "cite": {"$ref": "#/definitions/cite"},
-          "unobserved": {"$ref": "#/definitions/unobserved"}
+          "unobserved": {"$ref": "#/definitions/unobserved"},
+          "points": {
+            "type": "object", "additionalProperties": false,
+            "required": ["inputs", "min", "max", "end_keys", "cite"],
+            "properties": {
+              "inputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "min": {"type": "integer", "minimum": 1},
+              "max": {"type": "integer", "minimum": 1},
+              "end_keys": {"type": "string", "minLength": 1},
+              "cite": {"$ref": "#/definitions/cite"}
+            }
+          },
+          "sections": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["name", "stations", "elevations", "discharges", "slopes", "cite"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "stations": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+                "elevations": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+                "discharges": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "slopes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "cite": {"$ref": "#/definitions/cite"}
+              }
+            }
+          },
+          "fit": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "depth_in_pipe": {"$ref": "#/definitions/share"},
+              "discharge_in_pipe": {"$ref": "#/definitions/share"},
+              "critical_depth_in_pipe": {"$ref": "#/definitions/share"}
+            }
+          }
         }
       }
     },

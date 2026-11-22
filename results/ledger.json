@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 450,
+      "visits": 507,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 451,
+      "visits": 508,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 453,
+      "visits": 510,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -37,7 +37,7 @@
       ]
     },
     "irr_editor": {
-      "visits": 144,
+      "visits": 166,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -58,7 +58,7 @@
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 48,
+      "visits": 70,
       "keys_tried": [
         "{F6}"
       ]
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 101,
+      "visits": 115,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 4,
+      "visits": 16,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -94,7 +94,7 @@
       ]
     },
     "cc_form": {
-      "visits": 99,
+      "visits": 111,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -113,14 +113,14 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 77,
+      "visits": 86,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_circ_result": {
-      "visits": 3,
+      "visits": 12,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -129,7 +129,7 @@
       ]
     },
     "cc_circ_result": {
-      "visits": 4,
+      "visits": 16,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -192,79 +192,79 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 154
+      "cases": 178
     },
     "in_discharge": {
-      "cases": 113
+      "cases": 129
     },
     "depth": {
-      "cases": 125
+      "cases": 156
     },
     "in_slope": {
-      "cases": 154
+      "cases": 178
     },
     "area": {
-      "cases": 163
+      "cases": 202
     },
     "wet_perimeter": {
-      "cases": 163
+      "cases": 202
     },
     "velocity": {
-      "cases": 154
+      "cases": 178
     },
     "hyd_radius": {
-      "cases": 163
+      "cases": 202
     },
     "top_width": {
-      "cases": 166
+      "cases": 205
     },
     "froude": {
-      "cases": 166
+      "cases": 205
     },
     "flow_type": {
-      "cases": 163
+      "cases": 202
     },
     "in_bank_left": {
-      "cases": 12
+      "cases": 27
     },
     "in_bank_right": {
-      "cases": 12
+      "cases": 27
     },
     "in_n_left": {
-      "cases": 12
+      "cases": 27
     },
     "in_n_channel": {
-      "cases": 12
+      "cases": 27
     },
     "in_n_right": {
-      "cases": 12
+      "cases": 27
     },
     "in_irr_discharge": {
-      "cases": 9
+      "cases": 24
     },
     "in_irr_slope": {
-      "cases": 9
+      "cases": 24
     },
     "ws_elev": {
-      "cases": 12
+      "cases": 27
     },
     "chan_velocity": {
-      "cases": 12
+      "cases": 27
     },
     "critical_slope": {
-      "cases": 58
+      "cases": 68
     },
     "in_diameter": {
-      "cases": 6
+      "cases": 30
     },
     "max_discharge": {
-      "cases": 6
+      "cases": 30
     },
     "discharge": {
-      "cases": 41
+      "cases": 49
     },
     "in_depth": {
-      "cases": 41
+      "cases": 49
     },
     "in_len_left": {
       "cases": 3
@@ -296,7 +296,7 @@
   },
   "cases": {
     "cc-circ": {
-      "result": 2,
+      "result": 10,
       "rejected": 14,
       "error": 0,
       "observed": 0
@@ -320,7 +320,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 2,
+      "result": 12,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -344,13 +344,13 @@
       "observed": 0
     },
     "nd-circ": {
-      "result": 2,
+      "result": 8,
       "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "nd-irr": {
-      "result": 9,
+      "result": 24,
       "rejected": 1,
       "error": 0,
       "observed": 0
@@ -1671,6 +1671,40 @@
       "waited_for": "sb_result",
       "capture": "oracle/out/runs/20261122-180436-589e3d/final.txt",
       "at": "2026-11-22T18:04:36Z"
+    },
+    {
+      "run_id": "20261122-214335-b9904e",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "27.5",
+          "n": ".0263",
+          "discharge": "125",
+          "slope": "2.9332"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-214335-b9904e/final.txt",
+      "at": "2026-11-22T21:43:35Z"
+    },
+    {
+      "run_id": "20261122-214714-6aaf2d",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "9.1",
+          "n": ".0216",
+          "discharge": "2",
+          "slope": "1.9915"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261122-214714-6aaf2d/final.txt",
+      "at": "2026-11-22T21:47:14Z"
     }
   ],
   "unknown_screens": [
@@ -2202,11 +2236,18 @@
         "batch-20261122-171342-b63fa5",
         "batch-20261122-171725-c448b7"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T17:22:34Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Answered by the user's decision: practical circle cases are drawn to fit their pipe. The practical diameter range was in feet (0.667 to 15) although the prompt is Diameter (in) (Requirement 4.4, cd-circ-000001); it is now 8 to 180 in, the same AISI sizes. Channel Capacity draws depth below 0.95 of the diameter, from Requirement 8.5 (cc-circ-000018: depth 4 in a 36 in pipe holds the prompt). Normal Depth draws discharge below 0.9 of Manning's full-pipe discharge at the drawn n and slope, and Critical Depth below the critical discharge at 0.9 D; both are judgements labelled with Chow (1959), not observations. Batch batch-20261122-214715-5c32b8 (seed 20261123, generator version 2, practical) ran 24 circle cases: 23 results (8 cc, 10 cd, 6 nd) and 1 timeout, against 0 results from 26 practical circle draws in batches b63fa5 and c448b7. So a pipe beyond capacity is what stopped the earlier draws; whether QUICK-2 hangs or waits there is still Q-010. The quick set now holds 24 circle results and 17 circle rejections (was 6 and 18). The one timeout is the new question about 'DEPTH is Greater than the DIAMETER'.",
+      "answer_evidence": [
+        "batch-20261122-214715-5c32b8",
+        "cc-circ-000018",
+        "cc-circ-000019",
+        "cd-circ-000009",
+        "nd-circ-000009",
+        "batch-20261122-171342-b63fa5"
+      ],
+      "answered_at": "2026-11-22T21:55:05Z"
     },
     {
       "id": "Q-015",
@@ -2303,6 +2344,19 @@
         "sb-irr-000003"
       ],
       "answered_at": "2026-11-22T20:57:58Z"
+    },
+    {
+      "id": "Q-022",
+      "question": "Critical Depth on a 9.1 in pipe, n .0216, discharge 2, slope 1.9915 (generated cd-circ-000019, run 20261122-214714-6aaf2d) printed 'DEPTH is Greater than the DIAMETER' on row 19 of the form and stayed there; the case timed out because no screen maps that message. The generator's bound put 2 cfs under the critical discharge at 0.9 D (2.36 cfs). Should the profile map this as a rejected screen with its message, what key leaves it, and from what discharge does QUICK-2 print it for a given pipe?",
+      "evidence": [
+        "20261122-214714-6aaf2d",
+        "batch-20261122-214715-5c32b8"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T21:55:05Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
     }
   ],
   "decisions": [

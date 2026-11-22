@@ -725,6 +725,20 @@
         "nd-irr-000002",
         "nd-irr-000003",
         "nd-irr-000004"
+      ],
+      "points": {"inputs": ["sta_", "elev_"], "min": 2, "max": 40, "end_keys": "{F10}",
+                 "cite": ["obs-irrtwopt-000001", "nd-irr-000001", "nd-irr-000006"]},
+      "sections": [
+        {"name": "the 40-point section",
+         "stations": ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "260", "270", "280", "290", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390"],
+         "elevations": ["12", "11.6", "11.1", "10.7", "10.4", "10.1", "9.9", "9.8", "9.6", "9.5", "9.3", "9.2", "9", "8.8", "8.5", "7.9", "6.2", "4.1", "2.6", "1.8", "1.5", "1.7", "2.4", "3.9", "5.8", "7.6", "8.4", "8.7", "8.9", "9.1", "9.2", "9.4", "9.6", "9.8", "10", "10.3", "10.7", "11.2", "11.8", "12.5"],
+         "discharges": ["2500", "8000", "30000"], "slopes": [".002"],
+         "cite": ["nd-irr-000001", "nd-irr-000002", "nd-irr-000003", "nd-irr-000004", "nd-irr-000005"]},
+        {"name": "Grapevine Branch, realdata/huntington-section-01.json",
+         "stations": ["0", "12.82", "25.64", "38.46", "51.28", "64.1", "76.92", "89.74", "102.56", "115.38", "128.21", "141.03", "153.85", "166.67", "179.49", "192.31", "205.13", "217.95", "230.77", "243.59", "256.41", "269.23", "282.05", "294.87", "307.69", "320.51", "333.33", "346.15", "358.97", "371.79", "384.62", "397.44", "410.26", "423.08", "435.9", "448.72", "461.54", "474.36", "487.18", "500"],
+         "elevations": ["660.4", "657.09", "653.35", "647.73", "641.36", "634.82", "626.02", "619.92", "613.3", "607.79", "603.72", "601.16", "596.87", "593.53", "591.78", "590.79", "589.22", "590.99", "591.95", "592.41", "592.81", "593.01", "593.6", "594.61", "596.45", "597.63", "597.93", "596.42", "595.75", "595.75", "595.71", "595.32", "595.59", "597.79", "602.38", "602.3", "602.04", "606.79", "613.53", "615.76"],
+         "discharges": ["1200", "3000"], "slopes": [".0035"],
+         "cite": ["nd-irr-000006", "nd-irr-000007", "nd-irr-000008", "nd-irr-000010"]}
       ]
     },
     "step_backwater/irregular": {
@@ -880,7 +894,8 @@
         {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
         {"end": ["cd_circ_result"]}
       ],
-      "cite": ["cd-circ-000001", "cd-circ-000002"]
+      "cite": ["cd-circ-000001", "cd-circ-000002"],
+      "fit": {"critical_depth_in_pipe": {"max_share": 0.9, "source": ["Critical flow in a circular section: Q = A sqrt(g A / T) at depth y, with A = D^2/8 (t - sin t), T = D sin(t/2), t = 2 acos(1 - 2y/D), Chow (1959), Open-Channel Hydraulics. The drawn discharge stays under the critical discharge at 0.9 D, so the critical depth falls inside the pipe. A judgement, not an observation of QUICK-2: Critical Depth printed the same Max Discharge at slopes .005 and .001 (cd-circ-000001, cd-circ-000002, Q-009), so a bound from the typed slope is not used for it."]}}
     },
     "channel_capacity/v_ditch": {
       "steps": [
@@ -939,7 +954,8 @@
         {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
         {"end": ["cc_circ_result"]}
       ],
-      "cite": ["cc-circ-000001", "cc-circ-000002"]
+      "cite": ["cc-circ-000001", "cc-circ-000002"],
+      "fit": {"depth_in_pipe": {"max_share": 0.95, "cite": ["cc-circ-000018", "cc-circ-000001", "cc-circ-000002"]}}
     },
     "normal_depth/v_ditch": {
       "steps": [
@@ -982,7 +998,8 @@
         {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
         {"end": ["nd_circ_result"]}
       ],
-      "cite": ["nd-circ-000001"]
+      "cite": ["nd-circ-000001"],
+      "fit": {"discharge_in_pipe": {"max_share": 0.9, "source": ["Manning's equation for a pipe flowing full, Q = (1.486/n) A R^(2/3) S^(1/2) with A = pi D^2/4 and R = D/4 (D in ft), Chow (1959), Open-Channel Hydraulics. A judgement that bounds the drawn discharge, not an observation of QUICK-2."]}}
     }
   },
   "ranges": {
@@ -1028,7 +1045,7 @@
       "max": 9999.9,
       "decimals": 1,
       "boundaries": ["0", "-1"],
-      "practical": {"min": 0.667, "max": 15, "source": ["AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: diameters listed from 8 in. (0.667 ft) to 180 in. (15 ft). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]},
+      "practical": {"min": 8, "max": 180, "source": ["AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: diameters listed from 8 in. (0.667 ft) to 180 in. (15 ft). QUICK-2 asks for Diameter (in), so the bounds are in inches (cd-circ-000001, solver Requirement 4.4). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]},
       "cite": ["obs-fieldedge-000002", "cd-circ-000001"]
     },
     "depth": {

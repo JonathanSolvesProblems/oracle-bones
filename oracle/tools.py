@@ -1,4 +1,4 @@
-"""The nine oracle tools. Protocol-free, so they can be tested without an MCP client.
+﻿"""The nine oracle tools. Protocol-free, so they can be tested without an MCP client.
 
 Every function takes the parsed arguments and returns a dict that matches its output schema,
 or raises OracleError. No tool accepts golden content, printed field values, a case id to
@@ -182,7 +182,7 @@ class Oracle:
         batch_id = "batch-" + runs.new_run_id()
         report = paths.RUNS / (batch_id + ".json")
         report.parent.mkdir(parents=True, exist_ok=True)
-        uncovered = generator.split_pairs(prof, modes, shapes)[1]
+        uncovered = generator.split_pairs(prof, modes, shapes, ranges)[1]
         report.write_text(json.dumps({"seed": seed, "count": count, "generator_version": generator.GENERATOR_VERSION,
                                       "range_set": ranges, "record": False, "uncovered": uncovered, "results": results},
                                      indent=2) + "\n", encoding="utf-8")

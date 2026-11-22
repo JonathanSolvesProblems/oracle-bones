@@ -18,14 +18,47 @@ from .session import Session
 ANSWERED = ("result", "rejected", "error", "observed")
 
 
-def steps_for(profile, mode, shape, control=None):
+def steps_for(profile, mode, shape, control=None, inputs=None):
+    """The steps a case follows. With `inputs`, a flow that declares `points` keeps the steps
+    of the points the inputs give and, when that is fewer than the flow's most, ends point
+    entry with the flow's end keys after the last of them."""
     if control and control.get("steps"):
         return control["steps"]
     flow = profile["flows"].get("%s/%s" % (mode, shape))
     if flow is None:
         raise OracleError("invalid_arguments", "the profile has no flow for %s/%s" % (mode, shape),
                           {"flows": sorted(profile["flows"])})
-    return flow["steps"]
+    if inputs is None or "points" not in flow:
+        return flow["steps"]
+    return _trim_points(flow, inputs)
+
+
+def point_number(flow, name):
+    """The point a flow input belongs to (1 for sta_01), or None for other inputs."""
+    for prefix in flow.get("points", {}).get("inputs", []):
+        if name.startswith(prefix) and name[len(prefix):].isdigit():
+            return int(name[len(prefix):])
+    return None
+
+
+def _trim_points(flow, inputs):
+    pts = flow["points"]
+    given = [point_number(flow, k) for k in inputs]
+    count = max([n for n in given if n is not None] or [0])
+    if not pts["min"] <= count <= pts["max"]:
+        raise OracleError("invalid_arguments", "a section needs %d to %d points; got %d" % (pts["min"], pts["max"], count),
+                          {"points": count})
+    out, last = [], None
+    for st in flow["steps"]:
+        n = point_number(flow, st["input"]) if "input" in st else None
+        if n is not None and n > count:
+            continue
+        out.append(st)
+        if n is not None:
+            last = len(out)
+    if count < pts["max"]:
+        out.insert(last, {"expect": out[last - 1]["expect"], "keys": pts["end_keys"]})
+    return out
 
 
 def flow_inputs(profile, mode, shape):
@@ -47,7 +80,7 @@ def _stop_screens(profile):
 def run(profile, mode, shape, inputs, control=None, cfg=None, server_id=None, capture_all=False):
     """Run a case in a fresh session. Returns a dict; never raises for timeouts."""
     setup = dict(control.get("setup", {})) if control else {}
-    steps = steps_for(profile, mode, shape, control)
+    steps = steps_for(profile, mode, shape, control, None if control else inputs)
     observed = bool(control and control["expect"]["outcome"] == "observed")
     needed = [s["input"] for s in steps if "input" in s]
     missing = [n for n in needed if n not in inputs]
