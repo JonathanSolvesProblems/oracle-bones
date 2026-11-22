@@ -343,3 +343,154 @@ first write left out a field, and the ledger entry says so. It did not call the 
 it proposed no mismatch classification.
 
 Credits: 90.36. Time: 26 min.
+
+## 2026-11-21, session 6: answering the Exhumer, the comparator and the hooks
+
+Settings: Default agent, Claude Opus 5.5, Approve for me. A new session, two prompts.
+
+> The Exhumer's first run is done but not committed, since it has no shell. Work through these
+> in order, then stop.
+>
+> 1. Commit the Exhumer's run as it stands, in one commit: the profile, the new goldens and
+>    manifest, the ledger, .kiro/specs/quick2-solver/requirements.md and docs/build-log.md. I
+>    ran the traceability check: 22 criteria, 0 problems.
+>
+> 2. My answers to the Exhumer's open questions. Close each one in the ledger with ledger_write
+>    when it's done:
+>    - Q-005: a screen the profile marks as an error ends the case as rejected, with the message
+>      it printed, instead of waiting for the next prompt.
+>    - Q-001: a held prompt (same prompt, nothing changed after the settle window) also ends
+>      the case as rejected, with no message. Keep 0 in the generator, because the rebuild has
+>      to hold a 0 too.
+>    - Q-007: make the nd_irr_result marker specific enough that it can't match the screen
+>      after Begin in obs-nodata-000001. Then close the gap that let it through: the profile
+>      re-read checks only each golden's final capture, so make it check the screen id at every
+>      transcript step. Replay every golden afterwards.
+>
+> 3. Oracle-harness task 8. For 8.4, build the quick set from the modes and shapes mapped so far
+>    and list the uncovered pairs.
+>
+> 4. Oracle-harness tasks 10.1 and 10.2, then enable the four hooks. Test the guard script with
+>    piped JSON, not through a chat edit: the first live refusal should happen on camera during
+>    the solver build.
+>
+> Commit after each task with a short plain message, no tool or AI names. Only stop to ask me if
+> a problem would change what a spec promises.
+
+Kiro committed the Exhumer's run, built both case endings and checked each one live against
+the binary (a 0 now ends as rejected instead of a 10-second timeout; a bank station off the
+ground points ends on the program's own error message), and closed both questions in the ledger
+with the run ids as evidence.
+
+Then it stopped, as asked, because my Q-007 instruction could not be done honestly. The screen
+I wanted the marker to exclude was a real result screen (WS ELEV 2.96), identical in layout to
+the 40-point result; a marker that excluded it would have refused every short section. It laid
+out two options, and found a second gap: only control cases kept every screen, so the every-step
+check could only confirm the last step of the other goldens.
+
+> A. Tighten the marker against "SAVING FILE", change obs-nodata-000001's step 21 to expect
+> nd_irr_result, and rerecord it from the command line. If the stricter every-step check flags
+> any other step, fix the profile order or the expectation with evidence; don't loosen the check.
+>
+> Screens: capture every screen for control cases and for any case recorded through MCP, since
+> those are the ones a requirement cites, and rerecord those 9. Generated batches keep the final
+> screen and the hash chain, so the full set stays small enough for the repo.
+>
+> The older problems:
+> - Generator: draw only from mode and shape pairs whose inputs all have ranges, and list the
+>   rest as uncovered. Ranges for the irregular inputs will come from the Exhumer, from
+>   evidence.
+> - nd-trap-000004's broken chain and the 0.75 s risk in the held rule look like the same
+>   settle problem. Find the cause and fix it so the chain holds. Before ending a case as held,
+>   confirm the hold with a second, longer wait, so only cases that really hold pay for it.
+>   Rerecord nd-trap-000004 with the others.
+>
+> Then run check_traceability.py and the full suite, replay every golden, and carry on with task
+> 8, 10.1, 10.2 and the hooks as planned. Same commit rules. Only stop if a fix would change
+> what a spec promises.
+
+- **The settle problem had one cause.** After T and Enter, QUICK-2 echoes the T on the shape
+  menu before it draws the form. The pause is 14 to 47 ms on its own, but recorded alongside
+  another case it ran past the 150 ms settle time. A suspected hold now gets a second wait of
+  up to 2 seconds, and only inputs that really hold pay for it.
+- **Every step is checked.** The profile re-read now checks the screen at each step of every
+  golden, not just the last; the new rule flagged exactly the two steps in question. Eight
+  goldens were re-recorded, and none of their printed answers changed. All 17 replay the same
+  against the binary.
+- **It corrected itself in the ledger.** Its first Q-007 answer said the old replay would have
+  failed. It had never run that replay, so it added an entry saying so.
+- **The comparator exists** (task 8): the golden check, the rebuild contract with stub
+  rebuilds that answer, crash, hang and print bad JSON, and a quick set of 9 cases so far.
+  Channel capacity, critical depth and step-backwater are listed as uncovered until the Exhumer
+  maps them.
+- **The hooks are on.** To build the guard, Kiro read the hooks docs, then put a temporary hook
+  on a scratch file to see one real payload rather than guess its shape, and removed it after.
+  The guard refuses any write under `oracle/goldens/` with exit code 2, and that code survives a
+  PowerShell pipe. The live refusal is left for the solver build, on camera.
+
+Two changes beyond my instructions, both listed for me: it raised the profile version to 2
+before re-recording, as the exhume-loop spec requires, and updated the spec text to match my
+decisions. 170 tests pass.
+
+Credits: 28.68 and 83.42. Time: spread over the afternoon, with my answers in between.
+
+## 2026-11-22, session 7: the Exhumer maps every regular shape
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5, effort High, Approve for me. A new
+session after a window reload, with the four hooks on.
+
+> Run task 3.1 in .kiro/specs/exhume-loop/tasks.md: Critical Depth, Channel Capacity and Normal
+> Depth on every regular shape (V-ditch, rectangle, trapezoid, circle). For each mode and shape,
+> map the form and its flow in the profile, record a few sharp cases, and write criteria citing
+> them. Set each input's range from what the program accepts, with evidence, so the generator
+> can draw from it.
+>
+> Also answer Q-006 on the 40-point section: what does QUICK-2 assume when the water rises above
+> an end point?
+>
+> Stop when the next question isn't worth its credits, and list the criteria you wrote and the
+> questions you left.
+
+In 29 minutes it mapped all 12 regular mode and shape pairs (forms, result screens and flows),
+recorded 19 new cases, and took the solver spec from 22 to 51 acceptance criteria. I ran the
+traceability check afterwards: 51 criteria, 0 problems. Every input now has a range, set to what
+the program accepts and prints in its field, each bound cited to a recorded case.
+
+What the 1995 program does, as observed:
+
+- **Water above the end of a section** is held as if each end point rose as a vertical wall,
+  and the walls add nothing to the wetted perimeter. At 30,000 cfs the 40-point section printed
+  a water surface 7 ft above both ends, with no warning. Every printed number fits that rule; the
+  "vertical wall" wording is the agent's inference, and it says so.
+- **Critical depth sits just below the exact value** on the V-ditch and trapezoid (2.50 where
+  the exact answer is 2.509; 2.45 for 2.456), but rounds on the rectangle. And the 3.27 ft
+  normal depth from the first checkpoint prints beside an area that belongs to a slightly
+  deeper water line. It logged this as a candidate haunting, to classify with the Skeptic once
+  the rebuild first disagrees, not before.
+- **A circle's Max Discharge** prints 53 in Critical Depth and 51 in the other two modes for the
+  same pipe; Critical Depth may be using its own critical slope instead of the slope typed in.
+- **Inputs overflow their fields.** Values too wide for a field echo with a leading `%`, and
+  small non-zero values like .00001 are accepted, so only an exact 0 holds the prompt.
+
+It left six open questions, two marked for a person: whether the generator needs a practical
+range beside the accepted one, since uniform draws over the accepted ranges give channels no
+reviewer would enter (n 7.8, slope 8.7, 8,000 ft wide), and the untried 0 and -1 on the new
+forms. It recorded the function keys it had not tried on each new result screen, so the
+coverage report stays honest.
+
+Near the end, Kiro reported that Claude Opus 5.5 declined to continue the conversation and
+switched it to Claude Opus 4.8, which wrote the stop entry and the summary. I switched the model
+back for the next session.
+
+Credits: 71.05. Time: 29 min 4 s.
+
+## 2026-11-22, outside Kiro: a real cross-section
+
+Not a Kiro session, so no credits. The other AI coding assistant fetched one real test case
+from USGS services, the way a practitioner builds a QUICK-2 input: a 40-point cross-section
+across Grapevine Branch in Cabell County, West Virginia, a FEMA Zone A stream, from the USGS
+3DEP 1 m lidar through the same elevation service that Joe Trimboli's TPE tool calls; the
+100-year flow from USGS StreamStats (1,200 cfs for 2.70 square miles, from the West Virginia
+regression equations in USGS SIR 2025-5110); and a slope and bank stations labelled as
+estimates. Every service call is listed in the file. It is a data file, not code: the Exhumer
+records it through QUICK-2 before the solver is graded on it.

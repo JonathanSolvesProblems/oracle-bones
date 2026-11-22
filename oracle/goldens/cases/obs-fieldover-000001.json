@@ -1,0 +1,96 @@
+{
+  "id": "obs-fieldover-000001",
+  "control": true,
+  "expected_screen": "cc_form",
+  "mode": "channel_capacity",
+  "shape": "trapezoid",
+  "inputs": {},
+  "outcome": "observed",
+  "printed": {},
+  "message": null,
+  "held_prompt": null,
+  "seed": null,
+  "generator_version": null,
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "518cb7c0816353231bbcf7282a8d6e5174dfbc94f5a8c446b35826e6dd9ec09c",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "2{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "T{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "b41c634ba70159d4f2c669a1db56dd4e1bf5ff1aa29768813c2cb9aa64c478b3"
+    },
+    {
+      "step": 4,
+      "expect": "cc_form",
+      "keys": "123456789{Enter}",
+      "screen_hash_before": "b41c634ba70159d4f2c669a1db56dd4e1bf5ff1aa29768813c2cb9aa64c478b3",
+      "resend": false,
+      "screen_hash_after": "31f7d2464f6af908939ce3c50503bf14aafe5f8fa7e6bb8897fa6c67813e6fcd"
+    },
+    {
+      "step": 5,
+      "expect": "cc_form",
+      "keys": "99.9{Enter}",
+      "screen_hash_before": "31f7d2464f6af908939ce3c50503bf14aafe5f8fa7e6bb8897fa6c67813e6fcd",
+      "resend": false,
+      "screen_hash_after": "e6a4d96ac9604a72273e995e7ad1dd7c6808d033b9c207eb286776c61433c618"
+    },
+    {
+      "step": 6,
+      "expect": "cc_form",
+      "keys": "99999{Enter}",
+      "screen_hash_before": "e6a4d96ac9604a72273e995e7ad1dd7c6808d033b9c207eb286776c61433c618",
+      "resend": false,
+      "screen_hash_after": "ece2ba1307a7f962e591ce50a6561cc0b17ef2d551e3da5893fa99353f4c9a64"
+    },
+    {
+      "step": 7,
+      "expect": "cc_form",
+      "keys": "12.5{Enter}",
+      "screen_hash_before": "ece2ba1307a7f962e591ce50a6561cc0b17ef2d551e3da5893fa99353f4c9a64",
+      "resend": false,
+      "screen_hash_after": "88e1e9235c23224ff370cbbf3dc30c0f388531738c5cd14df4b6666d502ef6fd"
+    },
+    {
+      "step": 8,
+      "expect": "cc_form",
+      "keys": "1000{Enter}",
+      "screen_hash_before": "88e1e9235c23224ff370cbbf3dc30c0f388531738c5cd14df4b6666d502ef6fd",
+      "resend": false,
+      "screen_hash_after": "6ee4ec7a7685f5d80aee974082ae832b5b5014c2645b7d3693579493d6abc9d6"
+    },
+    {
+      "step": 9,
+      "expect": "cc_form",
+      "keys": "12.5{Enter}",
+      "screen_hash_before": "6ee4ec7a7685f5d80aee974082ae832b5b5014c2645b7d3693579493d6abc9d6",
+      "resend": false,
+      "screen_hash_after": "191524aff4e1e2bfbabb0736f1eddd63f0d2de2f229862b26bbfc558b7c81158"
+    }
+  ],
+  "screens": "all",
+  "capture_path": "oracle/goldens/captures/obs-fieldover-000001/",
+  "files": [],
+  "recorded_at": "2026-11-22T15:31:57Z"
+}

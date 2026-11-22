@@ -70,3 +70,77 @@ section" below.
 8. WHEN Begin Calculations is pressed for the 40-point section with banks 150 and 260, n values .06, .035 and .08, and discharge 8000 THE SYSTEM SHALL print WS ELEV `12.22`, Depth `10.7`, Area `1544`, Top Wid `386`, Hyd R `4.0`, Flow Type `SUBCRITICAL`, Chan Vel `7.6`, Wet Per `387` and Frd # `0.62`. _(observed: nd-irr-000002)_
 9. WHEN the case of criterion 8 is run with the LEFT n changed from .06 to .2 and nothing else changed THE SYSTEM SHALL print WS ELEV `12.52`, Depth `11.0`, Area `1657`, Top Wid `390`, Hyd R `4.2`, Flow Type `SUBCRITICAL`, Chan Vel `7.8`, Wet Per `391` and Frd # `0.63`. _(observed: nd-irr-000003, nd-irr-000002)_
 10. WHEN the case of criterion 8 is run with the RIGHT n changed from .08 to .2 and nothing else changed THE SYSTEM SHALL print WS ELEV `12.37`, Depth `10.9`, Area `1599`, Top Wid `388`, Hyd R `4.1`, Flow Type `SUBCRITICAL`, Chan Vel `7.7`, Wet Per `389` and Frd # `0.62`. _(observed: nd-irr-000004, nd-irr-000002)_
+11. WHEN Begin Calculations is pressed for the 40-point section with banks 150 and 260, n values .06, .035 and .08, and discharge 30000 THE SYSTEM SHALL print WS ELEV `19.10`, Depth `17.6`, Area `4226`, Top Wid `390`, Hyd R `10.8`, Flow Type `SUBCRITICAL`, Chan Vel `11.4`, Wet Per `391` and Frd # `0.51`, and show no warning or other screen. _(observed: nd-irr-000005)_
+12. WHEN the water-surface elevation is above both end points of the section (elevations 12 at station 0 and 12.5 at station 390) THE SYSTEM SHALL print a Top Wid of `390`, the distance from the first to the last station, and a Wet Per of `391`, the same as at WS ELEV `12.52`. _(observed: nd-irr-000005, nd-irr-000003)_
+
+### Requirement 4: Forms for the regular shapes
+
+**User Story:** As a floodplain permit reviewer, I want each mode and regular shape to ask for
+the same values in the same order as QUICK-2, so that I can enter a culvert or ditch the way I
+always did.
+
+All three modes use one form layout: the mode and shape on rows 3 and 4, INPUT VARIABLES on
+rows 8 to 11, OUTPUT VARIABLES on rows 15 to 18, and the prompt on row 20.
+
+#### Acceptance Criteria
+
+1. WHEN Critical Depth, Channel Capacity or Normal Depth is chosen with V - Ditch THE SYSTEM SHALL ask for Left Side Slope, Right Side Slope and Manning's n, then Discharge (Critical Depth, Normal Depth) or Depth (Channel Capacity), then Slope, then show "Begin Calculations  <Enter>", and print Bottom Width as `0.0` without asking for it. _(observed: cd-vdit-000001, cc-vdit-000001, nd-vdit-000001)_
+2. WHEN Critical Depth, Channel Capacity or Normal Depth is chosen with Rectangular Channel THE SYSTEM SHALL ask for Bottom Width and Manning's n, then Discharge or Depth, then Slope, and print both side slopes as `0.0:1` without asking for them. _(observed: cd-rect-000001, cc-rect-000001, nd-rect-000001)_
+3. WHEN Critical Depth, Channel Capacity or Normal Depth is chosen with Trapezoidal Channel THE SYSTEM SHALL ask for Left Side Slope, Right Side Slope, Bottom Width and Manning's n, then Discharge or Depth, then Slope. _(observed: cd-trap-000001, cc-trap-000001, nd-trap-000003)_
+4. WHEN Critical Depth, Channel Capacity or Normal Depth is chosen with Circular Channel THE SYSTEM SHALL ask for Diameter, labelled "Diameter (in)", and Manning's n, then Discharge or Depth, then Slope, and show no side slope or bottom width fields. _(observed: cd-circ-000001, cc-circ-000001, nd-circ-000001)_
+5. WHEN a Circular Channel result is shown in any of the three modes THE SYSTEM SHALL print a "Max Discharge(cfs)" output on row 18; it SHALL NOT appear for the other shapes. _(observed: cd-circ-000001, cc-circ-000001, nd-circ-000001, cd-vdit-000001, cc-trap-000001)_
+6. WHEN Begin Calculations has computed a result THE SYSTEM SHALL add "Print <F5>" and "New Shape <F9>" to the key lines below the prompt. _(observed: cd-vdit-000001, cc-rect-000001, nd-circ-000001)_
+
+### Requirement 5: Critical Depth on the regular shapes
+
+**User Story:** As a floodplain permit reviewer, I want Quickened to give the critical depth and
+critical slope QUICK-2 printed, so that I can check a crossing against it.
+
+#### Acceptance Criteria
+
+1. WHEN Critical Depth computes a result THE SYSTEM SHALL print Froude # `1.0`, Flow Type `CRITICAL`, and a Critical Slope on row 11. _(observed: cd-vdit-000001, cd-rect-000001, cd-trap-000001, cd-circ-000001)_
+2. WHEN Critical Depth is run on a V - Ditch with Left Side Slope 2, Right Side Slope 3, Manning's n .035, Discharge 100 and Slope .005 THE SYSTEM SHALL print Depth `2.50`, Critical Slope `0.0187`, Area `15.6`, Wet Perimeter `13.5`, Velocity `6.3`, Hyd Radius `1.2` and Top Width `12.5`. _(observed: cd-vdit-000001)_
+3. WHEN Critical Depth is run on a Rectangular Channel with Bottom Width 10, Manning's n .035, Discharge 300 and Slope .005 THE SYSTEM SHALL print Depth `3.03`, Critical Slope `0.0232`, Area `30.3`, Wet Perimeter `16.1`, Velocity `9.9`, Hyd Radius `1.9` and Top Width `10.0`. _(observed: cd-rect-000001)_
+4. WHEN Critical Depth is run on a Rectangular Channel with Bottom Width 10, Manning's n .035, Discharge 164 and Slope .005 THE SYSTEM SHALL print Depth `2.03`, Critical Slope `0.0223`, Area `20.3`, Wet Perimeter `14.1`, Velocity `8.1`, Hyd Radius `1.4` and Top Width `10.0`. _(observed: cd-rect-000002)_
+5. WHEN Critical Depth is run on a Trapezoidal Channel with Left Side Slope 3, Right Side Slope 2, Bottom Width 10, Manning's n .035, Discharge 300 and Slope .005 THE SYSTEM SHALL print Depth `2.45`, Critical Slope `0.0157`, Area `39.5`, Wet Perimeter `23.2`, Velocity `7.6`, Hyd Radius `1.7` and Top Width `22.3`. _(observed: cd-trap-000001)_
+6. WHEN Critical Depth is run on a Circular Channel with Diameter 36, Manning's n .013, Discharge 40 and Slope .005 THE SYSTEM SHALL print Depth `2.05`, Critical Slope `0.0054`, Area `5.2`, Wet Perimeter `5.9`, Velocity `7.7`, Hyd Radius `0.9`, Top Width `2.8` and Max Discharge `53`. _(observed: cd-circ-000001)_
+7. WHEN the Circular Channel case of criterion 6 is run with Slope .001 instead of .005 THE SYSTEM SHALL print every output exactly as in criterion 6, including Max Discharge `53`; only the Slope echo changes, to `0.0010`. _(observed: cd-circ-000002, cd-circ-000001)_
+
+### Requirement 6: Channel Capacity on the regular shapes
+
+**User Story:** As a floodplain permit reviewer, I want Quickened to give the discharge QUICK-2
+printed for a given depth, so that a capacity check reads the same in both.
+
+#### Acceptance Criteria
+
+1. WHEN Channel Capacity computes a result THE SYSTEM SHALL print the computed discharge in the Discharge (cfs) field on row 10 and echo the entered Depth in the Depth (ft) field with two decimals. _(observed: cc-vdit-000001, cc-rect-000001, cc-trap-000001, cc-circ-000001)_
+2. WHEN Channel Capacity computes a result for a V - Ditch, Rectangular or Trapezoidal Channel THE SYSTEM SHALL print the discharge with no decimals; for a Circular Channel it SHALL print it with one decimal. _(observed: cc-vdit-000001, cc-rect-000001, cc-trap-000001, cc-circ-000001, cc-circ-000002)_
+3. WHEN Channel Capacity is run on a V - Ditch with Left Side Slope 2, Right Side Slope 3, Manning's n .035, Depth 2.5 and Slope .005 THE SYSTEM SHALL print Discharge `52`, Area `15.6`, Wet Perimeter `13.5`, Velocity `3.3`, Hyd Radius `1.2`, Top Width `12.5`, Froude # `0.5` and Flow Type `SUBCRITICAL`. _(observed: cc-vdit-000001)_
+4. WHEN Channel Capacity is run on a Rectangular Channel with Bottom Width 10, Manning's n .035, Depth 3 and Slope .005 THE SYSTEM SHALL print Discharge `137`, Area `30.0`, Wet Perimeter `16.0`, Velocity `4.6`, Hyd Radius `1.9`, Top Width `10.0`, Froude # `0.5` and Flow Type `SUBCRITICAL`. _(observed: cc-rect-000001)_
+5. WHEN Channel Capacity is run on a Trapezoidal Channel with Left Side Slope 3, Right Side Slope 2, Bottom Width 10, Manning's n .035, Depth 3.27 and Slope .005 THE SYSTEM SHALL print Discharge `297`, Area `59.4`, Wet Perimeter `27.7`, Velocity `5.0`, Hyd Radius `2.1`, Top Width `26.4`, Froude # `0.6` and Flow Type `SUBCRITICAL`. _(observed: cc-trap-000001)_
+6. WHEN Channel Capacity is run on a Circular Channel with Diameter 36, Manning's n .013, Depth 1.5 and Slope .005 THE SYSTEM SHALL print Discharge `23.6`, Area `3.5`, Wet Perimeter `4.7`, Velocity `6.7`, Hyd Radius `0.8`, Top Width `3.0`, Froude # `1.1`, Max Discharge `51` and Flow Type `SUPERCRITICAL`. _(observed: cc-circ-000001)_
+7. WHEN Channel Capacity is run on a Circular Channel with Diameter 72, Manning's n .013, Depth 3 and Slope .005 THE SYSTEM SHALL print Discharge `149.7`, Area `14.1`, Wet Perimeter `9.4`, Velocity `10.6`, Hyd Radius `1.5`, Top Width `6.0`, Froude # `1.2`, Max Discharge `322` and Flow Type `SUPERCRITICAL`. _(observed: cc-circ-000002)_
+
+### Requirement 7: Normal Depth on the V - Ditch, rectangle and circle
+
+**User Story:** As a floodplain permit reviewer, I want Quickened to give the normal depth QUICK-2
+printed for each regular shape, so that its water-surface answers match.
+
+#### Acceptance Criteria
+
+1. WHEN Normal Depth is run on a V - Ditch with Left Side Slope 2, Right Side Slope 3, Manning's n .035, Discharge 100 and Slope .005 THE SYSTEM SHALL print Depth `3.20`, Area `25.6`, Wet Perimeter `17.3`, Velocity `3.9`, Hyd Radius `1.5`, Top Width `16.0`, Froude # `0.5` and Flow Type `SUBCRITICAL`. _(observed: nd-vdit-000001)_
+2. WHEN Normal Depth is run on a Rectangular Channel with Bottom Width 10, Manning's n .035, Discharge 137 and Slope .005 THE SYSTEM SHALL print Depth `3.00`, Area `30.0`, Wet Perimeter `16.0`, Velocity `4.6`, Hyd Radius `1.9`, Top Width `10.0`, Froude # `0.5` and Flow Type `SUBCRITICAL`. _(observed: nd-rect-000001)_
+3. WHEN Normal Depth is run on a Circular Channel with Diameter 36, Manning's n .013, Discharge 40 and Slope .005 THE SYSTEM SHALL print Depth `2.12`, Area `5.3`, Wet Perimeter `6.0`, Velocity `7.5`, Hyd Radius `0.9`, Top Width `2.7`, Froude # `0.9`, Max Discharge `51` and Flow Type `SUBCRITICAL`. _(observed: nd-circ-000001)_
+
+### Requirement 8: What the regular-shape prompts accept
+
+**User Story:** As a developer, I want Quickened's inputs to take and echo values the way
+QUICK-2's did, including values too large for their fields, so that odd entries give the same
+screen in both.
+
+#### Acceptance Criteria
+
+1. WHEN a value larger than its print field is entered THE SYSTEM SHALL accept it and echo it with a leading `%`: Left Side Slope 100 as `%100.0`, 123456789 as `% 1.2E+08`, Bottom Width 99999 as `%99999.0`, Manning's n 12.5 as `%12.5000`, Depth 1000 as `%1000.00`, Slope 12.5 as `%12.5000` and Discharge 1234567 as `%1234567`. _(observed: obs-fieldover-000001, obs-fieldedge-000001, obs-smallaccept-000001)_
+2. WHEN Side Slope 99.9, Bottom Width 9999.9, Manning's n 9.9999, Depth 999.99 and Slope 9.9999 are entered THE SYSTEM SHALL echo them as `99.9`, `9999.9`, `9.9999`, `999.99` and `9.9999`, with no `%`. _(observed: obs-fieldedge-000001)_
+3. WHEN Diameter 9999.9 and Discharge 999999 are entered THE SYSTEM SHALL echo them as `9999.9` and `999999`, with no `%`. _(observed: obs-fieldedge-000002)_
+4. WHEN a non-zero value too small for its field is entered (Left Side Slope .04, Manning's n .00001, Slope .00001) THE SYSTEM SHALL accept it, not hold the prompt, and echo it as `0.0` or `0.0000`. _(observed: obs-smallaccept-000001)_

@@ -1,41 +1,42 @@
 {
   "screens": {
     "title": {
-      "visits": 112,
+      "visits": 180,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 111,
+      "visits": 181,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 115,
+      "visits": 184,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_trap_form": {
-      "visits": 79,
+      "visits": 89,
       "keys_tried": [
         "literal",
-        "{Enter}"
+        "{Enter}",
+        "{F7}"
       ]
     },
     "nd_trap_result": {
-      "visits": 33,
+      "visits": 35,
       "keys_tried": [
         "{F7}"
       ]
     },
     "irr_editor": {
-      "visits": 65,
+      "visits": 67,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -48,7 +49,7 @@
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 31,
+      "visits": 33,
       "keys_tried": [
         "{F6}"
       ]
@@ -56,82 +57,234 @@
     "irr_bank_rejected": {
       "visits": 11,
       "keys_tried": []
+    },
+    "cd_form": {
+      "visits": 18,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "cd_result": {
+      "visits": 9,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F5}",
+        "{F2}"
+      ]
+    },
+    "cd_circ_result": {
+      "visits": 4,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F5}",
+        "{F2}",
+        "{F9}"
+      ]
+    },
+    "cc_form": {
+      "visits": 33,
+      "keys_tried": [
+        "literal",
+        "{Enter}",
+        "{F7}"
+      ]
+    },
+    "cc_result": {
+      "visits": 13,
+      "keys_tried": [
+        "{F7}"
+      ],
+      "keys_untried": [
+        "{F5}",
+        "{F2}",
+        "{F9}"
+      ]
+    },
+    "nd_reg_form": {
+      "visits": 15,
+      "keys_tried": [
+        "literal",
+        "{Enter}"
+      ]
+    },
+    "nd_circ_result": {
+      "visits": 2,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F5}",
+        "{F2}",
+        "{F9}"
+      ]
+    },
+    "cc_circ_result": {
+      "visits": 4,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F5}",
+        "{F2}",
+        "{F9}"
+      ]
+    },
+    "nd_reg_result": {
+      "visits": 10,
+      "keys_tried": [],
+      "keys_untried": [
+        "{F5}",
+        "{F2}",
+        "{F9}"
+      ]
     }
   },
   "fields": {
     "in_left_slope": {
-      "cases": 5
+      "cases": 14
     },
     "in_right_slope": {
-      "cases": 5
+      "cases": 14
     },
     "in_bottom_width": {
-      "cases": 5
+      "cases": 14
     },
     "in_n": {
-      "cases": 5
+      "cases": 19
     },
     "in_discharge": {
-      "cases": 5
+      "cases": 14
     },
     "depth": {
-      "cases": 9
+      "cases": 19
     },
     "in_slope": {
-      "cases": 5
+      "cases": 19
     },
     "area": {
-      "cases": 9
+      "cases": 24
     },
     "wet_perimeter": {
-      "cases": 9
+      "cases": 24
     },
     "velocity": {
-      "cases": 5
+      "cases": 19
     },
     "hyd_radius": {
-      "cases": 9
+      "cases": 24
     },
     "top_width": {
-      "cases": 9
+      "cases": 24
     },
     "froude": {
-      "cases": 9
+      "cases": 24
     },
     "flow_type": {
-      "cases": 9
+      "cases": 24
     },
     "in_bank_left": {
-      "cases": 4
+      "cases": 5
     },
     "in_bank_right": {
-      "cases": 4
+      "cases": 5
     },
     "in_n_left": {
-      "cases": 4
+      "cases": 5
     },
     "in_n_channel": {
-      "cases": 4
+      "cases": 5
     },
     "in_n_right": {
-      "cases": 4
+      "cases": 5
     },
     "in_irr_discharge": {
-      "cases": 4
+      "cases": 5
     },
     "in_irr_slope": {
-      "cases": 4
+      "cases": 5
     },
     "ws_elev": {
-      "cases": 4
+      "cases": 5
     },
     "chan_velocity": {
-      "cases": 4
+      "cases": 5
+    },
+    "critical_slope": {
+      "cases": 6
+    },
+    "in_diameter": {
+      "cases": 5
+    },
+    "max_discharge": {
+      "cases": 5
+    },
+    "discharge": {
+      "cases": 5
+    },
+    "in_depth": {
+      "cases": 5
     }
   },
   "cases": {
+    "cc-circ": {
+      "result": 2,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cc-rect": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cc-trap": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cc-vdit": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cd-circ": {
+      "result": 2,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cd-rect": {
+      "result": 2,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cd-trap": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "cd-vdit": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "nd-circ": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
     "nd-irr": {
-      "result": 4,
+      "result": 5,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
+    "nd-rect": {
+      "result": 1,
       "rejected": 0,
       "error": 0,
       "observed": 0
@@ -142,11 +295,29 @@
       "error": 0,
       "observed": 0
     },
+    "nd-vdit": {
+      "result": 1,
+      "rejected": 0,
+      "error": 0,
+      "observed": 0
+    },
     "obs-bankreject": {
       "result": 0,
       "rejected": 0,
       "error": 0,
       "observed": 2
+    },
+    "obs-fieldedge": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 2
+    },
+    "obs-fieldover": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
     },
     "obs-menudrop": {
       "result": 0,
@@ -167,6 +338,12 @@
       "observed": 2
     },
     "obs-nodata": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
+    },
+    "obs-smallaccept": {
       "result": 0,
       "rejected": 0,
       "error": 0,
@@ -536,9 +713,122 @@
       "waited_for": "irr_bank_rejected",
       "capture": "oracle/out/runs/20261121-171150-6d217d/final.txt",
       "at": "2026-11-21T17:11:50Z"
+    },
+    {
+      "run_id": "20261122-154348-369d35",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "2209.7",
+          "n": "1.259",
+          "discharge": "698893",
+          "slope": "7.2136"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_bank_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261122-154348-369d35/final.txt",
+      "at": "2026-11-22T15:43:48Z"
+    },
+    {
+      "run_id": "20261122-154349-fcbcb6",
+      "case": {
+        "mode": "channel_capacity",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "8377",
+          "n": ".7917",
+          "depth": "685.82",
+          "slope": "3.6011"
+        }
+      },
+      "reason": "waited 10.0s for ['cc_circ_result', 'irr_bank_rejected']",
+      "waited_for": "cc_form",
+      "capture": "oracle/out/runs/20261122-154349-fcbcb6/final.txt",
+      "at": "2026-11-22T15:43:49Z"
     }
   ],
-  "unknown_screens": [],
+  "unknown_screens": [
+    {
+      "run_id": "20261122-151921-cb2720",
+      "hash": "0a4007baf6b434741f5ada7768ebc9f843ccc20dfecd2ed908c5042d511ff182",
+      "capture": "oracle/out/runs/20261122-151921-cb2720/final.txt",
+      "at": "2026-11-22T15:19:21Z"
+    },
+    {
+      "run_id": "20261122-151928-232a28",
+      "hash": "54d2a7189f27660718a6cab92425b0343be91df20aa25ad208d758e577f51d23",
+      "capture": "oracle/out/runs/20261122-151928-232a28/final.txt",
+      "at": "2026-11-22T15:19:28Z"
+    },
+    {
+      "run_id": "20261122-151934-99da7c",
+      "hash": "ea45254a3eaf8ef263af3e35e50009776c6aeba448e706a819e83d3f46a85a91",
+      "capture": "oracle/out/runs/20261122-151934-99da7c/final.txt",
+      "at": "2026-11-22T15:19:34Z"
+    },
+    {
+      "run_id": "20261122-151939-48985d",
+      "hash": "e200a4af42a6a3d2d1a3c7c33748e2ffef2bb29ca324beca2df0e9bbc4789629",
+      "capture": "oracle/out/runs/20261122-151939-48985d/final.txt",
+      "at": "2026-11-22T15:19:39Z"
+    },
+    {
+      "run_id": "20261122-151943-6cfdc2",
+      "hash": "780bffd9978422b038e70069c1287a2247ceee48e9da73060a355f2a576efd07",
+      "capture": "oracle/out/runs/20261122-151943-6cfdc2/final.txt",
+      "at": "2026-11-22T15:19:43Z"
+    },
+    {
+      "run_id": "20261122-151950-a955fc",
+      "hash": "46c68bb3b2d86ac154c96e8cdc4f19936469a518948036fe30139bb436e4eac8",
+      "capture": "oracle/out/runs/20261122-151950-a955fc/final.txt",
+      "at": "2026-11-22T15:19:50Z"
+    },
+    {
+      "run_id": "20261122-151955-b169a2",
+      "hash": "a35714903e7bbf45bd0b785db8be36181405e445e76584fdd11974d027cf2ef0",
+      "capture": "oracle/out/runs/20261122-151955-b169a2/final.txt",
+      "at": "2026-11-22T15:19:55Z"
+    },
+    {
+      "run_id": "20261122-152042-396920",
+      "hash": "3b30f8e4260fef1e27438fe3cd2a4dfd3af19e7caee0b040b506363cff75a0a9",
+      "capture": "oracle/out/runs/20261122-152042-396920/final.txt",
+      "at": "2026-11-22T15:20:42Z"
+    },
+    {
+      "run_id": "20261122-152048-72b498",
+      "hash": "eae90331314d6b6d742bc9e362aed13ab01ab8d30336c6bf06baa6477f6a1e12",
+      "capture": "oracle/out/runs/20261122-152048-72b498/final.txt",
+      "at": "2026-11-22T15:20:48Z"
+    },
+    {
+      "run_id": "20261122-152054-b5b405",
+      "hash": "3fbf6cf16ab74452c1ab5d414fb6bafe70861642e1d1deb23de6d4285bc03e97",
+      "capture": "oracle/out/runs/20261122-152054-b5b405/final.txt",
+      "at": "2026-11-22T15:20:54Z"
+    },
+    {
+      "run_id": "20261122-152109-3c194c",
+      "hash": "ff492ce0a48d753957a0a2f2f4480bcafe3698c381200ef46325e32709121bb5",
+      "capture": "oracle/out/runs/20261122-152109-3c194c/final.txt",
+      "at": "2026-11-22T15:21:09Z"
+    },
+    {
+      "run_id": "20261122-152115-f52657",
+      "hash": "d2ea6b4d1ad758c436303e0a5851b7e08bf397ec5ff45ea06ac15b3865ed0ac4",
+      "capture": "oracle/out/runs/20261122-152115-f52657/final.txt",
+      "at": "2026-11-22T15:21:15Z"
+    },
+    {
+      "run_id": "20261122-152119-7464c4",
+      "hash": "e21e9d6e403f449a04ef2c70e73fb7268c266dfa7f9735ba2cb597e2617ab77d",
+      "capture": "oracle/out/runs/20261122-152119-7464c4/final.txt",
+      "at": "2026-11-22T15:21:19Z"
+    }
+  ],
   "nondeterminism": [],
   "rerecords": [
     {
@@ -725,36 +1015,8 @@
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
     },
     {
-      "profile_path": "screens[shape_menu]",
-      "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
-    },
-    {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-    },
-    {
-      "profile_path": "ranges[left_slope]",
-      "source": "starting range for the generator, not yet observed"
-    },
-    {
-      "profile_path": "ranges[right_slope]",
-      "source": "starting range for the generator, not yet observed"
-    },
-    {
-      "profile_path": "ranges[bottom_width]",
-      "source": "starting range for the generator, not yet observed"
-    },
-    {
-      "profile_path": "ranges[n]",
-      "source": "starting range for the generator, not yet observed"
-    },
-    {
-      "profile_path": "ranges[discharge]",
-      "source": "starting range for the generator, not yet observed"
-    },
-    {
-      "profile_path": "ranges[slope]",
-      "source": "starting range for the generator, not yet observed"
     }
   ],
   "harness_findings": {
@@ -862,11 +1124,15 @@
         "20261121-170949-0e0e84",
         "nd-irr-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-21T17:12:15Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "QUICK-2 confines the water between the first and last ground points as if each end point rose as a vertical wall, and the walls add nothing to the wetted perimeter. At Q 30000 the 40-point section printed WS ELEV 19.10 (7.1 ft above the left end at 12, 6.6 ft above the right end at 12.5) with Top Wid 390, the full station range, Wet Per 391, the ground length alone (391.2 ft; walls counted would give about 404), Hyd R 10.8 = 4226/391, and Area 4226, which equals the area at 12.52 (1657, nd-irr-000003) plus 390 x 6.58 within print rounding. No warning or other screen appears. The 'vertical wall' wording is an inference from these numbers; the printed values are in requirements 3.11 and 3.12. The Enter-after-ERROR and more-than-40-points parts move to Q-013.",
+      "answer_evidence": [
+        "nd-irr-000005",
+        "nd-irr-000003",
+        "nd-irr-000002"
+      ],
+      "answered_at": "2026-11-22T15:46:21Z"
     },
     {
       "id": "Q-007",
@@ -886,6 +1152,93 @@
         "20261121-213654-f8dcd0"
       ],
       "answered_at": "2026-11-21T22:06:39Z"
+    },
+    {
+      "id": "Q-008",
+      "question": "Depth below the exact value. CD V-ditch prints 2.50 where the exact critical depth is 2.509 (g 32.2) and CD trapezoid prints 2.45 for an exact 2.456; their areas (15.6, 39.5) and the V-ditch velocity (6.3, which is sqrt(gA/T) at 2.50, while Q/A at 2.50 is 6.4) fit the lower depth. CD rectangle rounds the exact value (2.03 for 2.029). ND trapezoid prints depth 3.27 with area 59.6, but CC at depth 3.27 prints area 59.4 and 297 cfs, so ND's area comes from a depth above 3.27. Does the V/trapezoid CD solver step depth (0.01?) and stop below critical, and does ND truncate its printed depth? Candidate haunting for CD; to be classified, with Skeptic review, when the rebuild first mismatches.",
+      "evidence": [
+        "cd-vdit-000001",
+        "cd-trap-000001",
+        "cd-rect-000002",
+        "cc-trap-000001",
+        "nd-trap-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:00Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-009",
+      "question": "Circle Max Discharge: CD prints 53 at entered slope .005 and at .001, while CC and ND print 51 for the same 36 in pipe, n .013 and slope .005. Does CD compute Max Discharge with its critical slope (0.0054 would give about 52.8) instead of the entered slope? Is the entered slope used for anything in CD on the other shapes (only the circle was tested)?",
+      "evidence": [
+        "cd-circ-000001",
+        "cd-circ-000002",
+        "cc-circ-000001",
+        "nd-circ-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:00Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-010",
+      "question": "Two generated circle cases timed out after Begin with the screen still on the form: ND diameter 2209.7, n 1.259, Q 698893, slope 7.2136, and CC diameter 8377, n .7917, depth 685.82, slope 3.6011. Is the solver hung, slower than 10 s, or waiting for a key? From what pipe size does it start? The diameter range (max 9999.9) is what the prompt accepts and prints, not what computes in time. No value is stated for these cases.",
+      "evidence": [
+        "batch-20261122-154350-36ee68",
+        "20261122-154348-369d35",
+        "20261122-154349-fcbcb6"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:02Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-011",
+      "question": "For a person: the ranges now span what each prompt accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999). Uniform draws over them mostly give channels no reviewer would enter (n 7.8, slope 8.7, 8000 ft wide) whose outputs overflow with %. Should the generator also have a practical range for the quick set, and who sets it, given that a practical range is a judgement and not an observation?",
+      "evidence": [
+        "batch-20261122-154350-36ee68",
+        "obs-fieldedge-000001",
+        "obs-fieldover-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:04Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-012",
+      "question": "Untried boundaries on the new forms: 0 and -1 at the Diameter and Depth prompts, and at any prompt of the V-ditch, rectangle and circle forms (the hold rule is seen only on the trapezoid Normal Depth form). Also untried: a Channel Capacity circle depth greater than the diameter, empty Enter and non-numeric text (Q-004).",
+      "evidence": [
+        "obs-zerohold-000001",
+        "cc-circ-000001",
+        "obs-smallaccept-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:06Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-013",
+      "question": "Left over from Q-006: what does Enter do after the bank-station ERROR line, and does the irregular editor take more than 40 points (F3 Insert GrPt is not a verified key)?",
+      "evidence": [
+        "obs-bankreject-000001",
+        "obs-bankreject-000002",
+        "nd-irr-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-22T15:46:07Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
     }
   ],
   "decisions": [
@@ -1157,7 +1510,258 @@
         "oracle/goldens/captures/obs-nodata-000001/screen-24.txt"
       ],
       "at": "2026-11-21T22:06:53Z"
+    },
+    {
+      "n": 22,
+      "saw": "Ledger: only normal_depth/trapezoid and normal_depth/irregular have flows and screens. Codes list only trap and irr shapes and no cd/cc forms. Task 3.1 needs Critical Depth, Channel Capacity and Normal Depth on V-ditch, rectangle, trapezoid and circle (11 mode/shape pairs unmapped). Q-006 open on the 40-point section above an end point.",
+      "chose": "probe_screen",
+      "why": "No form, prompt or result screen is known for the 11 unmapped pairs, so no case can run. One interactive session walking main menu 1/2/3 and shape V/R/T/C shows each form's prompts and result layout, which a marker and field regions need.",
+      "evidence": [
+        "nd-trap-000001",
+        "nd-irr-000002"
+      ],
+      "at": "2026-11-22T15:19:01Z"
+    },
+    {
+      "n": 23,
+      "saw": "Session c8d2c126 (no run folder): every regular-shape form uses the nd_trap_result template (same rows and columns). CD V-ditch: prompts Left Side Slope, Right Side Slope, Manning's n, Discharge, Slope, Begin; Bottom Width auto-filled 0.0; result adds Critical Slope on row 11 (cols 54-63). Inputs 2, 3, .035, 100, .005 gave Depth 2.50, Critical Slope 0.0187, Area 15.6, Wet Per 13.5, Velocity 6.3, Hyd R 1.2, Top Width 12.5, Froude 1.0, CRITICAL. CD circle: prompts Diameter (in, inches), n, Discharge, Slope; adds Max Discharge(cfs) on row 18 (cols 31-36); 36, .013, 40, .005 gave Depth 2.05, Crit Slope 0.0054, Area 5.2, WP 5.9, V 7.7, R 0.9, T 2.8, Max Q 53, Froude 1.0, CRITICAL. CC rectangle: slopes fixed 0.0:1, prompts Bottom Width, n, Depth, Slope; Discharge is the output (row 10 left); 10, .035, 3, .005 gave Discharge 137, Area 30.0, WP 16.0, V 4.6, R 1.9, T 10.0, Froude 0.5, SUBCRITICAL. F9 New Shape pops the shape menu without Irregular, and leaves a shadow row on row 0.",
+      "chose": "change_profile",
+      "why": "No flow reaches these 11 mode/shape pairs. Add shape codes, one form per mode (prompt patterns shared), result screens per mode split circle from V/R/T so that the row-9 field is either bottom width or diameter, and one flow per pair. All new screens go after every existing screen, so no stored golden can read differently; result screens go ahead of their form, whose marker is more general. Prompts not yet seen (e.g. CC V-ditch) are written by analogy and the first exploratory run of each flow checks them.",
+      "evidence": [],
+      "at": "2026-11-22T15:22:18Z"
+    },
+    {
+      "n": 24,
+      "saw": "Profile now has shape codes vdit/rect/circ, screens cd_circ_result, cd_result, cd_form, cc_circ_result, cc_result, cc_form, nd_circ_result, nd_reg_result, nd_reg_form appended after irr_editor, 11 new flows, and starting ranges for diameter and depth.",
+      "chose": "run_case",
+      "why": "Each new flow must be shown to reach its result screen before anything is recorded. First the three pairs seen in session c8d2c126 with the same inputs (a second sighting for each and a check on the profile re-read), then one case for each of the eight pairs written by analogy. A timeout or unknown screen in any of them shows which prompt guess is wrong.",
+      "evidence": [],
+      "at": "2026-11-22T15:23:58Z"
+    },
+    {
+      "n": 25,
+      "saw": "All 11 new flows reached their result screen (runs f758a6 cd/vdit, 97567f cd/rect, c343ec cd/trap, 40d4cb cd/circ, 0963dc cc/vdit, 58fb4b cc/rect, a7dafb cc/trap, 19ed97 cc/circ, bbf182 nd/vdit, 7992d1 nd/rect, ae3bb2 nd/circ). The three pairs seen in session c8d2c126 printed the same values. The profile re-read passed. Notable: CD circle prints Max Discharge 53 while CC and ND circle with the same diameter, n and slope print 51; CC circle prints discharge as 23.6 (one decimal) while CC trapezoid prints 297; CC trapezoid at depth 3.27 gives 297 and area 59.4 while ND trapezoid at 300 prints depth 3.27 and area 59.6.",
+      "chose": "record_case",
+      "why": "Each pair has been seen once in a run (three twice). Recording the same inputs gives the citation and the second sighting; if a recorded case prints differently from its run, neither is cited.",
+      "evidence": [
+        "20261122-152407-f758a6",
+        "20261122-152418-97567f",
+        "20261122-152419-c343ec",
+        "20261122-152417-40d4cb",
+        "20261122-152420-0963dc",
+        "20261122-152417-58fb4b",
+        "20261122-152421-a7dafb",
+        "20261122-152442-19ed97",
+        "20261122-152442-bbf182",
+        "20261122-152442-7992d1",
+        "20261122-152442-ae3bb2"
+      ],
+      "at": "2026-11-22T15:26:05Z"
+    },
+    {
+      "n": 26,
+      "saw": "All 11 recorded cases (cd-vdit-000001, cd-rect-000001, cd-trap-000001, cd-circ-000001, cc-vdit-000001, cc-rect-000001, cc-trap-000001, cc-circ-000001, nd-vdit-000001, nd-rect-000001, nd-circ-000001) print the same values as their exploratory runs. Unexplained: CD circle Max Discharge 53 against 51 in CC and ND with the same pipe, n and slope; CC circle discharge prints with one decimal (23.6) while CC V-ditch prints 52.",
+      "chose": "run_case",
+      "why": "Three cases that could each disprove a suspected rule. (1) CD circle with slope .001, others as cd-circ-000001: if Max Discharge stays 53 and depth stays 2.05, CD ignores the entered slope and uses the critical slope 0.0054 for Max Discharge (50.8 x sqrt(0.0054/0.005) = 52.8); if it drops, that rule is false. (2) CC circle at 72 in, depth 3 (about 150 cfs): if it prints 150 the one-decimal format depends on size, not on the circle. (3) CD rectangle b 10, Q 164: exact critical depth is 2.029 ft (g 32.2 or 32.174), so 2.02 means truncation or a 0.01 step, 2.03 means rounding.",
+      "evidence": [
+        "cd-circ-000001",
+        "cc-circ-000001",
+        "nd-circ-000001",
+        "cc-vdit-000001",
+        "cd-rect-000001"
+      ],
+      "at": "2026-11-22T15:26:49Z"
+    },
+    {
+      "n": 27,
+      "saw": "(1) CD circle with slope .001 (00f45e) printed exactly what cd-circ-000001 printed at .005, apart from the slope echo: depth 2.05, Critical Slope 0.0054, Max Discharge 53. (2) CC circle 72 in, depth 3 (ca4f09) printed discharge 149.7, Max Discharge 322: the one-decimal discharge is a circle CC format, not a size rule. (3) CD rectangle Q 164 (b7608e) printed depth 2.03, area 20.3: rounding of the exact 2.029, so the rectangle does not truncate. CD V-ditch (2.50 against an exact 2.509) and CD trapezoid (2.45 against 2.456) print below the exact critical depth, so they differ from the rectangle.",
+      "chose": "record_case",
+      "why": "Each of the three disproved or confirmed a rule once; recording gives the second sighting and the citation for criteria on: CD ignores the entered slope, circle CC discharge has one decimal, rectangle CD depth is rounded.",
+      "evidence": [
+        "20261122-152655-00f45e",
+        "20261122-152655-ca4f09",
+        "20261122-152656-b7608e",
+        "cd-circ-000001",
+        "cd-vdit-000001",
+        "cd-trap-000001"
+      ],
+      "at": "2026-11-22T15:27:26Z"
+    },
+    {
+      "n": 28,
+      "saw": "cd-circ-000002, cc-circ-000002 and cd-rect-000002 match their runs. Every ranges entry is still a starting guess marked unobserved; only 0 (held) and -1 (accepted) were tried, on the trapezoid ND form. Print fields are narrow: side slopes 4 characters, bottom width/diameter 7, discharge 9, depth 14, n and slope 0.0000 format.",
+      "chose": "probe_screen",
+      "why": "The generator needs the largest and smallest values each prompt accepts and computes with. A session on the CC trapezoid form (side slopes, bottom width, n, depth, slope) and the CD circle form (diameter, discharge) with values past each print field shows whether the program holds, accepts and overflows, or clips them. Echoes stay on screen, so one screen after a run of values shows each one.",
+      "evidence": [
+        "cc-trap-000001",
+        "cd-circ-000001",
+        "obs-zerohold-000001"
+      ],
+      "at": "2026-11-22T15:27:49Z"
+    },
+    {
+      "n": 29,
+      "saw": "Session ed51cabc (no run folder): no prompt rejects a large value. 123456789 left slope echoes '% 1.2E+08', 100 echoes '%100.0', 99999 width '%99999.0', 12.5 n and slope '%12.5000', 1000 depth '%1000.00', 1234567 discharge '%1234567', and Begin still computes (CC trapezoid printed overflowed area, perimeter and top width with %). The largest values that fit: side slopes 99.9, bottom width 9999.9, diameter 9999.9, n 9.9999, slope 9.9999, depth 999.99, discharge 999999. Small values are taken, not held: left slope .04 (echo 0.0), n .00001 and slope .00001 (echo 0.0000).",
+      "chose": "change_profile",
+      "why": "The ranges need cited evidence and sessions cannot be cited, so the four sequences seen go into controls as behaviour cases ending on the form before Begin: obs-fieldedge-000001 (CC trapezoid, largest fitting values and 100), obs-fieldover-000001 (CC trapezoid, overflow values), obs-fieldedge-000002 (CD circle, diameter and discharge), obs-smallaccept-000001 (ND trapezoid, tiny values). The next record call stores them with every screen. Note: this entry was written just after the controls were added to the profile, not before; no tool has run the program since the edit.",
+      "evidence": [
+        "cc-trap-000001",
+        "cd-circ-000001",
+        "obs-zerohold-000001"
+      ],
+      "at": "2026-11-22T15:30:41Z"
+    },
+    {
+      "n": 30,
+      "saw": "Q-006 is open: at Q 8000 the 40-point section printed WS ELEV 12.22, above the left end point (12 at station 0), Top Wid 386 and Wet Per 387, no warning. At Q 8000 with n_left .2, WS 12.52 is above both ends (12 and 12.5) and Top Wid prints 390, the full width; but 0.02 ft above the right end, a sloped extension would add only about 0.3 ft, too little to show.",
+      "chose": "run_case",
+      "why": "A sharp case: the same section, banks and n values at Q 30000, which should put the water several feet above both end points. If Top Wid stays 390 the program treats the ends as vertical walls (or clips the width); if it grows past 390 that is false. Wet Per separates walls that count as wetted (ground length 391.2 plus both wall heights) from walls that do not (391). A warning or a new screen would show as an unknown screen.",
+      "evidence": [
+        "nd-irr-000002",
+        "nd-irr-000003"
+      ],
+      "at": "2026-11-22T15:30:44Z"
+    },
+    {
+      "n": 31,
+      "saw": "Run 999a54 (40-point section, Q 30000): WS ELEV 19.10, 7.1 ft above the left end point and 6.6 ft above the right, no warning and no other screen. Top Wid 390 (the full section, no widening), Wet Per 391 (the ground length only, 391.2; walls counted would give about 404), Hyd R 10.8 = 4226/391 (with walls it would be 10.5), Area 4226 (area at 12.52 from nd-irr-000003, 1657, plus 390 x 6.58 = 4223, within the print rounding).",
+      "chose": "record_case",
+      "why": "The run fits vertical walls at both end points that hold water but add nothing to the wetted perimeter. Recording the same inputs gives the second sighting and the citation for Q-006; the call also records the four new behaviour cases first, so if one does not reproduce the call stores nothing and I learn that before writing ranges.",
+      "evidence": [
+        "20261122-153121-999a54",
+        "nd-irr-000003",
+        "nd-irr-000002"
+      ],
+      "at": "2026-11-22T15:31:34Z"
+    },
+    {
+      "n": 32,
+      "saw": "nd-irr-000005 matches run 999a54 on every field. The same call stored obs-fieldedge-000001, obs-fieldover-000001, obs-fieldedge-000002 and obs-smallaccept-000001; their last captures show the echoes seen in session ed51cabc (100 as %100.0; 99.9, 9999.9, 9.9999, 999.99, 9.9999 fit; 123456789, 99999, 12.5, 1000 and 12.5 echo with %; diameter 9999.9 and discharge 999999 fit; .04, .00001 taken; 1234567 echoes %1234567). Every new screen and flow is now shown by a recorded case.",
+      "chose": "change_profile",
+      "why": "Design rule 3: the new screens, flows and shape_menu get cite in place of unobserved. Then the ranges: each prompt takes any non-zero value, so min is the smallest step its echo shows and max the largest value that fits its print field (side slopes 0.1-99.9, bottom width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0, -1 and the first overflowing value as boundaries. Ranges are not read by the re-read, so no golden can read differently.",
+      "evidence": [
+        "nd-irr-000005",
+        "obs-fieldedge-000001",
+        "obs-fieldover-000001",
+        "obs-fieldedge-000002",
+        "obs-smallaccept-000001",
+        "oracle/goldens/captures/obs-fieldedge-000001/screen-09.txt",
+        "oracle/goldens/captures/obs-fieldover-000001/screen-09.txt",
+        "oracle/goldens/captures/obs-fieldedge-000002/screen-07.txt",
+        "oracle/goldens/captures/obs-smallaccept-000001/screen-09.txt"
+      ],
+      "at": "2026-11-22T15:34:21Z"
+    },
+    {
+      "n": 33,
+      "saw": "The ranges now span what each prompt accepts and prints in its field, with 0, -1 and an overflow value as boundaries, each citing the behaviour cases that show the edges. Nothing yet shows that values drawn anywhere in these ranges, in combination, reach a result screen in time: n -1 stalls (obs-negnstall-000001), and a CC circle depth above the diameter is untried.",
+      "chose": "run_case",
+      "why": "One exploratory batch of 24 generated cases over the three modes and four regular shapes tests the ranges as the generator will use them and checks that the profile still loads. Timeouts or unknown screens name the combinations to ask about; it would disprove 'any draw from these ranges gives a result'.",
+      "evidence": [
+        "obs-negnstall-000001",
+        "obs-fieldedge-000001"
+      ],
+      "at": "2026-11-22T15:42:21Z"
+    },
+    {
+      "n": 34,
+      "saw": "Batch 36ee68 (24 cases from the new ranges): 15 results, 7 rejected (held 0 or .000 boundaries), 2 timeouts, both circles with very large pipes: ND diameter 2209.7, n 1.259, Q 698893, slope 7.2136 (369d35) and CC diameter 8377, n .7917, depth 685.82, slope 3.6011 (fcbcb6). Results with absurd inputs still compute and print % in overflowing output fields (e.g. area %20917). Every mode and shape pair in task 3.1 now has at least one recorded case seen twice.",
+      "chose": "write_requirement",
+      "why": "Each behaviour below was seen twice with one sighting recorded: the form and prompt order for each shape, the CD, CC and ND printed values for 15 recorded cases, the circle-only Max Discharge and one-decimal CC discharge, CD ignoring the entered slope on the circle, the overflow % echo, the largest fitting values, small values taken, and the 40-point section at Q 30000. The two timeouts have no value and go to an open question, not a criterion.",
+      "evidence": [
+        "batch-20261122-154350-36ee68",
+        "20261122-154348-369d35",
+        "20261122-154349-fcbcb6",
+        "cd-vdit-000001",
+        "cd-rect-000001",
+        "cd-rect-000002",
+        "cd-trap-000001",
+        "cd-circ-000001",
+        "cd-circ-000002",
+        "cc-vdit-000001",
+        "cc-rect-000001",
+        "cc-trap-000001",
+        "cc-circ-000001",
+        "cc-circ-000002",
+        "nd-vdit-000001",
+        "nd-rect-000001",
+        "nd-circ-000001",
+        "nd-irr-000005",
+        "obs-fieldedge-000001",
+        "obs-fieldover-000001",
+        "obs-fieldedge-000002",
+        "obs-smallaccept-000001"
+      ],
+      "at": "2026-11-22T15:44:52Z"
+    },
+    {
+      "n": 35,
+      "saw": "Task 3.1 is done and Q-006 is answered. All 12 regular mode/shape pairs (Critical Depth, Channel Capacity, Normal Depth on V-ditch, rectangle, trapezoid, circle) are mapped in the profile with a form, result screen and flow, each cited by a recorded case seen twice (cd/cc/nd-vdit/rect/trap/circ-000001, plus cd-rect-000002, cd-circ-000002, cc-circ-000002). Requirements 4-8 in the solver spec give the form layouts, prompt orders, and printed values, each citing those cases; requirements 3.11-3.12 answer Q-006 (water above the end points is held by vertical walls that add nothing to the wetted perimeter), citing nd-irr-000005. Input ranges for every prompt are set to what the program accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0/-1/overflow boundaries, each citing the field-edge behaviour cases. The remaining open questions are not worth their credits in this run: Q-008 (CD depth below exact, a candidate haunting) and Q-009 (circle Max Discharge) are classifications best made with Skeptic review when the rebuild first mismatches, not before a line of solver exists; Q-010 (two circle timeouts) and Q-013 (Enter after bank ERROR, >40 points) are narrow edge probes; Q-011 and Q-012 are decisions for a person (practical generator range; untried 0/-1 on the new forms). A person should run scripts/check_traceability.py to confirm the new citations resolve; I have no shell.",
+      "chose": "stop",
+      "why": "Task 3.1 is done and Q-006 is answered. All 12 regular mode/shape pairs (Critical Depth, Channel Capacity, Normal Depth on V-ditch, rectangle, trapezoid, circle) are mapped in the profile with a form, result screen and flow, each cited by a recorded case seen twice (cd/cc/nd-vdit/rect/trap/circ-000001, plus cd-rect-000002, cd-circ-000002, cc-circ-000002). Requirements 4-8 in the solver spec give the form layouts, prompt orders, and printed values, each citing those cases; requirements 3.11-3.12 answer Q-006 (water above the end points is held by vertical walls that add nothing to the wetted perimeter), citing nd-irr-000005. Input ranges for every prompt are set to what the program accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0/-1/overflow boundaries, each citing the field-edge behaviour cases. The remaining open questions are not worth their credits in this run: Q-008 (CD depth below exact, a candidate haunting) and Q-009 (circle Max Discharge) are classifications best made with Skeptic review when the rebuild first mismatches, not before a line of solver exists; Q-010 (two circle timeouts) and Q-013 (Enter after bank ERROR, >40 points) are narrow edge probes; Q-011 and Q-012 are decisions for a person (practical generator range; untried 0/-1 on the new forms). A person should run scripts/check_traceability.py to confirm the new citations resolve; I have no shell.",
+      "evidence": [],
+      "at": "2026-11-22T15:47:06Z"
     }
   ],
-  "stopped": null
+  "stopped": {
+    "why": "Task 3.1 is done and Q-006 is answered. All 12 regular mode/shape pairs (Critical Depth, Channel Capacity, Normal Depth on V-ditch, rectangle, trapezoid, circle) are mapped in the profile with a form, result screen and flow, each cited by a recorded case seen twice (cd/cc/nd-vdit/rect/trap/circ-000001, plus cd-rect-000002, cd-circ-000002, cc-circ-000002). Requirements 4-8 in the solver spec give the form layouts, prompt orders, and printed values, each citing those cases; requirements 3.11-3.12 answer Q-006 (water above the end points is held by vertical walls that add nothing to the wetted perimeter), citing nd-irr-000005. Input ranges for every prompt are set to what the program accepts and prints in its field (side slopes 0.1-99.9, width and diameter 0.1-9999.9, n and slope 0.0001-9.9999, depth 0.01-999.99, discharge 1-999999), with 0/-1/overflow boundaries, each citing the field-edge behaviour cases. The remaining open questions are not worth their credits in this run: Q-008 (CD depth below exact, a candidate haunting) and Q-009 (circle Max Discharge) are classifications best made with Skeptic review when the rebuild first mismatches, not before a line of solver exists; Q-010 (two circle timeouts) and Q-013 (Enter after bank ERROR, >40 points) are narrow edge probes; Q-011 and Q-012 are decisions for a person (practical generator range; untried 0/-1 on the new forms). A person should run scripts/check_traceability.py to confirm the new citations resolve; I have no shell.",
+    "decision": 35,
+    "at": "2026-11-22T15:47:06Z",
+    "coverage": {
+      "unexercised_fields": [],
+      "untried_keys": {
+        "cd_result": [
+          "{F5}",
+          "{F2}"
+        ],
+        "cd_circ_result": [
+          "{F5}",
+          "{F2}",
+          "{F9}"
+        ],
+        "cc_result": [
+          "{F5}",
+          "{F2}",
+          "{F9}"
+        ],
+        "nd_circ_result": [
+          "{F5}",
+          "{F2}",
+          "{F9}"
+        ],
+        "cc_circ_result": [
+          "{F5}",
+          "{F2}",
+          "{F9}"
+        ],
+        "nd_reg_result": [
+          "{F5}",
+          "{F2}",
+          "{F9}"
+        ]
+      },
+      "unobserved_profile_facts": [
+        {
+          "profile_path": "entry",
+          "source": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
+        },
+        {
+          "profile_path": "keys",
+          "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
+        },
+        {
+          "profile_path": "screens[title]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
+        },
+        {
+          "profile_path": "screens[stray_listing]",
+          "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+        }
+      ],
+      "untriaged_mismatches": [],
+      "unanswered_runs": 8,
+      "unknown_screens": 13,
+      "nondeterministic_cases": 0
+    }
+  }
 }

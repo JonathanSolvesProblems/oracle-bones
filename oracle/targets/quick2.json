@@ -79,7 +79,10 @@
     },
     "shapes": {
       "trapezoid": "trap",
-      "irregular": "irr"
+      "irregular": "irr",
+      "v_ditch": "vdit",
+      "rectangle": "rect",
+      "circle": "circ"
     }
   },
   "screens": [
@@ -104,7 +107,7 @@
       "id": "shape_menu",
       "kind": "menu",
       "marker": "SHAPE OF CROSS SECTION",
-      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: takes V, R, T, C or I and Enter"
+      "cite": ["cd-vdit-000001", "cc-rect-000001", "nd-trap-000003", "nd-circ-000001", "nd-irr-000001"]
     },
     {
       "id": "nd_trap_result",
@@ -308,6 +311,185 @@
         "obs-bankreject-000001",
         "obs-nodata-000001"
       ]
+    },
+    {
+      "id": "cd_circ_result",
+      "kind": "result",
+      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "critical_slope", "row": 11, "col": 54, "width": 10},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cd-circ-000001", "cd-circ-000002"]
+    },
+    {
+      "id": "cd_result",
+      "kind": "result",
+      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "critical_slope", "row": 11, "col": 54, "width": 10},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cd-vdit-000001", "cd-rect-000001", "cd-rect-000002", "cd-trap-000001"]
+    },
+    {
+      "id": "cd_form",
+      "kind": "form",
+      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "discharge", "pattern": "Enter Discharge"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["cd-vdit-000001", "cd-rect-000001", "cd-trap-000001", "cd-circ-000001", "obs-fieldedge-000002"]
+    },
+    {
+      "id": "cc_circ_result",
+      "kind": "result",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "in_depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cc-circ-000001", "cc-circ-000002"]
+    },
+    {
+      "id": "cc_result",
+      "kind": "result",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "in_depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cc-vdit-000001", "cc-rect-000001", "cc-trap-000001"]
+    },
+    {
+      "id": "cc_form",
+      "kind": "form",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "depth", "pattern": "Enter Depth"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["cc-vdit-000001", "cc-rect-000001", "cc-trap-000001", "cc-circ-000001", "obs-fieldedge-000001", "obs-fieldover-000001"]
+    },
+    {
+      "id": "nd_circ_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["nd-circ-000001"]
+    },
+    {
+      "id": "nd_reg_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["nd-vdit-000001", "nd-rect-000001"]
+    },
+    {
+      "id": "nd_reg_form",
+      "kind": "form",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "discharge", "pattern": "Enter Discharge"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["nd-vdit-000001", "nd-rect-000001", "nd-circ-000001"]
     }
   ],
   "flows": {
@@ -479,68 +661,225 @@
         "nd-irr-000003",
         "nd-irr-000004"
       ]
+    },
+    "critical_depth/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "cd_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-vdit-000001"]
+    },
+    "critical_depth/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "cd_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-rect-000001", "cd-rect-000002"]
+    },
+    "critical_depth/trapezoid": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cd_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-trap-000001"]
+    },
+    "critical_depth/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_circ_result"]}
+      ],
+      "cite": ["cd-circ-000001", "cd-circ-000002"]
+    },
+    "channel_capacity/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "cc_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-vdit-000001"]
+    },
+    "channel_capacity/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "cc_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-rect-000001"]
+    },
+    "channel_capacity/trapezoid": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-trap-000001"]
+    },
+    "channel_capacity/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cc_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_circ_result"]}
+      ],
+      "cite": ["cc-circ-000001", "cc-circ-000002"]
+    },
+    "normal_depth/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_reg_result"]}
+      ],
+      "cite": ["nd-vdit-000001"]
+    },
+    "normal_depth/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_reg_result"]}
+      ],
+      "cite": ["nd-rect-000001"]
+    },
+    "normal_depth/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_circ_result"]}
+      ],
+      "cite": ["nd-circ-000001"]
     }
   },
   "ranges": {
     "left_slope": {
-      "min": 0,
-      "max": 10,
+      "min": 0.1,
+      "max": 99.9,
       "decimals": 1,
-      "boundaries": [
-        "0",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "boundaries": ["0", "-1", "100"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "nd-trap-000003"]
     },
     "right_slope": {
-      "min": 0,
-      "max": 10,
+      "min": 0.1,
+      "max": 99.9,
       "decimals": 1,
-      "boundaries": [
-        "0",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "boundaries": ["0", "-1", "100"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-zerohold-000001", "nd-trap-000004"]
     },
     "bottom_width": {
-      "min": 1,
-      "max": 200,
+      "min": 0.1,
+      "max": 9999.9,
       "decimals": 1,
-      "boundaries": [
-        "0",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "boundaries": ["0", "-1", "99999"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-zerohold-000001", "nd-trap-000005"]
     },
     "n": {
-      "min": 0.01,
-      "max": 0.15,
-      "decimals": 3,
-      "boundaries": [
-        ".000",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "min": 0.0001,
+      "max": 9.9999,
+      "decimals": 4,
+      "boundaries": [".000", "-1", "12.5"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negnstall-000001"]
     },
     "discharge": {
       "min": 1,
-      "max": 20000,
+      "max": 999999,
       "decimals": 0,
-      "boundaries": [
-        "0",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "boundaries": ["0", "-1", "1234567"],
+      "cite": ["obs-fieldedge-000002", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negreturn-000001"]
+    },
+    "diameter": {
+      "min": 0.1,
+      "max": 9999.9,
+      "decimals": 1,
+      "boundaries": ["0", "-1"],
+      "cite": ["obs-fieldedge-000002", "cd-circ-000001"]
+    },
+    "depth": {
+      "min": 0.01,
+      "max": 999.99,
+      "decimals": 2,
+      "boundaries": ["0", "-1", "1000"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "cc-trap-000001"]
     },
     "slope": {
       "min": 0.0001,
-      "max": 0.05,
+      "max": 9.9999,
       "decimals": 4,
-      "boundaries": [
-        "0",
-        "-1"
-      ],
-      "unobserved": "starting range for the generator, not yet observed"
+      "boundaries": ["0", "-1", "12.5"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negreturn-000002"]
     }
   },
   "controls": [
@@ -888,6 +1227,84 @@
         "screen_id": "irr_bank_rejected"
       },
       "source": "20261121-171150-6d217d"
+    },
+    {
+      "id": "obs-fieldedge-000001",
+      "mode": "channel_capacity",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "keys": "100{Enter}"},
+        {"expect": "cc_form", "keys": "99.9{Enter}"},
+        {"expect": "cc_form", "keys": "9999.9{Enter}"},
+        {"expect": "cc_form", "keys": "9.9999{Enter}"},
+        {"expect": "cc_form", "keys": "999.99{Enter}"},
+        {"expect": "cc_form", "keys": "9.9999{Enter}"},
+        {"end": ["cc_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cc_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): 100 echoes %100.0; 99.9, 9999.9, 9.9999, 999.99 and 9.9999 fit their fields"
+    },
+    {
+      "id": "obs-fieldover-000001",
+      "mode": "channel_capacity",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "keys": "123456789{Enter}"},
+        {"expect": "cc_form", "keys": "99.9{Enter}"},
+        {"expect": "cc_form", "keys": "99999{Enter}"},
+        {"expect": "cc_form", "keys": "12.5{Enter}"},
+        {"expect": "cc_form", "keys": "1000{Enter}"},
+        {"expect": "cc_form", "keys": "12.5{Enter}"},
+        {"end": ["cc_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cc_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): each value past its print field is accepted and echoed with a leading %"
+    },
+    {
+      "id": "obs-fieldedge-000002",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9999.9{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "999999{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"end": ["cd_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cd_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): diameter 9999.9 and discharge 999999 fit their fields"
+    },
+    {
+      "id": "obs-smallaccept-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".04{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".00001{Enter}"},
+        {"expect": "nd_trap_form", "keys": "1234567{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".00001{Enter}"},
+        {"end": ["nd_trap_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_trap_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): .04 (echo 0.0) and .00001 (echo 0.0000) are taken, not held; 1234567 echoes %1234567"
     }
   ]
 }
