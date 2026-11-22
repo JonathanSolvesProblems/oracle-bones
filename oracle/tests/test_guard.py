@@ -52,6 +52,17 @@ def test_other_writes_are_allowed(p):
     assert pipe(p) == (0, "")
 
 
+def test_the_hook_matches_the_file_write_tools_only():
+    import re
+    hook = json.loads((paths.ROOT / ".kiro" / "hooks" / "guard-goldens.json").read_text(encoding="utf-8"))
+    matcher = re.compile(hook["hooks"][0]["matcher"])
+    for tool in ("fs_write", "fs_append", "str_replace", "smart_relocate", "semantic_rename", "delete_file"):
+        assert matcher.search(tool), tool
+    for tool in ("execute_pwsh", "execute_bash", "read_file", "mcp_oracle_ledger_write", "mcp_oracle_run_case",
+                 "web_fetch", "fs_write_extra"):
+        assert not matcher.search(tool), tool
+
+
 def test_a_payload_that_is_not_json_is_refused():
     code, err = pipe(None, raw="not json")
     assert code == 2 and "cannot check" in err
