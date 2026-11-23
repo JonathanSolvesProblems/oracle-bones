@@ -795,3 +795,69 @@ Left open, and written into the tasks: a second interpolation step at depths und
 goldens), the circle search's start and step, and a few rules seen in only three cases.
 
 Credits: 94.01. Time: 26 min 19 s.
+
+## 2026-11-23, session 12: solver tasks 1 and 2
+
+Settings: Default agent, Claude Opus 5.5. A new session.
+
+> Run tasks 1 and 2 of the quick2-solver spec, in order, then stop. I reviewed the design and
+> accept it as written, including the decisions you flagged. Three notes first:
+>
+> 1. layout.ts will hold window rows and columns, which rule 3 bans outside constants.ts. Pick
+>    one in task 1.3 and say which: import the windows from oracle/targets/quick2.json so there
+>    is one source, or exempt that table in the guard test by name.
+>
+> 2. Keep the honest-attempt hypotheses and their scores in results/attempts.md, one section
+>    per mismatch. The build log gets one line per task pointing there.
+>
+> 3. scripts/oracle_quick.py took 22.5 s just to report that no rebuild command is set. The
+>    on-save hook runs it on every solver save, so find where the time goes before task 1.7 and
+>    get the quick set under the design's 30 s.
+>
+> Commit after each subtask with a short plain message, no tool or AI names, and include the
+> uncommitted docs/build-log.md in the first commit. Record each task's result, timing and match
+> counts in docs/build-log.md, and leave the credits line for me. Only stop to ask me if a
+> problem would change what a spec promises.
+
+### Task 1: comparator pipeline end to end on the trapezoid control cases
+
+- **1.1** `app/` is an ES-module package with no runtime dependencies (TypeScript 6.0.3, Vitest
+  5.1.1, fast-check 4.11.0, @types/node as dev dependencies). `node app/src/oracle/entry.ts`
+  runs on Node 24.14.0 with no build step.
+- **1.2** `single.ts`, `constants.ts` and `parse.ts` (VAL, then single precision).
+- **1.3** Note 1, decided: **the window table is exempted in the guard test by name**
+  (`WINDOWS` in `layout.ts`), and a test checks it equals the profile. Importing
+  `oracle/targets/quick2.json` would have given one source, but the profile also holds the
+  control cases with their inputs and expected printed values (`depth` `3.27` for the first
+  control), and importing it would put those answers inside the solver and the app bundle.
+  The format start columns need no numbers at all: each screen layout is the screen's rows with
+  the PRINT USING picture (`##.#`) written where the value goes, so a picture's first column is
+  its start column. A test checks that the layout's labels and box equal the final capture of
+  the first control case with every window blanked.
+- **1.4** The search, prismatic geometry, Normal Depth on the trapezoid and `solve()`. Every
+  other pair answers `error` / `not built`.
+- **1.5** The JSONL entry, and `rebuild.command` set to `["node", "app/src/oracle/entry.ts"]`.
+  The oracle test that expected exit 4 while no rebuild was configured now checks that the
+  quick set is graded and the contract kept.
+- **1.6** Guard tests and Property 7. Two places where the design's rules collide, and how they
+  were settled: (a) rule 2 bans case ids in `app/src/solver/`, but constants.ts must cite its
+  cases. Case ids are allowed only in the `@cite` comments of constants.ts, which no code can
+  read; everywhere else the scan is on the full text. (b) Rule 3's printed-value check hits
+  four honest constants: g = 32.2, the 0.5 ft steps and the 0.1 ft irregular start equal
+  printed values in some goldens. The test lists them by name with the reason, so any new
+  collision fails until someone adds it on purpose. A mutation check (a literal `'3.27'`, a 7
+  and a case id added to `index.ts`) failed all three guards.
+- **Note 3, where the time went.** With the cache warm, `oracle_quick.py` takes 0.6 s; nearly all
+  of it is the golden check hashing all 2,098 files under `oracle/goldens/`. The first read of a
+  newly written file is slow on this laptop (likely the on-access scan or OneDrive). Hashing
+  freshly copied goldens took 7.6, 7.6 and 9.1 s one file at a time, and 0.8 to 0.9 s with a
+  32-thread pool. `oracle/manifest.py` now hashes in a thread pool and still reads and hashes
+  every file, so oracle-harness 10.3 holds as written.
+- **1.7** Quick set: 16 of 200 match; 0.6 s by the script's clock, 1.0 s wall-clock with Python
+  and Node start included. nd-trap-000001 (`3.27`) and nd-trap-000002 (`4.22`) match on every
+  field. 182 cases are `outcome` mismatches from pairs not built yet (`result` or `rejected`
+  against `error`). The other two are `value` mismatches on nd-trap-000009 and nd-trap-000014:
+  Area, Wet Perimeter, Top Width, and Velocity and Froude on the first. These are two of the
+  six shallow cases (depth under 1.5 ft) that need the second interpolation step, which task
+  3.2 covers. Full set for normal_depth/trapezoid: 17 of 19 match, and the same two cases miss.
+  Honest attempts: none in task 1 (results/attempts.md).

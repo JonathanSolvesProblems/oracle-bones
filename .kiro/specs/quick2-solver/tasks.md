@@ -6,20 +6,20 @@ the after-task hook also runs) and one full-set run for the pairs it covers. A t
 through the honest attempt and the Skeptic and been recorded (design: When the rebuild and the
 oracle disagree). Mismatches in pairs a later task covers are expected until then.
 
-- [ ] 1. Comparator pipeline end to end on the trapezoid control cases
-  - [ ] 1.1 Set up the TypeScript package in `app/`: `package.json` (ES modules, no runtime dependencies; TypeScript, Vitest and fast-check as dev dependencies), `tsconfig.json` (strict, `erasableSyntaxOnly`, `allowImportingTsExtensions`, `noEmit`) and Vitest config. Check that `node app/src/oracle/entry.ts` runs on Node 24 without a build. Leave Vite and the service worker to quickened-app task 1.1.
+- [x] 1. Comparator pipeline end to end on the trapezoid control cases
+  - [x] 1.1 Set up the TypeScript package in `app/`: `package.json` (ES modules, no runtime dependencies; TypeScript, Vitest and fast-check as dev dependencies), `tsconfig.json` (strict, `erasableSyntaxOnly`, `allowImportingTsExtensions`, `noEmit`) and Vitest config. Check that `node app/src/oracle/entry.ts` runs on Node 24 without a build. Leave Vite and the service worker to quickened-app task 1.1.
     - _Requirements: none of the 74; design: The contract_
-  - [ ] 1.2 Write `single.ts`, `constants.ts` (start with 1.486, .667, 0.01 and the 0.5 ft step, each with its citing cases) and `parse.ts` (VAL to single precision); unit tests with the typed values of criteria 2.1 to 2.4
+  - [x] 1.2 Write `single.ts`, `constants.ts` (start with 1.486, .667, 0.01 and the 0.5 ft step, each with its citing cases) and `parse.ts` (VAL to single precision); unit tests with the typed values of criteria 2.1 to 2.4
     - _Requirements: design: Numbers, Parsing and holds_
-  - [ ] 1.3 Write `printUsing.ts` (fixed formats, rounding, `%` overflow), `screen.ts` (paint a row, cut each window) and the Normal Depth trapezoid entries of `layout.ts`; a test that each window equals `nd_trap_result` in `oracle/targets/quick2.json`
+  - [x] 1.3 Write `printUsing.ts` (fixed formats, rounding, `%` overflow), `screen.ts` (paint a row, cut each window) and the Normal Depth trapezoid entries of `layout.ts`; a test that each window equals `nd_trap_result` in `oracle/targets/quick2.json`
     - _Requirements: design: Printing_
-  - [ ] 1.4 Write `search.ts`, `geometry/prismatic.ts`, Normal Depth for the trapezoid in `modes/normalDepth.ts`, and `solve()` in `index.ts`, returning outcome `error` with message `not built` for every other pair
+  - [x] 1.4 Write `search.ts`, `geometry/prismatic.ts`, Normal Depth for the trapezoid in `modes/normalDepth.ts`, and `solve()` in `index.ts`, returning outcome `error` with message `not built` for every other pair
     - _Requirements: design: The depth search, Normal Depth prismatic shapes_
-  - [ ] 1.5 Write `app/src/oracle/entry.ts` and set `rebuild.command` in `oracle/harness.json` to `["node", "app/src/oracle/entry.ts"]`; tests that the entry answers every request once, keeps ids out of `solve()`, and writes only the contract's four keys
+  - [x] 1.5 Write `app/src/oracle/entry.ts` and set `rebuild.command` in `oracle/harness.json` to `["node", "app/src/oracle/entry.ts"]`; tests that the entry answers every request once, keeps ids out of `solve()`, and writes only the contract's four keys
     - _Requirements: oracle-harness 12.1 to 12.4_
-  - [ ] 1.6 Write the guard tests: no case-id pattern and no `goldens` reference in `app/src/solver/` or `app/src/format/`; numeric literals only in `constants.ts`, each constant cited; no literal equal to a printed golden value. Property 7 (renamed and shuffled ids change nothing).
+  - [x] 1.6 Write the guard tests: no case-id pattern and no `goldens` reference in `app/src/solver/` or `app/src/format/`; numeric literals only in `constants.ts`, each constant cited; no literal equal to a printed golden value. Property 7 (renamed and shuffled ids change nothing).
     - _Requirements: design: When the rebuild and the oracle disagree, rules 1 to 3; Property 7_
-  - [ ] 1.7 Run the quick set. nd-trap-000001 (depth 3.27 at 300 cfs) and nd-trap-000002 (4.22 at 500 cfs) match on every field, the run takes under 30 s, and every other case is an expected `outcome` mismatch. Record the timing and result in `docs/build-log.md`.
+  - [x] 1.7 Run the quick set. nd-trap-000001 (depth 3.27 at 300 cfs) and nd-trap-000002 (4.22 at 500 cfs) match on every field, the run takes under 30 s, and every other case is an expected `outcome` mismatch. Record the timing and result in `docs/build-log.md`.
     - _Requirements: closes none of the 74; proves oracle-harness Property 4 through the rebuild_
 
 - [ ] 2. Normal Depth on an irregular section

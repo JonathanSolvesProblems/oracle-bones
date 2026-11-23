@@ -1988,7 +1988,38 @@
       "at": "2026-11-21T21:33:41Z"
     }
   ],
-  "mismatches": {},
+  "mismatches": {
+    "area": {
+      "status": "untriaged",
+      "count": 2,
+      "last_run": "2026-11-23T14:27:13Z"
+    },
+    "froude": {
+      "status": "untriaged",
+      "count": 1,
+      "last_run": "2026-11-23T14:27:13Z"
+    },
+    "outcome": {
+      "status": "untriaged",
+      "count": 182,
+      "last_run": "2026-11-23T14:27:13Z"
+    },
+    "top_width": {
+      "status": "untriaged",
+      "count": 2,
+      "last_run": "2026-11-23T14:27:13Z"
+    },
+    "velocity": {
+      "status": "untriaged",
+      "count": 1,
+      "last_run": "2026-11-23T14:27:13Z"
+    },
+    "wet_perimeter": {
+      "status": "untriaged",
+      "count": 2,
+      "last_run": "2026-11-23T14:27:13Z"
+    }
+  },
   "unobserved": [
     {
       "profile_path": "entry",
