@@ -794,4 +794,4 @@ design quotes their match counts. What it found:
 Left open, and written into the tasks: a second interpolation step at depths under 1.5 ft (8
 goldens), the circle search's start and step, and a few rules seen in only three cases.
 
-Credits: (to fill in). Time: (to fill in).
+Credits: 94.01. Time: 26 min 19 s.

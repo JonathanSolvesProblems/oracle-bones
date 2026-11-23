@@ -1,0 +1,22 @@
+{
+  "name": "quickened",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Quickened: QUICK-2's open-channel calculations rebuilt for the browser.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "oracle": "node src/oracle/entry.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "fast-check": "4.11.0",
+    "typescript": "6.0.3",
+    "vitest": "5.1.1"
+  }
+}
