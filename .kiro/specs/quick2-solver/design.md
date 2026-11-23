@@ -106,7 +106,13 @@ quantity (depth, area, perimeter, top width, hydraulic radius, discharge, veloci
 trial in the search). Three goldens need this: values on an exact rounding boundary that only
 single-precision storage explains. In cd-trap-000013 the top width is 2127.65 in double
 precision but prints `2127.6`; in cd-vdit-000007 1561.95 prints `1561.9`; in cd-rect-000009
-7499.95 prints `7500.0`. Exactly which values QUICK-2 stores is not known. One CC golden,
+7499.95 prints `7500.0`. Task 3.3 settled these three: with the second step of the search
+(rule 3) and the typed inputs and trial depths held in single precision, none of them sits on
+a boundary any more (cd-trap-000013 Top Width 2127.64996, cd-vdit-000007 1561.94997; cd-rect-000009
+prints `7496.7` from 7496.70020), and they print the same whether or not Top Width is stored.
+The one Critical Depth field a store decides is the Area of cd-vdit-000002: 15808.9498 unstored,
+15809.0 stored, printed `%15809`. Storing Wet Perimeter, Top Width or Hyd Radius changes no
+Critical Depth golden, so those stores are kept but not pinned. One CC golden,
 cc-vdit-000002 (velocity `198.2`, 198.2500 computed), sits on a boundary that the choice of
 storage points decides; task 3.4 settles it.
 
@@ -195,7 +201,7 @@ Search start and step by shape:
 
 | Shape | First trial, step | Evidence |
 |---|---|---|
-| Trapezoid, V-ditch, rectangle | 0.5 ft, 0.5 ft | ND 47 of 53, CD 51 of 56 |
+| Trapezoid, V-ditch, rectangle | 0.5 ft, 0.5 ft | ND 53 of 53, CD 56 of 56 (tasks 3.2, 3.3) |
 | Irregular | lowest ground point + 0.1 ft, 0.5 ft; the bottom of the first bracket is the lowest point | ND 24 of 24, Step-Backwater 3 of 3 |
 | Circle | not yet identified | best tried: 0.1 ft steps, ND 6 of 8; CD 3 of 12 |
 
@@ -241,9 +247,9 @@ With the second step of rule 3, all 53 results match on every field (task 3.2). 
 
 The search runs on Qc(y) = A·√(g·A/T) with g = 32.2 and step 0.5 ft. At the search's depth,
 Velocity = √(g·A/T), Froude prints `1.0`, Flow Type is CRITICAL, and Critical Slope =
-((q/A) · n / (1.486 · R^.667))². The entered slope is echoed and used for nothing else. 51 of
-56 results match on every field (3 misses are the single-precision boundaries above, 2 the
-second step); Critical Slope matches in 53 of 56. Criteria 5.1 to 5.5.
+((q/A) · n / (1.486 · R^.667))². The entered slope is echoed and used for nothing else. With the
+second step of rule 3 and single-precision storage, all 56 results match on every field,
+Critical Slope included (task 3.3). Criteria 5.1 to 5.5.
 
 ### Circle: Normal Depth, Critical Depth, Max Discharge
 

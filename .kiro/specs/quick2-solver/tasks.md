@@ -39,7 +39,7 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 2.3, 2.4, 4.1, 4.2, 4.3, 4.4, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
   - [x] 3.2 Normal Depth on the V-ditch, rectangle and trapezoid: Velocity = q/A and its Froude; the `negative_input` flag; `never_finishes` for n of -1; `returns_to_menu` for Discharge or Slope of -1. Make the honest attempt at the second interpolation step on the 6 shallow goldens, and hand what remains to the Skeptic. Property 1 for prismatic Normal Depth.
     - _Requirements: 7.1, 7.2, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
-  - [ ] 3.3 Critical Depth on the V-ditch, rectangle and trapezoid: the search on A·√(gA/T) with g = 32.2, Velocity √(gA/T), Froude, Flow Type CRITICAL, Critical Slope with .667. Settle the single-precision storage points on cd-trap-000013, cd-vdit-000007 and cd-rect-000009. Property 1 for prismatic Critical Depth.
+  - [x] 3.3 Critical Depth on the V-ditch, rectangle and trapezoid: the search on A·√(gA/T) with g = 32.2, Velocity √(gA/T), Froude, Flow Type CRITICAL, Critical Slope with .667. Settle the single-precision storage points on cd-trap-000013, cd-vdit-000007 and cd-rect-000009. Property 1 for prismatic Critical Depth.
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   - [ ] 3.4 Channel Capacity on the V-ditch, rectangle and trapezoid: discharge with .6667, Velocity with .667, Froude, Flow Type; settle cc-vdit-000002's velocity boundary
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_

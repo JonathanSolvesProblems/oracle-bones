@@ -964,3 +964,24 @@ Settings: Default agent, Claude Opus 5.5.
   pass in 1.6 s. Quick set: 95 of 200 match (69 after 3.1), 0.5 s. Full set for normal_depth on
   the three shapes: all 53 results and the 8 rejected goldens match, 0 mismatches; irregular
   Normal Depth is still 26 of 26. Full set overall: 126 of 254, 0.5 s. Time: 8 min.
+- **3.3** Critical Depth on the V-ditch, rectangle and trapezoid (`modes/criticalDepth.ts`).
+  The search runs on A·√(gA/T) with g = 32.2. Velocity is √(gA/T), Froude prints `1.0`, Flow
+  Type is CRITICAL, and Critical Slope uses .667. Full set for critical_depth on the three shapes:
+  all 56 results and the 9 rejected goldens match on every field, Critical Slope included. The
+  design's double-precision fit had 51 of 56, and 53 of 56 on Critical Slope. The H6 second step
+  from 3.2 fixed the four second-step cases, as predicted there; this was their first grading by
+  the comparator. **Single-precision storage, settled:** cd-trap-000013, cd-vdit-000007 and
+  cd-rect-000009 do not need Top Width stored. With the H6 depths and the typed inputs held in
+  single precision, their top widths are 2127.64996, 1561.94997 and 7496.70020. They print the
+  same whether or not Top Width is stored, and they no longer sit on a rounding boundary. The one
+  Critical Depth field a store decides is cd-vdit-000002's Area: 15808.9498 unstored against
+  15809.0 stored, printed `%15809`. No Critical Depth golden decides the stores of Wet
+  Perimeter, Top Width or Hyd Radius, so the rebuild keeps them and the design now says they are
+  not pinned. The check is a throwaway script that switched each store on and off. It found one
+  more thing: Python's `%.1f` rounds half to even on exact ties, PRINT USING rounds half up, and
+  that difference alone moved cd-vdit-000005. The rebuild uses `toFixed`, which rounds an exact
+  tie up, as PRINT USING does. Property 1 runs on 300 generated channels. A second property
+  checks that changing the entered slope changes only its echo. 457 tests pass in 2.2 s. Quick
+  set: 137 of 200 match, 0.5 s. Full set: 182 of 254, 0.6 s. Every mismatch left is an
+  `outcome` mismatch in a pair a later task builds (Channel Capacity, the circle,
+  Step-Backwater). Time: 5 min.
