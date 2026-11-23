@@ -22,16 +22,16 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
   - [x] 1.7 Run the quick set. nd-trap-000001 (depth 3.27 at 300 cfs) and nd-trap-000002 (4.22 at 500 cfs) match on every field, the run takes under 30 s, and every other case is an expected `outcome` mismatch. Record the timing and result in `docs/build-log.md`.
     - _Requirements: closes none of the 74; proves oracle-harness Property 4 through the rebuild_
 
-- [ ] 2. Normal Depth on an irregular section
-  - [ ] 2.1 Write `groundPoints.ts` and the irregular prompt order in `forms.ts`: increasing stations with their error text, a negative first station, elevation 0 not taken, a negative elevation back to the station, entry ending after the 40th point, banks matched by value as entered with the ERROR line as the message. Test against the captures of obs-irrelev-000001, obs-irrstation-000001, obs-irrtwopt-000001, obs-bankreject-000001, obs-bankreject-000002 and nd-irr-000009, and the prompt order against the golden transcripts.
+- [x] 2. Normal Depth on an irregular section
+  - [x] 2.1 Write `groundPoints.ts` and the irregular prompt order in `forms.ts`: increasing stations with their error text, a negative first station, elevation 0 not taken, a negative elevation back to the station, entry ending after the 40th point, banks matched by value as entered with the ERROR line as the message. Test against the captures of obs-irrelev-000001, obs-irrstation-000001, obs-irrtwopt-000001, obs-bankreject-000001, obs-bankreject-000002 and nd-irr-000009, and the prompt order against the golden transcripts.
     - _Requirements: 3.2, 3.3, 3.4, 3.5, 9.6, 10.3, 10.4, 10.5, 10.6, 10.7_
-  - [ ] 2.2 Write `geometry/irregular.ts`: wet area, perimeter and top width with vertical end walls that add no perimeter, every wet part counted, the three subsections, overbank conveyance per ground segment, channel conveyance whole, and α. Add .6667 to `constants.ts`. Property 4.
+  - [x] 2.2 Write `geometry/irregular.ts`: wet area, perimeter and top width with vertical end walls that add no perimeter, every wet part counted, the three subsections, overbank conveyance per ground segment, channel conveyance whole, and α. Add .6667 to `constants.ts`. Property 4.
     - _Requirements: 3.12, 9.7_
-  - [ ] 2.3 Write irregular Normal Depth: the search from the lowest point plus 0.1 ft in 0.5 ft steps, the outputs (Depth, Chan Vel, α Froude), the echoes, and the `nd_irr_result` layout. Return outcome `error` with `never_finishes` for a section that can never carry the discharge (nd-irr-000026). Property 1 for irregular sections.
+  - [x] 2.3 Write irregular Normal Depth: the search from the lowest point plus 0.1 ft in 0.5 ft steps, the outputs (Depth, Chan Vel, α Froude), the echoes, and the `nd_irr_result` layout. Return outcome `error` with `never_finishes` for a section that can never carry the discharge (nd-irr-000026). Property 1 for irregular sections.
     - _Requirements: 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 9.2, 9.3, 9.4, 9.5, 10.2_
-  - [ ] 2.4 Write the `extended_section` and `cut_off_area_counted` flags in `flags.ts`; a test that `extended_section` agrees with row 24 of the final capture for every irregular golden, and that `cut_off_area_counted` is raised for nd-irr-000010 and sb-irr-000003 and no other irregular golden
+  - [x] 2.4 Write the `extended_section` and `cut_off_area_counted` flags in `flags.ts`; a test that `extended_section` agrees with row 24 of the final capture for every irregular golden, and that `cut_off_area_counted` is raised for nd-irr-000010 and sb-irr-000003 and no other irregular golden
     - _Requirements: 3.13, 9.7_
-  - [ ] 2.5 Run the quick set and the full set for normal_depth/irregular; triage any mismatch. Record hauntings for the cut-off low ground (nd-irr-000010) and the vertical walls (nd-irr-000005), and the evidence for ledger Q-006 and Q-021.
+  - [x] 2.5 Run the quick set and the full set for normal_depth/irregular; triage any mismatch. Record hauntings for the cut-off low ground (nd-irr-000010) and the vertical walls (nd-irr-000005), and the evidence for ledger Q-006 and Q-021.
     - _Requirements: closes 3.2 to 3.13, 9.2 to 9.7, 10.2 to 10.7_
 
 - [ ] 3. The regular shapes: Normal Depth, Critical Depth and Channel Capacity

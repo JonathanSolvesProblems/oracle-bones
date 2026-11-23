@@ -1992,32 +1992,32 @@
     "area": {
       "status": "untriaged",
       "count": 2,
-      "last_run": "2026-11-23T14:27:13Z"
+      "last_run": "2026-11-23T14:43:13Z"
     },
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-23T14:27:13Z"
+      "last_run": "2026-11-23T14:43:13Z"
     },
     "outcome": {
       "status": "untriaged",
-      "count": 182,
-      "last_run": "2026-11-23T14:27:13Z"
+      "count": 166,
+      "last_run": "2026-11-23T14:43:13Z"
     },
     "top_width": {
       "status": "untriaged",
       "count": 2,
-      "last_run": "2026-11-23T14:27:13Z"
+      "last_run": "2026-11-23T14:43:13Z"
     },
     "velocity": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-23T14:27:13Z"
+      "last_run": "2026-11-23T14:43:13Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
       "count": 2,
-      "last_run": "2026-11-23T14:27:13Z"
+      "last_run": "2026-11-23T14:43:13Z"
     }
   },
   "unobserved": [
@@ -3116,12 +3116,44 @@
       "why": "Q-021 answered by nd-irr-000010 and written as Requirement 9.7, as the user asked. The remaining open questions need a person (F3 and F8 key verification, runner behaviour on screens that never settle or pass through rejected screens) or are left to planned batches (Q-019).",
       "evidence": [],
       "at": "2026-11-22T20:57:59Z"
+    },
+    {
+      "n": 58,
+      "saw": "Q-006, rebuild evidence: the quick2-solver rebuild models the ends of an irregular section as vertical walls that add no wetted perimeter, and reproduces every printed field of all 24 irregular Normal Depth results, including nd-irr-000005 (WS 19.10 above both ends, Top Wid 390, Wet Per 391, Hyd R 10.8) and nd-irr-000002 (WS 12.22 above the left end only). Counting the walls as wetted would give Wet Per 404.9 and Hyd R 10.4 for nd-irr-000005. Recorded as haunting H-002 in results/hauntings.md.",
+      "chose": "triage",
+      "why": "Task 2.5 of quick2-solver asks for the rebuild's evidence on Q-006. The question is already answered; this adds that the wall rule, implemented, matches the oracle on the full set for normal_depth/irregular (26 of 26).",
+      "evidence": [
+        "nd-irr-000005",
+        "nd-irr-000002",
+        "nd-irr-000003"
+      ],
+      "at": "2026-11-23T14:42:07Z"
+    },
+    {
+      "n": 59,
+      "saw": "Q-021, rebuild evidence, which settles the part the answer left open: the cut-off pocket adds to Area and Wet Per as well as Top Wid. The rebuild counts every part of the section below the water surface in area, perimeter, top width and conveyance, and reproduces all nine fields of nd-irr-000010 (WS 596.37, Area 623, Top Wid 219, Wet Per 220). With the pocket left out, the same search gives WS 596.42, Area 586, Top Wid 152, Wet Per 153, which miss every one of those fields. Recorded as haunting H-001 in results/hauntings.md. The same rule also leaves a second wet pool inside the channel banks in nd-irr-000014 (Top Wid 253 = 182.5 + 70.4 ft), which the rebuild also matches.",
+      "chose": "triage",
+      "why": "Task 2.5 of quick2-solver asks for the rebuild's evidence on Q-021. Full set for normal_depth/irregular: 26 of 26 match.",
+      "evidence": [
+        "nd-irr-000010",
+        "nd-irr-000014",
+        "sb-irr-000003"
+      ],
+      "at": "2026-11-23T14:42:10Z"
+    },
+    {
+      "n": 60,
+      "saw": "Decisions 58 and 59 only added the solver's evidence for Q-006 and Q-021 (quick2-solver task 2.5). No exhume run was started, so the Exhumer is stopped again for the reason of decision 57: the open questions that remain need a person (verifying F3 and F8, and what the runner does on screens that never settle or that pass through rejected screens) or wait for planned batches (Q-019).",
+      "chose": "stop",
+      "why": "Decisions 58 and 59 only added the solver's evidence for Q-006 and Q-021 (quick2-solver task 2.5). No exhume run was started, so the Exhumer is stopped again for the reason of decision 57: the open questions that remain need a person (verifying F3 and F8, and what the runner does on screens that never settle or that pass through rejected screens) or wait for planned batches (Q-019).",
+      "evidence": [],
+      "at": "2026-11-23T14:42:58Z"
     }
   ],
   "stopped": {
-    "why": "Q-021 answered by nd-irr-000010 and written as Requirement 9.7, as the user asked. The remaining open questions need a person (F3 and F8 key verification, runner behaviour on screens that never settle or pass through rejected screens) or are left to planned batches (Q-019).",
-    "decision": 57,
-    "at": "2026-11-22T20:57:59Z",
+    "why": "Decisions 58 and 59 only added the solver's evidence for Q-006 and Q-021 (quick2-solver task 2.5). No exhume run was started, so the Exhumer is stopped again for the reason of decision 57: the open questions that remain need a person (verifying F3 and F8, and what the runner does on screens that never settle or that pass through rejected screens) or wait for planned batches (Q-019).",
+    "decision": 60,
+    "at": "2026-11-23T14:42:58Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -3178,7 +3210,7 @@
         },
         {
           "profile_path": "keys",
-          "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21"
+          "source": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21; F3 in the ground-points editor inserts a point, key capture oracle/tests/captures/quick2/keys/F3-after.txt, and F8 on the Step-Backwater result shows SAVING TEMPORARY FILE, key capture oracle/tests/captures/quick2/keys/F8-after.txt, 2026-11-22"
         },
         {
           "profile_path": "screens[title]",
@@ -3193,8 +3225,15 @@
           "source": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
         }
       ],
-      "untriaged_mismatches": [],
-      "unanswered_runs": 47,
+      "untriaged_mismatches": [
+        "area",
+        "froude",
+        "outcome",
+        "top_width",
+        "velocity",
+        "wet_perimeter"
+      ],
+      "unanswered_runs": 49,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }

@@ -861,3 +861,50 @@ Settings: Default agent, Claude Opus 5.5. A new session.
   six shallow cases (depth under 1.5 ft) that need the second interpolation step, which task
   3.2 covers. Full set for normal_depth/trapezoid: 17 of 19 match, and the same two cases miss.
   Honest attempts: none in task 1 (results/attempts.md).
+
+### Task 2: Normal Depth on an irregular section
+
+- **2.1** `groundPoints.ts`: the editor as a sequence of keys (a value and Enter, or F10), with
+  the station, elevation, 40-point and bank rules. The tests replay the typed keys of the five
+  behaviour cases and nd-irr-000009 and compare the error text with row 24 of their captures.
+  The NOT INCREASING text is built with QuickBASIC's plain PRINT of a number (sign position,
+  digits, trailing space), which gives `Stations  35  ,  35` and `Stations -50  , -60`. Found
+  in the captures: F10 also ends entry after the first point (obs-irronept-000001 and
+  nd-irr-000026), not only after the second as criterion 10.1 says. The editor accepts that.
+  The irregular prompt order matches the transcripts of all 26 non-behaviour irregular Normal
+  Depth goldens.
+- **2.2** `geometry/irregular.ts`, and Property 4. The property is limited to sections whose two
+  ends are their highest points, as in every irregular golden: if an interior point stood
+  higher than the water, the water would not span the section.
+- **2.3** Irregular Normal Depth, its result layout, and Property 1 for irregular sections (200
+  generated sections). nd-irr-000026 (one point) returns `error` with `never_finishes`, and
+  nd-irr-000009 returns `rejected` with the RIGHT bank ERROR line as its message. The design's
+  method needed no change. Single-precision storage of the trial elevation and of each printed
+  quantity reproduces every field.
+- **2.4** The `extended_section` flag agrees with row 24 for all 27 irregular result goldens
+  (24 Normal Depth, 3 Step-Backwater). For Step-Backwater, which is not built yet, the test
+  takes the water surface from the design's start rule. **`cut_off_area_counted` is raised for
+  nd-irr-000014 as well as nd-irr-000010 and sb-irr-000003.** The task named only the last
+  two. I kept the design's rule (the wet part is more than one span) and changed the test. At
+  WS 134.28 in nd-irr-000014, the point at station 408.39 (elevation 135.08) stands above the
+  water inside the channel banks and leaves a second pool from 428.5 to 498.9 ft. QUICK-2 counts
+  that pool: its Top Wid `253` is the two spans together (182.5 + 70.4 ft).
+- **2.5** Quick set: 32 of 200 match; 0.5 s by the script's clock, 0.7 s wall-clock. All 17
+  quick irregular cases match, and so do the 15 trapezoid cases that matched in task 1. The rest
+  are 166 `outcome` mismatches from pairs not built yet, plus the two shallow trapezoid cases
+  left for task 3.2. Full set for normal_depth/irregular: 26 of 26 match (24 results, the
+  rejected bank and the one-point error). There was nothing to triage. Hauntings H-001 (cut-off
+  low ground, nd-irr-000010) and H-002 (vertical end walls, nd-irr-000005) are in
+  `results/hauntings.md`. The rebuild's evidence for Q-006 and Q-021 is in ledger decisions 58
+  and 59. Both questions were already answered, and `ledger_write` will not answer a question
+  twice, so the evidence went in as decisions. A decision clears the Exhumer's `stopped`
+  record, so decision 60 stops it again for the reason decision 57 gave. Q-021's answer had left open whether the cut-off pocket also adds to Area and Wet Per.
+  It does: with the pocket counted, all nine fields of nd-irr-000010 match, and with it left out
+  the same search gives Area 586 and Wet Per 153 against the printed `623` and `220`.
+  Honest attempts: none in task 2 (results/attempts.md).
+- A slip during the session: the timing experiment for note 3 set `ORACLE_GOLDENS` (pointing to
+  an identical copy of the goldens, which passed the golden check) and `ORACLE_LEDGER` in the
+  shell, and they were still set during task 1.7's run. I cleared them before task 2.5.
+  Task 2.5's quick run reproduces task 1.7's trapezoid counts against `oracle/goldens/`.
+
+Credits: (to fill in). Time: (to fill in).
