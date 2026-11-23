@@ -629,3 +629,169 @@ said plainly what the case does not show: how much of the area and wetted perime
 adds.
 
 Credits: 9.76. Time: 1 min 52 s.
+
+## 2026-11-22, session 10: commit the run, fix the tests, a generator for circles and real sections
+
+Settings: Default agent, Claude Opus 5.5, effort Medium, Approve for me. A new session.
+
+> The Exhumer's last run is done but not committed. Run check_traceability.py and
+> check_goldens.py first (before its final Q-021 cases I got 73 criteria, 0 problems, and a
+> pass). Then work through these in order, then stop.
+>
+> 1. Commit the run as it stands, in one commit: the profile, the new goldens and manifest, the
+>    ledger, the solver requirements, docs/build-log.md, and realdata/ (the Grapevine Branch
+>    section, now cited by nd-irr-000006 to 000008).
+>
+> 2. Check the Manning's n rows in Requirement 9 against the HEC-RAS Hydraulic Reference
+>    Manual, Table 3-1: channel "minor stream, clean, winding, some pools and shoals" 0.033 /
+>    0.040 / 0.045, overbanks "floodplain, light brush and trees, in summer" 0.040 / 0.060 /
+>    0.080. If a value is wrong, say so and record a question for the Exhumer; don't edit its
+>    criteria.
+>
+> 3. Tests. Fix the two stale tests in test_reread.py so they work out what to expect from the
+>    stored goldens instead of a fixed list. Then re-run test_tools_end_to_end_over_stdio and the
+>    live replay test with no other oracle session open; they failed in a run of mine that
+>    overlapped a live Exhumer session. While you're there, check that the orphan cleanup at
+>    server start only removes containers whose server has really exited, never another live
+>    server's.
+>
+> 4. Generator. Q-014: draw circle cases that fit their pipe, from Requirement 8's evidence (a
+>    depth above the diameter holds the prompt). Irregular sections: draw them from Requirement
+>    10's evidence (2 to 40 points, strictly increasing stations, banks on a ground station) by
+>    varying the recorded sections, the 40-point one and Grapevine Branch, rather than inventing
+>    shapes. Record a batch and add both to the quick set.
+>
+> 5. My answers to the harness questions. Q-020 and Q-013: verify F8 and F3 with a before and
+>    after key capture, the way F1 was done, and add them to the profile's keys. Q-015: a run
+>    still on the irr_working screen after a confirmation wait long enough to tell slow from
+>    stuck ends as an error naming that screen, not a timeout. Q-017: a behaviour case whose
+>    steps expect a rejected screen continues past it. Close each in the ledger with its
+>    evidence.
+>
+> Commit after each task with a short plain message, no tool or AI names. Only stop to ask me if
+> a problem would change what a spec promises.
+
+Four commits (the n check changed no files). At the end Kiro ran the full suite with no other
+oracle session open: 197 passed in 21 minutes. I re-ran both checks afterwards: 74 criteria, 0
+problems, and every golden matches the manifest.
+
+- **Manning's n.** All six values match Table 3-1. One wording difference: the manual lists the
+  channel row under "Main Channels"; "minor stream" is Chow's heading.
+- **A cleanup that could delete someone else's work.** Asked to check the orphan cleanup, Kiro
+  found it could remove a live server's containers: pid files are kept per checkout, but Docker
+  labels are visible to every checkout, so a server started in a second worktree would have
+  found no pid file for the first one's containers and deleted them. Separately, a process
+  Windows would not let it open counted as exited. Containers now carry their owner's pid and
+  host as labels, cleanup keeps anything whose owner is running, on another host, or unreadable,
+  "access denied" counts as running, and a live test covers a server in another checkout. The two
+  stale reread tests now work out what to expect from the stored goldens, and the two live tests
+  pass on their own.
+- **A units mistake from session 8.** The practical pipe diameter range, 0.667 to 15, was the
+  source's sizes in feet, but QUICK-2 asks for the diameter in inches, so the practical circles
+  drawn in session 8 were pipes under 15 inches across. It is now 8 to 180 inches. Circle cases
+  also stay inside their pipe: Channel Capacity depths under 0.95 of the diameter (criterion
+  8.5), and discharges under 0.9 of the full-pipe flow for Normal Depth and under the critical
+  flow at 0.9 of the diameter for Critical Depth. The two discharge bounds are Kiro's judgement
+  and the profile labels them as not observed.
+- **Real sections, varied.** Irregular sections are now drawn by varying the two recorded
+  sections, the 40-point one and Grapevine Branch: 2 to 40 points, stations strictly increasing,
+  banks typed exactly as one of the stations, and F10 after the last point when there are fewer
+  than 40. A 40-case batch gave 39 results and 1 timeout. The quick set now holds 24 circle
+  results (it had 6) and 19 irregular results. The timeout opened Q-022: a 9.1 inch pipe at 2
+  cfs printed "DEPTH is Greater than the DIAMETER", a message no screen in the profile maps yet.
+- **F8 and F3 verified.** Each has a before and after capture and is in the profile's keys. On
+  the Step-Backwater result F8 shows "SAVING TEMPORARY FILE" and then the HEC-2 save message; no
+  form for a second section appeared, so mapping one stays with the Exhumer. F3 inserts a point,
+  so the editor can hold 41; whether QUICK-2 computes with more than 40 is still unobserved.
+- **A screen that never settles.** The irregular "Working" screen keeps the same text but
+  redraws without pause, so a run waiting for it to settle used to time out. A run still on it
+  after a 20 s confirmation now ends as an error that names the screen. The limit: the stuck
+  case took 49 s of its 60 s budget, so a longer section that hangs will still time out.
+- **Behaviour cases past an error.** A case whose steps expect a rejected screen now continues
+  past it; obs-bankexact-000001 records the bank ERROR, Enter, and a correct bank going on to a
+  result.
+
+One slip it caught itself: its PowerShell edits had added byte-order marks to several Python
+files in the earlier commits, and the last commit removes them. None are left in tracked files.
+
+Credits: 121.41. Time: 1 h 46 min 12 s.
+
+## 2026-11-22, session 11: the solver design and task list
+
+Settings: Default agent, Claude Opus 5.5. A new session.
+
+> Write the design and the task list for the quick2-solver spec, then stop. Don't write solver
+> code yet.
+>
+> Read first: .kiro/specs/quick2-solver/requirements.md (74 criteria, written by the Exhumer
+> from live runs, each citing its cases), .kiro/specs/quickened-app/design.md, the comparator
+> section and Requirement 12 of the oracle-harness spec, and the hooks in .kiro/hooks.
+>
+> Already fixed, so build on it:
+>
+> - The solver is TypeScript in app/src/solver/, with print and rounding rules in
+>   app/src/format/. The comparator calls the same module the app calls, so what is graded is
+>   what ships. No runtime dependencies in the solver.
+>
+> - A node entry speaks the comparator's JSONL contract; set it as rebuild.command in
+>   oracle/harness.json. The on-save and after-task hooks already grade app/src/solver and
+>   app/src/format against the quick set.
+>
+> - Inputs stay strings, as typed, since QUICK-2's parsing is part of the behaviour (0 ignored,
+>   -1 accepted, banks matched as typed).
+>
+> What the design must decide, each tied to the criteria it serves:
+>
+> - The numerical method per mode and shape, worked out from the criteria and the captures
+>   rather than textbook defaults, including how QUICK-2 iterates and when it stops: its
+>   critical depth lands slightly below the exact answer and its circle Max Discharge differs
+>   from Manning's.
+>
+> - Printing: every field at QUICK-2's printed width and precision, so a match is exact on the
+>   printed text.
+>
+> - QUICK-2's odd behaviours are reproduced, and each returns a flag the app can label in plain
+>   words: extended cross section, a cut-off low area counted as flowing (criterion 9.7),
+>   negative slopes accepted.
+>
+> - When the rebuild still disagrees with the oracle after an honest attempt, the case goes to
+>   the Skeptic to classify (spec error, display rule, or a QUICK-2 quirk kept as is). Never
+>   special-case a case id or hard-code a printed value, and say how a test catches that.
+>
+> Task order: first the comparator pipeline end to end on the trapezoid control cases (3.27 and
+> 4.22). Then irregular-section normal depth, the practitioner's real use (Grapevine Branch is
+> in the goldens). Then the regular shapes for normal depth, critical depth and channel
+> capacity. Step-Backwater last, first section only. Each task ends with the quick-set
+> comparison and names the criteria it closes. Add fast-check property tests only where the
+> goldens show a property holds for any input.
+>
+> Commit design.md, tasks.md and docs/build-log.md with a short plain message, no tool or AI
+> names. Then list the design decisions you were least sure of, so I can check them before the
+> build starts.
+
+No solver code was written. Before writing the design, Kiro fitted candidate methods against the
+271 stored goldens with throwaway Python scripts under `tmp/`, which are not committed, and the
+design quotes their match counts. What it found:
+
+- **One search for every depth.** QUICK-2 steps the depth up 0.5 ft at a time, interpolates
+  linearly once the discharge passes the target, and stops at the first trial within 1%. That
+  reproduces 47 of 53 regular-shape Normal Depth results and 51 of 56 Critical Depth results on
+  every field, and explains the depths that land below the exact answer (3.27 against 3.286 for
+  the control trapezoid) and the ones that land on a step (206.00 against 207.70).
+- **Two spellings of 2/3.** The search and the Channel Capacity velocity use R^.667; the Channel
+  Capacity discharge, the circle's Max Discharge and the irregular conveyance use R^.6667.
+  Channel Capacity velocity is not Q/A on the regular shapes.
+- **The circle.** π is 3.1416. Max Discharge is the Manning flow at 0.938 of the diameter, the
+  peak of the part-full curve, and Critical Depth computes it at the critical slope, which
+  answers ledger Q-009.
+- **The irregular section.** Overbank conveyance is summed one ground segment at a time, the
+  channel's is computed whole, and Froude carries the velocity-head coefficient. With the search
+  started 0.1 ft above the lowest point, all 24 irregular Normal Depth results and all 3
+  Step-Backwater results match on every field, Grapevine Branch included.
+- **Channel Capacity** matches on all 353 computed fields of its 49 results.
+- **Single precision** shows in three goldens whose values sit exactly on a rounding boundary.
+
+Left open, and written into the tasks: a second interpolation step at depths under 1.5 ft (8
+goldens), the circle search's start and step, and a few rules seen in only three cases.
+
+Credits: (to fill in). Time: (to fill in).
