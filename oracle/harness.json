@@ -7,5 +7,5 @@
   "max_sessions": 8,
   "container": {"cpus": "1.0", "memory": "256m", "pids": 64},
   "session_idle_limit_s": 900,
-  "rebuild": {"command": null, "time_limit_s": 25}
+  "rebuild": {"command": ["node", "app/src/oracle/entry.ts"], "time_limit_s": 25}
 }

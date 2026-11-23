@@ -1,12 +1,11 @@
-// The JSONL entry the oracle comparator runs. Task 1.5 fills it in; for now it answers every
-// request with outcome `error` and message `not built`.
+// The node entry the oracle comparator runs: `node app/src/oracle/entry.ts`. Reads one request
+// per line from stdin and writes one response per line to stdout (see contract.ts).
 import { createInterface } from 'node:readline';
-
-interface Request { id: string; }
+import { solve } from '../solver/index.ts';
+import { respond } from './contract.ts';
 
 const lines = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of lines) {
-  if (line.trim() === '') continue;
-  const req = JSON.parse(line) as Request;
-  process.stdout.write(JSON.stringify({ id: req.id, outcome: 'error', printed: {}, message: 'not built' }) + '\n');
+  const res = respond(line, solve);
+  if (res) process.stdout.write(JSON.stringify(res) + '\n');
 }

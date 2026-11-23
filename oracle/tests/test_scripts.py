@@ -15,12 +15,14 @@ def run(script, *args, env=None):
                           capture_output=True, text=True, cwd=str(paths.ROOT), env=e)
 
 
-def test_oracle_quick_exits_4_while_no_rebuild_is_configured(tmp_path):
-    # Until the solver exists, rebuild.command is null: the harness cannot compare.
+def test_oracle_quick_grades_the_configured_rebuild(tmp_path):
+    # rebuild.command names the solver's node entry: the quick set is compared, never refused,
+    # and the rebuild keeps the contract (exit 0 or 1, not 3 or 4).
     r = run("oracle_quick.py", env={"ORACLE_GOLDENS": str(paths.REPO_GOLDENS),
                                     "ORACLE_LEDGER": str(tmp_path / "ledger.json")})
-    assert r.returncode == 4, (r.stdout, r.stderr)
-    assert "rebuild command" in r.stderr
+    assert r.returncode in (0, 1), (r.stdout, r.stderr)
+    assert "quick set:" in (r.stdout + r.stderr)
+    assert "broke the contract" not in (r.stdout + r.stderr)
 
 
 def test_oracle_quick_exits_4_when_the_golden_check_fails(tmp_path):
