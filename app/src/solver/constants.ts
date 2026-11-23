@@ -76,6 +76,12 @@ export const SEARCH_DEPTH_LIMIT = 100000;
 export const SEARCH_MAX_TRIALS = 1000000;
 
 /**
+ * The circle's Diameter is typed in inches, its depths in feet.
+ * @cite cc-circ-000001 (label "Diameter (in)", criterion 4.4) cc-circ-000018 (Depth 4 held in
+ * a 36 in pipe, criterion 8.5)
+ */
+export const INCHES_PER_FOOT = 12;
+/**
  * Ground-point entry ends by itself after this many points.
  * @cite nd-irr-000001 obs-bankreject-000001 (criterion 3.2)
  */

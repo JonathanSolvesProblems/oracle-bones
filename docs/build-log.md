@@ -907,4 +907,40 @@ Settings: Default agent, Claude Opus 5.5. A new session.
   shell, and they were still set during task 1.7's run. I cleared them before task 2.5.
   Task 2.5's quick run reproduces task 1.7's trapezoid counts against `oracle/goldens/`.
 
-Credits: (to fill in). Time: (to fill in).
+Credits: 120.25. Time: 56 min 44 s.
+
+## 2026-11-23, session 13: solver task 3, the regular shapes
+
+Settings: Default agent, Claude Opus 5.5.
+
+> Run task 3 of the quick2-solver spec (the regular shapes), in order, then stop. Same rules as
+> last time: commit after each subtask with a short plain message, no tool or AI names; include
+> the uncommitted docs/build-log.md in the first commit; record each subtask's result, timing
+> and match counts in the build log, and leave the credits line for me; only stop to ask me if a
+> problem would change what a spec promises.
+>
+> One change in 3.2: when the honest attempt at the shallow second step is done and mismatches
+> remain, stop and show me them before anything goes to the Skeptic.
+
+### Task 3: the regular shapes
+
+- **3.1** The regular forms, holds, echoes and result layouts. `forms.ts` has the prompt order
+  of all 12 regular mode and shape pairs, the fixed fields (Bottom Width 0 on the V-ditch, both
+  side slopes 0 on the rectangle) and the hold rules: 0 at any prompt, a Diameter of -1, and a
+  Channel Capacity circle Depth above the diameter in feet (12 in to the foot, now a cited
+  constant). `solve()` applies the holds for every regular pair before it looks for a method, so
+  a held prompt is `rejected` even in pairs whose calculation is not built yet. `layout.ts` has
+  the six new result screens; their rows are built from shared rows, one per variant (mode
+  title, shape title, the circle's Diameter and Max Discharge rows, Critical Slope, the circle's
+  one-decimal Channel Capacity discharge). The existing trapezoid layout is now one of them.
+  Tests: all 12 layouts match their pair's first recorded screen with the windows blanked; the
+  prompt order matches the transcripts of all 225 regular goldens; `held` matches all 47
+  rejected regular goldens, and no accepted golden is held; the echo windows of the four forms
+  typed to their field edges (`% 1.2E+08`, `%99999.0`, `%12.5000`, `%1000.00`, `%1234567`,
+  `0.0000`) match their captures. Properties 2 and 3 run with fast-check. Property 3 leaves out
+  negative values that round below 1, since none has been typed. Two rules stay unobserved and
+  are written as such in `forms.ts`: a negative diameter other than -1, and a circle depth equal
+  to the diameter. 443 tests pass in 1.4 s. Quick set: 69 of 200 match (32 before), 0.5 s. The
+  37 new matches are the rejected regular goldens in the quick set. The 131 left: 129 `outcome`
+  mismatches from regular and Step-Backwater results not built yet, and the same two shallow
+  trapezoid cases as before (nd-trap-000009, nd-trap-000014). Time: 8 min.

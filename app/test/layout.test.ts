@@ -1,12 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { ND_IRR_RESULT, ND_TRAP_RESULT, WINDOWS } from '../src/format/layout.ts';
+import {
+  ND_IRR_RESULT, ND_TRAP_RESULT, REGULAR_MODES, REGULAR_RESULT, REGULAR_SCREEN, REGULAR_SHAPES, WINDOWS,
+} from '../src/format/layout.ts';
 import { blankRows, pictureFor, pictures, type ScreenLayout } from '../src/format/screen.ts';
 import { finalCapture, profileScreen } from './golden.ts';
 
 // [screen, layout, case whose final screen it is checked against, rows the case fills that
 // the layout leaves blank: the irregular screen's GROUND POINTS grid and its row-24 notice]
 const GRID_ROWS = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 24];
+const CODE: Record<string, string> = { trapezoid: 'trap', v_ditch: 'vdit', rectangle: 'rect', circle: 'circ', normal_depth: 'nd', critical_depth: 'cd', channel_capacity: 'cc' };
+const REGULAR: [string, ScreenLayout, string, number[]][] = REGULAR_MODES.flatMap((m) => REGULAR_SHAPES.map(
+  (s): [string, ScreenLayout, string, number[]] => [REGULAR_SCREEN[m][s]!, REGULAR_RESULT[m][s], `${CODE[m]}-${CODE[s]}-000001`, []],
+));
 const SCREENS: [string, ScreenLayout, string, number[]][] = [
+  ...REGULAR,
   ['nd_trap_result', ND_TRAP_RESULT, 'nd-trap-000001', []],
   ['nd_irr_result', ND_IRR_RESULT, 'nd-irr-000001', GRID_ROWS],
   ['nd_irr_result', ND_IRR_RESULT, 'nd-irr-000002', GRID_ROWS],

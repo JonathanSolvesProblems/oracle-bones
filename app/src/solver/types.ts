@@ -2,6 +2,9 @@
 
 export type Mode = 'normal_depth' | 'critical_depth' | 'channel_capacity' | 'step_backwater';
 export type Shape = 'trapezoid' | 'v_ditch' | 'rectangle' | 'circle' | 'irregular';
+/** The modes and shapes of the regular forms (criterion 4). */
+export type RegularMode = Exclude<Mode, 'step_backwater'>;
+export type RegularShape = Exclude<Shape, 'irregular'>;
 
 export interface Job {
   mode: Mode;

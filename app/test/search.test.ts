@@ -32,7 +32,9 @@ describe('search', () => {
 
 describe('solve', () => {
   it('answers not built for pairs not built yet', () => {
-    expect(solve({ mode: 'critical_depth', shape: 'circle', inputs: {} })).toMatchObject({ outcome: 'error', message: 'not built' });
+    expect(solve({ mode: 'step_backwater', shape: 'irregular', inputs: {} })).toMatchObject({ outcome: 'error', message: 'not built' });
+    const accepted = { diameter: '36', n: '.013', discharge: '40', slope: '.005' };
+    expect(solve({ mode: 'critical_depth', shape: 'circle', inputs: accepted })).toMatchObject({ outcome: 'error', message: 'not built' });
   });
   it('holds the first prompt that reads as 0', () => {
     const r = solve({ mode: 'normal_depth', shape: 'trapezoid', inputs: { left_slope: '3', right_slope: '0', bottom_width: '0', n: '.035', discharge: '300', slope: '.005' } });
