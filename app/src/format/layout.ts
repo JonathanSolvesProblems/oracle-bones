@@ -29,6 +29,24 @@ export const WINDOWS: Readonly<Record<string, Readonly<Record<string, Window>>>>
     froude: { row: 17, col: 48, width: 16 },
     flow_type: { row: 18, col: 49, width: 16 },
   },
+  nd_irr_result: {
+    in_bank_left: { row: 16, col: 37, width: 9 },
+    in_bank_right: { row: 16, col: 67, width: 9 },
+    in_n_left: { row: 17, col: 37, width: 9 },
+    in_n_channel: { row: 17, col: 53, width: 9 },
+    in_n_right: { row: 17, col: 67, width: 9 },
+    in_irr_discharge: { row: 18, col: 37, width: 9 },
+    in_irr_slope: { row: 18, col: 51, width: 10 },
+    depth: { row: 18, col: 67, width: 9 },
+    ws_elev: { row: 20, col: 12, width: 20 },
+    area: { row: 20, col: 37, width: 9 },
+    top_width: { row: 20, col: 53, width: 9 },
+    hyd_radius: { row: 20, col: 67, width: 9 },
+    flow_type: { row: 21, col: 14, width: 15 },
+    chan_velocity: { row: 21, col: 37, width: 9 },
+    wet_perimeter: { row: 21, col: 53, width: 9 },
+    froude: { row: 21, col: 67, width: 9 },
+  },
 };
 
 export interface ResultScreen extends ScreenLayout {
@@ -76,4 +94,49 @@ export const ND_TRAP_RESULT: ResultScreen = {
   ],
   windows: windowsOf('nd_trap_result'),
   unobservedStart: ['depth', 'velocity', 'hyd_radius', 'froude'],
+};
+
+// Normal Depth, irregular section. Rows 4 to 13 hold the GROUND POINTS grid, which shows the
+// points as typed (criterion 9.1, drawn by the app), and row 24 holds EXTENDED CROSS SECTION
+// when it applies (a flag); the layout leaves both blank. No overflow has been seen on this
+// screen, so every numeric start column is set to fit and is unobserved. Decimals: WS ELEV 2,
+// Depth 1, Area, Top Wid and Wet Per none, Hyd R 1, Chan Vel 1, Froude 2, banks 1, n values and
+// slope 4, discharge none (criterion 3.6).
+export const ND_IRR_RESULT: ResultScreen = {
+  rows: [
+    '                                                                                ',
+    '                                                                                ',
+    '  XSEC ID:     0             >> NORMAL   DEPTH <<             GROUND  POINTS    ',
+    '  STAT      ELEV      STAT      ELEV      STAT      ELEV      STAT      ELEV    ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '                                                                                ',
+    '   ╔════════════════════════════════════════════════════════════════════════╗   ',
+    '   ║ CHANNEL BANK STATIONS:      Left ####.#                  Right ####.#  ║   ',
+    "   ║ MANNING'S  N   VALUES:      Left #.####  Channel #.####  Right #.####  ║   ",
+    '   ║ CHANNEL     VARIABLES: Discharge ######  Slope   #.####  Depth ####.#  ║   ',
+    '   ╟────────────────────────────────────────────────────────────────────────╢   ',
+    '   ║ WS ELEV   ####.##           Area ######  Top Wid ######  Hyd R ####.#  ║   ',
+    '   ║ Flow Type @@@@@@@@@@@@@ Chan Vel ####.#  Wet Per ######  Frd # ###.##  ║   ',
+    '   ╟────────────────────────────────────────────────────────────────────────╢   ',
+    '   ║ F2}<─ Back Tab F5}PRINT F6}SAVE F7}Main Menu F8}New XSEC F10}Ed/Ex GrPt║   ',
+    '   ║                                                                        ║   ',
+  ],
+  paintOrder: [
+    'in_bank_left', 'in_bank_right', 'in_n_left', 'in_n_channel', 'in_n_right', 'in_irr_discharge', 'in_irr_slope',
+    'depth', 'ws_elev', 'area', 'top_width', 'hyd_radius', 'flow_type', 'chan_velocity', 'wet_perimeter', 'froude',
+  ],
+  windows: windowsOf('nd_irr_result'),
+  unobservedStart: [
+    'in_bank_left', 'in_bank_right', 'in_n_left', 'in_n_channel', 'in_n_right', 'in_irr_discharge', 'in_irr_slope',
+    'depth', 'ws_elev', 'area', 'top_width', 'hyd_radius', 'chan_velocity', 'wet_perimeter', 'froude',
+  ],
 };
