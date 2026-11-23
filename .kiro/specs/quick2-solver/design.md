@@ -128,7 +128,7 @@ literal other than 0, 1, 2 and -1. Each constant carries the cases that pin it.
 | g | 32.2 | Froude, critical flow | 32.174 drops Critical Depth from 54 to 22 of 68 matched |
 | π | 3.1416 | circle angle | with 3.14159265 two CC circle discharges miss (cc-circ-000020, cc-circ-000023); with 3.1416 none do |
 | exponent A | .667 | regular-shape search discharge, CC discharge and velocity on the prismatic shapes, critical slope | ND 47 of 53 matched (16 with .6667); CC velocity 29 misses with 2/3, 0 with .667; CC prismatic discharge 39 of 39 with .667, 3 with .6667 (task 3.4); critical slope 53 of 56 |
-| exponent B | .6667 | Max Discharge, irregular conveyance; CC discharge on the circle to be checked in task 3.5 | irregular ND 24 of 24 (10 with .667) |
+| exponent B | .6667 | Max Discharge, CC discharge on the circle, irregular conveyance | CC circles 10 of 10 with .6667, 1 of 10 with .667 (task 3.5); irregular ND 24 of 24 (10 with .667) |
 | search tolerance | 0.01 | every search | 0.0099 and 0.0101 give the same matches; the exact value is not pinned |
 | regular search step | 0.5 ft from depth 0 | prismatic shapes | the depths that land on 206.00, 73.00, 42.00, 32.50, 24.50, 19.50 |
 | irregular search start | lowest point + 0.1 ft, then 0.5 ft steps | irregular sections | nd-irr-000015, nd-irr-000021, nd-irr-000023 stop on depths 58.6, 40.6, 47.1 |
@@ -264,11 +264,17 @@ Max Discharge = 1.486/n · A · R^.6667 · √S at y = .938·D: the peak of the 
 curve, about 7.6% above the full-pipe flow. Channel Capacity and Normal Depth use the entered
 slope; Critical Depth uses the critical slope it computed (criteria 5.6, 5.7: `53` at slope .005
 and at .001, where the entered slope gives `51`; ledger Q-009). Whether QUICK-2 scans for the
-peak or uses .938 is open; nd-circ-000007 (`271099` printed, 271098.2 computed) is the case that
-would tell.
+peak or uses .938 is still open. Task 3.5 found that nd-circ-000007 cannot tell: a fine scan for
+the peak gives 271098.25 and .938·D gives 271098.16, while QUICK-2 printed `271099`. No
+single-precision store at .938·D gives 271099 either (results/attempts.md A-003). The rebuild
+keeps .938.
 
-The circle search's start and step are open. nd-circ-000007 stops on 49.00 ft, which rules out
-a fine fixed step from 0, while small pipes need a step under 0.5 ft. When the search passes the
+The circle search's start and step are open (task 3.5, A-003). nd-circ-000007 stops on
+49.00 ft, which rules out a fine fixed step from 0, while small pipes need a step under 0.5 ft.
+The best fixed step found is 0.1 ft from 0.1 ft, with .6667 in the discharge. It fits 6 of the 8
+Normal Depth circles and none of the 12 Critical Depth circles. On four Critical Depth circles,
+no single depth prints every field with the geometry that matches every Channel Capacity
+circle. When the search passes the
 diameter without bracketing, QUICK-2 prints "DEPTH is Greater than the DIAMETER" on the form
 (ledger Q-022); the rebuild returns outcome `rejected` with that message until the profile maps
 the screen. Criteria 4.5, 5.6, 5.7, 6.6, 6.7, 7.3.

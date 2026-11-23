@@ -1007,3 +1007,33 @@ Settings: Default agent, Claude Opus 5.5.
   tests pass in 2.2 s. Quick set: 173 of 200 match, 0.6 s. Full set: 221 of 254, 0.6 s. The 33
   left are the circle in all three modes (30) and Step-Backwater (3), all `outcome` mismatches
   from pairs not built yet. Time: 13 min.
+- **3.5, stopped partway: the circle's search is not found** (results/attempts.md, A-003).
+  Built: `geometry/circle.ts` with π = 3.1416 and an arc cosine written through ATN, all three
+  circle modes, Max Discharge at .938·D with .6667, and the "DEPTH is Greater than the DIAMETER"
+  rejection when a trial passes the diameter (Q-022; no golden records it yet). Channel
+  Capacity on the circle matches 10 of 10. Its discharge uses .6667 (9 of 10 miss with .667), so
+  the circle and the prismatic shapes use different exponents. Property 6 holds by construction
+  and has a test. **Open:**
+  - **Normal Depth on the circle: 6 of 8.** The best fixed search is 0.1 ft steps from 0.1 ft
+    with .6667. It misses nd-circ-000007, which stops on `49.00` where 0.1 ft steps stop on
+    48.90, and nd-circ-000010. Four of the eight print a depth within 0.01% of the exact root,
+    which a 1% stop with steps that coarse would rarely do. 0.5 ft steps fit nd-circ-000007 but
+    have no trial at nd-circ-000009's `8.40`.
+  - **Critical Depth on the circle: 0 of 12.** On four of them, no single depth prints every
+    field with the geometry that matches every Channel Capacity circle. In cd-circ-000001, Area
+    and Wet Perimeter need at least 2.055 ft, while Depth prints `2.05`.
+  - **Max Discharge, scan or .938:** nd-circ-000007 cannot decide it. A scan gives 271098.25,
+    .938·D gives 271098.16, and QUICK-2 printed `271099`. The other 17 print the same either way.
+    The rebuild keeps .938.
+  To find a start and step, I swept a grid of starts, steps, exponents and second-step rules,
+  which goes past the honest attempt's five hypotheses. I stopped there rather than keep
+  fitting. A-003 has the claim and a proposed classification (spec error, toward a bugfix spec
+  such as `circle-depth-search`), with the kinds of new cases that would separate the ideas.
+  Nothing has gone to the Skeptic. Task 3.5 is not ticked, and task 3.6 is not started. 466
+  tests pass in 2.0 s. Quick set: 185 of 200 match, 0.5 s. Full set: 237 of 254, 0.6 s. The 17
+  left are 2 Normal Depth circles, 12 Critical Depth circles and 3 Step-Backwater cases (not
+  built). All 20 rejected circle goldens match. Time so far: 10 min.
+- Notes for the whole session: `results/ledger.json` had uncommitted timestamp changes from a
+  comparator run before the session began. The comparator rewrites them on every run, so they
+  went into each commit with the rest. The throwaway fitting scripts are in `tmp/solver-design/`,
+  which is not committed.

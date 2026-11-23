@@ -1991,43 +1991,43 @@
   "mismatches": {
     "area": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-23T19:26:08Z"
+      "count": 5,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "froude": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-23T19:26:08Z"
+      "count": 1,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "outcome": {
       "status": "untriaged",
-      "count": 33,
-      "last_run": "2026-11-23T19:46:37Z"
+      "count": 3,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "top_width": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-23T19:26:08Z"
+      "count": 1,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "velocity": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-23T19:37:56Z"
+      "count": 5,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-23T19:26:08Z"
+      "count": 3,
+      "last_run": "2026-11-23T19:59:17Z"
     },
     "rebuild_error": {
       "status": "untriaged",
       "count": 0,
-      "last_run": "2026-11-23T19:37:25Z"
+      "last_run": "2026-11-23T19:55:38Z"
     },
     "discharge": {
       "status": "proposed",
       "count": 0,
-      "last_run": "2026-11-23T19:46:28Z",
+      "last_run": "2026-11-23T19:53:04Z",
       "classification": "display_rule",
       "why": "quick2-solver task 3.4 (results/attempts.md A-002). An overflowing value prints in full while its text (sign, digits, point, decimals) is at most 10 characters, and as an exponent past that: 3578117632, 4207745280 and 1062046336 print in full; -3465xxxxxx, 19078xxxxxx and 123456789.0 print as exponents. This replaces the first draft's nine-digit threshold. The rule is in app/src/format/printUsing.ts (OVERFLOW_MAX_CHARS). The same Discharge mismatches also had a constant error, now corrected in the design: prismatic Channel Capacity discharge uses R^.667, not R^.6667. With both changes, all 39 prismatic Channel Capacity results match on every field, so no mismatch is left and nothing went to the Skeptic.",
       "evidence": [
@@ -2039,6 +2039,26 @@
         "cc-trap-000015",
         "obs-fieldover-000001"
       ]
+    },
+    "critical_slope": {
+      "status": "untriaged",
+      "count": 3,
+      "last_run": "2026-11-23T19:59:17Z"
+    },
+    "depth": {
+      "status": "untriaged",
+      "count": 12,
+      "last_run": "2026-11-23T19:59:17Z"
+    },
+    "hyd_radius": {
+      "status": "untriaged",
+      "count": 1,
+      "last_run": "2026-11-23T19:59:17Z"
+    },
+    "max_discharge": {
+      "status": "untriaged",
+      "count": 7,
+      "last_run": "2026-11-23T19:59:17Z"
     }
   },
   "unobserved": [

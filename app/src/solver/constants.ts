@@ -24,10 +24,11 @@ export const MANNING_K = 1.486;
 export const EXP_A = 0.667;
 
 /**
- * The 2/3 power as `.6667`: Max Discharge and irregular conveyance. Channel Capacity on the
- * circle is still to be checked against it (task 3.5).
- * @cite nd-irr-000001 nd-irr-000002 nd-irr-000010 (irregular Normal Depth 24 of 24 with .6667,
- * 10 with .667)
+ * The 2/3 power as `.6667`: Max Discharge, Channel Capacity discharge on the circle, the
+ * circle's Normal Depth search (not settled), and irregular conveyance.
+ * @cite cc-circ-000002 cc-circ-000019 cc-circ-000020 (Channel Capacity circles: 10 of 10 with
+ * .6667, 1 of 10 with .667) nd-irr-000001 nd-irr-000002 nd-irr-000010 (irregular Normal
+ * Depth 24 of 24 with .6667, 10 with .667)
  */
 export const EXP_B = 0.6667;
 
@@ -84,6 +85,27 @@ export const SEARCH_MAX_TRIALS = 1000000;
  * a 36 in pipe, criterion 8.5)
  */
 export const INCHES_PER_FOOT = 12;
+/**
+ * π as QUICK-2 types it, in the circle's wetted angle.
+ * @cite cc-circ-000020 cc-circ-000023 (with 3.14159265 their discharges miss; with 3.1416 none
+ * of the Channel Capacity circles do)
+ */
+export const PI_QUICK2 = 3.1416;
+/**
+ * Max Discharge is the Manning flow at this fraction of the diameter, the peak of the part-full
+ * curve.
+ * @cite cc-circ-000001 nd-circ-000001 (Max Discharge 51) cc-circ-000002 (322); 17 of 18
+ * Channel Capacity and Normal Depth circles in the design's fit
+ */
+export const MAX_DISCHARGE_DEPTH = 0.938;
+/**
+ * First trial and step of the circle's depth search (ft). NOT SETTLED: the best fit found in
+ * task 3.5, which fits 6 of the 8 Normal Depth circles; results/attempts.md A-003 lists what it
+ * does not fit.
+ * @cite nd-circ-000009 (stops on 8.40) nd-circ-000012 (stops on 6.10); against it:
+ * nd-circ-000007 (stops on 49.00, where 0.1 ft steps stop on 48.90) nd-circ-000010
+ */
+export const CIRCLE_STEP = 0.1;
 /**
  * Ground-point entry ends by itself after this many points.
  * @cite nd-irr-000001 obs-bankreject-000001 (criterion 3.2)

@@ -26,11 +26,13 @@ export interface SearchSpec {
   first: number;
   /** The step between trials until F passes q. */
   step: number;
+  /** A depth no trial may pass: the circle's diameter. */
+  ceiling?: number;
 }
 
 export type SearchResult =
   | { ok: true; y: number; value: number; trials: number }
-  | { ok: false; reason: 'never_finishes' | 'not_a_number' };
+  | { ok: false; reason: 'never_finishes' | 'not_a_number' | 'past_ceiling' };
 
 export function search(F: (y: number) => number, q: number, spec: SearchSpec): SearchResult {
   const close = (v: number) => Math.abs(v - q) <= SEARCH_TOL * q;
@@ -42,6 +44,7 @@ export function search(F: (y: number) => number, q: number, spec: SearchSpec): S
   for (;;) {
     // Step up until F passes q.
     for (;;) {
+      if (spec.ceiling !== undefined && y > spec.ceiling) return { ok: false, reason: 'past_ceiling' };
       fy = store(F(y));
       trials += 1;
       if (Number.isNaN(fy)) return { ok: false, reason: 'not_a_number' };

@@ -2,7 +2,8 @@
 // sees a case id. Pairs not built yet answer outcome `error` with message `not built`; a regular
 // form still applies its hold rules first, so a held prompt is `rejected` in every regular pair.
 import { readRegularForm } from './forms.ts';
-import { capacityPrismatic } from './modes/capacity.ts';
+import { capacityCircle, capacityPrismatic } from './modes/capacity.ts';
+import { criticalDepthCircle, normalDepthCircle } from './modes/circle.ts';
 import { criticalDepthPrismatic } from './modes/criticalDepth.ts';
 import { normalDepthPrismatic } from './modes/normalDepth.ts';
 import { normalDepthIrregular } from './modes/normalDepthIrregular.ts';
@@ -27,6 +28,9 @@ const REGULAR_METHODS: Readonly<Record<string, RegularMethod>> = {
   'channel_capacity/trapezoid': (v) => capacityPrismatic('trapezoid', v),
   'channel_capacity/v_ditch': (v) => capacityPrismatic('v_ditch', v),
   'channel_capacity/rectangle': (v) => capacityPrismatic('rectangle', v),
+  'channel_capacity/circle': capacityCircle,
+  'normal_depth/circle': normalDepthCircle,
+  'critical_depth/circle': criticalDepthCircle,
 };
 
 const REGULAR_MODES = new Set<string>(['normal_depth', 'critical_depth', 'channel_capacity']);

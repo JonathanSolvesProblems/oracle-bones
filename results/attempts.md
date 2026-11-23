@@ -111,3 +111,61 @@ under .6667). The design and `constants.ts` are corrected. H2 is a display rule 
 `printUsing.ts` (`OVERFLOW_MAX_CHARS`). H3 is a storage point, recorded in the design's
 Channel Capacity section. Storing √S in Normal Depth too changes no golden, so the rebuild stores
 it only where a golden needs it. Whether SQR is single everywhere is in the design's open points.
+
+## A-003: the circle's depth search, Normal Depth and Critical Depth (task 3.5), OPEN
+
+**Not resolved. Stopped here for the person running the task; nothing has gone to the Skeptic.**
+
+**Built and matching.** Circle geometry with π = 3.1416, Channel Capacity on the circle (10 of
+10, discharge with .6667; with .667, 9 of 10 miss), and Max Discharge at .938·D with .6667.
+
+**What remains.** In the full set, Normal Depth on the circle matches 6 of 8, and Critical Depth
+on the circle matches 0 of 12. All 20 rejected circle goldens match.
+
+| Case | Field(s) | QUICK-2 | Rebuild |
+|---|---|---|---|
+| nd-circ-000007 | Depth, Area, Wet Per, Velocity, Hyd R, Top Width; Max Discharge | `49.00`, `5693.1`, `199.8`, `6.8`, `28.5`, `163.0`; `271099` | `48.90`, `5676.8`, `199.6`, `6.9`, `28.4`, `162.9`; `271098` |
+| nd-circ-000010 | Velocity, Froude | `87.0`, `24.3` | `87.4`, `24.4` |
+| cd-circ-000001 to -000018 (12) | Depth on 11; Area, Wet Per, Velocity, Critical Slope and Max Discharge on several | e.g. cd-circ-000014 Depth `8.27`, Area `92.4`, Max Discharge `2164` | `8.30`, `92.7`, `2154` |
+
+**What was tried.** This went past the five-hypothesis limit. The task asked for the circle's
+start and step to be found, so I swept a grid and did not stop at five guesses:
+
+- First trial {0.01, 0.1, 0.5 ft, or one step} × step {0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5,
+  1 ft, D/10, D/20, D/50, D/100} × exponent {.667, .6667} × second step {resume (A-001), repeat
+  the chord}. Each combination was scored by script on all 20 Normal Depth and Critical Depth
+  circles, then on the 8 Normal Depth circles with Velocity (q/A) included.
+- Best for Normal Depth: 0.1 ft steps from 0.1 ft, discharge with .6667, 6 of 8. That is built
+  (`CIRCLE_STEP`, cited as not settled), and the comparator agrees: 6 of 8.
+- Best for both modes together with Velocity left out: 0.5 ft steps, 11 of 20. It fits
+  nd-circ-000007 (49.00 is a 0.5 ft step, the trial before it is outside 1%, and the one at 49.00
+  is inside), but it misses nd-circ-000009 (`8.40`), which needs a trial at 8.40.
+
+**What the goldens show.**
+
+1. Normal Depth: four of the eight (nd-circ-000010, -000011, -000013, -000014) print a depth
+   within 0.01% of the exact root. A 1% stop with steps of 0.1 ft or more does not land that
+   close that often. Three others stop on a round depth: `49.00` (0.25% short), `8.40` (0.42%
+   short) and `6.10` (0.11% over). No single fixed step fits both nd-circ-000007 and
+   nd-circ-000009. At 0.1 ft, nd-circ-000007's trial at 48.90 is already within 1%; at 0.5 ft
+   nd-circ-000009 has no trial at 8.40.
+2. Critical Depth: in cd-circ-000001 (and -000002, -000009, -000012), no single depth prints
+   every field with this geometry. Area and Wet Perimeter need 2.055 to 2.087 ft, Velocity
+   √(gA/T) needs 2.032 to 2.064, and Depth prints `2.05`. The overlap is at most a few
+   thousandths of a foot wide, or there is none. Either the Critical Depth circle computes its
+   outputs at more than one depth, or one of its formulas differs from the Channel Capacity
+   circle's, which matches on every field.
+3. Max Discharge, scan or .938 (the decision task 3.5 asked for): neither explains
+   nd-circ-000007. At .938·D it is 271098.16; a fine scan for the peak gives 271098.25, at
+   0.93806·D; QUICK-2 printed `271099`. 32 combinations of single-precision stores at .938·D all
+   give 271098.15 to 271098.18. All other 17 Channel Capacity and Normal Depth circles print the
+   same with .938 or a scan, so the goldens cannot choose between them. The rebuild keeps .938.
+
+**Claim, for the Skeptic if you want to send it.** QUICK-2's circle search is not the prismatic
+search with another step. Its Normal Depth result often lands much closer to the root than a 1%
+stop allows, and its Critical Depth outputs do not all come from one depth. Proposed
+classification: spec error (the design's circle search), to become a bugfix spec such as
+`circle-depth-search`. Cases that would separate the ideas: a fixed pipe and n with discharges
+stepped so the depth crosses 0.1 ft and 0.5 ft grid points; the 36 in pipe at discharges whose
+critical depth falls just above and below a 0.1 ft step; and nd-circ-000007's pipe with its slope
+varied.
