@@ -171,8 +171,10 @@ critical-flow discharge A·√(gA/T) for Critical Depth) and a target q:
    if |F(y) − q| ≤ 0.01·q.
 2. When F passes q, take the last trial below q (or the bottom, where F is 0) and the first
    above as a bracket, and interpolate linearly.
-3. Check the interpolated depth the same way. If it is still short, it becomes the new lower
-   end and interpolation repeats.
+3. Check the interpolated depth the same way. If it is still short, stepping resumes from it:
+   the next trial is one step above it, and the next bracket runs from it to the first trial
+   past q (task 3.2, results/attempts.md A-001). An interpolation that is over q would become
+   the new upper end; on a convex F that does not happen, so it is unobserved.
 
 This explains the two things the Exhumer flagged (ledger Q-008). F is convex in depth, so a
 chord from below undershoots, and the 1% stop accepts the first trial that is close enough:
@@ -197,12 +199,13 @@ Search start and step by shape:
 | Irregular | lowest ground point + 0.1 ft, 0.5 ft; the bottom of the first bracket is the lowest point | ND 24 of 24, Step-Backwater 3 of 3 |
 | Circle | not yet identified | best tried: 0.1 ft steps, ND 6 of 8; CD 3 of 12 |
 
-Open: the second interpolation step. The 6 Normal Depth misses (nd-rect-000002, -000004,
--000007, -000026, nd-trap-000009, -000014) and 2 of the Critical Depth misses (cd-trap-000007,
--000008) are exactly the shallow cases (depth under 1.5 ft) that need a second interpolation.
-Each lands 0.0006 to 0.0009 ft below where plain repeated interpolation lands. Secant,
-regula falsi, bisection and a log-scale chord were tried and none fits. Task 3.2 has the last
-honest attempt before the Skeptic.
+The second interpolation step (settled in task 3.2). The 6 Normal Depth misses of the first
+fit (nd-rect-000002, -000004, -000007, -000026, nd-trap-000009, -000014) are the shallow cases
+whose first interpolation falls short of the 1% stop. Each lands 0.0001 to 0.0009 ft below where
+plain repeated interpolation lands. Secant, regula falsi, bisection, a log-scale chord and finer
+re-stepping all land too high. Resuming the 0.5 ft steps from the short interpolation (rule 3)
+fits all six, and also fits the four prismatic Critical Depth results that need a second step
+(cd-trap-000007, -000008, -000018, cd-rect-000020), which played no part in choosing it.
 
 ## Methods by mode and shape
 
@@ -231,7 +234,7 @@ results give 353 computed fields and no mismatch in double precision. Criteria 6
 
 The search runs on Q(y) = 1.486/n · A · R^.667 · √S with step 0.5 ft. At the search's depth,
 Velocity = q/A (the entered discharge, not Manning's velocity) and Froude = (q/A)/√(g·A/T).
-47 of 53 results match on every field; the 6 misses are the open second step above. Criteria
+With the second step of rule 3, all 53 results match on every field (task 3.2). Criteria
 7.1, 7.2, 2.5 to 2.7, and the controls nd-trap-000001 (3.27) and nd-trap-000002 (4.22).
 
 ### Critical Depth, prismatic shapes
@@ -492,7 +495,7 @@ typed text, held prompt) and the app draws them: 3.1 (four station and elevation
 
 ## Unverified assumptions and open points
 
-- The search's second interpolation step at depths under 1.5 ft (8 goldens). Task 3.2.
+- The search after an interpolation that is over q (never reached on a convex F).
 - The circle search's start and step. Task 3.5.
 - Max Discharge: a scan for the peak, or .938·D (nd-circ-000007). Task 3.5.
 - Which quantities QuickBASIC stores in single precision. Settled case by case in each task.

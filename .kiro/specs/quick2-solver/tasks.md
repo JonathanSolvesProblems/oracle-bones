@@ -35,9 +35,9 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
     - _Requirements: closes 3.2 to 3.13, 9.2 to 9.7, 10.2 to 10.7_
 
 - [ ] 3. The regular shapes: Normal Depth, Critical Depth and Channel Capacity
-  - [ ] 3.1 Write the regular forms in `forms.ts` (prompt order, fixed Bottom Width and side-slope fields), the hold rules (0 at any prompt, Diameter -1, Channel Capacity circle Depth above the diameter) and the echo formats with `%` and exponent overflow, and the `layout.ts` entries of every regular result screen. Test `held` against every rejected golden and the prompt order against the transcripts. Properties 2 and 3.
+  - [x] 3.1 Write the regular forms in `forms.ts` (prompt order, fixed Bottom Width and side-slope fields), the hold rules (0 at any prompt, Diameter -1, Channel Capacity circle Depth above the diameter) and the echo formats with `%` and exponent overflow, and the `layout.ts` entries of every regular result screen. Test `held` against every rejected golden and the prompt order against the transcripts. Properties 2 and 3.
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 2.3, 2.4, 4.1, 4.2, 4.3, 4.4, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
-  - [ ] 3.2 Normal Depth on the V-ditch, rectangle and trapezoid: Velocity = q/A and its Froude; the `negative_input` flag; `never_finishes` for n of -1; `returns_to_menu` for Discharge or Slope of -1. Make the honest attempt at the second interpolation step on the 6 shallow goldens, and hand what remains to the Skeptic. Property 1 for prismatic Normal Depth.
+  - [x] 3.2 Normal Depth on the V-ditch, rectangle and trapezoid: Velocity = q/A and its Froude; the `negative_input` flag; `never_finishes` for n of -1; `returns_to_menu` for Discharge or Slope of -1. Make the honest attempt at the second interpolation step on the 6 shallow goldens, and hand what remains to the Skeptic. Property 1 for prismatic Normal Depth.
     - _Requirements: 7.1, 7.2, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
   - [ ] 3.3 Critical Depth on the V-ditch, rectangle and trapezoid: the search on A·√(gA/T) with g = 32.2, Velocity √(gA/T), Froude, Flow Type CRITICAL, Critical Slope with .667. Settle the single-precision storage points on cd-trap-000013, cd-vdit-000007 and cd-rect-000009. Property 1 for prismatic Critical Depth.
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_

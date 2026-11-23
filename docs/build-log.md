@@ -944,3 +944,23 @@ Settings: Default agent, Claude Opus 5.5.
   37 new matches are the rejected regular goldens in the quick set. The 131 left: 129 `outcome`
   mismatches from regular and Step-Backwater results not built yet, and the same two shallow
   trapezoid cases as before (nd-trap-000009, nd-trap-000014). Time: 8 min.
+- **3.2** Normal Depth on the V-ditch, rectangle and trapezoid, one method for all three
+  (`normalDepthPrismatic`). Negative inputs raise `negative_input` with the fields they concern.
+  n of -1 ends in `never_finishes`. Discharge or Slope of -1 ends in `returns_to_menu`: the
+  search meets a NaN, which stands in for QuickBASIC's illegal function call. Tests cover the
+  behaviour cases obs-negnstall-000001 and obs-negreturn-000001 and -000002 from their typed
+  keys, and Property 1 runs on 300 generated channels.
+  **The honest attempt fixed the shallow cases. Nothing goes to the Skeptic** (results/attempts.md,
+  A-001). H1 to H5 (re-stepping at 0.1, 0.05 and 0.01 ft, and extrapolating) all landed too high.
+  H6 fits all six: when an interpolation falls short, stepping resumes from it with the same
+  0.5 ft step, so the next bracket is [y1, y1 + 0.5]. It has no parameter to tune. **H6 is a
+  sixth hypothesis, and the design allows five.** I kept it because it also fixes the four
+  prismatic Critical Depth results that need a second step (cd-trap-000007, -000008, -000018,
+  cd-rect-000020), and none of them was used to choose it. The decision is yours: keep H6, or
+  treat the limit as binding and send A-001 to the Skeptic. The search change is in `search.ts`.
+  I updated the design's search section (rule 3, the paragraph that was "Open", the open-points
+  list and the Normal Depth match count) to the H6 rule; no requirement changed. The irregular
+  search shares the code and still matches: none of its cases reaches a second step. 454 tests
+  pass in 1.6 s. Quick set: 95 of 200 match (69 after 3.1), 0.5 s. Full set for normal_depth on
+  the three shapes: all 53 results and the 8 rejected goldens match, 0 mismatches; irregular
+  Normal Depth is still 26 of 26. Full set overall: 126 of 254, 0.5 s. Time: 8 min.
