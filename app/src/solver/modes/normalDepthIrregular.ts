@@ -6,7 +6,7 @@
 // wet part; Hyd R = A/P; Chan Vel = q · Kch/K / Ach; Froude = √α · (q/A)/√(g·A/T).
 
 import { G, IRREGULAR_START, IRREGULAR_STEP } from '../constants.ts';
-import { flag } from '../flags.ts';
+import { flag, irregularFlags } from '../flags.ts';
 import { ND_IRREGULAR_PROMPTS } from '../forms.ts';
 import { flowAt, type IrregularFlow, type IrregularSection } from '../geometry/irregular.ts';
 import { LEFT_BANK_ERROR, RIGHT_BANK_ERROR, bankMatches, enter, sectionKeys, type GroundPoint } from '../groundPoints.ts';
@@ -103,7 +103,7 @@ export function normalDepthIrregular(inputs: Readonly<Record<string, string>>): 
     printed: printed(ND_IRR_RESULT, values),
     message: null,
     held: null,
-    flags: [],
+    flags: irregularFlags(read.value.points, ws, o.flow.spans),
     raw: {
       ws_elev: ws, depth, area: o.area, top_width: o.topWidth, wet_perimeter: o.perimeter, hyd_radius: o.hydR,
       chan_velocity: o.chanVel, froude: o.froude, alpha: o.flow.alpha, search_discharge: found.value,

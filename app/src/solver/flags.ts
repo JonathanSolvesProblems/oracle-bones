@@ -19,3 +19,26 @@ export const FLAG_TEXT: Readonly<Record<FlagCode, string>> = {
 export function flag(code: FlagCode, fields: string[] = []): Flag {
   return { code, text: FLAG_TEXT[code], fields };
 }
+
+/**
+ * EXTENDED CROSS SECTION: the water surface is above the first or the last ground elevation
+ * (criteria 3.12, 3.13, 10.2).
+ */
+export function isExtended(points: readonly { elevation: number }[], ws: number): boolean {
+  const first = points[0];
+  const last = points[points.length - 1];
+  return !!first && !!last && (ws > first.elevation || ws > last.elevation);
+}
+
+/** Low ground cut off from the channel counts as wet: the wet section is more than one span (9.7). */
+export function isCutOff(spans: readonly [number, number][]): boolean {
+  return spans.length > 1;
+}
+
+/** The flags an irregular result carries at water-surface elevation ws. */
+export function irregularFlags(points: readonly { elevation: number }[], ws: number, spans: readonly [number, number][]): Flag[] {
+  const out: Flag[] = [];
+  if (isExtended(points, ws)) out.push(flag('extended_section', ['ws_elev', 'top_width', 'wet_perimeter']));
+  if (isCutOff(spans)) out.push(flag('cut_off_area_counted', ['area', 'top_width', 'wet_perimeter']));
+  return out;
+}
