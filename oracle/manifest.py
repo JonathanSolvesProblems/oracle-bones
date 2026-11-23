@@ -56,9 +56,10 @@ def _digest(p):
 
 def on_disk(root):
     """sha256 of every file under root except the manifest. Every file is read and hashed on
-    every call. The reads run in a thread pool: the first open of each file after it is written
-    waits on the on-access virus scan (about 5 ms a file on the development laptop), and with
-    some 2,000 files a serial walk spent 10 to 20 s waiting."""
+    every call. The reads run in a thread pool because the first read of a newly written file is
+    slow on the development laptop (about 4 ms a file, most likely the on-access virus scan or
+    OneDrive): hashing 2,098 freshly copied goldens took 7.6 to 9.1 s one file at a time and
+    0.8 to 0.9 s with 32 threads."""
     root = Path(root)
     if not root.exists():
         return {}
