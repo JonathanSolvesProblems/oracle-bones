@@ -6,7 +6,7 @@ export type Shape = 'trapezoid' | 'v_ditch' | 'rectangle' | 'circle' | 'irregula
 export interface Job {
   mode: Mode;
   shape: Shape;
-  /** Typed text, keyed as in the goldens. */
+  /** Typed text, keyed by the input names of the oracle contract. */
   inputs: Readonly<Record<string, string>>;
 }
 
