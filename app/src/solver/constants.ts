@@ -75,7 +75,20 @@ export const SEARCH_DEPTH_LIMIT = 100000;
  */
 export const SEARCH_MAX_TRIALS = 1000000;
 
+/**
+ * Ground-point entry ends by itself after this many points.
+ * @cite nd-irr-000001 obs-bankreject-000001 (criterion 3.2)
+ */
+export const GROUND_POINTS_MAX = 40;
+
 // ---- print rules -------------------------------------------------------------------------
+
+/**
+ * Significant digits QuickBASIC's plain PRINT shows for a single-precision number.
+ * @cite QuickBASIC 4.5 manual (PRINT); observed only on whole numbers, obs-irrelev-000001
+ * obs-irrstation-000001 (`35`, `-50`, `-60` in the station error)
+ */
+export const SINGLE_PRINT_DIGITS = 7;
 
 /**
  * The number base of printed digits.
