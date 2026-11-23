@@ -8,6 +8,7 @@ file, and every hash that differs.
 import hashlib
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 NAME = "MANIFEST.json"
@@ -46,15 +47,25 @@ def update(root, changes):
     return files
 
 
+HASH_THREADS = 32
+
+
+def _digest(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
 def on_disk(root):
+    """sha256 of every file under root except the manifest. Every file is read and hashed on
+    every call. The reads run in a thread pool: the first open of each file after it is written
+    waits on the on-access virus scan (about 5 ms a file on the development laptop), and with
+    some 2,000 files a serial walk spent 10 to 20 s waiting."""
     root = Path(root)
-    out = {}
     if not root.exists():
-        return out
-    for p in root.rglob("*"):
-        if p.is_file() and p != path(root):
-            out[p.relative_to(root).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
-    return out
+        return {}
+    files = [p for p in root.rglob("*") if p.is_file() and p != path(root)]
+    with ThreadPoolExecutor(max_workers=HASH_THREADS) as pool:
+        digests = list(pool.map(_digest, files))
+    return {p.relative_to(root).as_posix(): d for p, d in zip(files, digests)}
 
 
 def check(root):
