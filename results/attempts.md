@@ -68,3 +68,46 @@ the Skeptic: no mismatch remains. The design's search section is updated to the 
 because it fits all six cases with no parameter to tune, and fits four Critical Depth cases that
 played no part in choosing it. Whether the five-hypothesis limit should count it is for the
 person running the task to decide.
+
+## A-002: Channel Capacity discharge on the prismatic shapes (task 3.4)
+
+**Resolved by H1 and H2. Nothing goes to the Skeptic.**
+
+**Cases.** With the design as written (discharge with R^.6667, exponent form past nine digits),
+36 of the 39 prismatic Channel Capacity results missed on Discharge, and cc-vdit-000002 also
+missed on Velocity. Discharge is the field that shows the most digits: these generated channels
+give discharges of 10^7 to 10^10 cfs, which overflow and print every digit. The reproduction is
+the comparator's own output, which lists every one; examples:
+
+| Case | QUICK-2 printed (row 10) | Rebuild before |
+|---|---|---|
+| cc-rect-000002 | `%793879552` | `%792335232` |
+| cc-vdit-000002 | `%3578117632` | `% 35716E+05` |
+| cc-trap-000005 | `% 19078E+06` | `% 19043E+06` |
+| cc-trap-000015 | `%-34654E+05` | `%-34593E+05` |
+
+Two things are wrong at once: the digits (all about 0.2% low, more for a larger hydraulic radius)
+and, for ten-digit values, the switch to an exponent.
+
+| Hypothesis | Prismatic CC results that match | Quick set | Full set |
+|---|---|---|---|
+| As written | 3 of 39 | 139 of 200 | 185 of 254 |
+| H1: discharge with R^.667, the exponent the search and the velocity use | 24 of 39; every digit now agrees, and the 15 left differ only in the exponent switch | not run | 206 of 254 |
+| H2: H1, and the exponent form starts past ten characters of text (sign, digits, point, decimals) instead of nine digits | 38 of 39 | 172 of 200 | 220 of 254 |
+| H3: H2, and √S held in single precision, as QuickBASIC's SQR returns it | 39 of 39 | 173 of 200 | 221 of 254 |
+
+H1: the ratio of the oracle's discharge to the rebuild's is R^0.0003 in every case (1.00182 at
+R = 429.7 for cc-vdit-000002), which is the gap between .667 and .6667. H2 is a display rule:
+3578117632, 4207745280 and 1062046336 have ten digits and print in full, while the
+eleven-character texts -3465xxxxxx, 19078xxxxxx and 123456789.0 print as exponents. A digit count
+cannot tell these apart, and a character count can. H3 settles the velocity boundary task 3.4
+named. cc-vdit-000002's velocity is 198.2500 with √S unstored and 198.249985 with it stored;
+QUICK-2 printed `198.2`. Storing R, R^.667, 1.486/n or 1.486/n·√S instead, or leaving A and P
+unstored, does not fix it. None of the three breaks a case that matched, and the other pairs'
+full-set counts are unchanged.
+
+**Classification.** H1 is a spec error in the design's constants table (CC discharge listed
+under .6667). The design and `constants.ts` are corrected. H2 is a display rule and goes into
+`printUsing.ts` (`OVERFLOW_MAX_CHARS`). H3 is a storage point, recorded in the design's
+Channel Capacity section. Storing √S in Normal Depth too changes no golden, so the rebuild stores
+it only where a golden needs it. Whether SQR is single everywhere is in the design's open points.

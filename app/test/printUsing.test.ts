@@ -44,11 +44,13 @@ describe('printUsing, overflow', () => {
     expect(echo('1000', '###.##')).toBe('%1000.00');
     expect(echo('1234567', '######')).toBe('%1234567');
   });
-  it('prints nine digits in full', () => {
+  it('prints up to ten characters in full', () => {
     expect(printUsing(793879552, '######')).toBe('%793879552');
+    expect(printUsing(3578117632, '######')).toBe('%3578117632');
   });
-  it('switches to an exponent past nine digits', () => {
+  it('switches to an exponent past ten characters', () => {
     expect(echo('123456789', '##.#')).toBe('% 1.2E+08');
     expect(printUsing(-3.4654e9, '######')).toBe('%-34654E+05');
+    expect(printUsing(1.9078e10, '######')).toBe('% 19078E+06');
   });
 });

@@ -14,15 +14,18 @@
 export const MANNING_K = 1.486;
 
 /**
- * The 2/3 power as `.667`: the regular-shape search discharge, Channel Capacity velocity and
- * Critical Slope.
+ * The 2/3 power as `.667`: the regular-shape search discharge, Channel Capacity discharge and
+ * velocity on the prismatic shapes, and Critical Slope.
  * @cite nd-trap-000001 nd-trap-000002 (Normal Depth 47 of 53 with .667, 16 with .6667)
- * cc-vdit-000012 (velocity 5104.8)
+ * cc-vdit-000012 (velocity 5104.8) cc-vdit-000002 cc-rect-000005 cc-trap-000003 (discharges
+ * printed to ten digits: 3578117632, 4207745280, 1062046336; 39 of 39 prismatic Channel
+ * Capacity discharges match with .667, 3 with .6667)
  */
 export const EXP_A = 0.667;
 
 /**
- * The 2/3 power as `.6667`: Channel Capacity discharge, Max Discharge, irregular conveyance.
+ * The 2/3 power as `.6667`: Max Discharge and irregular conveyance. Channel Capacity on the
+ * circle is still to be checked against it (task 3.5).
  * @cite nd-irr-000001 nd-irr-000002 nd-irr-000010 (irregular Normal Depth 24 of 24 with .6667,
  * 10 with .667)
  */
@@ -103,9 +106,13 @@ export const SINGLE_PRINT_DIGITS = 7;
 export const DECIMAL_BASE = 10;
 
 /**
- * An overflowing value prints as `%` and its digits while it needs at most this many digits,
- * counting those before and after the point; past that QuickBASIC prints an exponent.
- * @cite cc-rect-000002 (793879552 in full) obs-fieldover-000001 (123456789 as `% 1.2E+08`)
- * cc-trap-000015 (`%-34654E+05`); the threshold fits these three cases and nothing more yet
+ * An overflowing value prints as `%` and its text in full while that text (sign, digits, point
+ * and decimals) is at most this many characters long; past that QuickBASIC prints an exponent.
+ * @cite cc-rect-000002 (793879552, 9 characters, in full) cc-vdit-000002 cc-rect-000005
+ * cc-trap-000003 (3578117632, 4207745280, 1062046336: 10 characters, in full)
+ * obs-fieldover-000001 (123456789.0, 11 characters, as `% 1.2E+08`) cc-trap-000015
+ * (-3465xxxxxx, 11, as `%-34654E+05`) cc-trap-000005 (19078xxxxxx, 11, as `% 19078E+06`). A
+ * count of digits alone does not fit: 3578117632 has ten digits and prints in full. The rule
+ * fits these cases and nothing more yet.
  */
-export const OVERFLOW_MAX_DIGITS = 9;
+export const OVERFLOW_MAX_CHARS = 10;

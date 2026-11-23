@@ -5,14 +5,15 @@
 //   single-precision value) and right-aligned in the format's width.
 // - A number too wide for its format prints as `%` and the number with the format's decimals
 //   (criterion 8.1).
-// - When that would need more than OVERFLOW_MAX_DIGITS digits, QuickBASIC prints an exponent
+// - When that text (sign, digits, point and decimals) is longer than OVERFLOW_MAX_CHARS
+//   characters, QuickBASIC prints an exponent
 //   instead, with the mantissa laid out in the format's own positions: a sign position, then
 //   the remaining integer positions, the point and the decimals, then `E+nn`.
 //
 // Unobserved: negative values that round to zero (printed here with their `-`), formats with
 // no integer position, and values that are not finite.
 
-import { DECIMAL_BASE, OVERFLOW_MAX_DIGITS } from '../solver/constants.ts';
+import { DECIMAL_BASE, OVERFLOW_MAX_CHARS } from '../solver/constants.ts';
 
 export interface NumericFormat {
   /** Digit positions before the point. */
@@ -65,7 +66,6 @@ export function printUsing(x: number, picture: string): string {
   const body = fixed(ax, f.dec);
   const text = (x < 0 ? '-' : '') + body;
   if (text.length <= width) return text.padStart(width, ' ');
-  const digits = body.replace('.', '').length;
-  if (digits > OVERFLOW_MAX_DIGITS || body.includes('e')) return '%' + exponentForm(x, f);
+  if (text.length > OVERFLOW_MAX_CHARS || body.includes('e')) return '%' + exponentForm(x, f);
   return '%' + text;
 }

@@ -985,3 +985,25 @@ Settings: Default agent, Claude Opus 5.5.
   set: 137 of 200 match, 0.5 s. Full set: 182 of 254, 0.6 s. Every mismatch left is an
   `outcome` mismatch in a pair a later task builds (Channel Capacity, the circle,
   Step-Backwater). Time: 5 min.
+- **3.4** Channel Capacity on the V-ditch, rectangle and trapezoid (`modes/capacity.ts`).
+  **The design was wrong about the discharge in two places, and the oracle showed both**
+  (results/attempts.md, A-002). Built as written, 36 of the 39 results missed on Discharge.
+  Large generated channels print discharges of 10^7 to 10^10 cfs in full, so every digit counts.
+  (1) The discharge uses R^.667, not the .6667 the design listed. The oracle-to-rebuild ratio was
+  R^0.0003 in every case. With .667 all 39 match on their digits; with .6667, 3 do. (2) The
+  switch to an exponent comes after ten characters of text, not after nine digits:
+  `%3578117632` prints in full, while `%-34654E+05` and `% 19078E+06` (eleven characters) do not.
+  That is a display rule, now in `printUsing.ts`, with a ledger triage entry for `discharge`
+  (status proposed). **cc-vdit-000002's velocity boundary, settled:** √S is held in single
+  precision, as QuickBASIC's SQR returns it. That gives 198.249985, printed `198.2`, where the
+  unstored value is 198.2500. No other store of the velocity's parts that I tried fixes it.
+  Storing √S in Normal Depth as well changes no golden, so I left Normal Depth alone and put "is
+  SQR single everywhere" in the design's open points. A negative Depth or Slope has not been
+  tried in Channel Capacity. The rebuild answers `error` / `not observed` there instead of
+  guessing. The design, `constants.ts` (both exponents' citations and the renamed
+  `OVERFLOW_MAX_CHARS`) and the printUsing tests are updated; no requirement changed. Task 3.4's
+  own text still says "discharge with .6667", and I left the task text as written. Full set for
+  channel_capacity on the three shapes: all 39 results and the 10 rejected goldens match. 460
+  tests pass in 2.2 s. Quick set: 173 of 200 match, 0.6 s. Full set: 221 of 254, 0.6 s. The 33
+  left are the circle in all three modes (30) and Step-Backwater (3), all `outcome` mismatches
+  from pairs not built yet. Time: 13 min.

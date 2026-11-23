@@ -114,7 +114,8 @@ The one Critical Depth field a store decides is the Area of cd-vdit-000002: 1580
 15809.0 stored, printed `%15809`. Storing Wet Perimeter, Top Width or Hyd Radius changes no
 Critical Depth golden, so those stores are kept but not pinned. One CC golden,
 cc-vdit-000002 (velocity `198.2`, 198.2500 computed), sits on a boundary that the choice of
-storage points decides; task 3.4 settles it.
+storage points decides. Task 3.4 settled it: √S held in single precision (Channel Capacity
+below).
 
 ### Constants
 
@@ -126,8 +127,8 @@ literal other than 0, 1, 2 and -1. Each constant carries the cases that pin it.
 | Manning constant | 1.486 | every Manning formula | CC fields: 0 mismatches with 1.486, 62 with 1.49 |
 | g | 32.2 | Froude, critical flow | 32.174 drops Critical Depth from 54 to 22 of 68 matched |
 | π | 3.1416 | circle angle | with 3.14159265 two CC circle discharges miss (cc-circ-000020, cc-circ-000023); with 3.1416 none do |
-| exponent A | .667 | regular-shape search discharge, CC velocity, critical slope | ND 47 of 53 matched (16 with .6667); CC velocity 29 misses with 2/3, 0 with .667; critical slope 53 of 56 |
-| exponent B | .6667 | CC discharge, Max Discharge, irregular conveyance | CC fields: 0 mismatches with .6667, 5 with 2/3; irregular ND 24 of 24 (10 with .667) |
+| exponent A | .667 | regular-shape search discharge, CC discharge and velocity on the prismatic shapes, critical slope | ND 47 of 53 matched (16 with .6667); CC velocity 29 misses with 2/3, 0 with .667; CC prismatic discharge 39 of 39 with .667, 3 with .6667 (task 3.4); critical slope 53 of 56 |
+| exponent B | .6667 | Max Discharge, irregular conveyance; CC discharge on the circle to be checked in task 3.5 | irregular ND 24 of 24 (10 with .667) |
 | search tolerance | 0.01 | every search | 0.0099 and 0.0101 give the same matches; the exact value is not pinned |
 | regular search step | 0.5 ft from depth 0 | prismatic shapes | the depths that land on 206.00, 73.00, 42.00, 32.50, 24.50, 19.50 |
 | irregular search start | lowest point + 0.1 ft, then 0.5 ft steps | irregular sections | nd-irr-000015, nd-irr-000021, nd-irr-000023 stop on depths 58.6, 40.6, 47.1 |
@@ -231,10 +232,16 @@ field matches (10 goldens).
 
 ### Channel Capacity
 
-At the entered depth: Q = 1.486/n · A · R^.6667 · √S. Velocity on the prismatic shapes is
-1.486/n · R^.667 · √S, which is not Q/A; on the circle it is Q/A. Froude = V/√(g·A/T). Flow
-Type is SUBCRITICAL when Froude < 1 and SUPERCRITICAL when it is above. With these, the 49 CC
-results give 353 computed fields and no mismatch in double precision. Criteria 6.1 to 6.7.
+At the entered depth: Q = 1.486/n · A · R^.667 · √S on the prismatic shapes (task 3.4; the
+first draft had .6667, which 36 of the 39 prismatic results break once the ten-digit
+discharges print in full). Velocity on the prismatic shapes is 1.486/n · R^.667 · √S, which is
+not Q/A; on the circle it is Q/A. √S is held in single precision, as QuickBASIC's SQR returns
+it for a single argument: cc-vdit-000002's velocity is 198.2500 with √S unstored and
+198.249985 stored, printed `198.2`. None of the other stores tried (R, R^.667, 1.486/n, the
+product 1.486/n·√S, A and P unstored) fixes it. Froude =
+V/√(g·A/T). Flow Type is SUBCRITICAL when Froude < 1 and SUPERCRITICAL when it is above. All 39
+prismatic results match on every field (task 3.4). Whether the circle's discharge uses .667 or
+.6667 is task 3.5's to check. Criteria 6.1 to 6.7.
 
 ### Normal Depth, prismatic shapes
 
@@ -319,11 +326,14 @@ for it.
 - A number too wide for its format prints as `%` followed by the number with the format's
   decimals, starting at the format's first column (criterion 8.1: `%100.0`, `%99999.0`,
   `%12.5000`, `%1000.00`, `%1234567`; cc-circ-000021 `%37113.9`).
-- When the overflow would need more than nine digit positions, QuickBASIC switches to an
-  exponent, with the mantissa laid out in the format's own positions: `% 1.2E+08` for
-  123456789 in `##.#` (obs-fieldover-000001), `%-34654E+05` for about -3.4654E+09 in `######`
-  (cc-trap-000015), while 793879552 in `######` prints in full (cc-rect-000002). The nine-digit
-  threshold fits these three cases and nothing more yet.
+- When the overflowing text (sign, digits, point and decimals) is longer than ten characters,
+  QuickBASIC switches to an exponent, with the mantissa laid out in the format's own positions:
+  `% 1.2E+08` for 123456789.0 in `##.#` (obs-fieldover-000001), `%-34654E+05` for about
+  -3.4654E+09 in `######` (cc-trap-000015), `% 19078E+06` for about 1.9078E+10 (cc-trap-000005).
+  793879552 prints in full (cc-rect-000002), and so do the ten-digit 3578117632, 4207745280 and
+  1062046336 (cc-vdit-000002, cc-rect-000005, cc-trap-000003). Task 3.4 replaced the first
+  draft's nine-digit threshold, which those three ten-digit cases break: a digit count does not
+  fit, a character count does. The ten-character rule fits these cases and nothing more yet.
 
 `screen.ts` paints each result row the way the program does: the label text first, then each
 value at its format's start column, overwriting whatever is there. An overflowing value runs
@@ -505,7 +515,10 @@ typed text, held prompt) and the app draws them: 3.1 (four station and elevation
 - The circle search's start and step. Task 3.5.
 - Max Discharge: a scan for the peak, or .938·D (nd-circ-000007). Task 3.5.
 - Which quantities QuickBASIC stores in single precision. Settled case by case in each task.
-- The nine-digit threshold for exponent overflow, and the paint order of overflowing values.
+- The ten-character threshold for exponent overflow, and the paint order of overflowing values.
+- Whether QuickBASIC's SQR result is held in single precision everywhere. It is pinned only in
+  Channel Capacity (cc-vdit-000002); storing √S in Normal Depth changes no golden, and the
+  rebuild stores it only where a golden needs it.
 - Step-Backwater start value 1 (Q-018), Kratio and Flow Regime beyond a subcritical first
   section.
 - The outcome a "returns to the shape menu" case would be recorded with.

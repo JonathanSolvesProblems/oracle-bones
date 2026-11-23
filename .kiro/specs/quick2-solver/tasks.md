@@ -41,7 +41,7 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
     - _Requirements: 7.1, 7.2, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
   - [x] 3.3 Critical Depth on the V-ditch, rectangle and trapezoid: the search on A·√(gA/T) with g = 32.2, Velocity √(gA/T), Froude, Flow Type CRITICAL, Critical Slope with .667. Settle the single-precision storage points on cd-trap-000013, cd-vdit-000007 and cd-rect-000009. Property 1 for prismatic Critical Depth.
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-  - [ ] 3.4 Channel Capacity on the V-ditch, rectangle and trapezoid: discharge with .6667, Velocity with .667, Froude, Flow Type; settle cc-vdit-000002's velocity boundary
+  - [x] 3.4 Channel Capacity on the V-ditch, rectangle and trapezoid: discharge with .6667, Velocity with .667, Froude, Flow Type; settle cc-vdit-000002's velocity boundary
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
   - [ ] 3.5 The circle in all three modes: `geometry/circle.ts` with π = 3.1416; Max Discharge at .938·D with .6667, at the entered slope for Channel Capacity and Normal Depth and at the critical slope for Critical Depth; "DEPTH is Greater than the DIAMETER" as outcome `rejected` with that message. Find the circle search's start and step within the design's search, using nd-circ-000007 (stops on 49.00) and the small pipes, and decide scan or .938 on nd-circ-000007. Property 6.
     - _Requirements: 4.5, 5.6, 5.7, 6.6, 6.7, 7.3_
