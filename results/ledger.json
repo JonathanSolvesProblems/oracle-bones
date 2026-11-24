@@ -2551,11 +2551,30 @@
         "cd-circ-000010",
         "cd-circ-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-24T11:00:32Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "The two depths come from one search and a fixed offset (circle-outputs requirements 2.9 to 2.11). Circle Critical Depth searches on A*sqrt(g*A/T) with 0.2 ft trials from 0.2 ft, stops on the first trial within 0.5% of q, and otherwise takes the chord and stops on it if it is within 0.5%. Area, Wet Per, Top Width, Hyd R, Velocity (q/A, not sqrt(g*A/T)), Froude, Critical Slope ((q/A)*n/(1.486*R^.667))^2 and Max Discharge (at the critical slope) are all computed at that search depth; Depth prints the search depth minus 0.01 ft, stored in single precision. Every Critical Depth circle golden fits an offset from 0.0089 to 0.0101 ft (A-004 measurement 2). The split: cd-circ-000019 to -000021 against cc-circ-000031 to -000033 (cd-circ-000019 search depth 4.9014, Depth 4.89; haunting H-004). The step stop: cd-circ-000011 stops on the trial at 6.60 and prints 6.59. The rule was fitted on cd-circ-000001 to -000021 (A-004 H5) and then held out: the 11 A-005 cases cd-circ-000022 to -000032 were predicted in d9e1a3a before they ran, and all 11 printed as predicted, every field (A-006), including cd-circ-000030 to -000032, which print the 0.2 ft prediction and not the 0.1 ft one. No Critical Depth golden reaches a chord that is still short of 0.5%, so what Critical Depth does after a short chord is not observed; the rebuild uses Normal Depth's rule (Q-026, open). With Velocity sqrt(g*A/T), cd-circ-000010 and -000013 print 5.6 and 8.4 where QUICK-2 printed 5.7 and 8.5.",
+      "answer_evidence": [
+        "cd-circ-000019",
+        "cd-circ-000020",
+        "cd-circ-000021",
+        "cc-circ-000031",
+        "cc-circ-000032",
+        "cc-circ-000033",
+        "cd-circ-000011",
+        "cd-circ-000022",
+        "cd-circ-000023",
+        "cd-circ-000024",
+        "cd-circ-000025",
+        "cd-circ-000026",
+        "cd-circ-000027",
+        "cd-circ-000028",
+        "cd-circ-000029",
+        "cd-circ-000030",
+        "cd-circ-000031",
+        "cd-circ-000032"
+      ],
+      "answered_at": "2026-11-24T20:48:44Z"
     },
     {
       "id": "Q-028",

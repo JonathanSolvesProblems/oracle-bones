@@ -43,8 +43,9 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   - [x] 3.4 Channel Capacity on the V-ditch, rectangle and trapezoid: discharge with .6667, Velocity with .667, Froude, Flow Type; settle cc-vdit-000002's velocity boundary
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
-  - [ ] 3.5 The circle in all three modes: `geometry/circle.ts` with π = 3.1416; Max Discharge at .938·D with .6667, at the entered slope for Channel Capacity and Normal Depth and at the critical slope for Critical Depth; "DEPTH is Greater than the DIAMETER" as outcome `rejected` with that message. Find the circle search's start and step within the design's search, using nd-circ-000007 (stops on 49.00) and the small pipes, and decide scan or .938 on nd-circ-000007. Property 6.
+  - [x] 3.5 The circle in all three modes: `geometry/circle.ts` with π = 3.1416; Max Discharge at .938·D with .6667, at the entered slope for Channel Capacity and Normal Depth and at the critical slope for Critical Depth; "DEPTH is Greater than the DIAMETER" as outcome `rejected` with that message. Find the circle search's start and step within the design's search, using nd-circ-000007 (stops on 49.00) and the small pipes, and decide scan or .938 on nd-circ-000007. Property 6.
     - _Requirements: 4.5, 5.6, 5.7, 6.6, 6.7, 7.3_
+    - Closed by `.kiro/specs/circle-outputs`: the search's start and step (0.1 ft for Normal Depth, 0.2 ft for Critical Depth, 0.5% stop), Max Discharge at .9382·D rather than .938·D or a scan, and the sector-minus-triangle area. 78 of the 80 circle goldens match; the two misses are that spec's known differences.
   - [ ] 3.6 Run the quick set and the full set for every regular pair; triage any mismatch. Record hauntings for the 1% stop (nd-trap-000001, cd-vdit-000001), the .667 velocity (cc-vdit-000012), Critical Depth's Max Discharge (cd-circ-000001) and negative inputs (cc-trap-000015), and the evidence for ledger Q-002, Q-003, Q-008, Q-009 and Q-022.
     - _Requirements: closes 1.1, 1.2, 2.1 to 2.10, 4.1 to 4.5, 5.1 to 5.7, 6.1 to 6.7, 7.1 to 7.3, 8.1 to 8.6_
 

@@ -129,10 +129,13 @@ literal other than 0, 1, 2 and -1. Each constant carries the cases that pin it.
 | π | 3.1416 | circle angle | with 3.14159265 two CC circle discharges miss (cc-circ-000020, cc-circ-000023); with 3.1416 none do |
 | exponent A | .667 | regular-shape search discharge, CC discharge and velocity on the prismatic shapes, critical slope | ND 47 of 53 matched (16 with .6667); CC velocity 29 misses with 2/3, 0 with .667; CC prismatic discharge 39 of 39 with .667, 3 with .6667 (task 3.4); critical slope 53 of 56 |
 | exponent B | .6667 | Max Discharge, CC discharge on the circle, irregular conveyance | CC circles 10 of 10 with .6667, 1 of 10 with .667 (task 3.5); irregular ND 24 of 24 (10 with .667) |
-| search tolerance | 0.01 | every search | 0.0099 and 0.0101 give the same matches; the exact value is not pinned |
+| search tolerance | 0.01 | prismatic and irregular searches | 0.0099 and 0.0101 give the same matches; the exact value is not pinned |
+| circle search tolerance | 0.005 | circle Normal Depth and Critical Depth searches | between 0.464% and 0.515% (nd-circ-000015, -000016 against cc-circ-000028; Q-025). Corrected by `.kiro/specs/circle-outputs` |
+| circle search steps | 0.1 ft from 0.1 ft (ND), 0.2 ft from 0.2 ft (CD) | circle searches | nd-circ-000007 (49.00); cd-circ-000011 (6.60), cd-circ-000030 to -000032 held out (A-004 H5, A-006). Corrected by `.kiro/specs/circle-outputs` |
+| circle CD Depth offset | 0.01 ft | circle Critical Depth's printed Depth | Q-024, A-004 measurement 2. Added by `.kiro/specs/circle-outputs` |
 | regular search step | 0.5 ft from depth 0 | prismatic shapes | the depths that land on 206.00, 73.00, 42.00, 32.50, 24.50, 19.50 |
 | irregular search start | lowest point + 0.1 ft, then 0.5 ft steps | irregular sections | nd-irr-000015, nd-irr-000021, nd-irr-000023 stop on depths 58.6, 40.6, 47.1 |
-| Max Discharge depth | .938 × diameter | circle | 17 of 18 CC and ND circles (nd-circ-000007 is 1 cfs low) |
+| Max Discharge depth | .9382 × diameter | circle | cc-circ-000027 (271099; .938 gives 271098.47), cc-circ-000034, cc-circ-000036; known difference cc-circ-000035 (Q-028). Corrected from .938 by `.kiro/specs/circle-outputs` |
 
 Two exponents in one program are odd but the goldens are clear about it. The constants table is
 a finding to keep re-testing, not a fit to protect: if a later golden breaks a constant, the
@@ -175,13 +178,21 @@ irregular section. Given an increasing function F(y) (a discharge for Normal Dep
 critical-flow discharge A·√(gA/T) for Critical Depth) and a target q:
 
 1. Start at the shape's first trial depth and step up by the shape's step. At each trial, stop
-   if |F(y) − q| ≤ 0.01·q.
+   if |F(y) − q| ≤ tol·q, with tol = 0.01 on the prismatic shapes and the irregular section and
+   0.005 on the circle (Q-025; corrected by `.kiro/specs/circle-outputs`).
 2. When F passes q, take the last trial below q (or the bottom, where F is 0) and the first
    above as a bracket, and interpolate linearly.
 3. Check the interpolated depth the same way. If it is still short, stepping resumes from it:
    the next trial is one step above it, and the next bracket runs from it to the first trial
    past q (task 3.2, results/attempts.md A-001). An interpolation that is over q would become
    the new upper end; on a convex F that does not happen, so it is unobserved.
+
+What a short chord does is a per-shape option of `search.ts` (`afterShortChord`). The
+prismatic shapes and the irregular section resume stepping, as rule 3 says (`'resume'`, the
+default). The circle repeats the chord on the narrowed bracket, from the short chord to the same
+upper trial, until a chord is within 0.5% (`'narrow'`, Q-026 candidate N2). Q-026 is open:
+N1 (resume) prints the same three branch cases, and nd-circ-000020 fits no candidate. No circle
+Critical Depth golden reaches the branch. Added by `.kiro/specs/circle-outputs` (2.7, 2.9).
 
 This explains the two things the Exhumer flagged (ledger Q-008). F is convex in depth, so a
 chord from below undershoots, and the 1% stop accepts the first trial that is close enough:
@@ -204,7 +215,7 @@ Search start and step by shape:
 |---|---|---|
 | Trapezoid, V-ditch, rectangle | 0.5 ft, 0.5 ft | ND 53 of 53, CD 56 of 56 (tasks 3.2, 3.3) |
 | Irregular | lowest ground point + 0.1 ft, 0.5 ft; the bottom of the first bracket is the lowest point | ND 24 of 24, Step-Backwater 3 of 3 |
-| Circle | not yet identified | best tried: 0.1 ft steps, ND 6 of 8; CD 3 of 12 |
+| Circle | Normal Depth 0.1 ft, 0.1 ft; Critical Depth 0.2 ft, 0.2 ft; 0.5% stop; short chord repeated on the narrowed bracket; the diameter is a ceiling | ND 13 of 14 and CD 26 of 26 results (the miss is the known difference nd-circ-000020). Corrected by `.kiro/specs/circle-outputs` (A-004 to A-006) |
 
 The second interpolation step (settled in task 3.2). The 6 Normal Depth misses of the first
 fit (nd-rect-000002, -000004, -000007, -000026, nd-trap-000009, -000014) are the shallow cases
@@ -225,10 +236,16 @@ which reproduces criteria 2.5 to 2.7.
 
 ### Circle geometry
 
-D (ft) = Diameter (in) / 12. With x = (D/2 − y)/(D/2), the angle is
-θ = 2·(π/2 − ATN(x/√(1 − x²))) with π = 3.1416, written the way QuickBASIC computes an arc
-cosine. A = (D/2)²·(θ − sin θ)/2, P = (D/2)·θ, T = 2·√(y·(D − y)). With these, every CC circle
-field matches (10 goldens).
+D (ft) = Diameter (in) / 12. With r = D/2 and x = (r − y)/r, the half angle is
+α = π/2 − ATN(x/√(1 − x²)) with π = 3.1416, written the way QuickBASIC computes an arc cosine.
+With h = √(y·(D − y)), half the top width: A = r²·α − (r − y)·h (the sector minus the
+triangle), P = 2·r·α, T = 2·h. Nothing in between is stored; A, P and T are.
+
+Corrected by `.kiro/specs/circle-outputs` (2.1, 2.2). The first draft had
+A = r²(θ − sin θ)/2 with θ = 2α. The two forms are equal with the true π, but QUICK-2's π error
+cancels in that form and not in this one. With the old form, the 2200 in and 2215.5 in pipes
+miss (cc-circ-000031 prints `3783.9`, the old form gave 3783.2); with this one every Channel
+Capacity circle matches, 20 of 20 (results/attempts.md A-004 C1 to C3; haunting H-003).
 
 ### Channel Capacity
 
@@ -260,24 +277,38 @@ Critical Slope included (task 3.3). Criteria 5.1 to 5.5.
 
 ### Circle: Normal Depth, Critical Depth, Max Discharge
 
-Max Discharge = 1.486/n · A · R^.6667 · √S at y = .938·D: the peak of the part-full Manning
-curve, about 7.6% above the full-pipe flow. Channel Capacity and Normal Depth use the entered
-slope; Critical Depth uses the critical slope it computed (criteria 5.6, 5.7: `53` at slope .005
-and at .001, where the entered slope gives `51`; ledger Q-009). Whether QUICK-2 scans for the
-peak or uses .938 is still open. Task 3.5 found that nd-circ-000007 cannot tell: a fine scan for
-the peak gives 271098.25 and .938·D gives 271098.16, while QUICK-2 printed `271099`. No
-single-precision store at .938·D gives 271099 either (results/attempts.md A-003). The rebuild
-keeps .938.
+This section was corrected by `.kiro/specs/circle-outputs` (requirements 2.3 to 2.11; A-004 to
+A-006). The first draft's .938·D, its open search step, and its single depth for every
+Critical Depth field are replaced below.
 
-The circle search's start and step are open (task 3.5, A-003). nd-circ-000007 stops on
-49.00 ft, which rules out a fine fixed step from 0, while small pipes need a step under 0.5 ft.
-The best fixed step found is 0.1 ft from 0.1 ft, with .6667 in the discharge. It fits 6 of the 8
-Normal Depth circles and none of the 12 Critical Depth circles. On four Critical Depth circles,
-no single depth prints every field with the geometry that matches every Channel Capacity
-circle. When the search passes the
-diameter without bracketing, QUICK-2 prints "DEPTH is Greater than the DIAMETER" on the form
-(ledger Q-022); the rebuild returns outcome `rejected` with that message until the profile maps
-the screen. Criteria 4.5, 5.6, 5.7, 6.6, 6.7, 7.3.
+Max Discharge = 1.486/n · A · R^.6667 · √S at y = .9382·D: the peak of the part-full Manning
+curve, about 7.6% above the full-pipe flow. .938·D sits below the peak and prints `271098` in
+the 2215.5 in pipe where QUICK-2 printed `271099` (cc-circ-000027 to -000029, nd-circ-000007,
+-000015 to -000017); .9382·D prints it, and also `83414` and `31823` in cc-circ-000034 and
+-000036, where a 0.01 ft scan for the peak prints one less (A-004 M1 to M5, A-006). Channel
+Capacity and Normal Depth use the entered slope; Critical Depth uses the critical slope it
+computed (criteria 5.6, 5.7: `53` at slope .005 and at .001, where the entered slope gives `51`;
+ledger Q-009).
+
+Normal Depth searches on the Channel Capacity discharge from stored geometry and stored √S,
+1.486/n · store(√S) · A · store(A/P)^.6667, in 0.1 ft steps from 0.1 ft with the 0.5% stop and
+the narrowed chord (The depth search). Velocity = q/A.
+
+Critical Depth searches on A·√(g·A/T) from stored A and T, in 0.2 ft steps from 0.2 ft with the
+same stop and chord rule. Every field is computed at the search depth y: Area, Wet Perimeter,
+Top Width, Hyd Radius, Velocity = q/A, Froude = Velocity/√(g·A/T), Critical Slope
+((q/A)·n/(1.486·R^.667))² and Max Discharge. Depth prints store(y − 0.01): QUICK-2's printed
+Depth is 0.01 ft below the depth its other fields describe (Q-024, Q-027; haunting H-004). The
+rule was fitted on the 15 Critical Depth circles recorded before A-005, and all 11 held-out
+A-005 cases printed as predicted (A-006).
+
+Known differences, expected to miss and listed in circle-outputs' design: cc-circ-000035's
+Max Discharge (`101165`, the rebuild `101166`; Q-028) and nd-circ-000020's Velocity and Froude
+(`5.8`, `2.5`, the rebuild `5.7`, `2.4`; Q-026).
+
+When the search passes the diameter without bracketing, QUICK-2 prints "DEPTH is Greater than
+the DIAMETER" on the form (ledger Q-022); the rebuild returns outcome `rejected` with that
+message until the profile maps the screen. Criteria 4.5, 5.6, 5.7, 6.6, 6.7, 7.3.
 
 ### Normal Depth, irregular section
 
@@ -450,6 +481,22 @@ All 109 prismatic Normal Depth and Critical Depth results and all 24 irregular o
 including those that print far from the exact answer (nd-rect-000019: `206.00` against 207.70).
 **Validates: Requirements 5.1, 7.1, 7.2, 3.7**
 
+The circle has its own versions, Properties 8 and 9, stated in `.kiro/specs/circle-outputs`
+design and tested in `app/test/circle.test.ts`:
+
+### Property 8: The circle search stops within 0.5%
+
+For any circle input that gives a Normal Depth or Critical Depth result, the search's own
+function (the Channel Capacity discharge for Normal Depth, A·√(g·A/T) for Critical Depth) at the
+search depth is within 0.5% of the entered discharge.
+**Validates: circle-outputs Requirements 2.5, 2.6, 2.7, 2.9**
+
+### Property 9: Circle Critical Depth prints Depth one hundredth of a foot below its fields
+
+For any circle Critical Depth result, `raw.depth` = store(`raw.search_depth` − 0.01), and Area,
+Wet Perimeter and Top Width are those at `raw.search_depth`.
+**Validates: circle-outputs Requirement 2.10**
+
 ### Property 2: The first zero is held
 
 For any regular-form inputs where some value reads as 0, the outcome is `rejected` and `held`
@@ -518,8 +565,11 @@ typed text, held prompt) and the app draws them: 3.1 (four station and elevation
 ## Unverified assumptions and open points
 
 - The search after an interpolation that is over q (never reached on a convex F).
-- The circle search's start and step. Task 3.5.
-- Max Discharge: a scan for the peak, or .938·D (nd-circ-000007). Task 3.5.
+- What QUICK-2 does after a short chord on the circle (ledger Q-026). N2 is used; N1 to N4 have
+  been scored, and nd-circ-000020 fits none of them (`.kiro/specs/circle-outputs`).
+- cc-circ-000035's Max Discharge, one unit below .9382·D (ledger Q-028; circle-outputs).
+- The short-chord rule in circle Critical Depth: no golden reaches it, so the Normal Depth rule
+  is used unobserved (circle-outputs 2.9).
 - Which quantities QuickBASIC stores in single precision. Settled case by case in each task.
 - The ten-character threshold for exponent overflow, and the paint order of overflowing values.
 - Whether QuickBASIC's SQR result is held in single precision everywhere. It is pinned only in

@@ -75,19 +75,19 @@ full set.
     record it in `results/attempts.md` as a new section. Commit tasks 3 and 4.
     - _Requirements: 2.13, 3.1, 3.2, 3.3_
 
-- [ ] 5. Records
-  - [ ] 5.1 Add H-003 (QUICK-2's π = 3.1416 in the circle's area, cc-circ-000031) and H-004
+- [x] 5. Records
+  - [x] 5.1 Add H-003 (QUICK-2's π = 3.1416 in the circle's area, cc-circ-000031) and H-004
     (Critical Depth prints Depth 0.01 ft below its fields, cd-circ-000019) to
     `results/hauntings.md`, with the numbers of the design's hauntings section. Do not add
     cc-circ-000035 or nd-circ-000020.
     - _Requirements: 2.2, 2.4, 2.12_
-  - [ ] 5.2 Correct `.kiro/specs/quick2-solver/design.md` as the design's parent-design section
+  - [x] 5.2 Correct `.kiro/specs/quick2-solver/design.md` as the design's parent-design section
     lists: circle geometry, the search table's circle row and the short-chord option, the
     circle section, Property 8 and 9 beside Property 1, and the open points. Add a pointer to
     this spec in each corrected place. Tick task 3.5 of `.kiro/specs/quick2-solver/tasks.md`,
     noting that it was closed by circle-outputs.
     - _Requirements: 2.3, 2.9, 2.10, 2.11_
-  - [ ] 5.3 With `ledger_write`, answer Q-027 with the rule of 2.9 to 2.11. Evidence:
+  - [x] 5.3 With `ledger_write`, answer Q-027 with the rule of 2.9 to 2.11. Evidence:
     cd-circ-000019 to -000021, cc-circ-000031 to -000033, cd-circ-000011 and cd-circ-000022 to
     -000032. Leave Q-026 and Q-028 open, and report nothing as observed for the short-chord rule
     in Critical Depth. Commit task 5.

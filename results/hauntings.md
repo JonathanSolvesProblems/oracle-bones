@@ -38,3 +38,32 @@ QUICK-2's own search and constants; it is not an observation.
 - **Difference:** Wet Per 13.7 ft shorter in QUICK-2 (3.4%), Hyd R 0.36 ft larger (10.80 against 10.44,
   3.5%).
 - **Flag:** `extended_section`.
+
+## H-003: QUICK-2's π = 3.1416 in the circle's area
+
+- **Case:** cc-circ-000031. Channel Capacity, Diameter 2200 in, n .013, Depth 5.13 ft, slope
+  .005 (y/D 0.028).
+- **QUICK-2 printed:** Discharge `3783.9`.
+- **What happens:** QUICK-2 types π as 3.1416, 7.3e-6 above the true value, and computes the
+  wetted area as the sector minus the triangle, r²·α − (r − y)·√(y·(D − y)), with
+  α = π/2 − ATN(x/√(1 − x²)). The error of 3.7e-6 in α is multiplied by r², so it does not cancel
+  against the triangle (results/attempts.md A-004, hypothesis C2; circle-outputs requirement
+  2.2). The rebuild uses the same π and the same form and prints `3783.9`.
+- **Exact answer, with the true π:** Discharge 3782.98.
+- **Difference:** 0.92 cfs, 0.024%, higher in QUICK-2. The effect grows as the pipe gets larger
+  and the flow shallower: the area error is about r²·3.7e-6 (0.031 sq ft at r = 91.7 ft), a
+  larger share of a smaller area.
+
+## H-004: circle Critical Depth prints a Depth 0.01 ft below the depth of its other fields
+
+- **Case:** cd-circ-000019. Critical Depth, Diameter 2200 in, n .013, discharge 2000 cfs.
+- **QUICK-2 printed:** Depth `4.89`, with Area `194.4`, Top Width `59.1`, Velocity `10.3`,
+  Critical Slope `0.0017` and Max Discharge `%17133`.
+- **What happens:** QUICK-2's search stops at 4.9014 ft, and Area, Wet Perimeter, Top Width,
+  Hyd Radius, Velocity, Critical Slope and Max Discharge are computed at that depth. The printed
+  Depth is 0.01 ft lower, 4.8914 (ledger Q-024 and Q-027: cd-circ-000019 to -000021 against
+  cc-circ-000031 to -000033; A-004 measurement 2; circle-outputs requirements 2.10, 2.12). The
+  rebuild does the same and keeps the search depth as `raw.search_depth`.
+- **Exact answer, with the true π and no single-precision rounding:** critical depth 4.9030 ft.
+- **Difference:** the printed Depth is 0.0116 ft below the exact critical depth (0.24%), and
+  0.01 ft below the depth its own fields describe.
