@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 551,
+      "visits": 569,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 552,
+      "visits": 570,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 554,
+      "visits": 572,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 122,
+      "visits": 133,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 23,
+      "visits": 34,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -94,7 +94,7 @@
       ]
     },
     "cc_form": {
-      "visits": 133,
+      "visits": 136,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -113,14 +113,14 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 94,
+      "visits": 98,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_circ_result": {
-      "visits": 20,
+      "visits": 24,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -129,7 +129,7 @@
       ]
     },
     "cc_circ_result": {
-      "visits": 38,
+      "visits": 41,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -192,37 +192,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 191
+      "cases": 208
     },
     "in_discharge": {
-      "cases": 135
+      "cases": 149
     },
     "depth": {
-      "cases": 162
+      "cases": 176
     },
     "in_slope": {
-      "cases": 191
+      "cases": 208
     },
     "area": {
-      "cases": 215
+      "cases": 232
     },
     "wet_perimeter": {
-      "cases": 215
+      "cases": 232
     },
     "velocity": {
-      "cases": 191
+      "cases": 208
     },
     "hyd_radius": {
-      "cases": 215
+      "cases": 232
     },
     "top_width": {
-      "cases": 218
+      "cases": 235
     },
     "froude": {
-      "cases": 218
+      "cases": 235
     },
     "flow_type": {
-      "cases": 215
+      "cases": 232
     },
     "in_bank_left": {
       "cases": 27
@@ -252,19 +252,19 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 71
+      "cases": 82
     },
     "in_diameter": {
-      "cases": 43
+      "cases": 60
     },
     "max_discharge": {
-      "cases": 43
+      "cases": 60
     },
     "discharge": {
-      "cases": 56
+      "cases": 59
     },
     "in_depth": {
-      "cases": 56
+      "cases": 59
     },
     "in_len_left": {
       "cases": 3
@@ -296,7 +296,7 @@
   },
   "cases": {
     "cc-circ": {
-      "result": 17,
+      "result": 20,
       "rejected": 14,
       "error": 0,
       "observed": 0
@@ -320,7 +320,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 15,
+      "result": 26,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -344,7 +344,7 @@
       "observed": 0
     },
     "nd-circ": {
-      "result": 11,
+      "result": 14,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -2556,6 +2556,21 @@
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
+    },
+    {
+      "id": "Q-028",
+      "question": "Circle Max Discharge: what puts cc-circ-000035 one unit below .9382*D? A-005 part (d) committed .9382*D and a 0.01 ft scan for three Channel Capacity pipes. cc-circ-000034 (D 171.2, n .0132, S 3.4067) printed 83414 and cc-circ-000036 (D 110.2, n .0156, S 7.2582) printed 31823, as .9382*D gives (83413.508, 31822.514); cc-circ-000035 (D 147.3, n .0101, S 6.5418) printed 101165, where .9382*D gives 101165.516 and the 0.01 ft scan 101165.430. In all three the two rules sit 0.05 to 0.09 cfs either side of a rounding boundary, about one part in a million. The rebuild uses .9382*D (circle-outputs design) and lists cc-circ-000035 as a known difference. Candidate cause, not a classification: QuickBASIC 4.5 single precision in the Max Discharge expression (an evaluation order or store the rebuild does not reproduce at this size). No hypothesis has been scored for it; a case would need a pipe whose .9382*D value sits within about 0.1 cfs of a .5 boundary.",
+      "evidence": [
+        "cc-circ-000034",
+        "cc-circ-000035",
+        "cc-circ-000036",
+        "cc-circ-000027"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-24T17:42:32Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
     }
   ],
   "decisions": [
@@ -3460,12 +3475,46 @@
       "why": "A-003 is accepted as a spec error (Skeptic: holds). 13 cases recorded, all matching their exploratory runs. The bugfix spec can cite: ND circle stops on 0.1 ft steps at a 0.5% tolerance with R^.6667 (Q-025: nd-circ-000015 to -000017, cc-circ-000027 to -000030); CD circle prints Depth about 0.25% below the critical root while its geometry sits at the root, not truncation (Q-024: cd-circ-000019 to -000021, cc-circ-000031 to -000033); CD Max Discharge varies with q. What remains (Q-026, the ND branch after a chord; Q-027, the CD mechanism) can be settled by scoring candidates offline against the stored circle goldens. Another live case would not change what the spec states, only which candidate it names.",
       "evidence": [],
       "at": "2026-11-24T11:00:43Z"
+    },
+    {
+      "n": 73,
+      "saw": "All 17 A-005 cases (committed d9e1a3a) recorded with run_case record=true, inputs typed as A-005 shows them; every one ended on a result screen (cd_circ_result, nd_circ_result or cc_circ_result). Part (c), 8 Critical Depth circles from seed 20261125: cd-circ-000022 to cd-circ-000029, the ids A-005 lists. Part (a), 3 Normal Depth pipes (D 72, 38, 53): nd-circ-000018, nd-circ-000019, nd-circ-000020. Part (b), 3 Critical Depth pipes (D 73.3, 131.9, 176.5): cd-circ-000030, cd-circ-000031, cd-circ-000032. Part (d), 3 Channel Capacity pipes (D 171.2, 147.3, 110.2): cc-circ-000034, cc-circ-000035, cc-circ-000036.",
+      "chose": "record_case",
+      "why": "Held-out check of the A-004 circle rules against A-005's pre-committed predictions. Record only: no fitting, no new hypotheses, no grading here. A script grades these goldens against A-005 afterwards, and A-005 stays unchanged.",
+      "evidence": [
+        "cd-circ-000022",
+        "cd-circ-000023",
+        "cd-circ-000024",
+        "cd-circ-000025",
+        "cd-circ-000026",
+        "cd-circ-000027",
+        "cd-circ-000028",
+        "cd-circ-000029",
+        "nd-circ-000018",
+        "nd-circ-000019",
+        "nd-circ-000020",
+        "cd-circ-000030",
+        "cd-circ-000031",
+        "cd-circ-000032",
+        "cc-circ-000034",
+        "cc-circ-000035",
+        "cc-circ-000036"
+      ],
+      "at": "2026-11-24T17:20:25Z"
+    },
+    {
+      "n": 74,
+      "saw": "The A-005 held-out run is complete: all 17 cases are recorded, and each one ended on a result screen. The task was record-only, so grading is left to the script that compares these goldens with A-005. No further questions were opened in this session.",
+      "chose": "stop",
+      "why": "The A-005 held-out run is complete: all 17 cases are recorded, and each one ended on a result screen. The task was record-only, so grading is left to the script that compares these goldens with A-005. No further questions were opened in this session.",
+      "evidence": [],
+      "at": "2026-11-24T17:20:33Z"
     }
   ],
   "stopped": {
-    "why": "A-003 is accepted as a spec error (Skeptic: holds). 13 cases recorded, all matching their exploratory runs. The bugfix spec can cite: ND circle stops on 0.1 ft steps at a 0.5% tolerance with R^.6667 (Q-025: nd-circ-000015 to -000017, cc-circ-000027 to -000030); CD circle prints Depth about 0.25% below the critical root while its geometry sits at the root, not truncation (Q-024: cd-circ-000019 to -000021, cc-circ-000031 to -000033); CD Max Discharge varies with q. What remains (Q-026, the ND branch after a chord; Q-027, the CD mechanism) can be settled by scoring candidates offline against the stored circle goldens. Another live case would not change what the spec states, only which candidate it names.",
-    "decision": 72,
-    "at": "2026-11-24T11:00:43Z",
+    "why": "The A-005 held-out run is complete: all 17 cases are recorded, and each one ended on a result screen. The task was record-only, so grading is left to the script that compares these goldens with A-005. No further questions were opened in this session.",
+    "decision": 74,
+    "at": "2026-11-24T17:20:33Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {

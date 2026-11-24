@@ -472,3 +472,63 @@ Predicted (H5 as it stands):
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | .9382·D | 110.2 | 0.0156 | %14782 | 4.59 | 7.2582 | 33.1 | 14.4 | 446.6 | 2.3 | 9.2 | 41.4 | 31823 | SUPERCRITICAL |
 | scan 0.01 ft | 110.2 | 0.0156 | %14782 | 4.59 | 7.2582 | 33.1 | 14.4 | 446.6 | 2.3 | 9.2 | 41.4 | 31822 | SUPERCRITICAL |
+
+## A-006: the A-005 cases, graded against A-005 as committed
+
+**15 of 17 print as A-005 predicted with the rules it stated (N1, the 0.2 ft grid, H5,
+.9382·D). H5 holds on all 11 Critical Depth cases. Q-026 stays open. Max Discharge takes
+.9382·D, with cc-circ-000035 as a known difference (ledger Q-028).**
+
+**How graded.** The Exhumer recorded all 17 cases with the inputs A-005 shows (ledger decision
+73). `node scripts/circle_outputs.mts grade-a005` reads A-005 from commit d9e1a3a with
+`git show`, finds the golden with the same mode and typed inputs, and compares every
+predicted cell with the printed field, echoes included. The section's numbers below are that
+command's output. A-005 is unchanged.
+
+| Part | Cases | Rows that print every field | Rule as stated |
+|---|---|---|---|
+| (a) Q-026 | nd-circ-000018 (D 72) | N1, N2 | match |
+| | nd-circ-000019 (D 38) | N1, N2 | match |
+| | nd-circ-000020 (D 53) | none | miss: Velocity `5.8` and Froude `2.5` where N1 to N4 all give 5.7 and 2.4; Top Width `2.0`, which only N2 gives |
+| (b) the 0.2 ft step | cd-circ-000030 to -000032 | the 0.2 ft row in all three; the 0.1 ft row misses Depth on all three | match, 3 of 3 |
+| (c) generated, seed 20261125 | cd-circ-000022 to -000029 | H5 | match, 8 of 8 |
+| (d) Max Discharge | cc-circ-000034, -000036 | .9382·D (`83414`, `31823`) | match |
+| | cc-circ-000035 | the 0.01 ft scan (`101165`) | miss: .9382·D gives 101166 |
+
+**H5.** The 0.2 ft step was fitted on 15 goldens (A-004). On 11 it had never seen, it printed
+every field. In the three pipes chosen to separate it from 0.1 ft, QUICK-2 printed the 0.2 ft
+row each time. The fit cost recorded in A-004 is now paid: H5 is accepted.
+
+**Max Discharge.** In cc-circ-000034 to -000036 the two rules sit 0.05 to 0.09 cfs either side
+of a rounding boundary at 30,000 to 100,000 cfs: .9382·D gives 83413.508, 101165.516 and
+31822.514; the 0.01 ft scan gives 83413.461, 101165.430 and 31822.459. That is about one part in
+a million. Neither rule prints all three. No hypothesis is added to fit this (decision of the
+person running the task, 2026-11-24). The rebuild uses .9382·D, which prints 2 of the 3, and
+cc-circ-000035 is a known difference. The question is open as ledger Q-028. QuickBASIC 4.5's
+single precision in the Max Discharge expression is one candidate cause; it is not a
+classification, and no rule for it has been scored. It is not a haunting: hauntings record
+QUICK-2 against exact hydraulics, and this is the rebuild against QUICK-2.
+
+**Q-026 and nd-circ-000020.** Q-026 has used its five hypotheses (A-004, N1 to N5).
+nd-circ-000020 adds a fact. Every field it prints except Depth comes out as printed at one
+depth, 0.24883 to 0.25174 ft, where the discharge is 3.2% to 0.9% short of q. Velocity `5.8`
+alone needs that range: it needs a smaller area than any of N1 to N4 ends on. Their trials
+after the first bracket are:
+
+- N1: 0.24726 (−4.61%), 0.34726, 0.25184 (−0.81%), 0.35184, and 0.25263 (−0.15%), where it stops.
+- N2: 0.24726 (−4.61%), then 0.25228 (−0.45%), where it stops.
+- N3: 0.24726 (−4.61%), 0.25726, then 0.25275 (−0.05%).
+- N4: 0.24726 (−4.61%), 0.25354, then 0.25280 (−0.01%).
+
+No trial of any of them falls in 0.24883 to 0.25174. One idea fits nd-circ-000020: the fields
+are computed at the printed Depth, 0.25, which gives Velocity `5.8`, Froude `2.5` and Top Width
+`2.0`. It fails the only other branch case, nd-circ-000010: at 0.55 it gives Velocity 87.3 and
+Froude 24.4, where QUICK-2 printed `87.0` and `24.3`. I have no rule, stated before looking at
+further cases, that explains both. So no new question is opened and nothing new is predicted.
+
+The design uses N2, the only one of N1 to N4 that prints nd-circ-000020's Top Width. That match
+may be a coincidence: N2 still ends at 0.25228, where Velocity is 5.7. nd-circ-000020 is a known
+difference (Velocity and Froude). Q-026 stays open.
+
+**The adopted rules on every circle result golden** (C2, .9382·D, N2, H5): 58 of 60. The two
+misses are cc-circ-000035 (Max Discharge) and nd-circ-000020 (Velocity, Froude).

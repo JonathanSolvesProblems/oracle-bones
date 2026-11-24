@@ -390,7 +390,99 @@ function a005() {
   row(`pipes tried: ${tried}`);
 }
 
+// ---- A-006: grade the goldens against A-005 as committed --------------------------------
+/** The commit that holds A-005 as written before the runs. */
+const A005_COMMIT = 'd9e1a3a';
+interface Pred { part: string; mode: Mode; inputs: Record<string, string>; rows: { rule: string; cells: string[] }[] }
+function a005Predictions(): Pred[] {
+  const text = execFileSync('git', ['show', `${A005_COMMIT}:results/attempts.md`], { cwd: ROOT, encoding: 'utf-8' });
+  const start = text.indexOf('## A-005');
+  const rest = text.slice(start + 1);
+  const end = rest.search(/\n## /);
+  const sec = end < 0 ? rest : rest.slice(0, end);
+  const modeOf: Record<string, Mode> = { a: 'normal_depth', b: 'critical_depth', c: 'critical_depth', d: 'channel_capacity' };
+  const out: Pred[] = [];
+  const typed = (s: string) => {
+    const m = /Diameter ([\d.]+), n ([\d.]+), (Discharge|Depth) ([\d.]+), Slope ([\d.]+)/.exec(s);
+    if (!m) throw new Error(`cannot read inputs: ${s}`);
+    return { diameter: m[1]!, n: m[2]!, [m[3]!.toLowerCase()]: m[4]!, slope: m[5]! } as Record<string, string>;
+  };
+  const cellsOf = (l: string) => l.split('|').slice(1, -1).map((c) => c.trim());
+  for (const part of ['a', 'b', 'c', 'd']) {
+    const i = sec.indexOf(`### (${part})`);
+    const j = sec.slice(i + 4).search(/\n### \(/);
+    const body = j < 0 ? sec.slice(i) : sec.slice(i, i + 4 + j);
+    const lines = body.split('\n');
+    if (part === 'c') {
+      const inputs = new Map<string, Record<string, string>>();
+      for (const l of lines) { const m = /^- (cd-circ-\d+): (.*)$/.exec(l); if (m) inputs.set(m[1]!, typed(m[2]!)); }
+      for (const l of lines) {
+        const m = /^\| (cd-circ-\d+) \(/.exec(l);
+        if (m) { const c = cellsOf(l); out.push({ part, mode: modeOf[part]!, inputs: inputs.get(m[1]!)!, rows: [{ rule: 'H5', cells: c.slice(1) }] }); }
+      }
+      continue;
+    }
+    let cur: Pred | null = null;
+    for (const l of lines) {
+      if (l.startsWith('**Diameter')) { cur = { part, mode: modeOf[part]!, inputs: typed(l), rows: [] }; out.push(cur); continue; }
+      if (cur && l.startsWith('| ') && !l.startsWith('| Rule') && !l.startsWith('|---')) { const c = cellsOf(l); cur.rows.push({ rule: c[0]!, cells: c.slice(1) }); }
+    }
+  }
+  return out;
+}
+/** The row each part's stated rule predicts: N1, the 0.2 ft grid (H5), H5, .9382·D. */
+const STATED: Record<string, (rule: string) => boolean> = {
+  a: (r) => r.startsWith('N1 '), b: (r) => r.startsWith('0.2 ft'), c: () => true, d: (r) => r === '.9382·D',
+};
+function gradeA005() {
+  const preds = a005Predictions();
+  console.log(`A-005 read from ${A005_COMMIT}: ${preds.length} cases, ${preds.reduce((s, p) => s + p.rows.length, 0)} predicted rows.`);
+  let stated = 0;
+  for (const p of preds) {
+    const g = ALL.find((x) => x.mode === p.mode && x.shape === 'circle' && Object.keys(p.inputs).length === Object.keys(x.inputs).length && Object.entries(p.inputs).every(([k, v]) => x.inputs[k] === v));
+    if (!g) { row(`(${p.part}) ${JSON.stringify(p.inputs)}: no golden recorded`); continue; }
+    const fields = FIELDS[p.mode];
+    const res = p.rows.map((r) => {
+      const d = fields.map((k, i) => (g.printed[k]!.trim() === r.cells[i] ? '' : `${k} predicted ${r.cells[i]}, printed ${g.printed[k]!.trim()}`)).filter(Boolean);
+      return { rule: r.rule, d };
+    });
+    const st = res.find((r) => STATED[p.part]!(r.rule))!;
+    if (!st.d.length) stated++;
+    row(`(${p.part}) ${g.id} ${inputText(p.inputs)}: rows matching every field: ${res.filter((r) => !r.d.length).map((r) => r.rule).join(', ') || 'none'}`);
+    for (const r of res) if (r.d.length) row(`      ${r.rule}: ${r.d.join('; ')}`);
+  }
+  console.log(`With the rules as A-005 stated them (N1, the 0.2 ft grid, H5, .9382·D): ${stated} of ${preds.length} print exactly as predicted.`);
+
+  h('nd-circ-000020: the depths at which each printed field (Depth aside) comes out as QUICK-2 printed it');
+  const g20 = byId('nd-circ-000020'), v20 = vals('normal_depth', g20.inputs), D20 = diam(v20), k20 = kOf(v20, v20.slope!);
+  const at = (v: Vals, y: number) => { const D = diam(v), w = GEO_C2(D, y), vel = f(v.discharge! / w.A); return { area: w.A, wet_perimeter: w.P, velocity: vel, hyd_radius: f(w.A / w.P), top_width: w.T, froude: f(vel / Math.sqrt((G * w.A) / w.T)) } as Out; };
+  const span = (fn: (y: number) => boolean, lo: number, hi: number) => { let a = NaN, b = NaN; for (let i = 0; i <= 20000; i++) { const y = lo + ((hi - lo) * i) / 20000; if (fn(y)) { if (isNaN(a)) a = y; b = y; } } return isNaN(a) ? 'none' : `${a.toFixed(5)} to ${b.toFixed(5)}`; };
+  const okField = (k: string) => (y: number) => show('normal_depth', v20, { ...at(v20, f(y)), depth: y, max_discharge: 0, flow_type: '' })[k] === g20.printed[k];
+  for (const k of ['area', 'wet_perimeter', 'velocity', 'hyd_radius', 'top_width', 'froude']) row(`${k} \`${g20.printed[k]!.trim()}\`: y ${span(okField(k), 0.23, 0.27)}`);
+  const all = (y: number) => ['area', 'wet_perimeter', 'velocity', 'hyd_radius', 'top_width', 'froude'].every((k) => okField(k)(y));
+  row(`every field: y ${span(all, 0.23, 0.27)}`);
+  const Q = (y: number) => manning(GEO_C2, D20, f(y), k20);
+  row(`discharge there relative to q: at 0.2490 ${pct(Q(0.249), v20.discharge!)}, at 0.2517 ${pct(Q(0.2517), v20.discharge!)}`);
+  for (const [name, after] of [['N1', 'resume'], ['N2', 'narrow'], ['N3', 'restep10'], ['N4', 'secant']] as [string, After][]) {
+    const r = nd(v20, GEO_C2, QMAX_RULE, { ...ND_RULE, after })!;
+    row(`${name} trials after the first bracket: ${r.found.trials.filter(([y]) => y > 0.2 + 1e-6).map(([y, x]) => `${y.toFixed(5)} (${pct(x, v20.discharge!)})`).join(', ')}`);
+  }
+  h('The rules the design adopts (C2, M2 .9382·D, N2, H5) on every circle result golden');
+  const m2 = atShare(0.9382);
+  const adopted = count('channel_capacity', (v) => cc(v, GEO_C2, m2), [], true)
+    + count('normal_depth', (v) => nd(v, GEO_C2, m2, { ...ND_RULE, after: 'narrow' })?.out ?? null, [], true)
+    + count('critical_depth', (v) => cd(v, GEO_C2, m2)?.out ?? null, [], true);
+  row(`${adopted} of ${N('channel_capacity') + N('normal_depth') + N('critical_depth')} circle results`);
+  h('Fields at the printed (rounded) Depth, an idea checked against the other branch case');
+  for (const id of ['nd-circ-000020', 'nd-circ-000010']) {
+    const g = byId(id), v = vals('normal_depth', g.inputs), y = Number(g.printed.depth);
+    const p = show('normal_depth', v, { ...at(v, f(y)), depth: f(y), max_discharge: 0, flow_type: '' });
+    row(`${id} at ${y}: Velocity ${p.velocity!.trim()} (printed ${g.printed.velocity!.trim()}), Froude ${p.froude!.trim()} (printed ${g.printed.froude!.trim()}), Top Width ${p.top_width!.trim()} (printed ${g.printed.top_width!.trim()})`);
+  }
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a005') a005();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005'); process.exit(2); }
+else if (which === 'grade-a005') gradeA005();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005'); process.exit(2); }
