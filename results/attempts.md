@@ -532,3 +532,77 @@ difference (Velocity and Froude). Q-026 stays open.
 
 **The adopted rules on every circle result golden** (C2, .9382·D, N2, H5): 58 of 60. The two
 misses are cc-circ-000035 (Max Discharge) and nd-circ-000020 (Velocity, Froude).
+
+## A-007: predictions for "DEPTH is Greater than the DIAMETER" in circle Critical Depth (for the Exhumer, ledger Q-022)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section.**
+
+**Source.** Every number below is printed by `node scripts/q022_boundary.mts observed`, `rate`
+and `a007` at the commit that adds this section, from the rebuild's own search and circle
+geometry (app/src). Inputs are typed exactly as shown.
+
+**Why.** The rebuild's Critical Depth circle search steps 0.2 ft from 0.2 ft (A-004 H5, accepted
+in A-006). When the next trial would pass the diameter before A·√(gA/T) reaches the discharge,
+it returns outcome `rejected` with "DEPTH is Greater than the DIAMETER". On 2000 practical
+Critical Depth circles drawn by the generator (seed 20261126, version 2) it rejects 11 (0.55%),
+all of them pipes of 8.6 to 11.9 in, 6.5% of the 170 pipes under 24 in. In larger pipes the last
+trial inside the pipe sits so close to the crown that no discharge the generator draws (at most
+the critical discharge at 0.9·D) reaches it. No golden records the rejection: the profile has
+no screen for it.
+
+QUICK-2 has printed the message once, in run 20261122-214714-6aaf2d (Q-022): Diameter 9.1 in
+(0.75833 ft), n .0216, Discharge 2, Slope 1.9915. The rebuild's trials there are 0.2 ft
+(0.204 cfs), 0.4 ft (0.775), 0.6 ft (1.715, 0.791·D), then 0.8 ft, past the diameter, so it
+rejects as QUICK-2 did. A 0.1 ft grid would reach 0.7 ft, bracket, and print a result. That run
+was a generated case recorded before A-004 and played no part in choosing the 0.2 ft step. It is
+one case, and it does not show where the boundary lies.
+
+**Candidate rules.**
+
+- R1, the rebuild: 0.2 ft trials; rejected when the next trial passes the diameter. For a pipe,
+  a result up to q = A·√(gA/T) at the last trial inside the pipe, divided by 0.995 (the 0.5%
+  stop), and rejected above.
+- G1: the same with 0.1 ft trials. A-006 part (b) already refutes it for the printed Depth; it is
+  listed because it predicts the rejection differently.
+- S(f): rejected when q exceeds A·√(gA/T) at a fixed share f of the diameter. The observed run
+  is rejected only if f < 0.847 (A·√(gA/T) is 2 cfs at 0.847·D, and 2.357 cfs at 0.9·D, the
+  generator's bound).
+
+The two pipes: 10.1 in, where the last 0.2 ft trial inside is 0.8 ft (0.950·D, 3.790 cfs) and
+R1 gives a result up to 3.809 cfs; and 11.9 in, where it is 0.8 ft (0.807·D, 3.498 cfs) and R1
+gives a result up to 3.516 cfs. n .013 and slope .005 in all four; Critical Depth uses n only
+for Critical Slope and Max Discharge, and the slope for nothing but its echo (H-007).
+
+| Case | Diameter | n | Discharge | Slope | R1 (rebuild) | G1 | S(f), f < 0.847 |
+|---|---|---|---|---|---|---|---|
+| P1 | 10.1 | .013 | 3 | .005 | result (search depth 0.75200) | result | rejected for every such f (a result needs f ≥ 0.894) |
+| P2 | 10.1 | .013 | 4 | .005 | rejected | rejected | rejected (a result needs f ≥ 0.959) |
+| P3 | 11.9 | .013 | 3 | .005 | result (search depth 0.74322) | result | result for f ≥ 0.750, rejected below |
+| P4 | 11.9 | .013 | 4 | .005 | rejected | result (search depth 0.84644) | rejected (a result needs f ≥ 0.855) |
+
+P1 separates R1 from every S(f) the observed run allows. P2 and P1 put R1's boundary for the
+10.1 in pipe between 3 and 4 cfs. P4 separates R1 from G1 on the rejection itself. P3 is a
+result under R1 and G1.
+
+**Predicted screens under R1.** A rejection: the Critical Depth form stays, with "DEPTH is
+Greater than the DIAMETER" on row 19 and no output field filled. (In the observed run the
+Depth field also showed `0.00`; the rebuild does not model that field, so this is copied from
+that run, not computed.) The profile maps no screen for it, so the run will end as `timeout`
+on `cd_form`, as the observed run did, and its final screen is the observation.
+
+A result prints every field below, echoes included, as the comparator compares them:
+
+| Case | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 10.1 | 0.0130 | 3 | 0.74 | 0.0050 | 0.0158 | 0.5 | 2.1 | 5.7 | 0.3 | 0.5 | 1.0 | 3 | CRITICAL |
+| P3 | 11.9 | 0.0130 | 3 | 0.73 | 0.0050 | 0.0089 | 0.6 | 2.1 | 4.8 | 0.3 | 0.9 | 1.0 | 4 | CRITICAL |
+
+**What each outcome means.** All four as R1 predicts: R1's boundary holds on two more pipes, and
+Q-022's third part ("from what discharge") has the answer R1 gives. P1 rejected: QUICK-2 rejects
+below its last trial, so R1 is wrong about the boundary even though it fits the observed run.
+P4 a result: QUICK-2 does not reject where R1 does, and a rule that fits both P4 and the observed
+run is needed. P1 or P3 printing a result with fields
+other than those above is a circle Critical Depth mismatch for the comparator, not part of this
+question. Q-022's other parts, the screen mapping and the key that leaves the message, are not
+tested here.
