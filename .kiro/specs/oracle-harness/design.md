@@ -517,6 +517,7 @@ the harness label remains and no temp drive remains.
 | Golden check fails | `golden_check_failed`; comparator exit 4. |
 | Rebuild crashes or hangs | Unanswered cases are `rebuild_error`; exit 3. |
 | Session id unknown | `session_not_found`. |
+| Oracle code on disk changed since the server loaded it | `boot_target`, `send_keys`, `run_case` and `run_batch` return `stale_server`, naming the changed files and saying to restart the oracle MCP server; nothing runs. |
 
 ## Testing Strategy
 

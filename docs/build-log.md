@@ -1141,3 +1141,9 @@ reasoning: candidates for both can be scored offline against the stored circle g
 another live case would change which candidate the bugfix spec names, not what it states.
 
 Credits: 20.79. Time: 11 min 48 s.
+
+**A guard against a stale server.** `oracle/freshness.py` hashes every `.py` file under `oracle/`
+(not tests, run reports, binaries or goldens) when the server loads. `boot_target`, `send_keys`,
+`run_case` and `run_batch` hash them again first and refuse with `stale_server` if any differ,
+naming the files and saying to restart the oracle MCP server. `oracle/tests/test_freshness.py`
+covers it.

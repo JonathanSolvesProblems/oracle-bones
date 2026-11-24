@@ -14,6 +14,7 @@ CATEGORIES = {
     "profile_invalid": False,
     "golden_check_failed": False,
     "rebuild_failed": False,
+    "stale_server": False,
     "internal": False,
 }
 

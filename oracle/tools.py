@@ -13,7 +13,7 @@ import traceback
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import cases, evidence, generator, ledger, paths, reread, runs, sandbox, screen
+from . import cases, evidence, freshness, generator, ledger, paths, reread, runs, sandbox, screen
 from .recorder import Recorder
 from . import profile as profile_mod
 from .errors import OracleError
@@ -98,6 +98,7 @@ class Oracle:
     # ---- tools --------------------------------------------------------------------------
 
     def boot_target(self, profile=None):
+        freshness.check()
         prof = self._running_profile(profile)
         self._need_docker()
         s = self.manager.start(prof)
@@ -111,6 +112,7 @@ class Oracle:
         return {"screen": self._screen(s.read())}
 
     def send_keys(self, session_id, keys, expect=None, timeout_s=None):
+        freshness.check()
         s = self.manager.get(session_id)
         prof = self.session_profiles[session_id]
         before = screen.identify(prof, s.last["rows"])[0] if s.last else None
@@ -144,6 +146,7 @@ class Oracle:
         return {"screen": self._screen(desc), "resends": s.resends - resends_before}
 
     def run_case(self, mode, shape, inputs, record=False):
+        freshness.check()
         prof = self._running_profile()
         self._need_docker()
         if record:
@@ -155,6 +158,7 @@ class Oracle:
         return out
 
     def run_batch(self, seed, count, modes=None, shapes=None, record=False, ranges="accepted"):
+        freshness.check()
         prof = self._running_profile()
         self._need_docker()
         if record:
