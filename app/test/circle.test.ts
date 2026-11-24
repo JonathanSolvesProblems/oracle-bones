@@ -2,7 +2,9 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { solve } from '../src/solver/index.ts';
-import { DEPTH_ABOVE_DIAMETER } from '../src/solver/modes/circle.ts';
+import { DEPTH_ABOVE_DIAMETER, circleCriticalDischarge, circleNormalDischarge } from '../src/solver/modes/circle.ts';
+import { diameterFeet, wetCircleStored } from '../src/solver/geometry/circle.ts';
+import { readRegularForm } from '../src/solver/forms.ts';
 import { golden, goldens } from './golden.ts';
 
 const decimal = (lo: number, hi: number, d: number) => fc.integer({ min: lo, max: hi }).map((x) => (x / 10 ** d).toFixed(d));
@@ -65,6 +67,71 @@ describe('circle-outputs: reproduction of bugfix.md 1.1 to 1.6', () => {
       expect(fieldMisses(id)).toEqual([]);
     });
   }
+});
+
+/**
+ * Pipes from the practical ranges (Diameter 8 to 180 in, n .008 to .033), slope from the accepted
+ * range, and a discharge under the critical discharge at 0.9·D, as oracle/generator.py draws
+ * Critical Depth circles.
+ */
+const practicalPipeArb = fc.record({
+  diameter: decimal(80, 1800, 1),
+  n: decimal(80, 330, 4),
+  slope: decimal(1, 99999, 4),
+  share: fc.double({ min: 0, max: 1, noNaN: true }),
+}).map(({ share, ...rest }) => {
+  const D = diameterFeet(Number(rest.diameter));
+  const cap = circleCriticalDischarge(D)(0.9 * D);
+  return { ...rest, discharge: String(Math.max(1, Math.floor(share * Math.min(cap, 999999)))) };
+});
+
+function circleValues(mode: CircleMode, inputs: Record<string, string>): Record<string, number> {
+  const form = readRegularForm(mode, 'circle', inputs);
+  if (!form.ok) throw new Error(`held at ${form.held}`);
+  return form.values as Record<string, number>;
+}
+
+describe('Property 8: the circle search stops within 0.5%', () => {
+  it('Normal Depth: the Channel Capacity discharge at the printed depth is within 0.5% of q', () => {
+    let results = 0;
+    fc.assert(fc.property(practicalPipeArb, (inputs) => {
+      const r = solve({ mode: 'normal_depth', shape: 'circle', inputs });
+      if (r.outcome !== 'result') return;
+      results += 1;
+      const v = circleValues('normal_depth', inputs);
+      const value = Math.fround(circleNormalDischarge(diameterFeet(v.diameter!), v.n!, v.slope!)(r.raw!.depth!));
+      expect(value).toBe(r.raw!.search_discharge);
+      expect(Math.abs(value - v.discharge!)).toBeLessThanOrEqual(0.005 * v.discharge!);
+    }), { numRuns: 200 });
+    expect(results).toBeGreaterThan(100);
+  }, 60000);
+  it('Critical Depth: A·√(g·A/T) at the search depth is within 0.5% of q', () => {
+    let results = 0;
+    fc.assert(fc.property(practicalPipeArb, (inputs) => {
+      const r = solve({ mode: 'critical_depth', shape: 'circle', inputs });
+      if (r.outcome !== 'result') return;
+      results += 1;
+      const v = circleValues('critical_depth', inputs);
+      const value = Math.fround(circleCriticalDischarge(diameterFeet(v.diameter!))(r.raw!.search_depth!));
+      expect(value).toBe(r.raw!.search_discharge);
+      expect(Math.abs(value - v.discharge!)).toBeLessThanOrEqual(0.005 * v.discharge!);
+    }), { numRuns: 200 });
+    // A few small pipes are rejected: the 0.2 ft grid passes the diameter before it brackets q.
+    expect(results).toBeGreaterThan(150);
+  }, 60000);
+});
+
+describe('Property 9: circle Critical Depth prints Depth one hundredth of a foot below its fields', () => {
+  it('raw.depth = store(search depth − 0.01), and Area, Wet Perimeter and Top Width are at the search depth', () => {
+    fc.assert(fc.property(practicalPipeArb, (inputs) => {
+      const r = solve({ mode: 'critical_depth', shape: 'circle', inputs });
+      if (r.outcome !== 'result') return;
+      const y = r.raw!.search_depth!;
+      expect(r.raw!.depth).toBe(Math.fround(y - 0.01));
+      const w = wetCircleStored(diameterFeet(circleValues('critical_depth', inputs).diameter!), y);
+      expect([r.raw!.area, r.raw!.wet_perimeter, r.raw!.top_width]).toEqual([w.area, w.perimeter, w.topWidth]);
+    }), { numRuns: 200 });
+  }, 60000);
 });
 
 /** The design's known differences: the rebuild's expected printed value, field by field. */

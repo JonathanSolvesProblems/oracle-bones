@@ -26,7 +26,8 @@ const COINCIDENCES: Record<string, string> = {
   PRISMATIC_STEP: 'the 0.5 ft search step; 0.5 is also a printed Froude number',
   IRREGULAR_START: 'the 0.1 ft start above the lowest point; 0.1 is also a printed value',
   IRREGULAR_STEP: 'the 0.5 ft irregular search step; 0.5 is also a printed Froude number',
-  CIRCLE_STEP: 'the 0.1 ft circle search step (not settled); 0.1 is also a printed value',
+  CIRCLE_STEP: 'the 0.1 ft circle search step; 0.1 is also a printed value',
+  CIRCLE_CD_STEP: 'the 0.2 ft circle Critical Depth search step; 0.2 is also a printed Froude number and Hyd Radius',
 };
 
 function sourceFiles(): string[] {

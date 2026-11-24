@@ -33,6 +33,52 @@ describe('search', () => {
   });
 });
 
+describe('search options: tol and afterShortChord (circle-outputs 2.5 to 2.7)', () => {
+  /** y⁴ on 1 ft steps from 1 ft, with every trial depth recorded. */
+  const quartic = () => {
+    const ys: number[] = [];
+    return { ys, F: (y: number) => { ys.push(y); return y ** 4; } };
+  };
+  const steps = { bottom: 0, first: 1, step: 1 };
+
+  it('tol: a trial within 1% but not 0.5% stops by default and not with tol 0.005', () => {
+    // y² at 2 is 4, 0.74% below 4.03.
+    expect(search((y) => y * y, 4.03, spec)).toMatchObject({ ok: true, y: 2 });
+    const r = search((y) => y * y, 4.03, { ...spec, tol: 0.005 });
+    if (!r.ok) throw new Error('search failed');
+    expect(r.y).toBeGreaterThan(2);
+    expect(r.y).toBeLessThan(2.5);
+    expect(Math.abs(r.value - 4.03)).toBeLessThanOrEqual(0.005 * 4.03);
+  });
+  it('the defaults are the 1% stop and the resume rule', () => {
+    const a = quartic();
+    const b = quartic();
+    expect(search(a.F, 10, steps)).toEqual(search(b.F, 10, { ...steps, tol: 0.01, afterShortChord: 'resume' }));
+    expect(a.ys).toEqual(b.ys);
+  });
+  it("'resume': after a short chord the next trial is one step above it", () => {
+    // Trials 1 (1) and 2 (16) bracket 10; the chord at 1.6 gives 6.55, short.
+    const t = quartic();
+    const r = search(t.F, 10, { ...steps, tol: 0.005 });
+    expect(r.ok).toBe(true);
+    expect(t.ys.slice(0, 4)).toEqual([1, 2, Math.fround(1.6), Math.fround(Math.fround(1.6) + 1)]);
+  });
+  it("'narrow': after a short chord every later trial stays inside [chord, upper trial]", () => {
+    const t = quartic();
+    const r = search(t.F, 10, { ...steps, tol: 0.005, afterShortChord: 'narrow' });
+    if (!r.ok) throw new Error('search failed');
+    expect(t.ys.slice(0, 3)).toEqual([1, 2, Math.fround(1.6)]);
+    const later = t.ys.slice(3);
+    expect(later.length).toBeGreaterThan(1);
+    for (let i = 0; i < later.length; i++) {
+      expect(later[i]).toBeLessThan(2);
+      expect(later[i]).toBeGreaterThan(i === 0 ? Math.fround(1.6) : later[i - 1]!);
+    }
+    expect(Math.abs(r.value - 10)).toBeLessThanOrEqual(0.005 * 10);
+    expect(r.trials).toBe(t.ys.length);
+  });
+});
+
 describe('preservation: the prismatic and irregular searches return what they returned before circle-outputs (3.6)', () => {
   const { _note: note, ...snapshot } = JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf-8')) as Record<string, SnapshotEntry> & { _note: string };
   it('the snapshot says where it came from', () => {

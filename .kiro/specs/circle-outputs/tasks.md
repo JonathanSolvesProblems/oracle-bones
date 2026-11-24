@@ -7,8 +7,8 @@ disagree on an evaluation order or a store, the script is right (design: Overvie
 expected end state is in requirement 2.13: 78 of the 80 circle goldens, and 279 of 284 on the
 full set.
 
-- [ ] 1. Reproduce the circle misses before any fix
-  - [ ] 1.1 Add the "circle-outputs" block to `app/test/circle.test.ts`. Each case goes through
+- [x] 1. Reproduce the circle misses before any fix
+  - [x] 1.1 Add the "circle-outputs" block to `app/test/circle.test.ts`. Each case goes through
     `solve()` and is compared field by field with its golden: cc-circ-000027, cc-circ-000031,
     nd-circ-000007, nd-circ-000010, nd-circ-000016, cd-circ-000010, cd-circ-000011,
     cd-circ-000013, cd-circ-000019 and cd-circ-000030 (design: Testing strategy, item 1).
@@ -17,46 +17,46 @@ full set.
     cc-circ-000035 Max Discharge `101166`; nd-circ-000020 Velocity `5.7` and Froude `2.4`
     (design: Known differences).
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.4, 2.8_
-  - [ ] 1.2 Run `npx vitest run test/circle.test.ts` in `app/` on the unchanged code and show the
+  - [x] 1.2 Run `npx vitest run test/circle.test.ts` in `app/` on the unchanged code and show the
     output. Every reproduction case must fail on the fields `bugfix.md` 1.1 to 1.6 names, and
     the table-driven test must fail. If a case passes before the fix, stop and say so; do not
     drop it. Commit the tests, failing, with the failure count in the message.
     - _Requirements: 1.1 to 1.6_
 
-- [ ] 2. Record the prismatic and irregular search results before `search.ts` changes
-  - [ ] 2.1 Write `app/test/searchSnapshot.ts`, a test helper. For every trapezoid, V-ditch,
+- [x] 2. Record the prismatic and irregular search results before `search.ts` changes
+  - [x] 2.1 Write `app/test/searchSnapshot.ts`, a test helper. For every trapezoid, V-ditch,
     rectangle and irregular golden that reaches the search, it records the search's returned
     depth, value and trial count. Write them to `app/test/fixtures/search-snapshot.json`, keyed
     by case id. Values are written as exact decimal strings of the doubles. Generate the file
     from the unchanged `search.ts`, through an explicit script command, not from a test run.
     Add a note at the top of the file naming the commit it was generated at.
     - _Requirements: 3.1, 3.6_
-  - [ ] 2.2 Add the preservation test to `search.test.ts`. It recomputes each entry and compares
+  - [x] 2.2 Add the preservation test to `search.test.ts`. It recomputes each entry and compares
     depth, value and trial count exactly with the snapshot. Run it and show it passing on the
     unchanged code. Commit the snapshot, its generator and the test together, before any edit
     to `search.ts`. Report how many searches the snapshot holds per pair.
     - _Requirements: 3.1, 3.6_
 
-- [ ] 3. Constants and geometry
-  - [ ] 3.1 In `constants.ts`, set `MAX_DISCHARGE_DEPTH` to .9382. Add `CIRCLE_TOL` (0.005),
+- [x] 3. Constants and geometry
+  - [x] 3.1 In `constants.ts`, set `MAX_DISCHARGE_DEPTH` to .9382. Add `CIRCLE_TOL` (0.005),
     `CIRCLE_CD_STEP` (0.2) and `CIRCLE_CD_DEPTH_OFFSET` (0.01). Replace `CIRCLE_STEP`'s comment
     and citation. Use the `@cite` text of the design's constants table. Update
     `guard.test.ts`'s `COINCIDENCES` for every new constant the guard flags, with a one-line
     reason each, and remove "(not settled)" from `CIRCLE_STEP`'s entry.
     - _Requirements: 2.3, 2.5, 2.9, 2.10, 3.7_
-  - [ ] 3.2 Rewrite `wetCircle` in `geometry/circle.ts` to the sector-minus-triangle form of the
+  - [x] 3.2 Rewrite `wetCircle` in `geometry/circle.ts` to the sector-minus-triangle form of the
     design, with a header comment citing A-004 C2 and cc-circ-000031. Run the circle tests:
     the Channel Capacity reproduction cases (cc-circ-000027, -000031) now pass on Discharge.
     Show the output.
     - _Requirements: 2.1, 2.2_
 
-- [ ] 4. The circle search and the three circle modes
-  - [ ] 4.1 Add `tol` and `afterShortChord` (`'resume'` | `'narrow'`) to `SearchSpec` in
+- [x] 4. The circle search and the three circle modes
+  - [x] 4.1 Add `tol` and `afterShortChord` (`'resume'` | `'narrow'`) to `SearchSpec` in
     `search.ts`. Their defaults are today's rule. Add `search.test.ts` cases for both options on
     a hand-made convex function. Run the task 2 preservation test and show it passing, with
     every snapshot entry identical.
     - _Requirements: 2.6, 2.7, 3.6_
-  - [ ] 4.2 In `modes/circle.ts`, the trial functions use stored geometry, as the design says
+  - [x] 4.2 In `modes/circle.ts`, the trial functions use stored geometry, as the design says
     (and stored √S for Normal Depth). `searchCircle` takes the mode's step: `CIRCLE_STEP` for
     Normal Depth, `CIRCLE_CD_STEP` for Critical Depth. Both use `CIRCLE_TOL` and `'narrow'`.
     `criticalDepthCircle` computes every field at the search depth, with Velocity q/A, Depth =
@@ -64,12 +64,12 @@ full set.
     comment with the rules, their citations, the known differences and Q-026 and Q-028.
     Update `maxDischarge`'s comment in `modes/capacity.ts`.
     - _Requirements: 2.3, 2.5, 2.6, 2.7, 2.9, 2.10, 2.11_
-  - [ ] 4.3 Add Properties 8 and 9 to `circle.test.ts` (fast-check, 200 runs each, pipes from
+  - [x] 4.3 Add Properties 8 and 9 to `circle.test.ts` (fast-check, 200 runs each, pipes from
     the practical ranges with discharge under the critical discharge at 0.9·D). Run the whole
     of `circle.test.ts` and show it: the reproduction block and the table-driven test pass,
     with the known differences exactly as listed. Property 6 still passes.
     - _Requirements: 2.5 to 2.11, 3.4_
-  - [ ] 4.4 Run the comparator (`python scripts/oracle_quick.py`, then `--full`). Every mismatch
+  - [x] 4.4 Run the comparator (`python scripts/oracle_quick.py`, then `--full`). Every mismatch
     left must be a known difference or a Step-Backwater case. If anything else misses, make the
     honest attempt the quick2-solver design describes, against the script's numbers first, and
     record it in `results/attempts.md` as a new section. Commit tasks 3 and 4.

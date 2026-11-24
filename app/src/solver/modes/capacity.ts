@@ -27,9 +27,12 @@ import { flowType, negativeFlags, prismOf } from './normalDepth.ts';
 export const NOT_OBSERVED = 'not observed';
 
 /**
- * Max Discharge of a pipe: 1.486/n · A · R^.6667 · √S at .938·D, the peak of the part-full
- * curve (design: Circle). Channel Capacity and Normal Depth pass the entered slope, Critical
- * Depth its critical slope.
+ * Max Discharge of a pipe: 1.486/n · A · R^.6667 · √S at .9382·D (MAX_DISCHARGE_DEPTH), the peak
+ * of the part-full curve; .938·D sits below it (design: Circle; .kiro/specs/circle-outputs 2.3).
+ * Channel Capacity and Normal Depth pass the entered slope, Critical Depth its critical slope.
+ * Known difference: one A-005 pipe prints 101165 where this gives 101165.516, one part in a
+ * million from a rounding boundary; ledger Q-028 holds it open (the case is named there and in
+ * the circle-outputs design, since case ids stay out of this source).
  */
 export function maxDischarge(D: number, n: number, s: number): number {
   const w = wetCircleStored(D, store(MAX_DISCHARGE_DEPTH * D));

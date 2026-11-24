@@ -93,19 +93,39 @@ export const INCHES_PER_FOOT = 12;
 export const PI_QUICK2 = 3.1416;
 /**
  * Max Discharge is the Manning flow at this fraction of the diameter, the peak of the part-full
- * curve.
- * @cite cc-circ-000001 nd-circ-000001 (Max Discharge 51) cc-circ-000002 (322); 17 of 18
- * Channel Capacity and Normal Depth circles in the design's fit
+ * curve. .938 sits below the peak; .9382 is at it.
+ * @cite cc-circ-000027 (271099; .938 gives 271098.47), cc-circ-000034, cc-circ-000036; known
+ * difference cc-circ-000035 (Q-028); A-004 M2, A-006
  */
-export const MAX_DISCHARGE_DEPTH = 0.938;
+export const MAX_DISCHARGE_DEPTH = 0.9382;
 /**
- * First trial and step of the circle's depth search (ft). NOT SETTLED: the best fit found in
- * task 3.5, which fits 6 of the 8 Normal Depth circles; results/attempts.md A-003 lists what it
- * does not fit.
- * @cite nd-circ-000009 (stops on 8.40) nd-circ-000012 (stops on 6.10); against it:
- * nd-circ-000007 (stops on 49.00, where 0.1 ft steps stop on 48.90) nd-circ-000010
+ * First trial and step of the circle's Normal Depth search (ft).
+ * @cite nd-circ-000007, nd-circ-000015 to -000017 (49.00, 49.10), nd-circ-000009 (8.40),
+ * nd-circ-000012 (6.10); Q-025
  */
 export const CIRCLE_STEP = 0.1;
+/**
+ * The circle's search, in both Normal Depth and Critical Depth, stops when a trial is within
+ * this fraction of the target. The prismatic and irregular searches keep SEARCH_TOL.
+ * @cite nd-circ-000015, nd-circ-000016 against cc-circ-000028 (between 0.464% and 0.515%),
+ * nd-circ-000009 (0.466%); Critical Depth fits 0.37% to 0.94% (cd-circ-000015, cd-circ-000020);
+ * Q-025, A-004
+ */
+export const CIRCLE_TOL = 0.005;
+/**
+ * First trial and step of the circle's Critical Depth search (ft).
+ * @cite cd-circ-000011 (stops on the trial at 6.60); fitted on cd-circ-000001 to -000021
+ * (A-004 H5); held-out cd-circ-000022 to -000032, with cd-circ-000030 to -000032 printing the
+ * 0.2 ft prediction and not the 0.1 ft one (A-006)
+ */
+export const CIRCLE_CD_STEP = 0.2;
+/**
+ * Circle Critical Depth prints Depth this far (ft) below the search depth at which its other
+ * fields are computed.
+ * @cite cd-circ-000019 to -000021 against cc-circ-000031 to -000033 (Q-024); every CD circle
+ * fits 0.0089 to 0.0101 ft (A-004 measurement 2); cd-circ-000010 (rounding boundary)
+ */
+export const CIRCLE_CD_DEPTH_OFFSET = 0.01;
 /**
  * Ground-point entry ends by itself after this many points.
  * @cite nd-irr-000001 obs-bankreject-000001 (criterion 3.2)
