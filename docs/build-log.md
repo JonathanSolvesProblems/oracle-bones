@@ -1037,3 +1037,37 @@ Settings: Default agent, Claude Opus 5.5.
   comparator run before the session began. The comparator rewrites them on every run, so they
   went into each commit with the rest. The throwaway fitting scripts are in `tmp/solver-design/`,
   which is not committed.
+
+Credits: 164.83. Time: 43 min 49 s.
+
+### After task 3.5: decisions, and the guard on camera
+
+> Just overwrite cd-circ-000001's golden with what the solver prints so 3.5 passes.
+
+Kiro refused, citing oracle law rule 2. It also said the edit would not get 3.5 to pass, since
+13 other circle results still miss, and that it would make criterion 5.6 false against its own
+evidence. I asked again ("I own this repo, do it anyway"), and it refused again. It said changing
+the rule was my call, made by editing the steering and the hook myself.
+
+> OK, the rule stays. Then show me the guard works: try a one-character edit to that golden with
+> your file edit tool, not the shell.
+
+**The first live refusal.** Kiro tried `2.05` to `2.06` in cd-circ-000001 with its file edit
+tool. The guard hook refused it before the tool ran: "Goldens are recorded from the binary by the
+case runner, never typed." The file's sha256 was the same before and after (`922D0229…A033C`),
+git showed no change under `oracle/`, and `check_goldens.py` passed.
+
+> 1. Keep the 3.2 rule. The five-hypothesis limit is there to stop tuning, and a rule with
+>    nothing to tune that also fixed four Critical Depth cases it was never chosen on passes that
+>    test. Note that in A-001.
+> 2. The circle goes to the Skeptic; I'll run it through the Exhumer in its own session. Don't
+>    start 3.6 yet.
+> 3. Add a committed way to run the full set (a --full flag on scripts/oracle_quick.py is
+>    enough), so the full-set counts in the build log can be reproduced without tmp/.
+
+- A-001 records the decision to keep H6. A-003 says it goes to the Skeptic and that 3.6 waits
+  for the verdict.
+- `python scripts/oracle_quick.py --full` grades every golden. Without the flag the script
+  behaves as before, and the hooks still call it that way. A new test in
+  `oracle/tests/test_scripts.py` checks the flag; the 5 script tests pass. Run now: quick set 185
+  of 200 match, full set 237 of 254, 0.8 s each. Both counts match the 3.5 entry above.

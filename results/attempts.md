@@ -12,7 +12,7 @@ Skeptic.
 
 ## A-001: the second interpolation step on shallow Normal Depth (task 3.2)
 
-**Resolved by H6, the sixth hypothesis. The design allows five; see the note at the end.**
+**Resolved by H6, the sixth hypothesis. The design allows five; kept by decision, see the end.**
 
 **Cases.** The six prismatic Normal Depth results whose first interpolation is not within 1%
 of the discharge, all shallow and very wide. Five are in the quick set; nd-rect-000004 is not.
@@ -66,8 +66,11 @@ the Skeptic: no mismatch remains. The design's search section is updated to the 
 
 **Note on the count.** The design allows up to five hypotheses. H6 was the sixth. It is kept
 because it fits all six cases with no parameter to tune, and fits four Critical Depth cases that
-played no part in choosing it. Whether the five-hypothesis limit should count it is for the
-person running the task to decide.
+played no part in choosing it.
+
+**Decision (person running the task, 2026-11-23):** keep H6. The five-hypothesis limit is there
+to stop tuning. A rule with nothing to tune that also fixed four Critical Depth cases it was
+never chosen on passes that test.
 
 ## A-002: Channel Capacity discharge on the prismatic shapes (task 3.4)
 
@@ -114,7 +117,8 @@ it only where a golden needs it. Whether SQR is single everywhere is in the desi
 
 ## A-003: the circle's depth search, Normal Depth and Critical Depth (task 3.5), OPEN
 
-**Not resolved. Stopped here for the person running the task; nothing has gone to the Skeptic.**
+**Not resolved. Sent to the Skeptic by decision (2026-11-23); the person running the task runs
+it through the Exhumer in its own session. Task 3.6 waits for the verdict.**
 
 **Built and matching.** Circle geometry with π = 3.1416, Channel Capacity on the circle (10 of
 10, discharge with .6667; with .667, 9 of 10 miss), and Max Discharge at .938·D with .6667.

@@ -25,6 +25,15 @@ def test_oracle_quick_grades_the_configured_rebuild(tmp_path):
     assert "broke the contract" not in (r.stdout + r.stderr)
 
 
+def test_oracle_quick_full_grades_every_golden(tmp_path):
+    # --full compares every stored golden, so the build log's full-set counts can be reproduced.
+    r = run("oracle_quick.py", "--full", env={"ORACLE_GOLDENS": str(paths.REPO_GOLDENS),
+                                              "ORACLE_LEDGER": str(tmp_path / "ledger.json")})
+    assert r.returncode in (0, 1), (r.stdout, r.stderr)
+    assert "full set:" in (r.stdout + r.stderr)
+    assert "quick set:" not in (r.stdout + r.stderr)
+
+
 def test_oracle_quick_exits_4_when_the_golden_check_fails(tmp_path):
     import shutil
     root = tmp_path / "goldens"
