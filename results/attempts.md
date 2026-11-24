@@ -335,3 +335,140 @@ Depth fields), carried by the bugfix spec `circle-outputs`. The 3.1416 area effe
 need live cases, not more offline candidates.
 
 **All rules together** (C2, M4, ND with N1, CD with H5): 43 of 43 circle results, by script.
+
+## A-005: predictions for cases the circle rules have never seen (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section.**
+
+**Source.** Every value below is printed by `node scripts/circle_outputs.mts a005` at commit
+8624ac6 (the A-004 commit), with the rules of A-004: geometry C2, Normal Depth N1 unless the
+row names another rule, Critical Depth H5 unless the row names another rule, and Max Discharge
+M2 (.9382·D). Where a 0.01 ft scan (M4) would print a different Max Discharge, the row says so;
+in parts (a) to (c) it never does. Each row lists every field the result screen prints, echoes
+included, as the comparator compares them. The number in brackets after the rule is the
+search depth, for reference; it is not printed. Inputs are typed exactly as shown.
+
+**What each part tests.**
+
+- (a) Q-026. Across the three pipes, N1 to N4 each print a different combination of rows: the
+  72 in pipe separates {N1, N2}, N3 and N4; the 38 in pipe separates {N1, N2}, N3 and N4; the
+  53 in pipe separates N2, N4 and {N1, N3}. So the three runs name one rule if QUICK-2 uses one
+  of them. If no row matches a pipe, none of N1 to N4 is QUICK-2's.
+- (b) H5's fitted 0.2 ft step. Each pipe is one where the 0.2 ft grid (H5) and the 0.1 ft grid
+  (H4, H5's rule with A-003's step) print a different Depth and Area. A match on the 0.2 ft
+  row supports H5; a match on the 0.1 ft row, or on neither, refutes it.
+- (c) The rules as they stand, on eight Critical Depth circles drawn by the project's generator.
+  Seed 20261125, practical ranges, generator version 2:
+  `python -m oracle.record --seed 20261125 --count 8 --modes critical_depth --shapes circle --ranges practical`.
+  The case ids are those the generator assigns against today's goldens (cd-circ-000022 to
+  -000029); they shift if other circle Critical Depth cases are recorded first, and the inputs
+  do not. None of these inputs was used to choose a rule.
+- (d) Max Discharge. The script found pipes inside the ranges where .9382·D and a 0.01 ft scan
+  print different Max Discharge (diameter and n inside the circle's practical ranges; slope
+  has no practical range, so it is inside the accepted one). So the choice can show in an
+  output, and the design does not take .9382·D by default: these cases decide it. In all
+  three, a 0.005 ft scan prints what .9382·D prints, and a 0.02 ft scan prints what the 0.01 ft
+  scan prints, so a match on the .9382·D row leaves .9382·D and a scan of 0.005 ft or finer.
+  The script tried 209 random pipes to find three. Every other field is the same in both rows.
+
+### (a) the three Q-026 pipes, Normal Depth
+
+**Diameter 72, n .025, Discharge 2, Slope .0231**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| N1 (0.33187) | 72.0 | 0.0250 | 2 | 0.33 | 0.0231 | 0.6 | 2.8 | 3.3 | 0.2 | 2.7 | 1.2 | 360 | SUPERCRITICAL |
+| N2 (0.33201) | 72.0 | 0.0250 | 2 | 0.33 | 0.0231 | 0.6 | 2.8 | 3.3 | 0.2 | 2.7 | 1.2 | 360 | SUPERCRITICAL |
+| N3 (0.33232) | 72.0 | 0.0250 | 2 | 0.33 | 0.0231 | 0.6 | 2.9 | 3.3 | 0.2 | 2.7 | 1.2 | 360 | SUPERCRITICAL |
+| N4 (0.33256) | 72.0 | 0.0250 | 2 | 0.33 | 0.0231 | 0.6 | 2.9 | 3.2 | 0.2 | 2.7 | 1.2 | 360 | SUPERCRITICAL |
+
+**Diameter 38, n .029, Discharge 3, Slope .0418**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| N1 (0.44479) | 38.0 | 0.0290 | 3 | 0.44 | 0.0418 | 0.7 | 2.4 | 4.5 | 0.3 | 2.2 | 1.4 | 76 | SUPERCRITICAL |
+| N2 (0.44491) | 38.0 | 0.0290 | 3 | 0.44 | 0.0418 | 0.7 | 2.4 | 4.5 | 0.3 | 2.2 | 1.4 | 76 | SUPERCRITICAL |
+| N3 (0.44505) | 38.0 | 0.0290 | 3 | 0.45 | 0.0418 | 0.7 | 2.4 | 4.5 | 0.3 | 2.2 | 1.4 | 76 | SUPERCRITICAL |
+| N4 (0.44523) | 38.0 | 0.0290 | 3 | 0.45 | 0.0418 | 0.7 | 2.4 | 4.4 | 0.3 | 2.2 | 1.4 | 76 | SUPERCRITICAL |
+
+**Diameter 53, n .017, Discharge 2, Slope .0476**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| N1 (0.25263) | 53.0 | 0.0170 | 2 | 0.25 | 0.0476 | 0.3 | 2.1 | 5.7 | 0.2 | 2.1 | 2.4 | 336 | SUPERCRITICAL |
+| N2 (0.25228) | 53.0 | 0.0170 | 2 | 0.25 | 0.0476 | 0.3 | 2.1 | 5.7 | 0.2 | 2.0 | 2.4 | 336 | SUPERCRITICAL |
+| N3 (0.25275) | 53.0 | 0.0170 | 2 | 0.25 | 0.0476 | 0.3 | 2.1 | 5.7 | 0.2 | 2.1 | 2.4 | 336 | SUPERCRITICAL |
+| N4 (0.25280) | 53.0 | 0.0170 | 2 | 0.25 | 0.0476 | 0.4 | 2.1 | 5.7 | 0.2 | 2.1 | 2.4 | 336 | SUPERCRITICAL |
+
+### (b) Critical Depth where the 0.1 ft and 0.2 ft grids stop on different trials
+
+**Diameter 73.3, n 0.0184, Discharge 389, Slope 0.0285**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.2 ft, H5 as it stands (5.28251) | 73.3 | 0.0184 | 389 | 5.27 | 0.0285 | 0.0141 | 26.9 | 14.6 | 14.4 | 1.8 | 4.2 | 1.0 | 401 | CRITICAL |
+| 0.1 ft, H4 (5.28675) | 73.3 | 0.0184 | 389 | 5.28 | 0.0285 | 0.0141 | 27.0 | 14.6 | 14.4 | 1.8 | 4.2 | 1.0 | 401 | CRITICAL |
+
+**Diameter 131.9, n 0.0199, Discharge 1601, Slope 0.0467**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.2 ft, H5 as it stands (9.30915) | 131.9 | 0.0199 | 1601 | 9.30 | 0.0467 | 0.0126 | 85.7 | 25.7 | 18.7 | 3.3 | 7.9 | 1.0 | 1675 | CRITICAL |
+| 0.1 ft, H4 (9.30000) | 131.9 | 0.0199 | 1601 | 9.29 | 0.0467 | 0.0126 | 85.6 | 25.7 | 18.7 | 3.3 | 7.9 | 1.0 | 1677 | CRITICAL |
+
+**Diameter 176.5, n 0.0252, Discharge 3091, Slope 0.0376**
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.2 ft, H5 as it stands (12.08988) | 176.5 | 0.0252 | 3091 | 12.08 | 0.0376 | 0.0167 | 149.4 | 33.4 | 20.7 | 4.5 | 11.3 | 1.0 | 3315 | CRITICAL |
+| 0.1 ft, H4 (12.10001) | 176.5 | 0.0252 | 3091 | 12.09 | 0.0376 | 0.0166 | 149.6 | 33.4 | 20.7 | 4.5 | 11.2 | 1.0 | 3313 | CRITICAL |
+
+### (c) eight Critical Depth circles, practical ranges, seed 20261125
+
+Typed inputs:
+
+- cd-circ-000022: Diameter 94, n .0295, Discharge 148, Slope 2.3997
+- cd-circ-000023: Diameter 15.6, n .0252, Discharge 3, Slope 4.1317
+- cd-circ-000024: Diameter 16.7, n .0153, Discharge 8, Slope .1767
+- cd-circ-000025: Diameter 144, n .0149, Discharge 2053, Slope 6.5026
+- cd-circ-000026: Diameter 16.5, n .0148, Discharge 8, Slope 1.7439
+- cd-circ-000027: Diameter 111.1, n .0098, Discharge 325, Slope 7.7597
+- cd-circ-000028: Diameter 56.1, n .015, Discharge 81, Slope 4.213
+- cd-circ-000029: Diameter 100.9, n .0315, Discharge 51, Slope 2.4785
+
+Predicted (H5 as it stands):
+
+| Case (search depth) | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cd-circ-000022 (3.04318) | 94.0 | 0.0295 | 148 | 3.03 | 2.3997 | 0.0149 | 17.3 | 10.5 | 8.5 | 1.6 | 7.6 | 1.0 | 498 | CRITICAL |
+| cd-circ-000023 (0.68733) | 15.6 | 0.0252 | 3 | 0.68 | 4.1317 | 0.0218 | 0.7 | 2.1 | 4.2 | 0.3 | 1.3 | 1.0 | 6 | CRITICAL |
+| cd-circ-000024 (1.11130) | 16.7 | 0.0153 | 8 | 1.10 | 0.1767 | 0.0126 | 1.3 | 3.1 | 6.1 | 0.4 | 1.1 | 1.0 | 9 | CRITICAL |
+| cd-circ-000025 (10.28466) | 144.0 | 0.0149 | 2053 | 10.27 | 6.5026 | 0.0071 | 103.2 | 28.4 | 19.9 | 3.6 | 8.4 | 1.0 | 2130 | CRITICAL |
+| cd-circ-000026 (1.11266) | 16.5 | 0.0148 | 8 | 1.10 | 1.7439 | 0.0122 | 1.3 | 3.1 | 6.2 | 0.4 | 1.1 | 1.0 | 9 | CRITICAL |
+| cd-circ-000027 (4.36063) | 111.1 | 0.0098 | 325 | 4.35 | 7.7597 | 0.0016 | 31.2 | 14.0 | 10.4 | 2.2 | 9.2 | 1.0 | 775 | CRITICAL |
+| cd-circ-000028 (2.60000) | 56.1 | 0.0150 | 81 | 2.59 | 4.2130 | 0.0052 | 9.8 | 7.9 | 8.3 | 1.2 | 4.6 | 1.0 | 146 | CRITICAL |
+| cd-circ-000029 (1.72030) | 100.9 | 0.0315 | 51 | 1.71 | 2.4785 | 0.0167 | 8.2 | 7.9 | 6.2 | 1.0 | 6.8 | 1.0 | 598 | CRITICAL |
+
+### (d) pipes where .9382·D and a 0.01 ft scan print different Max Discharge
+
+**Diameter 171.2, n 0.0132, Depth 7.13, Slope 3.4067, Channel Capacity.** .9382·D 83413.508 prints 83414; scan 0.01 ft 83413.461 prints 83413; scan 0.005 ft 83414; scan 0.02 ft 83413.
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| .9382·D | 171.2 | 0.0132 | %38740 | 7.13 | 3.4067 | 79.9 | 22.4 | 485.0 | 3.6 | 14.3 | 36.1 | 83414 | SUPERCRITICAL |
+| scan 0.01 ft | 171.2 | 0.0132 | %38740 | 7.13 | 3.4067 | 79.9 | 22.4 | 485.0 | 3.6 | 14.3 | 36.1 | 83413 | SUPERCRITICAL |
+
+**Diameter 147.3, n 0.0101, Depth 6.14, Slope 6.5418, Channel Capacity.** .9382·D 101165.516 prints 101166; scan 0.01 ft 101165.430 prints 101165; scan 0.005 ft 101166; scan 0.02 ft 101165.
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| .9382·D | 147.3 | 0.0101 | %47055 | 6.14 | 6.5418 | 59.2 | 19.3 | 794.8 | 3.1 | 12.3 | 63.8 | 101166 | SUPERCRITICAL |
+| scan 0.01 ft | 147.3 | 0.0101 | %47055 | 6.14 | 6.5418 | 59.2 | 19.3 | 794.8 | 3.1 | 12.3 | 63.8 | 101165 | SUPERCRITICAL |
+
+**Diameter 110.2, n 0.0156, Depth 4.59, Slope 7.2582, Channel Capacity.** .9382·D 31822.514 prints 31823; scan 0.01 ft 31822.459 prints 31822; scan 0.005 ft 31823; scan 0.02 ft 31822.
+
+| Rule | Diameter | n | Discharge | Depth | Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| .9382·D | 110.2 | 0.0156 | %14782 | 4.59 | 7.2582 | 33.1 | 14.4 | 446.6 | 2.3 | 9.2 | 41.4 | 31823 | SUPERCRITICAL |
+| scan 0.01 ft | 110.2 | 0.0156 | %14782 | 4.59 | 7.2582 | 33.1 | 14.4 | 446.6 | 2.3 | 9.2 | 41.4 | 31822 | SUPERCRITICAL |
