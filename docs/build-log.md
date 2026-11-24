@@ -1193,4 +1193,5 @@ Credits and times:
 - the Exhumer's A-005 run: 5.89, 7 min 6 s;
 - a prompt sent to the Exhumer by mistake, which it declined because it has no shell: 2.68,
   1 min 24 s;
-- the prompt that wrote tasks.md: 10.74, 1 min 24 s.
+- the prompt that wrote tasks.md: 10.74, 1 min 24 s;
+- the build, tasks 1 to 7 in a new session: 69.09, 1 h 20 min 49 s.
