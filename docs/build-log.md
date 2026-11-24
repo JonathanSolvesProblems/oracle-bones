@@ -1147,3 +1147,50 @@ Credits: 20.79. Time: 11 min 48 s.
 `run_case` and `run_batch` hash them again first and refuse with `stale_server` if any differ,
 naming the files and saying to restart the oracle MCP server. `oracle/tests/test_freshness.py`
 covers it.
+
+### A-004 to A-006: the circle rules, checked on cases they had never seen
+
+Settings: Claude Opus 5.5 for the spec session and the build; the `exhumer` custom agent for
+the A-005 run, in its own session.
+
+**The held-out check.** The circle rules were fitted on the 43 circle results stored at the
+time (results/attempts.md A-004). Before the Exhumer ran anything new, Kiro wrote down what 17
+unseen cases would print, field by field, and committed it in d9e1a3a (A-005). The Exhumer then
+recorded those 17 cases in its own session, typing the inputs as A-005 shows them (decision 73).
+15 of the 17 printed exactly as predicted, every field, echoes included (A-006, graded by `node
+scripts/circle_outputs.mts grade-a005`, which reads the predictions from d9e1a3a rather than
+from the working tree). Critical Depth printed as predicted in 11 of 11. Three of those pipes
+were chosen because a 0.2 ft step and a 0.1 ft step predict different Depth and Area, and all
+three printed the 0.2 ft prediction (cd-circ-000030 to -000032).
+
+The two misses are left as known differences, not fitted. cc-circ-000035 printed Max Discharge
+`101165`, where .9382·D gives 101165.516: one part in a million from a rounding boundary, and
+in all three A-005 Channel Capacity pipes .9382·D and a fine scan sit 0.05 to 0.09 cfs either
+side of one. No rule is fitted to that (Q-028). nd-circ-000020 printed Velocity `5.8` and
+Froude `2.5`, which fit none of Q-026's four candidates for what the search does after a short
+chord, and no rule stated in advance explains both it and nd-circ-000010 (Q-026). Both
+questions stay open in the ledger.
+
+**What A-004 found.** The circle's area is the sector minus the triangle, r²α − (r − y)·h,
+not r²(θ − sin θ)/2: the two are equal with the true π, but QUICK-2's π = 3.1416 cancels in
+the second form and not the first, and only the first prints `3783.9` for cc-circ-000031
+(hypothesis C2; haunting H-003). Max Discharge is at .9382·D, not .938·D (M2). The circle
+search stops within 0.5%, not 1% (Q-025). Critical Depth computes every field at the search
+depth and prints Depth 0.01 ft below it (Q-024, Q-027; haunting H-004), and steps 0.2 ft, not
+0.1 ft (H5).
+
+**The build** (`.kiro/specs/circle-outputs`, tasks 1 to 5). The reproduction tests were
+committed failing first (51 failures), and every prismatic and irregular search result was
+snapshotted before `search.ts` changed; all 134 came back identical. Comparator after the
+fix: quick set 195 of 200 (174 at fe47275), full set 279 of 284. The five misses are the two
+known differences and sb-irr-000001 to -000003, where Step-Backwater is not built.
+
+Credits and times:
+- the stale-server guard session: 9.47 credits, 16 min 50 s;
+- this spec's session, first prompt: 89.36 credits, 1 h 0 min 58 s;
+- second prompt: 98.97, 2 h 19 min 47 s;
+- third prompt: 59.6, 34 min 9 s;
+- the Exhumer's A-005 run: 5.89, 7 min 6 s;
+- a prompt sent to the Exhumer by mistake, which it declined because it has no shell: 2.68,
+  1 min 24 s;
+- the prompt that wrote tasks.md: 10.74, 1 min 24 s.
