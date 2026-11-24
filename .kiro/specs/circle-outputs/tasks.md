@@ -93,8 +93,8 @@ full set.
     in Critical Depth. Commit task 5.
     - _Requirements: 2.14_
 
-- [ ] 6. Build log: A-004 to A-006
-  - [ ] 6.1 Add a section to `docs/build-log.md` after "A-003, second Exhumer session: the
+- [x] 6. Build log: A-004 to A-006
+  - [x] 6.1 Add a section to `docs/build-log.md` after "A-003, second Exhumer session: the
     Skeptic holds, and the circle search measured" and its stale-server guard paragraph. The
     held-out check comes first and is the point of the section:
     - The rules were fitted on 43 stored circle results (A-004).
@@ -125,8 +125,8 @@ full set.
     Commit the build log on its own.
     - _Requirements: none; the record of A-004 to A-006_
 
-- [ ] 7. Final check against 2.13
-  - [ ] 7.1 Run, and show the output of each:
+- [x] 7. Final check against 2.13
+  - [x] 7.1 Run, and show the output of each:
     - `node scripts/circle_outputs.mts grade-a005`. It must still report 15 of 17 for A-005's
       stated rules and 58 of 60 for the adopted rules, with the same two misses.
     - `python scripts/oracle_quick.py` and `python scripts/oracle_quick.py --full`. Report the
@@ -134,7 +134,7 @@ full set.
     - The full Python suite (`python -m pytest oracle/tests`, live tests included) and the full
       Vitest suite.
     - _Requirements: 2.13, 3.1 to 3.7_
-  - [ ] 7.2 Report the counts against requirement 2.13 in one table: full set (expected 279 of
+  - [x] 7.2 Report the counts against requirement 2.13 in one table: full set (expected 279 of
     284), circle goldens (78 of 80), each circle pair, and every other pair at 100%. List each
     mismatch left and say which known difference or Step-Backwater case it is. If any count
     differs from 2.13, say so plainly and do not tick this task. Update the build-log section
