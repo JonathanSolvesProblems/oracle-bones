@@ -48,6 +48,7 @@ oracle disagree). Mismatches in pairs a later task covers are expected until the
     - Closed by `.kiro/specs/circle-outputs`: the search's start and step (0.1 ft for Normal Depth, 0.2 ft for Critical Depth, 0.5% stop), Max Discharge at .9382·D rather than .938·D or a scan, and the sector-minus-triangle area. 78 of the 80 circle goldens match; the two misses are that spec's known differences.
   - [ ] 3.6 Run the quick set and the full set for every regular pair; triage any mismatch. Record hauntings for the 1% stop (nd-trap-000001, cd-vdit-000001), the .667 velocity (cc-vdit-000012), Critical Depth's Max Discharge (cd-circ-000001) and negative inputs (cc-trap-000015), and the evidence for ledger Q-002, Q-003, Q-008, Q-009 and Q-022.
     - _Requirements: closes 1.1, 1.2, 2.1 to 2.10, 4.1 to 4.5, 5.1 to 5.7, 6.1 to 6.7, 7.1 to 7.3, 8.1 to 8.6_
+    - Done: quick set 195 of 200, full set 279 of 284, every regular pair 100% except the two circle known differences; hauntings H-005 to H-008; Q-008 and Q-009 answered. Left: the Exhumer's run of results/attempts.md A-007 for Q-022, and the live key tests Q-002 and Q-003 need (what F7, F2 or Enter do after n -1; whether inputs are kept after the return to the menu).
 
 - [ ] 4. Step-Backwater, first section only
   - [ ] 4.1 Write the start-value rule (below 1 a slope, above 1 an elevation; 1 stays open as ledger Q-018 and returns outcome `error` with message `not observed`) and the Step-Backwater prompt order, with no slope, reach-length or loss-coefficient prompt and those fields blank

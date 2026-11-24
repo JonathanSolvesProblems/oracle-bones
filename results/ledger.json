@@ -1997,12 +1997,12 @@
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T20:51:10Z"
+      "last_run": "2026-11-24T21:26:05Z"
     },
     "outcome": {
       "status": "untriaged",
       "count": 3,
-      "last_run": "2026-11-24T20:51:10Z"
+      "last_run": "2026-11-24T21:26:05Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2012,7 +2012,7 @@
     "velocity": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T20:51:10Z"
+      "last_run": "2026-11-24T21:26:05Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2068,7 +2068,7 @@
     "max_discharge": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T20:51:10Z"
+      "last_run": "2026-11-24T21:26:05Z"
     }
   },
   "unobserved": [
@@ -2233,11 +2233,17 @@
         "cc-trap-000001",
         "nd-trap-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T15:46:00Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Yes for Critical Depth; Normal Depth does not truncate. On the V-ditch, rectangle and trapezoid both modes step depth 0.5 ft from 0.5 ft, interpolate once the trial discharge passes q, and stop on the first trial within 1% of q; a short interpolation resumes the 0.5 ft steps from itself. Every field is computed at that search depth and the printed Depth is that depth rounded by PRINT USING. CD V-ditch (cd-vdit-000001) stops on the 0.5 ft trial 2.50 itself, where A*sqrt(gA/T) is 99.13 cfs (0.87% short), so Area 15.6 and Velocity 6.3 are at 2.50; the exact critical depth is 2.5088. CD trapezoid (cd-trap-000001) stops at 2.4518 (exact 2.4559); CD rectangle (cd-rect-000002) at 2.0274 (exact 2.0290), which prints 2.03. ND trapezoid (nd-trap-000001) stops at 3.2747, where Manning's discharge is 298.08 cfs (0.64% short): Depth prints 3.27 and Area 59.6 is the area at 3.2747, while CC at the typed depth 3.27 prints 59.4 (cc-trap-000001). The rule fits every field of all 53 prismatic ND and 56 prismatic CD results (quick2-solver tasks 3.2, 3.3, 3.6; results/attempts.md A-001). Recorded as haunting H-005, with the exact roots.",
+      "answer_evidence": [
+        "cd-vdit-000001",
+        "cd-trap-000001",
+        "cd-rect-000002",
+        "nd-trap-000001",
+        "cc-trap-000001"
+      ],
+      "answered_at": "2026-11-24T21:34:24Z"
     },
     {
       "id": "Q-009",
@@ -2248,11 +2254,19 @@
         "cc-circ-000001",
         "nd-circ-000001"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T15:46:00Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Yes. Circle Critical Depth computes Max Discharge (Manning at .9382*D with .6667) with the critical slope it computed, 0.0054245 for the 36 in pipe at 40 cfs, which gives 52.84 and prints 53 at entered slope .005 and .001 alike; at the entered .005 the same formula gives 50.73, which CC and ND print as 51 for that pipe. The held-out A-005 Critical Depth circles cd-circ-000022 to -000032 printed Max Discharge as this rule predicted (results/attempts.md A-005, A-006). On the other shapes Critical Depth uses the entered slope for nothing but its echo: the rebuild never reads it, and all 56 prismatic CD results match on every field, Critical Slope included, across the slopes the generator drew. Recorded as haunting H-007.",
+      "answer_evidence": [
+        "cd-circ-000001",
+        "cd-circ-000002",
+        "cc-circ-000001",
+        "nd-circ-000001",
+        "cd-circ-000022",
+        "cd-circ-000030",
+        "cd-circ-000032"
+      ],
+      "answered_at": "2026-11-24T21:34:24Z"
     },
     {
       "id": "Q-010",

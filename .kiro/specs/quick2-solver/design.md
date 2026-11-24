@@ -425,11 +425,13 @@ the cut-off low ground, the frictionless end walls and the use of negative value
 exact hydraulics. Each task that reproduces one of them records a haunting in
 `results/hauntings.md` (oracle law, rule 5): the case, the printed value, the exact value and the
 difference. Examples to record: nd-trap-000001 depth `3.27` against 3.286; cd-vdit-000001 depth
-`2.50` against 2.509; cc-vdit-000012 velocity `5104.8` against Q/A = 5095.2; cd-circ-000001 Max
+`2.50` against 2.509; cc-vdit-000012 velocity `5104.8` against 5095.2 with the exponent 2/3
+(Q/A with QUICK-2's own discharge is also 5104.8, since both use .667); cd-circ-000001 Max
 Discharge `53` against 51 at the entered slope; nd-irr-000010 Top Wid `219` against about 151
 for the channel-connected water; nd-irr-000005 Wet Per `391` against about 404 with the walls
-counted; cc-trap-000015, a negative discharge from n = -1. Showing exact values beside printed
-ones is the app's job (quickened-app Requirement 2.2); `raw` gives it the numbers.
+counted; cc-trap-000015, a negative discharge from n = -1. Recorded as H-001 to H-008 (tasks
+2.5, 3.6 and circle-outputs). Showing exact values beside printed ones is the app's job
+(quickened-app Requirement 2.2); `raw` gives it the numbers.
 
 ## When the rebuild and the oracle disagree
 

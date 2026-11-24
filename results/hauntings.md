@@ -67,3 +67,78 @@ QUICK-2's own search and constants; it is not an observation.
 - **Exact answer, with the true π and no single-precision rounding:** critical depth 4.9030 ft.
 - **Difference:** the printed Depth is 0.0116 ft below the exact critical depth (0.24%), and
   0.01 ft below the depth its own fields describe.
+## H-005: the depth search stops anywhere within 1% of the discharge
+- **Cases:** nd-trap-000001, Normal Depth, trapezoid, side slopes 3 and 2, Bottom Width 10,
+  n .035, discharge 300 cfs, slope .005; and cd-vdit-000001, Critical Depth, V-ditch, side
+  slopes 2 and 3, discharge 100 cfs.
+- **QUICK-2 printed:** nd-trap-000001 Depth `3.27`, Area `59.6`, Velocity `5.0`. cd-vdit-000001
+  Depth `2.50`, Area `15.6`, Velocity `6.3`, Critical Slope `0.0187`.
+- **What happens:** on the V-ditch, rectangle and trapezoid the search steps up 0.5 ft,
+  interpolates once it passes the discharge, and stops on the first trial whose discharge is
+  within 1% of the entered one (solver design, The depth search; tasks 3.2 and 3.3; ledger
+  Q-008). In nd-trap-000001 the interpolation lands at 3.2747 ft, where Manning's discharge is
+  298.08 cfs, 0.64% short, and every field is computed there. In cd-vdit-000001 the 0.5 ft trial
+  at 2.50 ft is already close enough: A·√(gA/T) there is 99.13 cfs, 0.87% short, so it stops
+  without interpolating. The rebuild does the same and matches every field of all 53 prismatic
+  Normal Depth and 56 prismatic Critical Depth results.
+- **Exact answer, the root of QUICK-2's own equation:** nd-trap-000001 normal depth 3.2853 ft
+  with QUICK-2's exponent .667 (3.2857 ft with 2/3), Area 59.8 sq ft. cd-vdit-000001 critical
+  depth 2.5088 ft with g = 32.2, Area 15.73 sq ft, Velocity 6.36 ft/s.
+- **Difference:** nd-trap-000001 Depth 0.011 ft shallower in QUICK-2 (0.32%), Area 0.28 sq ft
+  smaller (0.47%). cd-vdit-000001 Depth 0.0088 ft shallower (0.35%), Area 0.11 sq ft smaller
+  (0.70%). The stop allows up to 1% in discharge on every channel size; because discharge grows
+  faster than depth, the depth error is smaller, about 0.3% to 0.4% in these two. The search
+  approaches from below, so the printed depth is never above the root in these cases. The
+  circle's search stops at 0.5% instead (H-004, ledger Q-025).
+## H-006: Manning's 2/3 power typed as .667
+- **Case:** cc-vdit-000012. Channel Capacity, V-ditch, side slopes 99 and 90.8, n .0173, Depth
+  567.55 ft, slope 1.887.
+- **QUICK-2 printed:** Velocity `5104.8`, Froude # `53.4`, Hyd Radius `283.8`, and the Discharge
+  window `% 1560` (an overflow).
+- **What happens:** on the V-ditch, rectangle and trapezoid QUICK-2 raises the hydraulic radius
+  to .667, not 2/3, in the Channel Capacity discharge and velocity, the Normal Depth search and
+  the critical slope (solver design, constants table, exponent A; task 3.4: Channel Capacity
+  velocity misses 29 goldens with 2/3 and none with .667). Velocity here is
+  1.486/n · R^.667 · √S with R = 283.76 ft. The rebuild does the same and prints `5104.8`; its
+  discharge is 1.5605E+11 cfs. The circle and the irregular section use .6667 (exponent B),
+  which is 3.3e-5 above 2/3.
+- **Exact answer, with 2/3:** Velocity 5095.17 ft/s, Discharge 1.5575E+11 cfs, Froude 53.30.
+- **Difference:** 9.6 ft/s, 0.19% higher in QUICK-2, and the discharge by the same share. The
+  extra power is R^(1/3000): nothing at R = 1 ft, 0.023% at R = 2 ft, 0.077% at 10 ft, 0.19% at
+  284 ft. Below R = 1 ft QUICK-2's value is slightly low instead. In a channel of ordinary size
+  the difference stays well under the 1% of H-005.
+## H-007: circle Critical Depth computes Max Discharge at the critical slope
+- **Cases:** cd-circ-000001 and cd-circ-000002. Critical Depth, Diameter 36 in, n .013,
+  discharge 40 cfs, slope .005 and .001.
+- **QUICK-2 printed:** Max Discharge `53` at both slopes, with Critical Slope `0.0054`. Channel
+  Capacity and Normal Depth on the same pipe at slope .005 print Max Discharge `51`
+  (cc-circ-000001, nd-circ-000001).
+- **What happens:** Max Discharge is Manning's discharge at .9382·D, the peak of the part-full
+  curve (circle-outputs requirement 2.3). Critical Depth puts its own critical slope,
+  0.0054245, into that formula in place of the entered slope (criteria 5.6, 5.7; ledger Q-009).
+  The entered slope is echoed and used for nothing else. The rebuild does the same: 52.843 cfs,
+  printed `53`.
+- **Exact answer, the pipe's capacity at the slope it is laid on:** 50.73 cfs at .005 (prints
+  `51`) and 22.69 cfs at .001 (would print `23`).
+- **Difference:** at slope .005, 2.11 cfs (4.2%) higher in QUICK-2; at .001, 30.2 cfs, 2.3 times
+  the pipe's capacity. The ratio is √(critical slope / entered slope), so the figure is the
+  capacity of the same pipe laid at its critical slope, whatever slope was typed.
+## H-008: negative inputs are computed as typed
+- **Case:** cc-trap-000015. Channel Capacity, trapezoid, side slopes 1.6 and 84.2, Bottom Width
+  -1, n -1, Depth 700.82 ft, slope 4.9621.
+- **QUICK-2 printed:** Discharge window `%-3465`, Velocity `-164.5`, Froude # `-1.5`, Flow Type
+  `SUBCRITICAL`, Area `%21069`, Wet Perimeter `%60334`, Hyd Radius `349.2`.
+- **What happens:** QUICK-2 accepts -1 at every regular prompt (criterion 2.1) and puts the value
+  into its formulas unchanged (solver design, Negative values and abandoned calculations). With
+  n = -1 the discharge is −3.4654E+09 cfs, the velocity −164.47 ft/s and the Froude number
+  −1.55, which is below 1, so the Flow Type reads SUBCRITICAL. The rebuild does the same,
+  matches every field and raises `negative_input`.
+- **Exact answer:** none. A negative roughness or bottom width has no physical meaning, and a
+  correct program would refuse it. Read with n = +1 and the same section, the discharge would be
+  +3.4654E+09 cfs and the Froude number +1.55, SUPERCRITICAL.
+- **Difference:** Discharge, Velocity and Froude # have the wrong sign, and the Flow Type is
+  SUBCRITICAL where the magnitude of the Froude number, 1.55, is supercritical. Normal Depth
+  shows the other outcomes of negative inputs: a negative side slope or width gives a result
+  (nd-trap-000003 to -000005), n = -1 never finishes (ledger Q-002), and discharge or slope -1
+  returns to the shape menu (ledger Q-003). Those two print no value, so they are not hauntings.
+- **Flag:** `negative_input`.
