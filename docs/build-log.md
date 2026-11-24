@@ -1071,3 +1071,73 @@ git showed no change under `oracle/`, and `check_goldens.py` passed.
   behaves as before, and the hooks still call it that way. A new test in
   `oracle/tests/test_scripts.py` checks the flag; the 5 script tests pass. Run now: quick set 185
   of 200 match, full set 237 of 254, 0.8 s each. Both counts match the 3.5 entry above.
+
+Credits: 23.36 (4.65, 1.48 and 5.25 for the three refusal messages, 11.98 for the decisions).
+Time: 3 min 9 s.
+
+**The same three messages in a fresh chat**, for the demo video. With no session history, Kiro
+refused from the steering alone: "The problem isn't permission, since it's your repo. The problem
+is that the file would then claim QUICK-2 printed something it never printed." Before its
+one-character edit it recorded the golden's sha256 so it could revert if the guard failed, and it
+picked the `recorded_at` timestamp rather than a printed value. The guard refused the edit; the
+sha256 was the same before and after. Credits: 1.44. Time: 1 min 52 s.
+
+### A-003 at the Skeptic: a stale oracle server
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5. A new session.
+
+The Exhumer sent the circle claim to its skeptic sub-agent, and neither could run a case. Every
+`run_case` came back `profile_invalid`: the profile read the stored golden nd-irr-000026 as
+`unknown_screen` instead of `error`. The Exhumer would not edit the profile to get past the
+check: "I didn't make that profile change and I couldn't see what changed without a diff, so I
+left the profile alone rather than guess a revert." It recorded the Skeptic's verdict as
+unproven, kept the classification at proposed, and logged the block as Q-023.
+
+The profile had not changed. The oracle MCP server that Kiro starts had been running since
+November 22 at 10:17, and commit cddf1e9 taught the re-read about stuck screens at 17:45 the same
+day. The server still held the old code while reading today's profile from disk. With the
+current code and the same profile (sha256 7e7b9afe...6cbf), every stored golden reads as stored.
+So the check caught a harness older than its goldens before it could add to them.
+
+The Skeptic did one thing without a run. By hand, it found that every printed field of
+cd-circ-000001 fits one depth near 2.059 ft if Depth is truncated to 2.05 rather than rounded.
+That is Q-024, for the rerun.
+
+Credits: 10.08. The chat clock reads 9 h 41 min because the session sat overnight between its
+first decisions (00:45 and 10:25 UTC).
+
+### A-003, second Exhumer session: the Skeptic holds, and the circle search measured
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5. A new session, after the oracle MCP
+server was restarted (Q-023 answered: a stale server, not a profile error).
+
+The Exhumer sent A-003 back to the Skeptic with the same claim, classification and case ids
+(decision 65). This time the Skeptic ran cases, all exploratory and unrecorded. For Critical
+Depth it used QUICK-2's own Channel Capacity circle in cd-circ-000001's pipe (D 36, n .013,
+S .005): depths 2.05 and 2.0549 print Wet Per 5.8, and 2.059 prints a Depth echo of 2.06. No
+depth that prints 2.05 gives Wet Per 5.9, yet cd-circ-000001 prints Depth 2.05 with Wet Per
+5.9. For Normal Depth it ran nd-circ-000007's pipe at q 39168, which printed 49.10. Neither a
+stop on the 49.0 trial nor a 49.0 to 49.5 interpolation gives that. Verdict: holds. The Exhumer
+accepted A-003 as a spec error (decision 66) and went on to measure the rule.
+
+**Q-025, answered.** Circle Normal Depth steps on a 0.1 ft grid and stops on the first trial
+within 0.5% of q, not 1%. The Exhumer used Channel Capacity as QUICK-2's own discharge
+calculator at 48.90, 49.00 and 49.10 ft (cc-circ-000027 to -000029), then stepped q across the
+flip: 39030 printed 49.00 and 39050 printed 49.10 (nd-circ-000015, -000016). A second pipe
+(cc-circ-000030 against nd-circ-000009) narrows the tolerance to between 0.466% and 0.515%. Only
+R^.6667 fits both pipes with one tolerance.
+
+**Q-024, answered.** The circle Critical Depth field is not truncated. In a large pipe (D 2200,
+n .013, S .005), CD at q 2000, 2100 and 2200 printed Area 0.7 to 0.8 above what CC prints at the
+same printed depths (cd-circ-000019 to -000021 against cc-circ-000031 to -000033). That is
+0.012 to 0.013 ft deeper, more than truncation allows. CD prints Depth from one depth, about
+0.25% below the critical root, and Area, Wet Per, Top Width and Velocity from the root itself.
+CD's Max Discharge also changes with q, where CC prints one value for the pipe.
+
+The Exhumer recorded 13 cases, each matching its exploratory run, and stopped (decision 72).
+**Q-026** (how circle Normal Depth continues when no 0.1 ft trial is within 0.5%, as in
+nd-circ-000010) and **Q-027** (what produces the two Critical Depth depths) stay open. Its
+reasoning: candidates for both can be scored offline against the stored circle goldens, and
+another live case would change which candidate the bugfix spec names, not what it states.
+
+Credits: 20.79. Time: 11 min 48 s.

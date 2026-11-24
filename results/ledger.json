@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 514,
+      "visits": 551,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 515,
+      "visits": 552,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 517,
+      "visits": 554,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 115,
+      "visits": 122,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 16,
+      "visits": 23,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -94,7 +94,7 @@
       ]
     },
     "cc_form": {
-      "visits": 111,
+      "visits": 133,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -113,14 +113,14 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 86,
+      "visits": 94,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_circ_result": {
-      "visits": 12,
+      "visits": 20,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -129,7 +129,7 @@
       ]
     },
     "cc_circ_result": {
-      "visits": 16,
+      "visits": 38,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -192,37 +192,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 178
+      "cases": 191
     },
     "in_discharge": {
-      "cases": 129
+      "cases": 135
     },
     "depth": {
-      "cases": 156
+      "cases": 162
     },
     "in_slope": {
-      "cases": 178
+      "cases": 191
     },
     "area": {
-      "cases": 202
+      "cases": 215
     },
     "wet_perimeter": {
-      "cases": 202
+      "cases": 215
     },
     "velocity": {
-      "cases": 178
+      "cases": 191
     },
     "hyd_radius": {
-      "cases": 202
+      "cases": 215
     },
     "top_width": {
-      "cases": 205
+      "cases": 218
     },
     "froude": {
-      "cases": 205
+      "cases": 218
     },
     "flow_type": {
-      "cases": 202
+      "cases": 215
     },
     "in_bank_left": {
       "cases": 27
@@ -252,19 +252,19 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 68
+      "cases": 71
     },
     "in_diameter": {
-      "cases": 30
+      "cases": 43
     },
     "max_discharge": {
-      "cases": 30
+      "cases": 43
     },
     "discharge": {
-      "cases": 49
+      "cases": 56
     },
     "in_depth": {
-      "cases": 49
+      "cases": 56
     },
     "in_len_left": {
       "cases": 3
@@ -296,7 +296,7 @@
   },
   "cases": {
     "cc-circ": {
-      "result": 10,
+      "result": 17,
       "rejected": 14,
       "error": 0,
       "observed": 0
@@ -320,7 +320,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 12,
+      "result": 15,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -344,7 +344,7 @@
       "observed": 0
     },
     "nd-circ": {
-      "result": 8,
+      "result": 11,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -2046,9 +2046,19 @@
       "last_run": "2026-11-24T00:38:27Z"
     },
     "depth": {
-      "status": "untriaged",
+      "status": "accepted",
       "count": 12,
-      "last_run": "2026-11-24T00:38:27Z"
+      "last_run": "2026-11-24T00:38:27Z",
+      "classification": "spec_error",
+      "why": "results/attempts.md A-003. Skeptic second review 2026-11-24: holds. CD: with QUICK-2's own Channel Capacity circle geometry (D 36, n .013, S .005), every depth up to 2.0549 prints Wet Per 5.8, yet cd-circ-000001 prints Depth 2.05 with Wet Per 5.9, so its outputs do not come from one depth (runs 20261124-105235-02c7bf, -c64753, 20261124-105250-b1a90a). ND: nd-circ-000007's pipe at Q 39168 printed 49.10 (20261124-105255-39224c), which neither a stop on the 49.0 trial nor a 49.0 to 49.5 interpolation gives. Spec error in the design's circle search; rule to be measured for the bugfix spec.",
+      "evidence": [
+        "20261124-105235-02c7bf",
+        "20261124-105235-c64753",
+        "20261124-105250-b1a90a",
+        "20261124-105255-39224c",
+        "cd-circ-000001",
+        "nd-circ-000007"
+      ]
     },
     "hyd_radius": {
       "status": "untriaged",
@@ -2077,10 +2087,6 @@
     {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-    },
-    {
-      "profile_path": "screens[irr_working]",
-      "source": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
     }
   ],
   "harness_findings": {
@@ -2451,6 +2457,102 @@
       ],
       "status": "open",
       "asked_at": "2026-11-22T21:55:05Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-023",
+      "question": "Why does the current profile (sha256 7e7b9afed3c8191ac56c23e2be7f0a70ddb185e04e9f062a37159eb8773cc6bf) read nd-irr-000026 as unknown_screen when it was stored as outcome 'error' with stuck_screen irr_working? Its final capture screen-14.txt still holds 'GROUND  POINTS' and 'W o r k i n g', which the irr_working marker matches, and irr_working still sits ahead of irr_editor. The change was not made in this session. Until a person restores the profile, or raises its version and rerecords, every run_case, run_batch and boot_target is refused, which blocks A-003.",
+      "evidence": [
+        "nd-irr-000026",
+        "oracle/goldens/captures/nd-irr-000026/screen-14.txt"
+      ],
+      "status": "answered",
+      "asked_at": "2026-11-24T10:25:33Z",
+      "answer": "The profile did not change. Per the person running the task: the oracle MCP server had run since 2026-11-22 10:17, before commit cddf1e9 (17:45 that day) taught reread.read_as about stuck screens, so its old code read nd-irr-000026's final screen (irr_working, kind other, stuck) as unknown_screen while loading today's profile. Offline with current code and the same profile (sha256 7e7b9afed3c8191ac56c23e2be7f0a70ddb185e04e9f062a37159eb8773cc6bf) the re-read finds no differences. The server has been restarted. A stale server, not a profile error.",
+      "answer_evidence": [
+        "nd-irr-000026",
+        "oracle/goldens/captures/nd-irr-000026/screen-14.txt"
+      ],
+      "answered_at": "2026-11-24T10:49:17Z"
+    },
+    {
+      "id": "Q-024",
+      "question": "Is the circle Critical Depth Depth field truncated rather than rounded? The Skeptic's hand check (no run) puts cd-circ-000001's exact critical depth near 2.059 ft, where Area 5.2, Wet Per 5.9, Top Width 2.8, Velocity 7.7 and Hyd R 0.9 all print as stored and Depth would print 2.05 only by truncation. If so, A-003's claim that the CD outputs do not all come from one depth fails. Test once runs work: a large pipe (D 2200, n .013, S .005, Q 86, 87, 88) where 0.01 ft of depth moves Area by about 0.28, to see whether Area moves smoothly (one converged depth) or in steps, and whether Depth is the truncation of the depth Area implies.",
+      "evidence": [
+        "cd-circ-000001",
+        "cd-circ-000010"
+      ],
+      "status": "answered",
+      "asked_at": "2026-11-24T10:25:35Z",
+      "answer": "No, it is not truncation. In D 2200 n .013 S .005, CD q 2000, 2100, 2200 printed Depth 4.89, 5.01, 5.13 with Area 194.4, 201.6, 208.7 (cd-circ-000019, -000020, -000021). CC at exactly those depths printed Area 193.7, 200.8, 208.0 (cc-circ-000032, -000033, -000031). The CD Area is 0.7 to 0.8 higher, which at Top Width 59.1 to 60.5 is 0.012 to 0.013 ft deeper, more than the 0.01 ft truncation allows; CD Wet Per 61.0 and 61.7 against CC 60.9 and 61.6, and CD Top Width 59.9 against CC 59.8, move the same way. So CD circle prints Depth from one depth and Area, Wet Per, Top Width and Velocity (q/A) from a deeper one. From the CD fields, q^2 T/(g A^3) is about 0.999, so the geometry is at the critical root. The printed Depth is about 0.25% below it: with the CC geometry at the printed depth, sqrt(g A^3/T) is 0.50% to 0.58% below q in all three. Also seen: CD Max Discharge (%17133, %17063, %17004) changes with q while CC prints %29399 in the same pipe, and cd-circ-000001's 53 against CC's 51 fits Max Discharge computed with the critical slope.",
+      "answer_evidence": [
+        "cd-circ-000019",
+        "cd-circ-000020",
+        "cd-circ-000021",
+        "cc-circ-000031",
+        "cc-circ-000032",
+        "cc-circ-000033",
+        "cd-circ-000001"
+      ],
+      "answered_at": "2026-11-24T11:00:26Z"
+    },
+    {
+      "id": "Q-025",
+      "question": "Does circle Normal Depth stop closer to the root than a 1% stop allows? Skeptic's planned test, not yet run: near half full, D 120 n .013 S .005 Q 585 (exact root about 5.00 ft) and D 240 n .013 S .005 Q 3712 (about 10.00 ft). A-003's own separating cases (one pipe with discharges stepped across 0.1 ft and 0.5 ft grid points; the 36 in pipe with critical depth just above and below a 0.1 ft step; nd-circ-000007's pipe with slope varied) are also unrun.",
+      "evidence": [
+        "nd-circ-000007",
+        "nd-circ-000010"
+      ],
+      "status": "answered",
+      "asked_at": "2026-11-24T10:25:37Z",
+      "answer": "Yes. Circle ND steps on a 0.1 ft grid and stops on the first step trial whose discharge is within about 0.5% of q, not 1%. In D 2215.5 n 4.3763 S 4.641, CC prints Q %38693 at 48.90, %38849 at 49.00, %39006 at 49.10 (cc-circ-000027, -000028, -000029). ND q 39030 printed 49.00 (nd-circ-000015; 49.00 is 0.464% short) and q 39050 printed 49.10 (nd-circ-000016; 49.00 is 0.515% short); q 39168 printed 49.10 (nd-circ-000017). nd-circ-000007 (q 38986) printed 49.00 although 48.90 is 0.75% short, which a 1% stop would have taken. In D 143.3 n .0322 S 1.187, CC prints 9837.9 at 8.40 (cc-circ-000030), and nd-circ-000009 (q 9884) stopped there, 0.466% short. Measured against CC's discharge (R^.6667), the tolerance lies between 0.466% and 0.515%. With R^.667 the bounds would be 0.36% to 0.41% in the large pipe but above 0.43% for nd-circ-000009, which no single tolerance fits, so ND circle uses .6667. Stop results print Area and Wet Per equal to CC at the same depth (nd-circ-000015 and cc-circ-000028: 5693.1, 199.8). What happens when no step trial is within 0.5% stays open (new question).",
+      "answer_evidence": [
+        "cc-circ-000027",
+        "cc-circ-000028",
+        "cc-circ-000029",
+        "cc-circ-000030",
+        "nd-circ-000015",
+        "nd-circ-000016",
+        "nd-circ-000017",
+        "nd-circ-000007",
+        "nd-circ-000009"
+      ],
+      "answered_at": "2026-11-24T11:00:26Z"
+    },
+    {
+      "id": "Q-026",
+      "question": "Circle ND when no 0.1 ft step trial is within 0.5%: how does the search continue after the first chord? nd-circ-000010 (D 21.3 n .018 S 5.2485 q 57): CC Q is 47.2 at 0.50 and 67.0 at 0.60 (exploratory 20261124-105607-af4ca8, 20261124-105607-559858), a chord gives 0.5495, and QUICK-2 printed Depth 0.55 with Velocity 87.0 (A about 0.655), where the rebuild (1% stop) prints 87.4. Candidates to score offline with the 0.5% stop: A-001's H6 (resume 0.1 ft steps from the chord), a chord on the narrowed bracket, or repeated chords. nd-circ-000010, -000011, -000013 and -000014 are the goldens that reach this branch.",
+      "evidence": [
+        "nd-circ-000010",
+        "nd-circ-000011",
+        "nd-circ-000013",
+        "nd-circ-000014",
+        "20261124-105607-af4ca8",
+        "20261124-105607-559858"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-24T11:00:29Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-027",
+      "question": "Circle CD: what produces the two depths? The printed Depth sits where sqrt(g A^3/T) is about 0.5% below q (a 0.5% stop approached from below would land there only if its steps were fine), while Area, Wet Per, Top Width and Velocity are at the critical root (cd-circ-000019 to -000021 against cc-circ-000031 to -000033). Is the geometry from a later trial than the depth variable, or from a separate pass? Is the stop 0.5% on sqrt(g A^3/T), 1% on the Froude number squared, or something else? Do Critical Slope and Max Discharge use the root or the printed depth? cd-circ-000010 fits one depth by the Skeptic's hand check, so the split may not happen in every case.",
+      "evidence": [
+        "cd-circ-000019",
+        "cd-circ-000020",
+        "cd-circ-000021",
+        "cc-circ-000031",
+        "cc-circ-000032",
+        "cc-circ-000033",
+        "cd-circ-000010",
+        "cd-circ-000001"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-24T11:00:32Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -3189,12 +3291,181 @@
       "why": "Decisions 58 and 59 only added the solver's evidence for Q-006 and Q-021 (quick2-solver task 2.5). No exhume run was started, so the Exhumer is stopped again for the reason of decision 57: the open questions that remain need a person (verifying F3 and F8, and what the runner does on screens that never settle or that pass through rejected screens) or wait for planned batches (Q-019).",
       "evidence": [],
       "at": "2026-11-23T14:42:58Z"
+    },
+    {
+      "n": 61,
+      "saw": "results/attempts.md A-003 (quick2-solver task 3.5): circle Normal Depth matches 6 of 8 (nd-circ-000007, nd-circ-000010 miss) and circle Critical Depth 0 of 12 (cd-circ-000001, -02, -09 to -18); ledger mismatches 'depth' (12) and others untriaged.",
+      "chose": "triage",
+      "why": "A-003 proposes a classification for the circle depth search; it must be entered as proposed before the Skeptic reviews it.",
+      "evidence": [
+        "nd-circ-000007",
+        "nd-circ-000010",
+        "cd-circ-000001",
+        "cd-circ-000002",
+        "cd-circ-000009",
+        "cd-circ-000010",
+        "cd-circ-000011",
+        "cd-circ-000012",
+        "cd-circ-000013",
+        "cd-circ-000014",
+        "cd-circ-000015",
+        "cd-circ-000016",
+        "cd-circ-000017",
+        "cd-circ-000018"
+      ],
+      "at": "2026-11-24T00:45:51Z"
+    },
+    {
+      "n": 62,
+      "saw": "depth triaged spec_error, proposed (A-003).",
+      "chose": "ask_skeptic",
+      "why": "A classification is proposed; the user asked that the Skeptic get only the claim, the class and the mismatching case ids from A-003's table.",
+      "evidence": [
+        "nd-circ-000007",
+        "nd-circ-000010",
+        "cd-circ-000001",
+        "cd-circ-000014"
+      ],
+      "at": "2026-11-24T00:45:57Z"
+    },
+    {
+      "n": 63,
+      "saw": "Skeptic verdict on A-003 (results/attempts.md): unproven. It ran no case: all five exploratory runs (CD circle D 2200 n .013 S .005 Q 86/87/88; ND circle D 120 n .013 S .005 Q 585; ND circle D 240 n .013 S .005 Q 3712) were refused with profile_invalid before boot, so nothing printed and nothing was recorded. I repeated the ND D 120 Q 585 run and got the same refusal: nd-irr-000026 stored outcome 'error', reread 'unknown_screen', profile sha256 7e7b9afe...6cbf. By hand only, the Skeptic found that cd-circ-000001's printed fields could all come from one depth near 2.059 ft if Depth is truncated to 2.05 rather than rounded; this contradicts the Critical Depth half of the claim but rests on no run.",
+      "chose": "triage",
+      "why": "Step 4 of the task: the verdict is unproven, so record what the Skeptic's cases showed and stop. The classification stays proposed, not accepted. The profile change that breaks the re-read is not one this session made, and without a diff of the profile I cannot change it back safely; it goes to a person.",
+      "evidence": [
+        "nd-irr-000026",
+        "cd-circ-000001",
+        "cd-circ-000010",
+        "nd-circ-000007",
+        "nd-circ-000010"
+      ],
+      "at": "2026-11-24T10:25:32Z"
+    },
+    {
+      "n": 64,
+      "saw": "A-003 Skeptic verdict is unproven and, per the task, work stops there. No case can run: every oracle call is refused with profile_invalid because the current profile reads nd-irr-000026 as unknown_screen instead of error (Q-023), a change not made in this session. No case was recorded, no requirement written and no bugfix spec evidence exists yet. Next: a person fixes the profile, then the Skeptic's five cases are rerun (Q-024, Q-025).",
+      "chose": "stop",
+      "why": "A-003 Skeptic verdict is unproven and, per the task, work stops there. No case can run: every oracle call is refused with profile_invalid because the current profile reads nd-irr-000026 as unknown_screen instead of error (Q-023), a change not made in this session. No case was recorded, no requirement written and no bugfix spec evidence exists yet. Next: a person fixes the profile, then the Skeptic's five cases are rerun (Q-024, Q-025).",
+      "evidence": [],
+      "at": "2026-11-24T10:25:46Z"
+    },
+    {
+      "n": 65,
+      "saw": "Q-023 answered: the profile_invalid refusals came from a stale MCP server; it has been restarted. A-003 (results/attempts.md) is still proposed spec_error with an unproven verdict from a Skeptic that ran no case.",
+      "chose": "ask_skeptic",
+      "why": "The earlier review never reached the program. Ask again with the same claim, classification and mismatching case ids only.",
+      "evidence": [
+        "nd-irr-000026",
+        "nd-circ-000007",
+        "nd-circ-000010",
+        "cd-circ-000001"
+      ],
+      "at": "2026-11-24T10:49:18Z"
+    },
+    {
+      "n": 66,
+      "saw": "Skeptic second review of A-003 (results/attempts.md): verdict holds. Exploratory, unrecorded runs: CC circle D 36 n .013 S .005 at depth 2.05 (20261124-105235-02c7bf: Area 5.1, Wet Per 5.8, Velocity 7.4), 2.059 (20261124-105235-c64753: Depth echo 2.06, Area 5.2, Wet Per 5.9) and 2.0549 (20261124-105250-b1a90a: Depth 2.05, Area 5.2, Wet Per 5.8); no depth printing 2.05 gives Wet Per 5.9, yet cd-circ-000001 prints Depth 2.05 with Wet Per 5.9. ND circle D 2215.5 n 4.3763 S 4.641 Q 39168 (20261124-105255-39224c) printed Depth 49.10, Area 5709.4, though the 49.0 trial is within 1% by the Skeptic's hand estimate. Limits it named: the 2.06 rounding was seen on the CC depth echo, not on a CD depth; the ND 1% figures are hand calculations; cd-circ-000010 fits one depth by hand.",
+      "chose": "triage",
+      "why": "Record the verdict and accept the classification: the CD split rests on program output (CC geometry), and the ND result 49.10 differs from both readings of the prismatic search. The rule itself is still unknown, so next I measure it.",
+      "evidence": [
+        "20261124-105235-02c7bf",
+        "20261124-105235-c64753",
+        "20261124-105250-b1a90a",
+        "20261124-105255-39224c",
+        "cd-circ-000001",
+        "cd-circ-000010",
+        "nd-circ-000007"
+      ],
+      "at": "2026-11-24T10:53:58Z"
+    },
+    {
+      "n": 67,
+      "saw": "Accepted A-003. Printed ND circle depths: 49.00 (nd-circ-000007), 49.10 (run 20261124-105255-39224c), 8.40, 6.10, and near-exact 4.17, 3.53, 4.85, 0.55, 2.12. My only estimates of discharge at trial depths are hand calculations.",
+      "chose": "run_case",
+      "why": "Use QUICK-2's own Channel Capacity circle (10 of 10 matched by the rebuild) as the discharge calculator: Q at 48.9, 49.0, 49.1, 49.2 ft in nd-circ-000007's pipe gives the program's own discharge error at each 0.1 ft trial, so the ND stop tolerance can be bracketed by choosing discharges, instead of guessing from hand arithmetic.",
+      "evidence": [
+        "nd-circ-000007",
+        "20261124-105255-39224c"
+      ],
+      "at": "2026-11-24T10:54:29Z"
+    },
+    {
+      "n": 68,
+      "saw": "CC circle D 2215.5 n 4.3763 S 4.641 printed Discharge %38693 at 48.90 (20261124-105445-e3207e), %38849 at 49.00 (20261124-105445-05eff6), %39006 at 49.10 (20261124-105445-1f22fc), %39162 at 49.20 (20261124-105445-c87d2b). So nd-circ-000007 (q 38986) printed 49.00 although Q(49.10) is only 0.05% over and Q(49.00) 0.35% short; q 39168 printed 49.10 although Q(49.20) is 0.015% short. Both fit a stop on the first 0.1 ft trial within a tolerance between 0.41% and 0.75% (not 1%: 48.90 is 0.75% short of 38986).",
+      "chose": "run_case",
+      "why": "Bracket the tolerance by discharge in the same pipe: q 39010, 39030, 39050, 39070 put the 49.00 trial 0.41%, 0.46%, 0.51%, 0.56% short. The flip from 49.00 to 49.10 gives the tolerance; a flip at 39006 would instead mean 'lower end of the bracket'.",
+      "evidence": [
+        "20261124-105445-e3207e",
+        "20261124-105445-05eff6",
+        "20261124-105445-1f22fc",
+        "20261124-105445-c87d2b",
+        "nd-circ-000007",
+        "20261124-105255-39224c"
+      ],
+      "at": "2026-11-24T10:55:21Z"
+    },
+    {
+      "n": 69,
+      "saw": "ND circle D 2215.5 n 4.3763 S 4.641: q 39010 and 39030 printed Depth 49.00 (20261124-105536-496ef8, 20261124-105537-0ea6ae); q 39050 and 39070 printed 49.10 (20261124-105539-7f310e, 20261124-105539-4c4af9). Against CC's Q(49.00) = 38849 the flip lies between 0.464% and 0.515% short: a 0.5% stop. 'Lower end of the bracket' with CC's discharge is ruled out (39010 > Q(49.10) = 39006 still printed 49.00).",
+      "chose": "run_case",
+      "why": "In this pipe a 0.1 ft step moves Q about 0.4%, less than the tolerance, so no interpolation happens. nd-circ-000009 (8.40) and nd-circ-000010 (0.55, Velocity 87.0 vs rebuild 87.4) are small pipes where a step moves Q by more than 0.5%. CC at the neighbouring 0.1 ft depths tells whether 8.40 is a tolerance stop and what happens when no trial is within 0.5%.",
+      "evidence": [
+        "20261124-105536-496ef8",
+        "20261124-105537-0ea6ae",
+        "20261124-105539-7f310e",
+        "20261124-105539-4c4af9",
+        "nd-circ-000009",
+        "nd-circ-000010"
+      ],
+      "at": "2026-11-24T10:55:54Z"
+    },
+    {
+      "n": 70,
+      "saw": "CC circle D 143.3 n .0322 S 1.187: Q 9684.9 at 8.30, 9837.9 at 8.40, 9988.9 at 8.50 (20261124-105602-c6778a, 20261124-105604-fedd64, 20261124-105606-9cacef). nd-circ-000009 (q 9884) stopped on 8.40, 0.466% short, so the tolerance is between 0.466% and 0.515%: 0.5%. CC D 21.3 n .018 S 5.2485: Q 47.2 at 0.50, 67.0 at 0.60 (20261124-105607-af4ca8, 20261124-105607-559858); nd-circ-000010 (q 57) has no 0.1 ft trial within 0.5%, and a chord gives 0.5495. Also: cd-circ-000001 prints Max Discharge 53 where CC in the same pipe prints 51; 51 x sqrt(0.0054/0.005) = 53, so CD's Max Discharge appears to use the critical slope. By hand, cd-circ-000001's fields all fit one depth near 2.058 if CD Depth is truncated: the Skeptic's rounding evidence came from the CC depth echo, which is a typed input, not a CD output.",
+      "chose": "run_case",
+      "why": "Q-024 is still open: test truncation on a CD screen itself. In a large pipe (D 2200, n .013, S .005) Area prints to 0.1 on values near 200, so it pins the depth to about 0.002 ft. Three CD runs, then CC at the printed depth and nearby depths, show whether the Area depth lies in [printed, printed + 0.01) every time (truncation, one depth) or elsewhere (two depths).",
+      "evidence": [
+        "20261124-105602-c6778a",
+        "20261124-105604-fedd64",
+        "20261124-105606-9cacef",
+        "20261124-105607-af4ca8",
+        "20261124-105607-559858",
+        "nd-circ-000009",
+        "nd-circ-000010",
+        "cd-circ-000001",
+        "20261124-105235-c64753"
+      ],
+      "at": "2026-11-24T10:57:20Z"
+    },
+    {
+      "n": 71,
+      "saw": "CD circle D 2200 n .013 S .005: q 2000, 2100, 2200 printed Depth 4.89, 5.01, 5.13 with Area 194.4, 201.6, 208.7 (20261124-105730-42275c, 20261124-105731-7d8c6a, 20261124-105731-eed1ae). CC at those printed depths printed Area 193.7, 200.8, 208.0 (20261124-105757-b7ca34, 20261124-105757-2b129f, 20261124-105757-b8da18): the CD Area sits 0.7 to 0.8 higher, which at Top Width about 59 to 60 is 0.012 to 0.013 ft deeper. That exceeds 0.01 ft, so truncation of one depth cannot explain it. Wet Per and Top Width move the same way. From the printed CD fields, q^2 T/(g A^3) is about 0.999, so the geometry is at the critical root, while the printed Depth is about 0.25% below it (its CC geometry gives a critical discharge 0.50% to 0.58% below q). Max Discharge on CD (%17133, %17063, %17004) changes with q, while CC prints %29399 in the same pipe.",
+      "chose": "record_case",
+      "why": "The ND stop (0.1 ft steps, 0.5% tolerance) and the CD split (Depth below the root, geometry at the root) have both been seen in exploratory runs, and further cases would only refine the CD mechanism, not change what the bugfix spec states. Record the sharpest 13 for citation: ND q 39030, 39050, 39168; CC 48.90, 49.00, 49.10 and 8.40 in their pipes; CD q 2000, 2100, 2200; CC 4.89, 5.01, 5.13.",
+      "evidence": [
+        "20261124-105730-42275c",
+        "20261124-105731-7d8c6a",
+        "20261124-105731-eed1ae",
+        "20261124-105757-b7ca34",
+        "20261124-105757-2b129f",
+        "20261124-105757-b8da18"
+      ],
+      "at": "2026-11-24T10:59:13Z"
+    },
+    {
+      "n": 72,
+      "saw": "A-003 is accepted as a spec error (Skeptic: holds). 13 cases recorded, all matching their exploratory runs. The bugfix spec can cite: ND circle stops on 0.1 ft steps at a 0.5% tolerance with R^.6667 (Q-025: nd-circ-000015 to -000017, cc-circ-000027 to -000030); CD circle prints Depth about 0.25% below the critical root while its geometry sits at the root, not truncation (Q-024: cd-circ-000019 to -000021, cc-circ-000031 to -000033); CD Max Discharge varies with q. What remains (Q-026, the ND branch after a chord; Q-027, the CD mechanism) can be settled by scoring candidates offline against the stored circle goldens. Another live case would not change what the spec states, only which candidate it names.",
+      "chose": "stop",
+      "why": "A-003 is accepted as a spec error (Skeptic: holds). 13 cases recorded, all matching their exploratory runs. The bugfix spec can cite: ND circle stops on 0.1 ft steps at a 0.5% tolerance with R^.6667 (Q-025: nd-circ-000015 to -000017, cc-circ-000027 to -000030); CD circle prints Depth about 0.25% below the critical root while its geometry sits at the root, not truncation (Q-024: cd-circ-000019 to -000021, cc-circ-000031 to -000033); CD Max Discharge varies with q. What remains (Q-026, the ND branch after a chord; Q-027, the CD mechanism) can be settled by scoring candidates offline against the stored circle goldens. Another live case would not change what the spec states, only which candidate it names.",
+      "evidence": [],
+      "at": "2026-11-24T11:00:43Z"
     }
   ],
   "stopped": {
-    "why": "Decisions 58 and 59 only added the solver's evidence for Q-006 and Q-021 (quick2-solver task 2.5). No exhume run was started, so the Exhumer is stopped again for the reason of decision 57: the open questions that remain need a person (verifying F3 and F8, and what the runner does on screens that never settle or that pass through rejected screens) or wait for planned batches (Q-019).",
-    "decision": 60,
-    "at": "2026-11-23T14:42:58Z",
+    "why": "A-003 is accepted as a spec error (Skeptic: holds). 13 cases recorded, all matching their exploratory runs. The bugfix spec can cite: ND circle stops on 0.1 ft steps at a 0.5% tolerance with R^.6667 (Q-025: nd-circ-000015 to -000017, cc-circ-000027 to -000030); CD circle prints Depth about 0.25% below the critical root while its geometry sits at the root, not truncation (Q-024: cd-circ-000019 to -000021, cc-circ-000031 to -000033); CD Max Discharge varies with q. What remains (Q-026, the ND branch after a chord; Q-027, the CD mechanism) can be settled by scoring candidates offline against the stored circle goldens. Another live case would not change what the spec states, only which candidate it names.",
+    "decision": 72,
+    "at": "2026-11-24T11:00:43Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -3260,15 +3531,14 @@
         {
           "profile_path": "screens[stray_listing]",
           "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-        },
-        {
-          "profile_path": "screens[irr_working]",
-          "source": "sessions b018e73c and d2c32fcf on 2026-11-22 (sessions write no run folder): with 1 ground point or none, Begin shows 'W o r k i n g  ..........' on row 24 and the screen stays so past 10 s; recording run 20261122-175134-d1f6a5 identified this screen but timed out waiting on it (Q-015)"
         }
       ],
       "untriaged_mismatches": [
         "area",
+        "critical_slope",
         "froude",
+        "hyd_radius",
+        "max_discharge",
         "outcome",
         "top_width",
         "velocity",
