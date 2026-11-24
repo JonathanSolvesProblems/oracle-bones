@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { search } from '../src/solver/search.ts';
 import { solve } from '../src/solver/index.ts';
+import { readFileSync } from 'node:fs';
+import { SNAPSHOT_PATH, computeSnapshot, entryOf, exactDecimal, searchOf, type SnapshotEntry } from './searchSnapshot.ts';
+import { golden } from './golden.ts';
 
 const spec = { bottom: 0, first: 0.5, step: 0.5 };
 
@@ -28,6 +31,28 @@ describe('search', () => {
   it('reports a value that is not a number', () => {
     expect(search(() => NaN, 100, spec)).toEqual({ ok: false, reason: 'not_a_number' });
   });
+});
+
+describe('preservation: the prismatic and irregular searches return what they returned before circle-outputs (3.6)', () => {
+  const { _note: note, ...snapshot } = JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf-8')) as Record<string, SnapshotEntry> & { _note: string };
+  it('the snapshot says where it came from', () => {
+    expect(note).toMatch(/at commit [0-9a-f]{7,}/);
+  });
+  it('writes doubles as exact decimals', () => {
+    expect(exactDecimal(0.5)).toBe('0.5');
+    expect(exactDecimal(0.1)).toBe('0.1000000000000000055511151231257827021181583404541015625');
+    expect(exactDecimal(-3)).toBe('-3');
+  });
+  it('every prismatic and irregular golden that reaches the search is in the snapshot, and no other', () => {
+    expect(Object.keys(computeSnapshot()).sort()).toEqual(Object.keys(snapshot).sort());
+  });
+  for (const [id, entry] of Object.entries(snapshot)) {
+    it(`${id}: same depth, value and trial count`, () => {
+      const r = searchOf(golden(id));
+      if (!r) throw new Error(`${id} no longer reaches the search`);
+      expect(entryOf(entry.pair, r)).toEqual(entry);
+    });
+  }
 });
 
 describe('solve', () => {

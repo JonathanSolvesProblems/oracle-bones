@@ -11,7 +11,8 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
-    "oracle": "node src/oracle/entry.ts"
+    "oracle": "node src/oracle/entry.ts",
+    "snapshot:search": "node test/searchSnapshot.ts write"
   },
   "devDependencies": {
     "@types/node": "24.19.2",
