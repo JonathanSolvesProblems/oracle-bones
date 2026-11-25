@@ -1405,3 +1405,38 @@ survivors a different answer. Not run. The grid scan takes about 45 minutes, and
 stopped answering for a few minutes near its end.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-012 and A-013 session, and a prompt sent to the wrong agent
+
+The session in the last entry used 266.69 credits over 3 h 16 min 36 s. Part of that time was
+spent waiting on an approval prompt and on A-013's grid scan, which ran twice at about 45
+minutes each.
+
+I also sent a prompt to the `exhumer` agent by mistake. It declined, since it has no shell:
+0.67 credits, 21 s.
+
+### The A-013 amendment
+
+Settings: Claude Opus 5.5, a new session.
+
+I checked A-013 with my own code, written from its prose, and got the same 16 survivors. I
+found two problems. R3 and R5 rest on the geometry's last digits: in both, the deciding trial
+is a chord plus 0.2 ft, so the chord's last digits decide whether it lands on D. With
+A·√(gA/T) multiplied by 1 ± 1e-6 they change outcome for many survivors, while R1, R2 and R4
+do not change even at 1 ± 1e-4. And A-013's trials left out the single literal .2 summed in
+double, which is what `Y# = Y# + .2` does in QuickBASIC.
+
+**The amendment** (6ecfb3c), in its own section after A-013, before any of its cases runs.
+`a013-amendment` agrees with the problem: at 1 ± 1e-6, R3 changes for 35 of 39 survivors and
+R5 for 15 (my own counts were 19, 39 with the new trials, and up to 17; the difference was not
+traced). R3 and R5 are withdrawn and will not be run. T8 to T10 (.2 a single summed in double,
+the geometry given the double or store(y), chords kept or stored) add 23 survivors, 39 in all,
+among them T8·D1·X1, the rebuild's diameter and test with only the trial changed. The four
+cases I suggested, all multiples of 2.4 in, are kept as R6 to R9: each separates pairs no other
+case does, and none changes at 1 ± 1e-4. On R1, R2, R4 and R6 to R9 the 39 fall into 14
+groups, each with its own row; 11 groups hold more than one survivor, T1 and T2 among them.
+Only R1 and R2 are in the generator's practical range. No survivor prints a result on any of
+the seven, so every prediction rests on A-013's reading of a geometry error as the shape menu.
+The command prints all of it in under a second. Not run.
+
+Credits: not counted here; they go in the next entry.
