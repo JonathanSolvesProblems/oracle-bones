@@ -21,6 +21,15 @@ from .runner import keys as keys_mod
 ANSWER_GRACE_S = 15  # extra time for the runner to answer beyond the wait it was asked for
 
 
+def text_settle(profile):
+    """[[marker, keeps_output], ...] for every screen with a marker, in profile order, or None
+    when no screen is marked keeps_output (the runner then uses the output rule everywhere)."""
+    marked = [s for s in profile["screens"] if s["marker"] is not None]
+    if not any(s.get("keeps_output") for s in marked):
+        return None
+    return [[s["marker"], bool(s.get("keeps_output"))] for s in marked]
+
+
 class Session:
     def __init__(self, profile, cfg=None, server_id=None, session_id=None, setup=None, argv=None,
                  extra_files=None, case_limit=True):
@@ -84,6 +93,15 @@ class Session:
         self.last_used = time.monotonic()
         return rep["screen"]
 
+    def _wait(self, req, answer_within):
+        """A runner wait. When the profile marks any screen keeps_output, the request carries
+        every marker in profile order with its mark, so the runner settles a marked screen on
+        unchanged text and every other screen on quiet output (runner/settle.py, Q-030)."""
+        order = text_settle(self.profile)
+        if order:
+            req = dict(req, text_settle=order)
+        return self._call(req, answer_within)
+
     def remaining(self):
         if not self.case_limit:
             return float("inf")
@@ -118,7 +136,7 @@ class Session:
                 raise OracleError("profile_invalid", "screen %r has no marker yet" % sid)
             patterns.append(sdef["marker"])
         t = self._bounded(timeout_s)
-        snap = self._call({"op": "wait", "any": patterns, "changed_from": changed_from,
+        snap = self._wait({"op": "wait", "any": patterns, "changed_from": changed_from,
                            "settle_ms": settle, "timeout_s": t}, t)
         self.last = snap
         desc = screen.describe(self.profile, snap)
@@ -129,7 +147,7 @@ class Session:
                 snap["matched"] = False
         if snap.get("matched") and prompt_id:
             sdef = screen_by_id(self.profile, screen_ids[0])
-            p = screen.prompt(sdef, snap["rows"], snap["quiet_ms"], settle)
+            p = screen.prompt(sdef, snap["rows"], screen.quiet_for(sdef, snap), settle)
             if not p or p["id"] != prompt_id:
                 pat = next(x["pattern"] for x in sdef.get("prompts", []) if x["id"] == prompt_id)
                 if not re.search(pat, screen.text_of(snap["rows"]), re.M):
@@ -159,7 +177,7 @@ class Session:
         settled on afterwards."""
         window_s = self.limits.get("hold_confirm_ms", 2000) / 1000
         t = self._bounded(None)
-        snap = self._call({"op": "wait", "any": [], "changed_from": unchanged_hash,
+        snap = self._wait({"op": "wait", "any": [], "changed_from": unchanged_hash,
                            "settle_ms": self.limits["settle_ms"], "timeout_s": min(t, window_s)}, t)
         if snap.get("hash") != unchanged_hash:
             snap = self._settle_after({"hash": unchanged_hash})
@@ -192,7 +210,7 @@ class Session:
         pat = next(x["pattern"] for x in sdef.get("prompts", []) if x["id"] == prompt_id)
         stop_markers = [screen_by_id(self.profile, sid)["marker"] for sid in stops]
         t = self._bounded(timeout_s)
-        snap = self._call({"op": "wait", "any": ([sdef["marker"]] if sdef["marker"] else []) + stop_markers,
+        snap = self._wait({"op": "wait", "any": ([sdef["marker"]] if sdef["marker"] else []) + stop_markers,
                            "changed_from": None, "settle_ms": self.limits["settle_ms"], "timeout_s": t}, t)
         deadline = time.monotonic() + t
 
@@ -210,7 +228,7 @@ class Session:
                 raise OracleError("timeout", "waited %.1fs for prompt %s" % (t, prompt_id),
                                   {"screen": screen.describe(self.profile, snap), "waited_for": [screen_id],
                                    "prompt": prompt_id})
-            snap = self._call({"op": "wait", "any": [pat] + stop_markers, "changed_from": None,
+            snap = self._wait({"op": "wait", "any": [pat] + stop_markers, "changed_from": None,
                                "settle_ms": self.limits["settle_ms"], "timeout_s": min(left, t)}, left)
         self.last = snap
         self._arrived(snap)
@@ -237,7 +255,7 @@ class Session:
         if allow:
             for attempt in range(self.limits["retry_limit"] + 1):
                 t = self._bounded(None)
-                snap = self._call({"op": "wait", "any": [], "changed_from": before["hash"],
+                snap = self._wait({"op": "wait", "any": [], "changed_from": before["hash"],
                                    "settle_ms": self.limits["settle_ms"],
                                    "timeout_s": min(t, self.limits["settle_ms"] / 1000 * 4)}, t)
                 self.last = snap
@@ -268,12 +286,12 @@ class Session:
         not change within the change window, the after screen is the unchanged screen, settled."""
         settle = self.limits["settle_ms"]
         t = self._bounded(None)
-        snap = self._call({"op": "wait", "any": [], "changed_from": before["hash"] if before else None,
+        snap = self._wait({"op": "wait", "any": [], "changed_from": before["hash"] if before else None,
                            "settle_ms": settle, "timeout_s": min(t, self._change_window_s())}, t)
         if not snap.get("matched") and snap.get("exited") is None:
             # Unchanged, or changed but still drawing when the window closed: wait for quiet.
             t = self._bounded(None)
-            snap = self._call({"op": "wait", "any": [], "changed_from": None,
+            snap = self._wait({"op": "wait", "any": [], "changed_from": None,
                                "settle_ms": settle, "timeout_s": t}, t)
         return snap
 

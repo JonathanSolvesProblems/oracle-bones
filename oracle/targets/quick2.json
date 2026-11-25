@@ -384,7 +384,7 @@
     {
       "id": "cd_circ_result",
       "kind": "result",
-      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "marker": "(?s)\\A(?!.*DEPTH is Greater than the DIAMETER).*CRITICAL\\s+DEPTH.*CIRCULAR\\s+CHANNEL.*Print\\s+<F5>",
       "fields": [
         {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
         {"name": "in_n", "row": 9, "col": 51, "width": 13},
@@ -430,8 +430,9 @@
       "id": "cd_circ_rejected",
       "kind": "rejected",
       "marker": "DEPTH is Greater than the DIAMETER",
+      "keeps_output": true,
       "message": {"row": 20, "col": 13, "width": 51},
-      "unobserved": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
+      "unobserved": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form. The screen keeps sending output while its text and cursor stay the same (S2's inputs: 73 output chunks in 4 s, longest gap 98 ms, measured 2026-11-25), so it never went settle_ms without output and every case that reached it timed out (Q-030); it is marked keeps_output. Enter on it (run 20261125-142211-6307dd, exploratory) leaves the message and adds 'Print <F5>' on row 21; cd_circ_result's marker excludes the message, so that screen reads as this one and is not stored as a result with blank fields (Q-032 b)"
     },
     {
       "id": "cd_form",

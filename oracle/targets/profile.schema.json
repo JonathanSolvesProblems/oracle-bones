@@ -117,6 +117,7 @@
           "marker": {"type": ["string", "null"], "minLength": 1},
           "resend": {"type": "boolean"},
           "stuck": {"type": "boolean"},
+          "keeps_output": {"type": "boolean"},
           "prompts": {
             "type": "array",
             "items": {"type": "object", "additionalProperties": false, "required": ["id", "pattern"],

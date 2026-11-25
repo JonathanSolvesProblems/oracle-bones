@@ -27,7 +27,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* \
  && useradd --uid 10001 --create-home --shell /usr/sbin/nologin oracle
 COPY --from=build /usr/local/bin/emu2 /usr/local/bin/emu2
-COPY runner/agent.py /opt/oracle/runner/
+COPY runner/agent.py runner/settle.py /opt/oracle/runner/
 ENV EMU2_COMMIT=$EMU2_COMMIT PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 USER 10001:10001
 WORKDIR /drive

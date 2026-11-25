@@ -6,13 +6,14 @@ Speaks JSON lines: one request per line on stdin, one reply per line on stdout.
    "pty_rows": 27, "frozen_time": "1995-06-01 12:00:00" | null, "argv": [...] (optional, tests)}
   {"op": "screen"}
   {"op": "wait", "any": [regex, ...], "changed_from": hash | null, "settle_ms": 150,
-   "timeout_s": 10}
+   "timeout_s": 10, "text_settle": [[marker, keeps_output], ...] (optional, see settle.py)}
   {"op": "send", "chunks": ["<hex>", ...]}
   {"op": "kill"}
 
 Every reply carries the screen: rows (the first `rows` lines), sha256 of the rows joined with
-"\\n", cursor, and whether the program has exited. This file must not import anything outside
-the standard library and pyte, because it runs in the image.
+"\\n", cursor, quiet_ms and text_quiet_ms, and whether the program has exited. This file and
+settle.py must not import anything outside the standard library and pyte, because they run in
+the image.
 """
 
 import fcntl
@@ -31,6 +32,11 @@ import time
 
 import pyte
 
+try:
+    from . import settle
+except ImportError:  # run as a script in the image, beside settle.py
+    import settle
+
 CHUNK_GAP_S = 0.05  # between key chunks, so a lone ESC is not read as the start of a sequence
 POLL_S = 0.02
 
@@ -44,8 +50,7 @@ class Emulator:
         self.stream = pyte.ByteStream(self.screen)
         self.lock = threading.Lock()
         self.version = 0
-        self.changed_at = time.monotonic()
-        self.sent_at = 0.0
+        self.quiet = settle.Quiet(time.monotonic(), self._text_hash())
         self.exit_code = None
         env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": "/tmp", "TERM": "xterm"}
         env.update(req.get("env", {}))
@@ -87,7 +92,7 @@ class Emulator:
             with self.lock:
                 self.stream.feed(data)
                 self.version += 1
-                self.changed_at = time.monotonic()
+                self.quiet.output(time.monotonic(), self._text_hash())
 
     def _reap(self, block=False):
         if self.exit_code is not None:
@@ -102,12 +107,20 @@ class Emulator:
         self.exit_code = os.waitstatus_to_exitcode(status)
         return True
 
+    def _text_hash(self):
+        """Hash of the rows a snapshot returns. Called with the lock held, or before the reader runs."""
+        display = self.screen.display
+        text = "\n".join(display[i] for i in range(self.rows))
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
     def snapshot(self):
         with self.lock:
             rows = [self.screen.display[i] for i in range(self.rows)]
             cursor = {"row": self.screen.cursor.y, "col": self.screen.cursor.x}
             extra = [self.screen.display[i] for i in range(self.rows, self.pty_rows)]
-            quiet_ms = int((time.monotonic() - max(self.changed_at, self.sent_at)) * 1000)
+            now = time.monotonic()
+            quiet_ms = self.quiet.quiet_ms(now)
+            text_quiet_ms = self.quiet.text_quiet_ms(now)
             version = self.version
         text = "\n".join(rows)
         return {
@@ -115,6 +128,7 @@ class Emulator:
             "hash": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "cursor": cursor,
             "quiet_ms": quiet_ms,
+            "text_quiet_ms": text_quiet_ms,
             "version": version,
             "overflow_rows_used": any(r.strip() for r in extra),
             "exited": self.exit_code,
@@ -124,21 +138,15 @@ class Emulator:
         regexes = [re.compile(p, re.M) for p in req.get("any", [])]
         changed_from = req.get("changed_from")
         settle_ms = req.get("settle_ms", 0)
+        order = settle.compile_order(req.get("text_settle"))
         deadline = time.monotonic() + req["timeout_s"]
         while True:
             snap = self.snapshot()
-            text = "\n".join(snap["rows"])
-            ok = True
-            if regexes and not any(r.search(text) for r in regexes):
-                ok = False
-            if changed_from is not None and snap["hash"] == changed_from:
-                ok = False
-            if snap["quiet_ms"] < settle_ms:
-                ok = False
-            if ok:
+            got = settle.decide(snap, regexes, changed_from, settle_ms, order)
+            if got == "matched":
                 snap["matched"] = True
                 return snap
-            if snap["exited"] is not None and snap["quiet_ms"] >= settle_ms:
+            if got == "exited":
                 snap["matched"] = False
                 snap["reason"] = "exited"
                 return snap
@@ -154,7 +162,7 @@ class Emulator:
                 time.sleep(CHUNK_GAP_S)
             os.write(self.fd, bytes.fromhex(chunk))
         with self.lock:
-            self.sent_at = time.monotonic()
+            self.quiet.sent(time.monotonic())
 
     def kill(self):
         try:

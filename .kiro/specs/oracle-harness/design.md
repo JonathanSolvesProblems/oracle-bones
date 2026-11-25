@@ -205,8 +205,10 @@ Messages over stdin and stdout, one JSON object per line:
 - `screen` returns rows, sha256 of the rows joined with `\n` (trailing spaces kept), cursor.
 - `wait {until, timeout_s}` polls the pyte screen every 20 ms until a predicate holds: a screen
   id's marker present, a prompt pattern matched, or the hash changed. It also requires the
-  hash to be unchanged for `settle_ms`. That settle check is a condition on the screen, not a
-  sleep in place of one. On timeout it returns `timeout`.
+  screen to be quiet for `settle_ms`: as built, no output arrived and no key was sent for that
+  long, or on a screen marked `keeps_output` the text did not change for that long (see
+  "Sending and resend" below; corrected 2026-11-25, Q-030). That settle check is a condition on
+  the screen, not a sleep in place of one. On timeout it returns `timeout`.
 - `send {keys}` encodes and writes the bytes, then returns.
 - `kill`.
 
@@ -264,6 +266,19 @@ is still there at the end, the case ends as `error` with no message, and the gol
 screen in `stuck_screen`; a behaviour case ends as `observed` on it. The re-read checks that the
 final screen still reads as that screen. A case with too little time left to watch the whole
 window stays a timeout (decided 2026-11-22, ledger Q-015).
+
+A screen settles when it has been quiet for `settle_ms`. Quiet means no output from the program
+and no key sent for that long, except on a screen the profile marks `"keeps_output": true`: one
+that goes on sending output while its text stays the same. There quiet means the screen text
+(the rows the runner returns) has not changed, and no key has been sent, for `settle_ms`. With
+S2's inputs QUICK-2's circle Critical Depth rejection received 73 output chunks in 4 s, the
+longest gap 98 ms, with its text and cursor unchanged, so under the output rule every case that
+reached it timed out (Q-030). The runner keeps both times (`quiet_ms`, `text_quiet_ms`); each
+host wait sends every marker in profile order with its mark, and the runner applies the text
+rule only when the first marker that matches belongs to a marked screen, the way the host
+identifies screens. A marked screen whose text is still changing does not settle. Every other
+screen keeps the output rule, and a profile with no marked screen sends no list
+(`oracle/runner/settle.py`, decided 2026-11-25).
 
 Resend applies only on screens with `"resend": true`: if the hash is unchanged after the
 settle time, the same key is sent again, up to `retry_limit`, each one logged as `resend: true`.

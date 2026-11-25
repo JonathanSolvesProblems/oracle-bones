@@ -50,7 +50,8 @@ def runner_hash():
     """Short hash of the files baked into the image, so a changed runner means a new image."""
     import hashlib
     h = hashlib.sha256()
-    for p in (paths.ORACLE / "Dockerfile", paths.ORACLE / "runner" / "agent.py"):
+    for p in (paths.ORACLE / "Dockerfile", paths.ORACLE / "runner" / "agent.py",
+              paths.ORACLE / "runner" / "settle.py"):
         h.update(p.read_bytes().replace(b"\r\n", b"\n"))
     return h.hexdigest()[:8]
 

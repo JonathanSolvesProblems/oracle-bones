@@ -40,6 +40,15 @@ def message(screen_def, rows):
     return row[m["col"]:m["col"] + m["width"]]
 
 
+def quiet_for(screen_def, snap):
+    """How long the screen has been quiet by its own rule. A screen the profile marks
+    keeps_output goes on receiving output while its text stays the same, so it is quiet from
+    the last change of its text; every other screen from the last output (runner/settle.py)."""
+    if screen_def is not None and screen_def.get("keeps_output") and "text_quiet_ms" in snap:
+        return snap["text_quiet_ms"]
+    return snap.get("quiet_ms", 0)
+
+
 def prompt(screen_def, rows, quiet_ms, settle_ms):
     """The prompt the program waits on, or None. Needs a settled screen and a matching pattern."""
     if screen_def is None or quiet_ms < settle_ms:
@@ -68,7 +77,7 @@ def describe(profile, snap):
         "screen_id": sid,
         "unknown": sid is None,
         "overlap": matches if len(matches) > 1 else [],
-        "prompt": prompt(sdef, rows, snap.get("quiet_ms", 0), profile["limits"]["settle_ms"]),
+        "prompt": prompt(sdef, rows, quiet_for(sdef, snap), profile["limits"]["settle_ms"]),
         "fields": fields(sdef, rows) if sdef else {},
         "kind": sdef["kind"] if sdef else None,
         "exited": snap.get("exited"),
