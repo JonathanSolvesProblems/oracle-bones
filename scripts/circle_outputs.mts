@@ -1895,6 +1895,115 @@ async function a014Diameter() {
   row(`${obs.length} observations: T1·D1·X6 fits ${ok1}, T1·D3·X6 fits ${ok3}; result fields ${fields}, printed differently by D1 and D3 ${d}`);
   for (const l of lines) row(`    ${l}`);
 }
+// ---- A-015: A-014's held-out cases graded, every combination rescored, T1·D1·X2 ---------------
+const A014_COMMIT = 'f066861';
+/** Ledger decision that lists the goldens of H1 to H3. */
+const A015_DECISION = 100;
+/** The rule A-015 proposes: the rebuild's trial and diameter store, trial >= D. */
+const A015_RULE = 'T1·D1·X2';
+/** A-014's held-out cases and G3's predictions, read from git. */
+function a014AsCommitted() {
+  const a = committedSection(A014_COMMIT, '## A-014: A-013 and its amendment graded');
+  const p = a.slice(a.indexOf('### Predictions for G3'));
+  if (!p.startsWith('### Predictions for G3')) throw new Error(`no "Predictions for G3" at ${A014_COMMIT}`);
+  const common = /n ([\d.]+),\s+slope ([\d.]+) and (\d+) cfs in all three/.exec(p);
+  const same = /(T\d·D\d·X\d) and (T\d·D\d·X\d) give the same answer on all three/.exec(p);
+  if (!common || !same) throw new Error(`A-014 at ${A014_COMMIT}: common inputs or G3's survivors not read`);
+  const cases: { name: string; diameter: string; discharge: string; predicts: string }[] = [];
+  let header: string[] = [];
+  for (const l of p.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (header[3] !== 'G3 predicts' || !/^H\d$/.test(c[0]!)) continue;
+    const cell = c[3]!, predicts = /^shape menu/.test(cell) ? 'shape menu' : cell === 'message' ? 'message' : '';
+    if (!predicts) throw new Error(`unread prediction "${cell}"`);
+    cases.push({ name: c[0]!, diameter: c[1]!, discharge: c[2]!, predicts });
+  }
+  if (cases.length !== 3) throw new Error(`read ${cases.length} of A-014's three held-out cases`);
+  return { n: common[1]!, slope: common[2]!, q: common[3]!, g3: [same[1]!, same[2]!], cases };
+}
+/** What QUICK-2 printed for one case: a golden the listed decisions name, or a behaviour case. */
+function seenListed(inputs: Record<string, string>, decision: number): { a: string; source: string; screen: string } {
+  const o = observeListed(inputs, [decision]);
+  if (!o.golden) throw new Error(`no golden for ${JSON.stringify(inputs)}`);
+  const scr = lastCapture(o.source), msg = scr.some((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+  return { a: o.outcome === 'rejected' && msg ? 'message' : o.outcome === 'result' ? 'result' : o.outcome, source: o.source, screen: rejectionScreen(scr) };
+}
+function gradeA014() {
+  const m2 = atShare(0.9382), all = all184(), byIdC = new Map(all.map((c) => [c.id, c]));
+  const H = a014AsCommitted();
+  h(`A-014 read from ${A014_COMMIT}: G3 is ${H.g3.join(' and ')}; n ${H.n}, slope ${H.slope}, ${H.q} cfs in all three`);
+  if (H.g3.join() !== G3_IDS.join()) throw new Error('G3 differs from the script');
+  for (const c of H.cases) row(`${c.name}: Diameter ${c.diameter}, Discharge ${c.discharge}; G3 predicts ${c.predicts}`);
+  const inputsOf = (d: string, q: string) => ({ diameter: d, n: H.n, discharge: q, slope: H.slope });
+  { let same = 0, n = 0;
+    for (const id of H.g3) for (const c of H.cases) { n++; const a = answerOf(byIdC.get(id)!, c.diameter, Number(c.discharge)).a; if (a === c.predicts) same++; else row(`differs: ${id} ${c.name}: committed "${c.predicts}", model "${a}"`); }
+    row(`the model, rerun now, gives the committed answer on ${same} of ${n} (survivor, case) pairs`); }
+
+  h(`What QUICK-2 did: the goldens ledger decision ${A015_DECISION} lists`);
+  const seenH: Record<string, string> = {};
+  for (const c of H.cases) {
+    const s = seenListed(inputsOf(c.diameter, c.discharge), A015_DECISION);
+    seenH[c.name] = s.a;
+    row(`${c.name} ${inputText(inputsOf(c.diameter, c.discharge))}: ${s.source}, ${s.a}; last screen: ${s.screen}`);
+  }
+  console.log(`\n| Case | Diameter | G3 predicts | QUICK-2 | Golden | Right |`);
+  console.log('|---|---|---|---|---|---|');
+  let right = 0;
+  for (const c of H.cases) {
+    const ok = c.predicts === seenH[c.name]; if (ok) right++;
+    console.log(`| ${c.name} | ${c.diameter} | ${ok ? c.predicts : `**${c.predicts}**`} | ${seenH[c.name]} | ${seenListed(inputsOf(c.diameter, c.discharge), A015_DECISION).source} | ${ok ? 'yes' : 'no'} |`);
+  }
+  row(`G3 right on ${right} of ${H.cases.length}`);
+
+  const { obs, held } = a014Observations();
+  h(`All ${all.length} combinations on every circle Critical Depth outcome: ${obs.length} observations`);
+  const by = (s: string) => obs.filter((o) => o.seen === s).length;
+  row(`${by('result')} results, ${by('rejected')} rejections with the message, ${by('shape_menu')} shape-menu ending (${OBS_MENU}); not used, held at a prompt: ${held.join(', ')}`);
+  const scores = all.map((c) => ({ c, bad: obs.map((o) => ({ o, ...a013Fits(o, c.t, c.ds, c.x, m2) })).filter((r) => !r.ok) }));
+  const hist = new Map<number, number>(); for (const s of scores) hist.set(obs.length - s.bad.length, (hist.get(obs.length - s.bad.length) ?? 0) + 1);
+  row(`scores: ${[...hist].sort((a, b) => b[0] - a[0]).map(([k, n]) => `${n} fit ${k}`).join(', ')}`);
+  row(`fit all ${obs.length}: ${scores.filter((s) => !s.bad.length).map((s) => s.c.id).join(', ') || 'none'}`);
+  const onlyMenu = scores.filter((s) => s.bad.length === 1 && s.bad[0]!.o.name === OBS_MENU);
+  row(`miss only ${OBS_MENU}: ${onlyMenu.length}`);
+  const fam = new Map<string, string[]>(); for (const s of onlyMenu) { const t = s.c.t.id; if (!fam.has(t)) fam.set(t, []); fam.get(t)!.push(s.c.id); }
+  for (const [t, ids] of fam) row(`    ${t}: ${ids.length}: ${ids.join(', ')}`);
+  row(`    what they give on ${OBS_MENU}: ${[...new Set(onlyMenu.map((s) => s.bad[0]!.got.replace(/ at trial .*/, '')))].join(', ')}`);
+  const nearH = scores.filter((s) => s.bad.length && s.bad.every((r) => r.o.name === 'cd-circ-000061' || r.o.name === 'cd-circ-000062'));
+  row(`miss only cd-circ-000061 and/or -000062 (H1, H2): ${nearH.map((s) => `${s.c.id} (${s.bad.map((r) => r.o.name).join(', ')})`).join(', ') || 'none'}`);
+  const best = Math.max(...scores.map((s) => obs.length - s.bad.length));
+  if (best < obs.length) row(`the best fit is ${best} of ${obs.length}, by ${scores.filter((s) => obs.length - s.bad.length === best).length} combinations`);
+
+  h(`${A015_RULE} on the ten cases it was not chosen on: the amendment's R1, R2, R4, R6 to R9 and A-014's H1 to H3`);
+  const rule = byIdC.get(A015_RULE)!;
+  const A = a013AsCommitted();
+  const ten = [...[...A.amCases.values()].map((c) => ({ name: c.name, d: c.diameter, q: c.discharge, dec: A014_DECISIONS.r })),
+    ...H.cases.map((c) => ({ name: c.name, d: c.diameter, q: c.discharge, dec: A015_DECISION }))];
+  if (ten.length !== 10) throw new Error(`${ten.length} cases, not ten`);
+  console.log(`\n| Case | Diameter | Discharge | ${A015_RULE} | Deciding trial | QUICK-2 | Golden | Right |`);
+  console.log('|---|---|---|---|---|---|---|---|');
+  let ok10 = 0;
+  for (const c of ten) {
+    const s = seenListed(inputsOf(c.d, c.q), c.dec), r = answerOf(rule, c.d, Number(c.q)), ok = r.a === s.a; if (ok) ok10++;
+    const at = r.r.at === undefined ? '-' : `${r.r.from === 0 ? `stepped trial ${r.r.k}` : 'after a chord'}, ${r.r.at.toPrecision(10)} (D ${rule.ds.D(c.d).toPrecision(10)})`;
+    console.log(`| ${c.name} | ${c.d} | ${c.q} | ${r.a} | ${at} | ${s.a} | ${s.source} | ${ok ? 'yes' : '**no**'} |`);
+  }
+  row(`${A015_RULE} right on ${ok10} of ${ten.length}`);
+  { const s = scores.find((x) => x.c.id === A015_RULE)!;
+    row(`${A015_RULE} on all ${obs.length} observations: ${obs.length - s.bad.length} of ${obs.length}${s.bad.length ? `; misses ${s.bad.map((r) => `${r.o.name} (${r.got})`).join(', ')}` : ''}`); }
+  { const s = scores.find((x) => x.c.id === 'T1·D1·X1')!;
+    row(`for comparison, T1·D1·X1 (the rebuild's test, with K1) on all ${obs.length}: ${obs.length - s.bad.length}; misses ${s.bad.map((r) => `${r.o.name} (${r.got})`).join(', ')}`); }
+  { const a = answerOf(rule, '9.6', 2);
+    row(`9.6 in, 2 cfs under ${A015_RULE}: ${a.a} at stepped trial ${a.r.k}, ${a.r.at?.toPrecision(10)}, against D ${rule.ds.D('9.6').toPrecision(10)}; QUICK-2: shape menu (${OBS_MENU})`); }
+  { const outs = new Set(obs.map((o) => { const v = vals('critical_depth', o.inputs); return a013Search(o.inputs.diameter!, v.discharge!, rule.t, rule.ds, rule.x).outcome; }));
+    row(`${A015_RULE}'s outcomes over the ${obs.length} observations: ${[...outs].join(', ')}`); }
+  h(`9.6, 4.8 and 2.4 in: a stepped trial lands on D under ${A015_RULE}'s trial and store; what QUICK-2 printed`);
+  for (const [d, q, seen] of [['9.6', 2, `shape menu (${OBS_MENU})`], ['4.8', 1, 'message (cd-circ-000061)'], ['2.4', 1, 'message (cd-circ-000062)']] as const) {
+    const st = stepped(d, rule.t, rule.ds, DTESTS[0]!), lastF = st.Fs[st.Fs.length - 1];
+    row(`${d} in: D ${rule.ds.D(d).toPrecision(10)}; stepped trials inside ${st.ys.map((y) => y.toPrecision(10)).join(', ') || 'none'}; the trial on D is reached for q above ${lastF === undefined ? '0' : (lastF / (1 - CIRCLE_TOL)).toFixed(4)} cfs; typed ${q} cfs; QUICK-2: ${seen}`);
+  }
+}
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a009') a009();
@@ -1907,4 +2016,5 @@ else if (which === 'grade-a011') gradeA011();
 else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013'); process.exit(2); }
+else if (which === 'grade-a014') gradeA014();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014'); process.exit(2); }

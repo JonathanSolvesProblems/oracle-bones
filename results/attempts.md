@@ -1720,3 +1720,136 @@ shape menu under D1, the message under D3, which is what QUICK-2 printed.
 
 **Not part of this.** The solver is unchanged. circle-short-chord's bugfix.md is revised in a
 later commit. Normal Depth's search (N2, Q-026) is not tested by any case here.
+
+## A-015: A-014's held-out cases graded, every combination rescored, and the rule to build
+
+**Written after cd-circ-000061 to -000063 ran. The grade is against A-014 as committed
+(f066861). Nothing in this section is a prediction: every score below, including the proposed
+rule's, is derived from cases that had already run. The solver is not changed.**
+
+**G3 is right on H3 and wrong on H1 and H2. QUICK-2 printed "DEPTH is Greater than the
+DIAMETER" on all three, where G3 predicted the shape menu on H1 and H2. G3 (T1·D3·X6 and
+T2·D3·X6), which fit 54 of 54 circle Critical Depth goldens, is refuted by its first held-out
+cases, and circle-short-chord 2.12's revision is triggered. Of all 184 combinations, none fits
+all 57 circle Critical Depth outcomes; 56 miss only obs-cdmenu-000001, and all 56 give the
+message there. The rule proposed to build is T1·D1·X2, one of the 56.**
+
+**How graded.** `node scripts/circle_outputs.mts grade-a014` (about 1 s) reads A-014 from
+commit f066861 with `git show`: the table under "Predictions for G3", the common inputs (n
+.013, slope .005, 1 cfs) and G3's two survivors. For each case it finds the golden that ledger
+decision 100 lists with the same mode and typed inputs, and reads its outcome and its last
+captured screen. As a check, the model rerun now gives A-014's committed answer on 6 of 6
+(survivor, case) pairs. It never runs the program. Every number in this section is that
+command's output, except the person's wider search, which is reported as his.
+
+| Case | Diameter | Discharge | G3 predicts | QUICK-2 | Golden | Right |
+|---|---|---|---|---|---|---|
+| H1 | 4.8 | 1 | **shape menu, no message** | message | cd-circ-000061 | no |
+| H2 | 2.4 | 1 | **shape menu, no message** | message | cd-circ-000062 | no |
+| H3 | 7.2 | 1 | message | message | cd-circ-000063 | yes |
+
+A bold cell is a wrong prediction. On all three goldens the message is on 0-based row 20,
+the Depth field shows `0.00`, and Critical Slope and every output field are blank. None ended
+on the shape menu, none printed a result, and the form took the 2.4 in diameter.
+
+**What H1 and H2 say.** In both, trial·12 falls short of the typed diameter stored as a single
+(4.800000072 against 4.800000191 in, and 2.400000036 against 2.400000095 in), so the inches
+test lets the trial through, and in feet the trial is past VAL/12. G3 sends that trial to the
+geometry, and A-013's assumption reads the geometry's error as the shape menu. QUICK-2 printed
+the message instead. This is the case A-014 listed as "H1 or H2 printing the message": the
+inches test letting a trial through at the crown does not explain the shape menu beyond 9.6 in,
+and the 9.6 in ending needs another explanation. G3 now scores 55 of 57, missing cd-circ-000061
+and -000062.
+
+**All 184 combinations on every circle Critical Depth outcome there is now.** A-013's 136 and
+the amendment's 48, scored as A-014 scored them: the 31 circle Critical Depth results on every
+printed field, the 25 rejections with the message (cd-circ-000039 to -000063), and
+obs-cdmenu-000001 as the shape menu, 57 observations. cd-circ-000003, -000007 and -000008 are
+held at a prompt and are left out, as in A-014. Scores: 56 fit 56, 21 fit 55, 17 fit 54, 15
+fit 53, 18 fit 52, 30 fit 51, 5 fit 50, 6 fit 49, 6 fit 48, 2 fit 47, 3 fit 46, 2 fit 45, 2
+fit 44 and 1 fits 42. None fits all 57. The 56 that fit 56 all miss obs-cdmenu-000001 and
+nothing else, and every one of them rejects the 9.6 in pipe with the message. This agrees with
+the person's own count, none and 56.
+
+| Trial | Combinations that miss only obs-cdmenu-000001 |
+|---|---|
+| T1 | T1·D1·X2, T1·D2·X2, T1·D3·X2, T1·D3·X4, T1·D4·X2, T1·D4·X3, T1·D4·X4, T1·D4·X6 |
+| T2 | T2·D1·X2, T2·D1·X4, T2·D2·X2, T2·D3·X2, T2·D3·X3, T2·D3·X4, T2·D4·X2, T2·D4·X3, T2·D4·X4, T2·D4·X6 |
+| T3 | T3·D1·X2, T3·D2·X2, T3·D3·X2, T3·D3·X3, T3·D3·X4, T3·D4·X2, T3·D4·X6 |
+| T4 | T4·D1·X2, T4·D2·X2, T4·D3·X2, T4·D4·X2, T4·D4·X6 |
+| T6 | T6·D1·X2, T6·D2·X2, T6·D3·X2, T6·D4·X2, T6·D4·X6 |
+| T7 | T7·D3·X2, T7·D4·X2, T7·D4·X6 |
+| T8 | T8·D1·X2, T8·D2·X2, T8·D3·X1, T8·D3·X2, T8·D4·X1, T8·D4·X2, T8·D4·X5, T8·D4·X6 |
+| T9 | T9·D3·X1, T9·D3·X2 |
+| T10 | T10·D1·X2, T10·D2·X2, T10·D3·X1, T10·D3·X2, T10·D4·X1, T10·D4·X2, T10·D4·X5, T10·D4·X6 |
+
+The 56 give the same outcome on all 57 observations: QUICK-2's on 56, and the message on the
+9.6 in pipe. No observation separates any two of them.
+
+### The rule to build: T1·D1·X2
+
+The rebuild's trial (T1, store(y + 0.2)) and diameter store (D1, store(store(VAL)/12)), with
+the test trial ≥ D in place of trial > D, and K1 after a short chord (circle-short-chord 2.1).
+Scored on the ten cases it was not chosen on, the amendment's R1, R2, R4 and R6 to R9 and
+A-014's H1 to H3:
+
+| Case | Diameter | Discharge | T1·D1·X2 | Deciding trial (D) | QUICK-2 | Golden | Right |
+|---|---|---|---|---|---|---|---|
+| R1 | 19.2 | 15 | message | stepped trial 8, 1.600000143 (1.600000024) | message | cd-circ-000054 | yes |
+| R2 | 21.6 | 20 | message | stepped trial 9, 1.800000191 (1.800000072) | message | cd-circ-000055 | yes |
+| R4 | 55.2 | 276 | message | stepped trial 23, 4.599999905 (4.599999905) | message | cd-circ-000056 | yes |
+| R6 | 98.4 | 1369 | message | after a chord, 8.200121880 (8.199999809) | message | cd-circ-000057 | yes |
+| R7 | 129.6 | 2924 | message | after a chord, 10.80014133 (10.80000019) | message | cd-circ-000058 | yes |
+| R8 | 26.4 | 36 | message | stepped trial 11, 2.200000286 (2.200000048) | message | cd-circ-000059 | yes |
+| R9 | 57.6 | 312 | message | stepped trial 24, 4.799999714 (4.799999714) | message | cd-circ-000060 | yes |
+| H1 | 4.8 | 1 | message | stepped trial 2, 0.4000000060 (0.4000000060) | message | cd-circ-000061 | yes |
+| H2 | 2.4 | 1 | message | stepped trial 1, 0.2000000030 (0.2000000030) | message | cd-circ-000062 | yes |
+| H3 | 7.2 | 1 | message | stepped trial 3, 0.6000000238 (0.5999999642) | message | cd-circ-000063 | yes |
+
+10 of 10. This agrees with the person's count. On all 57 observations T1·D1·X2 fits 56; it
+misses obs-cdmenu-000001, rejected at trial 0.8000000119 ft, which is its D. Its outcomes are
+results and rejections only. For comparison, T1·D1·X1 (the rebuild's test, with K1) fits 52:
+it reaches the geometry at a trial on D in cd-circ-000045, -000056, -000060, -000061 and -000062.
+
+**What the 10 of 10 is, and is not.**
+- T1·D1·X2 was already known to miss the 9.6 in run. A-013 says so ("With a `≥` test
+  (T1·D1·X2) ... the rebuild's trials miss the 9.6 in run instead: both reject at 0.800000012
+  ft"), and that is why A-013 dropped it: A-013 kept only the combinations that fit all 47
+  observations, the 9.6 in run among them.
+- Its scores on the ten are derived, not predictions committed before the runs. Nobody wrote
+  T1·D1·X2's answers on R1 to R9 or H1 to H3 down before those cases ran.
+- It is picked because it is the smallest change to the rebuild: one comparison, > to ≥, with
+  the trial and the diameter store as they are now. Nothing observed separates it from the other
+  55; all 56 give the same outcome on every observation.
+
+**The known difference it leaves.** 9.6 in, n .013, 2 cfs, slope .005: QUICK-2 went to the
+shape menu with no result and no message (obs-cdmenu-000001; three runs, the exploratory
+20261125-100815-dff8b0, the run that recorded obs-cdmenu-000001 and 20261125-184734-96cde0,
+ledger decision 98). Under T1·D1·X2 the rebuild returns rejected with the message, at stepped
+trial 4, 0.8000000119 ft, which equals D. obs-cdmenu-000001 is a behaviour case, so the
+comparator never grades it, and this difference shows up in no count.
+
+**Q-029 goes back to open.** The question is now why QUICK-2 ends on the shape menu for the
+9.6 in pipe at 2 cfs, when it prints the message for 4.8 in and 2.4 in at 1 cfs. Under the
+rebuild's trial and diameter store, all three pipes put a stepped trial exactly on D (trial 4,
+0.8000000119; trial 2, 0.4000000060; trial 1, 0.2000000030), and the discharge typed reaches
+that trial in all three (above 1.7619 cfs at 9.6 in, 0.1420 cfs at 4.8 in, any q at 2.4 in).
+The pipes differ in diameter and discharge, and no case has varied either alone at 9.6 in.
+What was tried:
+- A-011 and its amendment: five, then seven ways of forming the trials, and two diameter
+  stores. A-012: S2 (12 in, 4 cfs, cd-circ-000045) printed the message where the rebuild's
+  trial lands on its diameter, so a trial on the diameter does not by itself give the menu.
+- A-013 and its amendment: 184 combinations of ten trial formers, four diameter stores and six
+  tests, under the assumption that a trial the test passes at or past D raises a QuickBASIC
+  error that ends on the shape menu. 16, then 39, fit the 47 observations then known.
+- A-014: R1, R2, R4 and R6 to R9 picked G3, which explained the 9.6 in ending by an inches test that
+  lets the trial through, and predicted the menu at 4.8 and 2.4 in.
+- This section: H1 and H2 printed the message. None of the 184 fits all 57 outcomes.
+- obs-cdmenu-000001 keeps one screen per step, so nothing between the last Enter and the shape
+  menu is seen, and no capture shows a QuickBASIC error. The ending repeated in all three runs.
+- After the fact, the person searched about 32,000 wider models. 16 fit, and they were chosen
+  by one pipe, so none is adopted. That search is his; this script does not run it.
+
+**Not part of this.** The solver is unchanged. circle-short-chord's bugfix.md is revised in a
+later commit, and its design is not written. Normal Depth's search (N2, Q-026) is not tested
+by any case here.
