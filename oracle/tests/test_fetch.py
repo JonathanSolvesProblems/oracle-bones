@@ -1,9 +1,7 @@
 import hashlib
 import io
-import os
 import subprocess
 import zipfile
-from pathlib import Path
 
 import pytest
 
@@ -104,23 +102,31 @@ def test_vendor_and_out_are_ignored():
 
 
 def test_no_program_file_inside_repository_outside_vendor():
-    """Requirement 1.6: no file from the unpacked program lives anywhere else in the repo."""
+    """Requirement 1.6: no file from the unpacked program lives anywhere git could commit it.
+
+    The scan covers tracked files and untracked files that .gitignore does not exclude
+    (git ls-files -co --exclude-standard). Ignored paths (oracle/vendor, oracle/out,
+    node_modules, .venv) cannot be committed without -f, and a force-added file is tracked,
+    so it is listed too.
+    """
     unpacked = paths.VENDOR / "quick2" / "unpacked"
     if not unpacked.exists():
         pytest.skip("setup has not run")
     digests = {fetch.sha256_file(p) for p in unpacked.rglob("*") if p.is_file()}
     names = {p.name.upper() for p in unpacked.rglob("*") if p.is_file()}
-    skip = {paths.VENDOR.resolve(), (paths.ROOT / ".git").resolve(), (paths.ROOT / ".venv").resolve()}
+    # -z gives raw UTF-8 paths; decode them as UTF-8, not the locale's code page.
+    listed = subprocess.run(["git", "ls-files", "-z", "-co", "--exclude-standard"], cwd=paths.ROOT,
+                            capture_output=True, encoding="utf-8")
+    assert listed.returncode == 0, listed.stderr
     found = []
-    for dirpath, dirnames, filenames in os.walk(paths.ROOT):
-        d = Path(dirpath).resolve()
-        dirnames[:] = [n for n in dirnames if (d / n).resolve() not in skip]
-        for f in filenames:
-            p = d / f
-            if f.upper() in names and p.suffix.upper() in (".EXE", ".COM", ".BAT"):
-                found.append(str(p))
-            elif p.stat().st_size < 5_000_000 and fetch.sha256_file(p) in digests:
-                found.append(str(p))
+    for rel in sorted(set(filter(None, listed.stdout.split("\0")))):
+        p = paths.ROOT / rel
+        if not p.is_file():  # tracked but deleted in the working tree
+            continue
+        if p.name.upper() in names and p.suffix.upper() in (".EXE", ".COM", ".BAT"):
+            found.append(rel)
+        elif p.stat().st_size < 5_000_000 and fetch.sha256_file(p) in digests:
+            found.append(rel)
     assert not found, found
     # Tracked files only: nothing under vendor is tracked either.
     assert _git("ls-files", "oracle/vendor").stdout.strip() == ""
