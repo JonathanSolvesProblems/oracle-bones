@@ -20,6 +20,8 @@
 //   node scripts/circle_outputs.mts floor      circle-short-chord 2.7: the least A·√(g·A/T) a pipe gives, the discharges
 //                                              under or near it, and 1.4's inputs, today and under T1·D1·X2 (about 1 s)
 //   node scripts/circle_outputs.mts a016       A-016: predictions for K1 with T1·D1·X2, every model, the 1 ± ε check (about 3 s)
+//   node scripts/circle_outputs.mts design     circle-short-chord design: every circle Critical Depth golden today and under
+//                                              2.4 with K1, 20000 generated circles, H-009's exact critical depths (about 1 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -2195,9 +2197,89 @@ function a016() {
   console.log(`|${'---|'.repeat(4 + A016_FIELDS.length)}`);
   for (const l of table) console.log(l);
 }
+// ---- H-009: the exact critical depth where QUICK-2 printed the message -------------------------
+/** The root of A·√(g·A/T) = q with the true π, in double, nothing stored, g = 32.2 (QUICK-2's):
+ * A = r²(θ − sin θ)/2, θ = 2·acos((r − y)/r), T = 2·√(y·(D − y)), D = VAL/12. Bisection on (0, D). */
+function exactCritical(d: string, q: number): number {
+  const D = val(d) / 12, r = D / 2, F = (y: number) => { const th = 2 * Math.acos((r - y) / r), A = (r * r * (th - Math.sin(th))) / 2, T = 2 * Math.sqrt(y * (D - y)); return A * Math.sqrt((G * A) / T); };
+  let lo = 0, hi = D;
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (F(mid) < q) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+function h009() {
+  h('H-009: the exact critical depth, true π, double, g = 32.2, and its distance below the crown');
+  const cases: { name: string; d: string; q: string; src: string }[] = [
+    ...['cd-circ-000043', 'cd-circ-000049', 'cd-circ-000050'].map((id) => { const g = byId(id); return { name: id, d: g.inputs.diameter!, q: g.inputs.discharge!, src: `${g.outcome}${lastCapture(id).some((l) => l.includes(DEPTH_ABOVE_DIAMETER)) ? ', the message' : ''}` }; }),
+    { name: 'A-016 U1', d: '8', q: '1.6', src: 'not run' }, { name: 'A-016 U2', d: '8', q: '1.71', src: 'not run' },
+  ];
+  for (const c of cases) {
+    const g = c.name.startsWith('cd-') ? byId(c.name) : null;
+    if (g && (g.mode !== 'critical_depth' || g.shape !== 'circle')) throw new Error(`${c.name} is not circle Critical Depth`);
+    const D = val(c.d) / 12, y = exactCritical(c.d, val(c.q));
+    row(`${c.name}: ${c.d} in, ${c.q} cfs${g ? `, n ${g.inputs.n}, slope ${g.inputs.slope}` : ''} (${c.src}): critical depth ${y.toFixed(4)} ft, ${(y / D).toFixed(3)}·D, ${(D - y).toFixed(4)} ft (${((D - y) * 12).toFixed(2)} in) below the crown`);
+  }
+}
+/** Every circle Critical Depth golden, graded as the comparator grades it (outcome, then every
+ * printed field of a result), under solve() today and under 2.4 with K1 (A-016's written-out
+ * search, fields from cdFields). Goldens the form holds are not searched and do not change. */
+function designChanges() {
+  const m2 = atShare(0.9382), K1X2 = A016_MODELS[0]!;
+  h('circle-short-chord design: every circle Critical Depth golden, today and under 2.4 with K1');
+  const gs = ALL.filter((g) => g.shape === 'circle' && g.mode === 'critical_depth' && !g.id.startsWith('obs-')); // behaviour cases are never graded
+  const rows: { id: string; today: string; after: string }[] = [];
+  const held: string[] = [];
+  for (const g of gs) {
+    const r = solve({ mode: 'critical_depth', shape: 'circle', inputs: g.inputs });
+    if (r.held) { held.push(g.id); continue; }
+    const v = vals('critical_depth', g.inputs), o = a016Search(g.inputs.diameter!, v.discharge!, K1X2);
+    const grade = (outcome: string, p: Record<string, string> | null) => {
+      if (outcome !== g.outcome) return `miss (${outcome})`;
+      if (outcome !== 'result') return 'match';
+      const d = misses(g, p!); return d.length ? `miss (${d.join('; ')})` : 'match';
+    };
+    const today = grade(r.outcome, r.printed);
+    const after = grade(o.outcome === 'no_end' ? 'error' : o.outcome, o.outcome === 'result' ? show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y!, CD_RULE.offset, 'q/A', f(f(val(g.inputs.diameter!)) / 12))) : null);
+    rows.push({ id: g.id, today, after });
+  }
+  const n = (s: string, w: 'today' | 'after') => rows.filter((x) => x[w].startsWith(s)).length;
+  row(`${gs.length} goldens: ${held.length} held at a prompt, not searched (${held.join(', ')}); of the other ${rows.length}, today ${n('match', 'today')} match, after ${n('match', 'after')}`);
+  const fixed = rows.filter((x) => x.today !== 'match' && x.after === 'match'), broken = rows.filter((x) => x.today === 'match' && x.after !== 'match'), still = rows.filter((x) => x.today !== 'match' && x.after !== 'match');
+  row(`start to match: ${fixed.length}`);
+  for (const x of fixed) row(`    ${x.id}: today ${x.today}`);
+  row(`stop matching: ${broken.length}${broken.map((x) => `; ${x.id} ${x.after}`).join('')}`);
+  row(`miss before and after: ${still.length}${still.map((x) => `; ${x.id} ${x.after}`).join('')}`);
+
+  h('Generated circles under 2.4 with K1: Diameter 8 to 180 in by 0.1 in, q log-uniform from 0.01 cfs to A·√(g·A/T) at 0.99·D');
+  let seed = 20261125 >>> 0;
+  const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
+  const count = new Map<string, number>(), at: string[] = []; let geoMax = 0;
+  for (let i = 0; i < 20000; i++) {
+    const d = (80 + Math.floor(rnd() * 1721)) / 10, D = f(f(d) / 12), top = f(circleCriticalDischarge(D)(f(0.99 * D)));
+    const q = f(0.01 * Math.pow(top / 0.01, rnd()));
+    const o = a016Search(String(d), q, K1X2);
+    for (const y of a016SearchDepths(String(d), q)) geoMax = Math.max(geoMax, y / D); // every depth the geometry is given
+    const w = a016Word(o); count.set(w, (count.get(w) ?? 0) + 1);
+    if (o.outcome === 'no_end' && at.length < 5) at.push(`${d} in at ${q.toPrecision(4)} cfs`);
+  }
+  row(`20000 drawn: ${[...count].map(([k, n]) => `${n} ${k}`).join(', ')}${at.length ? `; never finish: ${at.join(', ')}` : ''}`);
+  row(`the largest depth the geometry was given, as a share of D: ${geoMax.toPrecision(10)}${geoMax < 1 ? ' (below D)' : ' (NOT below D)'}`);
+}
+/** Every depth a016Search gives the geometry, under K1 and trial >= D. */
+function a016SearchDepths(text: string, q: number): number[] {
+  const D = f(f(val(text)) / 12), F = circleCriticalDischarge(D), ys: number[] = [];
+  const close = (v: number) => Math.abs(v - q) <= CIRCLE_TOL * q, ev = (y: number) => { ys.push(y); return f(F(y)); };
+  let lo = 0, flo = 0, y = f(CIRCLE_CD_STEP), fy: number, n = 0;
+  for (;;) {
+    for (;;) { if (y >= D) return ys; fy = ev(y); if (close(fy) || ++n > 1e6) return ys; if (fy > q) break; lo = y; flo = fy; y = f(y + CIRCLE_CD_STEP); }
+    let hi = y, fhi = fy;
+    for (;;) { if (!(fhi > flo) || ++n > 1e6) return ys; y = f(lo + ((q - flo) * (hi - lo)) / (fhi - flo)); fy = ev(y); if (close(fy)) return ys; if (fy < q) break; hi = y; fhi = fy; }
+    lo = y; flo = fy; y = f(y + CIRCLE_CD_STEP);
+  }
+}
 const which = process.argv[2];
 if (which === 'floor') floorReport();
 else if (which === 'a016') a016();
+else if (which === 'design') { designChanges(); h009(); }
 else if (which === 'a004') a004();
 else if (which === 'a009') a009();
 else if (which === 'a005') a005();
@@ -2210,4 +2292,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design'); process.exit(2); }
