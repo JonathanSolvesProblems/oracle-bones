@@ -1232,6 +1232,11 @@ boundary is wrong. G1 got 2 of 4. S(f) with 0.750 ≤ f < 0.847 predicted all fo
 13 of 14 fields as R1 predicted; Critical Slope printed `0.0090` against `0.0089`. The quick set
 was rebuilt with the new golden (2dcaf77): 194 of 200, full set 279 of 285.
 
+*Correction, 2026-11-25.* S(f) did not predict all four. As committed in A-007, it predicted
+P1, P2 and P4; its 0.750 lower bound came from P3's result afterwards, so it fitted P3. The
+wording came from my prompt. The paragraph above is left as written (results/attempts.md A-008
+carries the same note).
+
 Credits for the Exhumer's run: 4.28. Time: 4 min 55 s.
 
 ### cd-circ-000033 and A-009: one rule for both misses

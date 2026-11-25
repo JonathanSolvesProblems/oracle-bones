@@ -614,6 +614,12 @@ rejected P1 (10.1 in, 3 cfs), where R1 and G1 predicted a result. G1 gets 2 of 4
 it on the rejection too. S(f) with 0.750 ≤ f < 0.847 predicted all four. P3 printed 13 of its
 14 fields as R1 predicted; the miss is Critical Slope `0.0090`, predicted `0.0089`.**
 
+*Correction, 2026-11-25.* "S(f) with 0.750 ≤ f < 0.847 predicted all four" is wrong. As
+committed in A-007 (dcd4e85), S(f) predicted P1, P2 and P4. For P3 it said "result for f ≥
+0.750, rejected below", and the 0.750 lower bound was taken from P3's result afterwards, so S(f)
+fitted P3 rather than predicted it. The wording came from the user's prompt for this section.
+The sentence above is left as written.
+
 **How graded.** The Exhumer ran the four cases as A-007 types them (ledger decision 75). P3
 ended on a result and is golden cd-circ-000033. P1, P2 and P4 timed out on `cd_form` with
 the message on the form, so they store no golden; each observation is the final screen of its
