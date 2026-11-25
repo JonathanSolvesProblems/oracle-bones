@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 602,
+      "visits": 630,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 604,
+      "visits": 632,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 606,
+      "visits": 638,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 179,
+      "visits": 207,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -181,7 +181,7 @@
       ]
     },
     "cd_circ_rejected": {
-      "visits": 17,
+      "visits": 41,
       "keys_tried": [
         "{Enter}",
         "{F2}",
@@ -332,7 +332,7 @@
     },
     "cd-circ": {
       "result": 31,
-      "rejected": 3,
+      "rejected": 25,
       "error": 0,
       "observed": 0
     },
@@ -395,6 +395,12 @@
       "rejected": 0,
       "error": 0,
       "observed": 2
+    },
+    "obs-cdmenu": {
+      "result": 0,
+      "rejected": 0,
+      "error": 0,
+      "observed": 1
     },
     "obs-fieldedge": {
       "result": 0,
@@ -2085,6 +2091,23 @@
       "waited_for": "cd_circ_rejected",
       "capture": "oracle/out/runs/20261125-141855-1d1517/final.txt",
       "at": "2026-11-25T14:18:55Z"
+    },
+    {
+      "run_id": "20261125-184734-96cde0",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "2",
+          "diameter": "9.6",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261125-184734-96cde0/final.txt",
+      "at": "2026-11-25T18:47:34Z"
     }
   ],
   "unknown_screens": [
@@ -2464,10 +2487,6 @@
     {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-    },
-    {
-      "profile_path": "screens[cd_circ_rejected]",
-      "source": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
     }
   ],
   "harness_findings": {
@@ -2850,11 +2869,27 @@
         "20261122-214714-6aaf2d",
         "batch-20261122-214715-5c32b8"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-22T21:55:05Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Partly answered. Yes, the profile maps it: cd_circ_rejected (kind rejected, marker 'DEPTH is Greater than the DIAMETER', message on 0-based row 20 from column 13, keeps_output, ahead of cd_form), cited by recorded goldens. The Q-022 run's inputs (9.1, .0216, 2, 1.9915) recorded as cd-circ-000039 end rejected on it with that message, and so do the fourteen other circle Critical Depth inputs recorded this session (cd-circ-000040 to -000053). Not answered by these cases, and carried to a new open question: what key leaves the screen, and from what discharge QUICK-2 prints the message for a given pipe.",
+      "answer_evidence": [
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053"
+      ],
+      "answered_at": "2026-11-25T18:45:01Z"
     },
     {
       "id": "Q-023",
@@ -2992,11 +3027,17 @@
       "evidence": [
         "20261125-100815-dff8b0"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-25T10:08:34Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Recorded as behaviour case obs-cdmenu-000001 (9.6, .013, 2, .005, every screen captured, source run 20261125-100815-dff8b0). screen-07 is cd_form at Begin Calculations with the four inputs echoed, Depth 0.00, Critical Slope and every output field blank. After the last Enter, screen-08 is the shape menu: no result, no message, a row of block characters on row 0, and the '<F7> - Main Menu' box below the menu. The run of the same inputs in the same call (20261125-184734-96cde0) also ended on shape_menu and timed out waiting for a result or a rejection, so the first run's ending repeated twice. The capture holds one screen per step, so nothing between the Enter and the shape menu is seen; whether the program returned by itself or crashed and restarted its menu is not shown by these screens.",
+      "answer_evidence": [
+        "obs-cdmenu-000001",
+        "oracle/goldens/captures/obs-cdmenu-000001/screen-07.txt",
+        "oracle/goldens/captures/obs-cdmenu-000001/screen-08.txt",
+        "20261125-184734-96cde0",
+        "20261125-100815-dff8b0"
+      ],
+      "answered_at": "2026-11-25T18:48:05Z"
     },
     {
       "id": "Q-030",
@@ -3005,11 +3046,28 @@
         "20261125-140843-0e1f6a",
         "20261122-214714-6aaf2d"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-25T14:10:02Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "The screen never settles: it keeps sending output while its text and cursor stay the same (S2's inputs: 73 output chunks in 4 s, longest gap 98 ms, measured 2026-11-25), so the wait never saw settle_ms (150) without output. Fixed in the harness in commit 40b8f6d by marking cd_circ_rejected keeps_output. With the fix, the recorded Q-022 run, which timed out in run 20261125-140843-0e1f6a, ended rejected on cd_circ_rejected as cd-circ-000039, and so did the other fourteen cases recorded this session (cd-circ-000040 to cd-circ-000053).",
+      "answer_evidence": [
+        "20261125-140843-0e1f6a",
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053"
+      ],
+      "answered_at": "2026-11-25T18:44:54Z"
     },
     {
       "id": "Q-031",
@@ -3019,11 +3077,27 @@
         "20261125-141415-e06fc2",
         "20261125-141855-1d1517"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-25T14:19:19Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Re-recorded by the Exhumer in this session after the Q-030 fix: the six rejections as cd-circ-000039 (Q-022 run), -000040 (P1), -000041 (P2), -000042 (P4), -000043 (Q1), -000044 (Q2), and S2, S3, S4, S5, S7, S8, S9, S10, S11 as cd-circ-000045 to -000053, all rejected on cd_circ_rejected. The unobserved note is not extended with run ids: it is replaced by a cite of these fifteen goldens.",
+      "answer_evidence": [
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053"
+      ],
+      "answered_at": "2026-11-25T18:44:57Z"
     },
     {
       "id": "Q-032",
@@ -3034,6 +3108,19 @@
       ],
       "status": "open",
       "asked_at": "2026-11-25T14:25:50Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-033",
+      "question": "Left open from Q-022: (1) What key leaves cd_circ_rejected? No recorded case presses one; the only observations are Q-032's exploratory sessions. (2) From what discharge does QUICK-2 print 'DEPTH is Greater than the DIAMETER' for a given pipe? The recorded rejections (cd-circ-000039 to -000053) show inputs where it is printed, not a boundary.",
+      "evidence": [
+        "cd-circ-000039",
+        "cd-circ-000045"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-25T18:45:03Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -4196,12 +4283,128 @@
       "why": "Every step of the task is done. Mapping cd_circ_rejected passed the re-read, but every case that reaches the screen times out because the screen is identified yet never counts as settled (Q-030, reproduced by hand in session dd494343). So none of the six rejections or the nine S cases that reach the screen stored a golden, and the screen keeps its unobserved note (Q-031). S1 and S6 stored cd-circ-000037 and cd-circ-000038. Q-029 stays open: S2, recorded and by hand, ended on the rejection screen, and send_keys shows only settled screens. Enter, F2 and F7 were tried on the rejection screen (Q-032); Esc is untried. A person must fix Q-030 in the harness before more recording here is worth its credits.",
       "evidence": [],
       "at": "2026-11-25T14:25:57Z"
+    },
+    {
+      "n": 94,
+      "saw": "Q-030 fixed in commit 40b8f6d (cd_circ_rejected marked keeps_output). circle-short-chord bugfix.md 2.11 asks for the six rejections to be recorded as goldens.",
+      "chose": "record_case",
+      "why": "Step 1 of the session: record the six rejections of bugfix.md with the inputs in its table, critical_depth/circle, record true, one run each. In run order: Q-022 run (9.1, .0216, 2, 1.9915) cd-circ-000039 run 20261125-184030-4c6072; P1 (10.1, .013, 3, .005) cd-circ-000040 run 20261125-184041-0a2a28; P2 (10.1, .013, 4, .005) cd-circ-000041 run 20261125-184056-983861; P4 (11.9, .013, 4, .005) cd-circ-000042 run 20261125-184106-5b6fa2; Q1 (8, .013, 1, .005) cd-circ-000043 run 20261125-184115-f3a46a; Q2 (22.7, .013, 23, .005) cd-circ-000044 run 20261125-184132-2b5e6e. All six ended rejected on cd_circ_rejected. Decision written after the runs so that it can list their ids, as the person asked.",
+      "evidence": [
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "20261125-184030-4c6072",
+        "20261125-184041-0a2a28",
+        "20261125-184056-983861",
+        "20261125-184106-5b6fa2",
+        "20261125-184115-f3a46a",
+        "20261125-184132-2b5e6e"
+      ],
+      "at": "2026-11-25T18:41:41Z"
+    },
+    {
+      "n": 95,
+      "saw": "All six rejections recorded as rejected goldens (decision 94). A-012 lists S2 to S5 and S7 to S11 as observed only in run folders, never recorded (Q-031).",
+      "chose": "record_case",
+      "why": "Step 2: record S2 to S5 and S7 to S11 with the inputs of A-011 and its amendment, n .013, slope .005, critical_depth/circle, record true, one run each. In run order: S2 (12, 4) cd-circ-000045 run 20261125-184159-b7ddb7; S3 (24, 27) cd-circ-000046 run 20261125-184215-4584a6; S4 (36, 84) cd-circ-000047 run 20261125-184230-cd317d; S5 (48, 188) cd-circ-000048 run 20261125-184247-c747da; S7 (15, 7) cd-circ-000049 run 20261125-184303-b301f2; S8 (18, 12) cd-circ-000050 run 20261125-184318-bb8ab9; S9 (30, 55) cd-circ-000051 run 20261125-184334-bae252; S10 (60, 360) cd-circ-000052 run 20261125-184349-a8c188; S11 (14.4, 7) cd-circ-000053 run 20261125-184408-332b7b. All nine ended rejected on cd_circ_rejected. Written after the runs so that it can list their ids.",
+      "evidence": [
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053",
+        "20261125-184159-b7ddb7",
+        "20261125-184215-4584a6",
+        "20261125-184230-cd317d",
+        "20261125-184247-c747da",
+        "20261125-184303-b301f2",
+        "20261125-184318-bb8ab9",
+        "20261125-184334-bae252",
+        "20261125-184349-a8c188",
+        "20261125-184408-332b7b"
+      ],
+      "at": "2026-11-25T18:44:16Z"
+    },
+    {
+      "n": 96,
+      "saw": "cd_circ_rejected still carries its unobserved note; fifteen recorded goldens (cd-circ-000039 to cd-circ-000053) now end on it as rejected.",
+      "chose": "change_profile",
+      "why": "Step 3: replace the note with a cite of the fifteen goldens, keeping kind, marker, keeps_output and message unchanged. What the note held about the screen is kept in the ledger: the output that never settles (Q-030, answered with it), and the Enter screen that keeps the message and adds 'Print <F5>' on row 21, which reads as cd_circ_rejected because cd_circ_result's marker excludes the message (Q-032, which stays open for (a)). The next run re-reads every golden under the change.",
+      "evidence": [
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053",
+        "20261125-142211-6307dd"
+      ],
+      "at": "2026-11-25T18:44:41Z"
+    },
+    {
+      "n": 97,
+      "saw": "cd_circ_rejected now cites fifteen goldens (decision 96); the first run under the changed profile passed its re-read. A-013's amendment lists seven cases to run, R3 and R5 withdrawn.",
+      "chose": "record_case",
+      "why": "Step 4: record the seven cases of A-013's amendment, n .013, slope .005, critical_depth/circle, record true, one run each; R3 and R5 not run. In run order: R1 (19.2, 15) cd-circ-000054 run 20261125-184518-ed4af0; R2 (21.6, 20) cd-circ-000055 run 20261125-184527-ebc209; R4 (55.2, 276) cd-circ-000056 run 20261125-184537-7097df; R6 (98.4, 1369) cd-circ-000057 run 20261125-184547-40f93d; R7 (129.6, 2924) cd-circ-000058 run 20261125-184556-411e14; R8 (26.4, 36) cd-circ-000059 run 20261125-184605-22a756; R9 (57.6, 312) cd-circ-000060 run 20261125-184615-98bcc1. All seven ended rejected on cd_circ_rejected; none left the form for the shape menu. Written after the runs so that it can list their ids.",
+      "evidence": [
+        "cd-circ-000054",
+        "cd-circ-000055",
+        "cd-circ-000056",
+        "cd-circ-000057",
+        "cd-circ-000058",
+        "cd-circ-000059",
+        "cd-circ-000060",
+        "20261125-184518-ed4af0",
+        "20261125-184527-ebc209",
+        "20261125-184537-7097df",
+        "20261125-184547-40f93d",
+        "20261125-184556-411e14",
+        "20261125-184605-22a756",
+        "20261125-184615-98bcc1"
+      ],
+      "at": "2026-11-25T18:46:27Z"
+    },
+    {
+      "n": 98,
+      "saw": "None of the seven step-4 cases left the form for the shape menu: all seven ended rejected (decision 97). Q-029's 9.6 in run (20261125-100815-dff8b0) is the only shape-menu ending, and it is exploratory with only its final screen kept.",
+      "chose": "record_case",
+      "why": "Step 5: no step-4 case needs a behaviour case. For the 9.6 in run, added control obs-cdmenu-000001 to the profile (critical_depth/circle, keys 9.6, .013, 2, .005 and the Begin Enter, end on shape_menu with hold_ms 3000, outcome observed, source 20261125-100815-dff8b0), then ran the same inputs once with record true, the only recording call that brings the control in. In run order: the control recorded first as obs-cdmenu-000001, ending on shape_menu with every screen captured; then run 20261125-184734-96cde0 (9.6, .013, 2, .005) timed out on shape_menu and stored no golden. Written after the runs so that it can list their ids.",
+      "evidence": [
+        "obs-cdmenu-000001",
+        "20261125-184734-96cde0",
+        "20261125-100815-dff8b0"
+      ],
+      "at": "2026-11-25T18:48:12Z"
+    },
+    {
+      "n": 99,
+      "saw": "Every case this session listed is recorded (cd-circ-000039 to -000060, obs-cdmenu-000001) and the person allowed no other runs. Q-032 (a) and Q-033 (the key that leaves cd_circ_rejected, the discharge boundary) stay open, as do Q-026 and the trial questions of A-013, for grading and later sessions.",
+      "chose": "stop",
+      "why": "Every case this session listed is recorded (cd-circ-000039 to -000060, obs-cdmenu-000001) and the person allowed no other runs. Q-032 (a) and Q-033 (the key that leaves cd_circ_rejected, the discharge boundary) stay open, as do Q-026 and the trial questions of A-013, for grading and later sessions.",
+      "evidence": [],
+      "at": "2026-11-25T18:48:17Z"
     }
   ],
   "stopped": {
-    "why": "Every step of the task is done. Mapping cd_circ_rejected passed the re-read, but every case that reaches the screen times out because the screen is identified yet never counts as settled (Q-030, reproduced by hand in session dd494343). So none of the six rejections or the nine S cases that reach the screen stored a golden, and the screen keeps its unobserved note (Q-031). S1 and S6 stored cd-circ-000037 and cd-circ-000038. Q-029 stays open: S2, recorded and by hand, ended on the rejection screen, and send_keys shows only settled screens. Enter, F2 and F7 were tried on the rejection screen (Q-032); Esc is untried. A person must fix Q-030 in the harness before more recording here is worth its credits.",
-    "decision": 93,
-    "at": "2026-11-25T14:25:57Z",
+    "why": "Every case this session listed is recorded (cd-circ-000039 to -000060, obs-cdmenu-000001) and the person allowed no other runs. Q-032 (a) and Q-033 (the key that leaves cd_circ_rejected, the discharge boundary) stay open, as do Q-026 and the trial questions of A-013, for grading and later sessions.",
+    "decision": 99,
+    "at": "2026-11-25T18:48:17Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -4270,17 +4473,14 @@
         {
           "profile_path": "screens[stray_listing]",
           "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
-        },
-        {
-          "profile_path": "screens[cd_circ_rejected]",
-          "source": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
         }
       ],
       "untriaged_mismatches": [
         "max_discharge",
-        "outcome"
+        "outcome",
+        "velocity"
       ],
-      "unanswered_runs": 70,
+      "unanswered_runs": 71,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }

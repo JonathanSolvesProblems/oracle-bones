@@ -432,7 +432,7 @@
       "marker": "DEPTH is Greater than the DIAMETER",
       "keeps_output": true,
       "message": {"row": 20, "col": 13, "width": 51},
-      "unobserved": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form. The screen keeps sending output while its text and cursor stay the same (S2's inputs: 73 output chunks in 4 s, longest gap 98 ms, measured 2026-11-25), so it never went settle_ms without output and every case that reached it timed out (Q-030); it is marked keeps_output. Enter on it (run 20261125-142211-6307dd, exploratory) leaves the message and adds 'Print <F5>' on row 21; cd_circ_result's marker excludes the message, so that screen reads as this one and is not stored as a result with blank fields (Q-032 b)"
+      "cite": ["cd-circ-000039", "cd-circ-000040", "cd-circ-000041", "cd-circ-000042", "cd-circ-000043", "cd-circ-000044", "cd-circ-000045", "cd-circ-000046", "cd-circ-000047", "cd-circ-000048", "cd-circ-000049", "cd-circ-000050", "cd-circ-000051", "cd-circ-000052", "cd-circ-000053"]
     },
     {
       "id": "cd_form",
@@ -1339,6 +1339,28 @@
         "screen_id": "shape_menu"
       },
       "source": "20261121-165641-ab4f64"
+    },
+    {
+      "id": "obs-cdmenu-000001",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261125-100815-dff8b0"
     },
     {
       "id": "obs-negnstall-000001",
