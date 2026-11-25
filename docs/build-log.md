@@ -1489,3 +1489,51 @@ H-009's goldens, 2.9 takes the comparator's counts, and 2.11 and 2.12 ask for th
 cases before the design, with a revision if any misses. The design is not written.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-014 session
+
+The session in the last entry used 51.71 credits over 19 min 3 s.
+
+### The Exhumer on A-014: three held-out cases
+
+Settings: the `exhumer` custom agent, in its own session.
+
+The Exhumer ran A-014's H1 to H3 once each with record true and stored them as cd-circ-000061
+(4.8 in), -000062 (2.4 in) and -000063 (7.2 in), with every screen kept (decision 100). All
+three ended rejected with the message, so no behaviour case was added. Nothing else was run,
+graded or written.
+
+Credits: 3. Time: 2 min 52 s.
+
+### A-015: G3 refuted, a rule picked, and the requirements revised
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed** (afb1dc0), and the quick set rebuilt (c865f11): 16 of 200
+cases swapped; none of the three new goldens entered, cd-circ-000058 came in and -000055 left.
+Quick set 193 of 200 before, 192 after. Full set 291 of 314: H3 matches, and H1 and H2 are
+outcome misses (rejected by QUICK-2, `error` from the rebuild).
+
+**A-015** (78278da). `grade-a014` reads A-014 from f066861 and grades H1 to H3. QUICK-2
+printed the message on all three, so G3 is right on H3 and wrong on H1 and H2, where it
+predicted the shape menu. G3, which fit 54 of 54, is refuted by its first held-out cases, and
+circle-short-chord 2.12's revision is triggered. Rescored on all 57 circle Critical Depth
+outcomes, none of the 184 combinations fits all of them and 56 miss only obs-cdmenu-000001,
+which is what I got. A-015 proposes T1·D1·X2, the rebuild's trial and diameter store with
+trial >= D: 10 of 10 on R1, R2, R4, R6 to R9 and H1 to H3, also what I got. It says that A-013
+had already found it misses the 9.6 in run and dropped it for that, that the 10 of 10 is derived
+after the runs, and that it is picked as the smallest change to the rebuild, not because
+anything separates it from the other 55. It leaves one known difference, 9.6 in at 2 cfs, and
+Q-029 goes back to open with what was tried, including my search of about 32,000 wider models,
+whose 16 fits were chosen by one pipe. Not run.
+
+**circle-short-chord** (ea96487). 2.4 is trial >= D with the trial and D as now. 2.6 is the
+9.6 in difference: no special case in the solver, recorded in the ledger and in hauntings.md's
+known differences, Q-029 open. 2.7: the app says nothing about the menu, the limits page lists
+the difference, and never_finishes is no longer raised by any circle Critical Depth input. 2.9
+takes the comparator's counts with H1 to H3 as goldens, 291 of 314 today and 309 after, quick
+set 192 and 195 of 200. 2.11 asks for no more runs before the design, 2.12 records the grade,
+and 1.5 and 2.10 are brought up to date. K1, N2 and Normal Depth are unchanged. The design is
+not written.
+
+Credits: not counted here; they go in the next entry.
