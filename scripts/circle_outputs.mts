@@ -3,6 +3,9 @@
 //
 //   node scripts/circle_outputs.mts a004       every A-004 number, section by section
 //   node scripts/circle_outputs.mts a005       A-005's cases and predicted fields
+//   node scripts/circle_outputs.mts grade-a005 A-006: the goldens against A-005 as committed
+//   node scripts/circle_outputs.mts critical-slope  A-008: cd-circ-000033's Critical Slope
+//   node scripts/circle_outputs.mts a009       A-009: the short-chord rule, its scores and predictions
 //
 // It builds candidate rules on the rebuild's own form reader and printer (app/src) and compares
 // printed fields with the stored goldens. It never runs the program and never writes a file.
@@ -16,6 +19,10 @@ import { REGULAR_RESULT } from '../app/src/format/layout.ts';
 import { echoes, readRegularForm } from '../app/src/solver/forms.ts';
 import { solve } from '../app/src/solver/index.ts';
 import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
+import { circleCriticalDischarge } from '../app/src/solver/modes/circle.ts';
+import { diameterFeet } from '../app/src/solver/geometry/circle.ts';
+import { search as appSearch } from '../app/src/solver/search.ts';
+import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
 
 const ROOT = join(import.meta.dirname, '..');
 const CASES = join(ROOT, 'oracle', 'goldens', 'cases');
@@ -556,8 +563,153 @@ function criticalSlopeA008() {
   row(`within the 0.5% stop as well: y ${c.toFixed(5)} to ${b.toFixed(5)}, ${(y33 - b).toFixed(5)} to ${(y33 - c).toFixed(5)} ft below the rebuild's chord`);
 }
 
+// ---- A-009: one rule for cd-circ-000033 and the Q-022 boundary --------------------------
+/** The four circle Critical Depth runs that printed "DEPTH is Greater than the DIAMETER": the
+ * Q-022 run and A-008's P1, P2 and P4 (ledger Q-022 and decision 75). None stores a golden. */
+const REJECTED_RUNS: { run: string; inputs: Record<string, string> }[] = [
+  { run: '20261122-214714-6aaf2d', inputs: { diameter: '9.1', n: '.0216', discharge: '2', slope: '1.9915' } },
+  { run: '20261124-225953-c32ec8', inputs: { diameter: '10.1', n: '.013', discharge: '3', slope: '.005' } },
+  { run: '20261124-230038-48c33a', inputs: { diameter: '10.1', n: '.013', discharge: '4', slope: '.005' } },
+  { run: '20261124-230140-e185ee', inputs: { diameter: '11.9', n: '.013', discharge: '4', slope: '.005' } },
+];
+/** What Critical Depth does after a chord that is still short. The rest of H5 is unchanged. */
+const A009_RULES: [string, After][] = [
+  ['the rebuild: the chord repeats on the narrowed bracket (N2)', 'narrow'],
+  ['K1: stepping resumes from the chord with the same 0.2 ft step (N1)', 'resume'],
+  ['K2: stepping resumes from the chord with 0.02 ft steps (N3)', 'restep10'],
+  ['K3: secant through the two latest trials (N4)', 'secant'],
+  ['K4: bisect the bracket (N5)', 'bisect'],
+];
+/** A-009's cases for the Exhumer, chosen by `a009` below from the grid it prints. */
+const A009_CASES: { id: string; inputs: Record<string, string> }[] = [
+  { id: 'Q1', inputs: { diameter: '8', n: '.013', discharge: '1', slope: '.005' } },
+  { id: 'Q2', inputs: { diameter: '22.7', n: '.013', discharge: '23', slope: '.005' } },
+  { id: 'Q3', inputs: { diameter: '37', n: '.013', discharge: '77', slope: '.005' } },
+  { id: 'Q4', inputs: { diameter: '51', n: '.013', discharge: '4', slope: '.005' } },
+];
+
+function a009() {
+  const m2 = atShare(0.9382);
+  const cdBy = (after: After) => (v: Vals) => cd(v, GEO_C2, m2, { ...CD_RULE, after });
+  h('Check: the narrow rule here prints what the rebuild (solve) prints, on every circle Critical Depth golden and rejection');
+  let same = 0;
+  const all = [...circles('critical_depth').map((g) => g.inputs), ...REJECTED_RUNS.map((r) => r.inputs)];
+  for (const inputs of all) {
+    const r = solve({ mode: 'critical_depth', shape: 'circle', inputs }), x = cdBy('narrow')(vals('critical_depth', inputs));
+    const p = x ? show('critical_depth', vals('critical_depth', inputs), x.out) : null;
+    if ((r.outcome === 'rejected' && !x) || (r.outcome === 'result' && p && FIELDS.critical_depth.every((k) => p[k] === r.printed[k]))) same++;
+  }
+  row(`${same} of ${all.length}`);
+
+  h('Scores: 27 circle Critical Depth results (every field) and the 4 rejections (outcome)');
+  for (const [name, after] of A009_RULES) {
+    const run = cdBy(after);
+    let ok = 0, rej = 0; const miss: string[] = [], branch: string[] = [];
+    for (const g of circles('critical_depth')) {
+      const v = vals('critical_depth', g.inputs), r = run(v);
+      if (r?.found.branch) branch.push(g.id);
+      const d = r ? misses(g, show('critical_depth', v, r.out)) : ['rejected'];
+      if (!d.length) ok++; else miss.push(`${g.id} (${d.join('; ')})`);
+    }
+    const rmiss: string[] = [];
+    for (const x of REJECTED_RUNS) { const r = run(vals('critical_depth', x.inputs)); if (!r) rej++; else rmiss.push(`run ${x.run} gives a result at ${r.found.y.toFixed(5)}`); }
+    row(`${name}: results ${ok} of ${circles('critical_depth').length}, rejections ${rej} of ${REJECTED_RUNS.length}, together ${ok + rej} of ${circles('critical_depth').length + REJECTED_RUNS.length}`);
+    row(`    reach the short-chord branch: ${branch.join(', ') || 'none'}`);
+    for (const m of [...miss, ...rmiss]) row(`    miss: ${m}`);
+  }
+
+  h('cd-circ-000033 and run 20261124-225953-c32ec8, trial by trial, under the rebuild and K1');
+  for (const inputs of [byId('cd-circ-000033').inputs, REJECTED_RUNS[1]!.inputs]) {
+    const v = vals('critical_depth', inputs), q = v.discharge!, D = diam(v);
+    for (const after of ['narrow', 'resume'] as After[]) {
+      const trials: [number, number][] = [];
+      const r = search((y) => { const x = qc(GEO_C2, D)(y); trials.push([y, x]); return x; }, q, D, 0.2, 0.005, after);
+      const t = (r?.trials ?? trials).map(([y, x]) => `${y.toFixed(5)} (${pct(x, q)})`).join(', ');
+      row(`${inputText(inputs)} [D ${D.toFixed(5)} ft], ${after}: ${t}${r ? `; stops at ${r.y.toFixed(5)}` : `; next trial past the diameter: rejected`}`);
+    }
+  }
+
+  h('Generated practical circles (seed 20261126, 2000, as A-007): how many each rule rejects');
+  const py = process.env.PYTHON ?? [join(ROOT, '.venv', 'Scripts', 'python.exe'), join(ROOT, '.venv', 'bin', 'python')].find(existsSync) ?? 'python';
+  const code = 'import json\nfrom oracle import generator, profile\np=profile.load()\n' +
+    'print(json.dumps(generator.generate(p,20261126,2000,modes=["critical_depth"],shapes=["circle"],existing_ids=[],range_set="practical")))';
+  const drawn = JSON.parse(execFileSync(py, ['-c', code], { cwd: ROOT, encoding: 'utf-8', maxBuffer: 1 << 26 })) as { inputs: Record<string, string> }[];
+  // Outcomes come from the rebuild's own search (app/src/solver/search.ts), which tells a trial
+  // past the diameter from a search that never finishes; fields come from cd() above.
+  const outcomeOf = (v: Vals, after: 'narrow' | 'resume') => {
+    const r = appSearch(circleCriticalDischarge(diameterFeet(v.diameter!)), v.discharge!, { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: diameterFeet(v.diameter!), tol: CIRCLE_TOL, afterShortChord: after });
+    return r.ok ? 'result' : r.reason === 'past_ceiling' ? 'rejected' : r.reason;
+  };
+  let disagree = 0;
+  for (const [name, after] of [[A009_RULES[0]![0], 'narrow'], [A009_RULES[1]![0], 'resume']] as [string, 'narrow' | 'resume'][]) {
+    const n: Record<string, number> = {}; const ds: number[] = []; let br = 0, diff = 0;
+    for (const c of drawn) {
+      const v = vals('critical_depth', c.inputs), o = outcomeOf(v, after), r = cdBy(after)(v);
+      n[o] = (n[o] ?? 0) + 1;
+      if (o === 'rejected') ds.push(v.diameter!);
+      if ((o === 'result') !== !!r) disagree++;
+      if (r?.found.branch) br++;
+      if (after === 'resume') {
+        const o2 = outcomeOf(v, 'narrow'), n2 = cdBy('narrow')(v);
+        if (o2 !== o || (n2 && r && FIELDS.critical_depth.some((k) => show('critical_depth', v, n2.out)[k] !== show('critical_depth', v, r.out)[k]))) diff++;
+      }
+    }
+    row(`${name}: ${Object.entries(n).map(([k, x]) => `${k} ${x}`).join(', ')}; rejected diameters ${Math.min(...ds).toFixed(1)} to ${Math.max(...ds).toFixed(1)} in; ${br} results reach the short-chord branch${after === 'resume' ? `; ${diff} of ${drawn.length} differ from the rebuild in outcome or a printed field` : ''}`);
+  }
+  row(`cases where the outcome by search.ts and by this script's search disagree: ${disagree}`);
+  for (const c of drawn) {
+    const v = vals('critical_depth', c.inputs);
+    if (outcomeOf(v, 'narrow') === 'never_finishes') row(`never finishes under both rules: ${inputText(c.inputs)} (D ${diameterFeet(v.diameter!)} ft; the trial at D has top width 0): K1 ${outcomeOf(v, 'resume')}`);
+  }
+
+  h('Grid: n .013, slope .005; pipes where K1 and the rebuild print differently');
+  const rejects: { d: number; s: string }[] = [], fields: { d: number; k: number; s: string }[] = [];
+  const diamGrid: number[] = [];
+  for (let d = 80; d <= 360; d++) diamGrid.push(d / 10);
+  for (let d = 37; d <= 180; d++) diamGrid.push(d);
+  for (const d of diamGrid) {
+    const D = f(d / 12), cap = qc(GEO_C2, D)(0.9 * D);
+    const qs = d <= 36 ? Array.from({ length: Math.floor(cap) }, (_, i) => i + 1) : Array.from({ length: 40 }, (_, i) => Math.max(1, Math.round((cap * (i + 1)) / 41)));
+    for (const qv of qs) {
+      const inputs = { diameter: String(d), n: '.013', discharge: String(qv), slope: '.005' };
+      const v = vals('critical_depth', inputs), oa = outcomeOf(v, 'narrow'), ob = outcomeOf(v, 'resume');
+      if (oa !== 'result' && ob !== 'result') continue;
+      const a = cdBy('narrow')(v), b = cdBy('resume')(v);
+      if (oa === 'result' && ob === 'rejected') { rejects.push({ d, s: `${d} in, q ${qv}: rebuild ${a!.found.y.toFixed(5)}, K1 rejected` }); continue; }
+      if (oa !== 'result' || ob !== 'result') { row(`other: ${d} in, q ${qv}: rebuild ${oa}, K1 ${ob}`); continue; }
+      const pa = show('critical_depth', v, a!.out), pb = show('critical_depth', v, b!.out);
+      const dk = FIELDS.critical_depth.filter((k) => pa[k] !== pb[k]);
+      if (dk.length) fields.push({ d, k: dk.length, s: `${d} in, q ${qv}: rebuild ${a!.found.y.toFixed(5)}, K1 ${b!.found.y.toFixed(5)} (${(b!.found.y / D).toFixed(3)}·D); differ on ${dk.join(', ')}` });
+    }
+  }
+  row(`K1 rejects where the rebuild gives a result: ${rejects.length} grid cases, ${Math.min(...rejects.map((x) => x.d))} to ${Math.max(...rejects.map((x) => x.d))} in; the largest pipes:`);
+  for (const x of rejects.slice(-8)) row(`    ${x.s}`);
+  row(`both give a result and print differently: ${fields.length} grid cases, ${Math.min(...fields.map((x) => x.d))} to ${Math.max(...fields.map((x) => x.d))} in; ${fields.filter((x) => x.d >= 37).length} of them 37 in or larger. Three or more fields differ in:`);
+  for (const x of fields.filter((x) => x.k >= 3)) row(`    ${x.s}`);
+  row('37 in or larger:');
+  for (const x of fields.filter((x) => x.d >= 37).slice(0, 20)) row(`    ${x.s}`);
+
+  if (A009_CASES.length) {
+    h('A-009 predictions: every printed field under each rule');
+    for (const c of A009_CASES) {
+      const v = vals('critical_depth', c.inputs);
+      const D = diam(v), F = qc(GEO_C2, D);
+      let lo = 0.01, hi = 0.999;
+      for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (F(m * D) < v.discharge!) lo = m; else hi = m; }
+      const fs = (lo + hi) / 2;
+      const sf = fs >= 0.847 ? 'rejected for every f in [0.750, 0.847)' : fs < 0.75 ? 'a result for every f in [0.750, 0.847)' : `a result for f ≥ ${fs.toFixed(3)}, rejected below`;
+      row(`${c.id} ${inputText(c.inputs)} [D ${D.toFixed(5)} ft; A·√(gA/T) reaches q at ${fs.toFixed(3)}·D; S(f): ${sf}]`);
+      for (const [name, after] of A009_RULES) {
+        const r = cdBy(after)(v);
+        row(`  ${name.split(':')[0]}: ${r ? `result (search depth ${r.found.y.toFixed(5)}) ${line('critical_depth', show('critical_depth', v, r.out))}` : 'rejected'}`);
+      }
+    }
+  }
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
+else if (which === 'a009') a009();
 else if (which === 'a005') a005();
 else if (which === 'grade-a005') gradeA005();
 else if (which === 'critical-slope') criticalSlopeA008();

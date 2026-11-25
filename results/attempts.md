@@ -719,3 +719,114 @@ rule prints `0.0090` without breaking another case. It is not a haunting, becaus
 the rebuild with QUICK-2, not QUICK-2 with exact hydraulics. If the Skeptic finds it holds, a
 bugfix spec follows. The table-driven circle test fails on cd-circ-000033's Critical Slope
 until then.
+
+## A-009: one rule for cd-circ-000033 and the Q-022 boundary (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a009` at the
+commit that adds this section. It builds each rule on the rebuild's form reader, geometry (C2)
+and printer, with Max Discharge at .9382·D, and checks first that its version of the rebuild's
+rule prints what `solve()` prints on all 31 cases scored here (31 of 31). Outcomes on generated
+and grid cases come from the rebuild's own `search.ts`. Inputs are typed exactly as shown.
+
+**Why one mechanism.** Both misses are circle Critical Depth in pipes under 1 ft, near the
+crown, and both are cases where the search's first chord is still short of q. That branch was
+unobserved in Critical Depth when the design chose its rule (A-004: no Critical Depth golden
+reached it). The rebuild then takes the chord again on the narrowed bracket (N2, chosen for
+Normal Depth from nd-circ-000020's Top Width, A-006). The A-005 goldens cd-circ-000023, -000024
+and -000026 reach the branch too, but there every rule below prints the same.
+
+- cd-circ-000033 (11.9 in, D 0.99167 ft, q 3): trials 0.2, 0.4, 0.6 (−34.369%), 0.8
+  (+16.602%); the first chord, 0.73486, is 2.444% short. The rebuild's second chord is 0.74322
+  (−0.174%). A-008 measured that every printed field needs a search depth of 0.74203 to
+  0.74279.
+- Run 20261124-225953-c32ec8 (10.1 in, D 0.84167 ft, q 3): trials 0.2, 0.4, 0.6 (−40.095%),
+  0.8 (+26.333%); the first chord, 0.72072, is 11.085% short. The rebuild narrows three more
+  times and prints a result at 0.75200. QUICK-2 printed "DEPTH is Greater than the DIAMETER".
+
+If stepping resumes from a short chord with the same 0.2 ft step (N1, the shared search's rule
+for every other shape, A-001), the 10.1 in pipe's next trial is 0.92072, past the diameter, so
+the search rejects. The 11.9 in pipe's next trial is 0.93486 (+82.666%, inside the pipe); the
+chord on [0.73486, 0.93486] is 0.74060 (−0.889%), the next trial 0.94060 (+88.274%), and the
+chord on [0.74060, 0.94060] is 0.74259 (−0.345%), within the 0.5% stop and inside A-008's
+window. One rule gives both.
+
+**Hypotheses.** Each changes only what Critical Depth does after a chord that is still short;
+the 0.2 ft step from 0.2 ft, the 0.5% stop, the diameter ceiling on stepped trials, the 0.01 ft
+Depth offset and every field formula are H5 as accepted (A-006). Scored on every field of the
+27 circle Critical Depth result goldens and on the outcome of the four runs that printed the
+message: run 20261122-214714-6aaf2d (Q-022) and A-008's P1, P2 and P4.
+
+| Rule after a short chord | Results (every field) | Rejections | Together | Misses |
+|---|---|---|---|---|
+| The rebuild: the chord repeats on the narrowed bracket (N2) | 26 of 27 | 3 of 4 | 29 of 31 | cd-circ-000033 (Critical Slope); P1 gives a result at 0.75200 |
+| K1: stepping resumes from the chord with the same 0.2 ft step (N1) | **27 of 27** | **4 of 4** | **31 of 31** | none |
+| K2: stepping resumes from the chord with 0.02 ft steps (N3) | 25 | 3 | 28 | cd-circ-000023 and -000033 (Critical Slope); P1 a result at 0.75222 |
+| K3: secant through the two latest trials (N4) | 23 | 3 | 26 | cd-circ-000023, -000024 (Critical Slope), -000026 (Depth), -000033 (Depth, Critical Slope); P1 a result at 0.75298 |
+| K4: bisect the bracket (N5) | 26 | 3 | 29 | cd-circ-000033 (Critical Slope); P1 a result at 0.75191 |
+
+P2, P4 and the Q-022 run are rejected under every rule: each passes the diameter before F
+reaches q, so no chord is taken. Only cd-circ-000033 and P1 separate the rules, and both were
+seen before K1 was named. K1 is not tuned: it is the shared search's existing rule, already
+candidate N1 of Q-026, with no constant chosen here. Still, two cases chose it, so it is a
+proposal until the cases below run.
+
+**The rule I would adopt for Q-022.** A circle Critical Depth input is rejected with "DEPTH is
+Greater than the DIAMETER" when a 0.2 ft step would pass the diameter before a trial or a chord
+lands within 0.5% of q. Steps run from 0.2 ft, and again from every chord that is still short
+(K1). So the boundary is not a fixed discharge or a fixed share of the diameter: in a given
+pipe it depends on where the chord lands: a chord still short of q and within 0.2 ft of the
+crown rejects, wherever q sits.
+
+**What K1 predicts beyond the goldens.** On A-007's 2000 generated practical circles (seed
+20261126), the rebuild rejects 11 and K1 rejects 27 (1.50%), in pipes of 8.6 to 21.2 in where
+the rebuild's rejections stop at 11.9 in. 79 of the 2000 differ from the rebuild in outcome or
+in a printed field. On a grid with n .013 and slope .005 (8 to 36 in by 0.1 in with every whole
+discharge below the critical discharge at 0.9·D, and 37 to 180 in by 1 in with 40 discharges
+each), K1 rejects 110 cases where the rebuild prints a result, 8 to 22.7 in, and both print a
+result but differ in 739, 8.3 to 98 in. In all but 4 of the 739, one or two fields differ.
+
+**Not part of this.** Normal Depth keeps N2. nd-circ-000020's Top Width `2.0` is printed only by
+N2 (A-006), so taking K1 for both modes would add a Top Width miss to a case that is already a
+known difference. Q-026 stays open; QUICK-2 may treat the two modes differently, and nothing here
+shows whether it does. Three of the 2000 generated cases are 9.6 in pipes (D 0.8 ft exactly),
+where the trial at 0.8 ft sits on the diameter, the top width is 0 and A·√(gA/T) is infinite.
+Both rules then never finish. QUICK-2 has not been run on such a pipe, and no case below tests it.
+
+### Predictions
+
+n .013 and slope .005 in all four. "S(f)" is A-008's range, 0.750 ≤ f < 0.847, given for
+reference: each case's share is where A·√(gA/T) reaches q.
+
+| Case | Diameter | Discharge | Rebuild (N2) | K1 | S(f) | What it tests |
+|---|---|---|---|---|---|---|
+| Q1 | 8 | 1 | result (search depth 0.47330) | **rejected** | result (share 0.712) | K1's rejection below the shares S(f) allows, in the smallest practical pipe |
+| Q2 | 22.7 | 23 | result (search depth 1.69660) | **rejected** | rejected (share 0.898) | K1's rejection in a pipe twice the size of any rejection seen |
+| Q3 | 37 | 77 | result (search depth 2.75615) | result (search depth 2.75394) | rejected (share 0.894) | K1 against the rebuild on Depth; S(f) against both on the outcome |
+| Q4 | 51 | 4 | result (search depth 0.56793) | result (search depth 0.56735) | result (share 0.134) | K1 against the rebuild in a shallow flow far from the crown |
+
+K2 to K4, refuted above, give results on all four; their fields are in the script's output.
+
+**Predicted screens.** A rejection, as A-007 and A-008 saw it: the run ends as `timeout` on
+`cd_form`, "DEPTH is Greater than the DIAMETER" is on the form, the Depth field shows `0.00`,
+and no output field is filled. A result prints every field below, echoes included, as the
+comparator compares them:
+
+| Case | Rule | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Q1 | Rebuild | 8.0 | 0.0130 | 1 | 0.46 | 0.0050 | 0.0094 | 0.3 | 1.3 | 3.8 | 0.2 | 0.6 | 1.0 | 1 | CRITICAL |
+| Q2 | Rebuild | 22.7 | 0.0130 | 23 | 1.69 | 0.0050 | 0.0123 | 2.7 | 4.7 | 8.7 | 0.6 | 1.2 | 1.0 | 23 | CRITICAL |
+| Q3 | Rebuild | 37.0 | 0.0130 | 77 | 2.75 | 0.0050 | 0.0102 | 7.0 | 7.6 | 10.9 | 0.9 | 1.9 | 1.0 | 78 | CRITICAL |
+| Q3 | K1 | 37.0 | 0.0130 | 77 | 2.74 | 0.0050 | 0.0102 | 7.0 | 7.6 | 10.9 | 0.9 | 1.9 | 1.0 | 78 | CRITICAL |
+| Q4 | Rebuild | 51.0 | 0.0130 | 4 | 0.56 | 0.0050 | 0.0038 | 1.1 | 3.2 | 3.5 | 0.4 | 2.9 | 1.0 | 112 | CRITICAL |
+| Q4 | K1 | 51.0 | 0.0130 | 4 | 0.56 | 0.0050 | 0.0039 | 1.1 | 3.2 | 3.6 | 0.4 | 2.9 | 1.0 | 113 | CRITICAL |
+
+**What each outcome means.** All four as K1 predicts: K1 holds on cases it was not chosen on,
+which supports A-008's claim and its proposed classification (a spec error in the circle Critical
+Depth search, the short-chord rule), and Q-022's boundary has the rule above as its answer. Q1 or Q2 printing a
+result refutes K1 for the rejection; if it prints the rebuild's fields, the rebuild's rule is
+right there and a third rule is needed for P1. Q3 or Q4 printing the rebuild's row refutes K1 for
+results. Q3 rejected with Q1 a result would point back to a share rule like S(f). Any other
+printed field is a mismatch for the comparator and is examined separately.
