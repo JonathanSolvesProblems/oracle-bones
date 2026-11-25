@@ -838,6 +838,165 @@ function gradeA009() {
   }
 }
 
+// ---- A-011: trials that land on the diameter, and predictions for standard pipe sizes -------
+/** Diameters listed in the source the profile cites for the circle's practical range (HEC-RAS
+ * Hydraulic Reference Manual 6.5, Table 6-2, AISI 1980): 8 to 180 in. */
+const TABLE_6_2_DIAMETERS = [8, 10, 12, 18, 24, 36, 48, 54, 60, 66, 72, 78, 120, 180];
+/** A-011's cases for the Exhumer: standard sizes, n .013, slope .005. */
+const A011_CASES: { id: string; inputs: Record<string, string> }[] = [
+  { id: 'S1', inputs: { diameter: '12', n: '.013', discharge: '3', slope: '.005' } },
+  { id: 'S2', inputs: { diameter: '12', n: '.013', discharge: '4', slope: '.005' } },
+  { id: 'S3', inputs: { diameter: '24', n: '.013', discharge: '27', slope: '.005' } },
+  { id: 'S4', inputs: { diameter: '36', n: '.013', discharge: '84', slope: '.005' } },
+  { id: 'S5', inputs: { diameter: '48', n: '.013', discharge: '188', slope: '.005' } },
+];
+/** How a trial depth could be formed. `next(prev, k, base)` is the k-th trial after `base` (0 at
+ * the start, or the short chord stepping resumes from). `keep` stores a depth (chords too). */
+interface TrialModel { name: string; next: (prev: number, k: number, base: number) => number; keep: (y: number) => number; cmp?: (prev: number, k: number, base: number) => number }
+const TRIAL_MODELS: TrialModel[] = [
+  // search.ts: store(y + CIRCLE_CD_STEP), the step a double 0.2.
+  { name: 'the rebuild: y + 0.2, stored', next: (p, k, b) => (k === 1 && b === 0 ? f(CIRCLE_CD_STEP) : f(p + CIRCLE_CD_STEP)), keep: f },
+  // QuickBASIC: the literal .2 is a single (0.200000003), and the sum is rounded to single.
+  { name: 'y + .2 with .2 a single, stored', next: (p, k, b) => (k === 1 && b === 0 ? f(0.2) : f(p + f(0.2))), keep: f },
+  // A counter: the k-th trial is base + k·.2, so errors do not accumulate.
+  { name: 'base + k·.2, stored', next: (_p, k, b) => f(b + f(k * f(0.2))), keep: f },
+  // The depth held in double precision (a # variable) and never stored as a single.
+  { name: 'y + .2 in double precision', next: (p, k, b) => (k === 1 && b === 0 ? 0.2 : p + 0.2), keep: (y) => y },
+  // y + .2 stored as a single, but the test against the diameter made on the unrounded sum, as
+  // the 8087 holds it before the store (for example IF Y + .2 > D).
+  { name: 'y + .2 tested before it is stored', next: (p, k, b) => (k === 1 && b === 0 ? f(0.2) : f(p + f(0.2))), keep: f, cmp: (p, k, b) => (k === 1 && b === 0 ? f(0.2) : p + f(0.2)) },
+];
+type ModelOutcome = { outcome: 'result' | 'rejected' | 'on_diameter' | 'no_end'; y?: number };
+/** H5 with K1, trials formed by `m`. A trial equal to D stops as `on_diameter`, past D as `rejected`. */
+function k1Model(F: (y: number) => number, q: number, D: number, m: TrialModel): ModelOutcome {
+  const close = (x: number) => Math.abs(x - q) <= CIRCLE_TOL * q;
+  let lo = 0, flo = 0, base = 0, k = 1, y = m.next(0, 1, 0), t = m.cmp ? m.cmp(0, 1, 0) : y;
+  for (let guard = 0; guard < 100000; guard++) {
+    if (t === D) return { outcome: 'on_diameter' };
+    if (t > D) return { outcome: 'rejected' };
+    const fy = f(F(y));
+    if (close(fy)) return { outcome: 'result', y };
+    if (fy < q) { lo = y; flo = fy; k++; t = m.cmp ? m.cmp(y, k, base) : m.next(y, k, base); y = m.next(y, k, base); continue; }
+    let hi = y, fhi = fy, resumed = false;
+    for (let c = 0; c < 1000 && !resumed; c++) {
+      const yc = m.keep(lo + ((q - flo) * (hi - lo)) / (fhi - flo)), fc = f(F(yc));
+      if (close(fc)) return { outcome: 'result', y: yc };
+      if (fc > q) { hi = yc; fhi = fc; continue; }
+      lo = yc; flo = fc; base = yc; k = 1; t = m.cmp ? m.cmp(yc, 1, yc) : m.next(yc, 1, yc); y = m.next(yc, 1, yc); resumed = true;
+    }
+    if (!resumed) return { outcome: 'no_end' };
+  }
+  return { outcome: 'no_end' };
+}
+/** Stepped trials from 0.2 ft under `m`, as tested against D, up to the first at or past D. */
+function steppedTrials(D: number, m: TrialModel): number[] {
+  const out: number[] = []; let y = 0;
+  for (let k = 1; k < 100000; k++) { const t = m.cmp ? m.cmp(y, k, 0) : m.next(y, k, 0); y = m.next(y, k, 0); out.push(t); if (t >= D) break; }
+  return out;
+}
+const appOutcome = (v: Vals, after: 'narrow' | 'resume') => {
+  const D = diameterFeet(v.diameter!);
+  const r = appSearch(circleCriticalDischarge(D), v.discharge!, { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: D, tol: CIRCLE_TOL, afterShortChord: after });
+  return { r, outcome: r.ok ? 'result' : r.reason === 'past_ceiling' ? 'rejected' : r.reason };
+};
+const signed = (x: number) => (x === 0 ? '0' : `${x > 0 ? '+' : '−'}${Math.abs(x).toExponential(2)}`);
+
+function a011() {
+  const m2 = atShare(0.9382), rebuildModel = TRIAL_MODELS[0]!;
+  const dv = (text: string) => vals('critical_depth', { diameter: text, n: '.013', discharge: '1', slope: '.005' }).diameter!;
+
+  h('Check: the rebuild model here gives the outcome search.ts gives with K1 (on_diameter = never_finishes), n .013, slope .005');
+  let same = 0, total = 0;
+  for (let t = 80; t <= 1800; t += 7) {
+    const text = (t / 10).toFixed(1), D = diameterFeet(dv(text)), F = circleCriticalDischarge(D), cap = F(f(0.95 * D));
+    for (const qv of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765].filter((x) => x < cap)) {
+      const v = vals('critical_depth', { diameter: text, n: '.013', discharge: String(qv), slope: '.005' });
+      const a = appOutcome(v, 'resume').outcome, b = k1Model(F, qv, D, rebuildModel);
+      const bo = b.outcome === 'on_diameter' ? 'never_finishes' : b.outcome;
+      total++; if (a === bo) same++; else row(`differs: ${text} in, q ${qv}: search.ts ${a}, model ${b.outcome}`);
+    }
+  }
+  row(`${same} of ${total}`);
+
+  h('Does the diameter in feet depend on how it is formed? store(d/12) against store(store(d)/12), 8 to 180 in by 0.1 in');
+  const dDiff: string[] = [];
+  for (let t = 80; t <= 1800; t++) { const d = dv((t / 10).toFixed(1)); if (f(d / 12) !== f(f(d) / 12)) dDiff.push((t / 10).toFixed(1)); }
+  row(`${dDiff.length} diameters differ${dDiff.length ? ': ' + dDiff.slice(0, 30).join(', ') + (dDiff.length > 30 ? ', …' : '') : ''}`);
+
+  h('Do the rebuild\'s stepped trials differ from y + .2 with .2 a single? Every trial from 0.2 ft to 15.2 ft');
+  { let a = 0, b = 0, n = 0, first = ''; for (let k = 1; k <= 76; k++) { a = TRIAL_MODELS[0]!.next(a, k, 0); b = TRIAL_MODELS[1]!.next(b, k, 0); n++; if (a !== b && !first) first = `trial ${k}: ${a} against ${b}`; }
+    row(first ? `they differ from ${first}` : `identical on all ${n} trials`); }
+
+  h('Table 6-2 diameters: the stepped trial nearest the crown under each trial model (D stored from Diameter/12)');
+  for (const d of TABLE_6_2_DIAMETERS) {
+    const D = diameterFeet(dv(String(d)));
+    const parts = TRIAL_MODELS.map((m) => {
+      const t = steppedTrials(D, m), last = t[t.length - 1]!, prev = t[t.length - 2] ?? 0;
+      const near = D - prev < 1e-4 ? `trial ${t.length - 1} at ${prev.toPrecision(9)}, ${signed(prev - D)} ft, just below; next ${signed(last - D)}`
+        : last === D ? `trial ${t.length} on the diameter` : `trial ${t.length} ${signed(last - D)} ft past; last inside ${(D - prev).toFixed(5)} ft below`;
+      return `${m.name}: ${near}`;
+    });
+    row(`${d} in (D ${D.toPrecision(9)} ft)`);
+    for (const p of parts) row(`    ${p}`);
+  }
+
+  h('8 to 180 in by 0.1 in: diameters where a stepped trial lands exactly on the diameter');
+  for (const m of TRIAL_MODELS) {
+    const on: string[] = [];
+    for (let t = 80; t <= 1800; t++) {
+      const text = (t / 10).toFixed(1), D = diameterFeet(dv(text)), tr = steppedTrials(D, m);
+      if (tr[tr.length - 1] === D) on.push(text);
+    }
+    row(`${m.name}: ${on.length} diameters: ${on.join(', ')}`);
+  }
+
+  h('The rebuild\'s list, with the discharge above which the stepped search reaches the diameter (F at the last trial inside, divided by 0.995)');
+  for (let t = 80; t <= 1800; t++) {
+    const text = (t / 10).toFixed(1), D = diameterFeet(dv(text)), tr = steppedTrials(D, rebuildModel);
+    if (tr[tr.length - 1] !== D) continue;
+    const prev = tr[tr.length - 2]!, F = circleCriticalDischarge(D), fp = f(F(prev));
+    row(`${text} in: D ${D.toPrecision(9)} ft, trial ${tr.length} on it; last trial inside ${prev.toPrecision(9)} ft (A·√(gA/T) ${fp.toFixed(4)} cfs); never finishes for q above ${(fp / (1 - CIRCLE_TOL)).toFixed(4)} cfs, up to the critical discharge at 0.9·D, ${F(f(0.9 * D)).toFixed(3)} cfs, ${prev < 0.9 * D ? 'so the generator can draw it' : 'beyond 0.9·D, so the generator cannot draw it'}`);
+  }
+
+  h('A-011 predictions: n .013, slope .005');
+  for (const c of A011_CASES) {
+    const v = vals('critical_depth', c.inputs), D = diameterFeet(v.diameter!), q = v.discharge!, F = circleCriticalDischarge(D);
+    let lo = 0.01, hi = 0.999999; for (let k = 0; k < 80; k++) { const mm = (lo + hi) / 2; if (F(mm * D) < q) lo = mm; else hi = mm; }
+    row(`${c.id} ${inputText(c.inputs)} [D ${D.toPrecision(9)} ft; A·√(gA/T) reaches q at ${((lo + hi) / 2).toFixed(4)}·D]`);
+    const head: string[] = [], tail: string[] = []; let nTrials = 0, lastY = 0;
+    const rec = appSearch((y) => {
+      const x = F(y), s = `${y.toPrecision(9)} (${pct(f(x), q)})`; nTrials++; lastY = y;
+      if (head.length < 4) head.push(s); else { tail.push(s); if (tail.length > 6) tail.shift(); }
+      return x;
+    }, q, { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: D, tol: CIRCLE_TOL, afterShortChord: 'resume' });
+    const shown = nTrials > head.length + tail.length ? [...head, `… ${nTrials - head.length - tail.length} more …`, ...tail] : [...head, ...tail];
+    row(`    K1 trials (search.ts, ${nTrials}): ${shown.join(', ')}; ${rec.ok ? `stops at ${rec.y.toFixed(5)}` : rec.reason === 'past_ceiling' ? `the next trial, ${f(lastY + CIRCLE_CD_STEP).toPrecision(9)}, is ${signed(f(lastY + CIRCLE_CD_STEP) - D)} ft past the diameter: rejected` : rec.reason}`);
+    const n2 = appOutcome(v, 'narrow');
+    row(`    the rebuild now (N2): ${n2.outcome}${n2.r.ok ? ` (search depth ${n2.r.y.toFixed(5)})` : ''}`);
+    const k1 = cd(v, GEO_C2, m2, { ...CD_RULE, after: 'resume' });
+    if (rec.ok && k1) {
+      if (Math.abs(k1.found.y - rec.y) > 1e-9) row(`    WARNING: cd() stops at ${k1.found.y} where search.ts stops at ${rec.y}`);
+      row(`    K1: result (search depth ${rec.y.toFixed(5)}) ${line('critical_depth', show('critical_depth', v, k1.out))}`);
+      if (n2.r.ok) {
+        const nb = cd(v, GEO_C2, m2, { ...CD_RULE, after: 'narrow' })!, pa = show('critical_depth', v, nb.out), pb = show('critical_depth', v, k1.out);
+        const dk = FIELDS.critical_depth.filter((k) => pa[k] !== pb[k]);
+        row(`    N2 prints ${dk.length ? 'differently on ' + dk.map((k) => `${k} \`${pa[k]!.trim()}\``).join(', ') : 'the same fields'}`);
+      }
+    } else row(`    K1: ${appOutcome(v, 'resume').outcome}`);
+    for (const m of TRIAL_MODELS) {
+      const o = k1Model(F, q, D, m);
+      let extra = '';
+      if (o.outcome === 'result' && o.y !== undefined) {
+        const p = show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y, CD_RULE.offset));
+        const base = k1 && rec.ok ? show('critical_depth', v, k1.out) : null;
+        const dk = base ? FIELDS.critical_depth.filter((k) => p[k] !== base[k]) : [];
+        extra = ` at ${o.y.toFixed(5)}${base ? (dk.length ? `, differs from K1 on ${dk.map((k) => `${k} \`${p[k]!.trim()}\``).join(', ')}` : ', same fields as K1') : ` ${line('critical_depth', p)}`}`;
+      }
+      row(`    ${m.name}: ${o.outcome}${extra}`);
+    }
+  }
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a009') a009();
@@ -845,4 +1004,5 @@ else if (which === 'a005') a005();
 else if (which === 'grade-a005') gradeA005();
 else if (which === 'critical-slope') criticalSlopeA008();
 else if (which === 'grade-a009') gradeA009();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009'); process.exit(2); }
+else if (which === 'a011') a011();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011'); process.exit(2); }

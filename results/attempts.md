@@ -893,3 +893,127 @@ printed on the same pipe and discharge: run 20261125-100502-2c83a6 (n .13, slope
 `4.7599`. `node scripts/circle_outputs.mts grade-a009` prints these numbers too; it reads the
 two runs from their folders, so this check also needs a machine that holds them. The runs were
 exploratory, so they are not citations for a requirement.
+
+## A-011: trials that land on the diameter, and standard pipe sizes (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a011` at the
+commit that adds this section. Outcomes come from the rebuild's own `search.ts` with
+`afterShortChord: 'resume'` (K1, A-009); fields come from the script's `cd()` with geometry C2
+and Max Discharge at .9382·D, as in A-009. The script first checks that its model of the
+rebuild's trials gives the outcome `search.ts` gives, on 3306 pipe and discharge pairs from 8 to
+180 in (3306 of 3306). Inputs are typed exactly as shown. The circle-short-chord spec
+(`.kiro/specs/circle-short-chord`) is the reason for this section.
+
+**Why.** A circle Critical Depth trial that lands exactly on the diameter has top width 0, so
+A·√(g·A/T) is infinite. The chord on [last trial inside, D] then lands on the last trial inside,
+which is short, so stepping returns to D, and the rebuild never finishes under N2 and under K1
+alike. QUICK-2 has been run on one such pipe: 9.6 in, 2 cfs, exploratory run
+20261125-100815-dff8b0, which ended on the shape menu with no result and no message (Q-029).
+Standard pipe sizes have never been run.
+
+**Where the rebuild's trials land.** Trials step from 0.2 ft by `store(y + 0.2)`. On the 8 to
+180 in grid by 0.1 in, a stepped trial lands exactly on the diameter in 6 pipes:
+
+| Diameter | D (ft) | Trial on D | Last trial inside | A·√(gA/T) there | The search reaches D for q above | Critical discharge at 0.9·D |
+|---|---|---|---|---|---|---|
+| 9.6 | 0.800000012 | 4 | 0.600000024 | 1.7531 | 1.7619 | 2.694 |
+| 12.0 | 1.00000000 | 5 | 0.800000012 | 3.5072 | 3.5248 | 4.706 |
+| 50.4 | 4.20000029 | 21 | 4.00000048 | 213.1072 | 214.1781 | 170.135 |
+| 52.8 | 4.40000010 | 22 | 4.20000029 | 242.4823 | 243.7008 | 191.118 |
+| 55.2 | 4.59999990 | 23 | 4.40000010 | 274.3034 | 275.6818 | 213.582 |
+| 57.6 | 4.79999971 | 24 | 4.59999990 | 308.6533 | 310.2043 | 237.560 |
+
+The threshold is A·√(gA/T) at the last trial inside divided by 0.995: above it, no trial is
+within 0.5% before D. In 9.6 and 12 in that is below the critical discharge at 0.9·D, so the
+generator's practical range can draw it. In 50.4 to 57.6 in it is above, so only a typed
+discharge reaches it. In the other pipes the sums drift off the diameter. Of the diameters in
+HEC-RAS Table 6-2 (AISI 1980, the source the profile cites for the practical range: 8, 10, 12,
+18, 24, 36, 48, 54, 60, 66, 72, 78, 120 and 180 in), only 12 in lands on D:
+
+- 24, 36 and 48 in: the sum lands just past D, by 2.38e-7, 4.77e-7 and 4.77e-7 ft, so a
+  search that reaches the last trial inside (0.2 ft below the crown) without stopping is
+  rejected with "DEPTH is Greater than the DIAMETER".
+- 60, 72, 120 and 180 in: the sum lands just below D, by 4.77e-7, 1.43e-6, 4.77e-6 and
+  9.54e-6 ft. That trial is inside the pipe, with a top width near 0 and a very large but
+  finite A·√(gA/T).
+- 8, 10, 18, 54, 66 and 78 in: no trial comes within 0.03 ft of D.
+
+The diameter in feet is the same whether it is formed as `store(d/12)` or
+`store(store(d)/12)`: no diameter on the grid differs.
+
+**How QUICK-2's sum could differ from the rebuild's.** The rebuild adds a double 0.2 and
+stores the sum. Five ways of forming the trial were tried on every stepped trial:
+
+| Trial formed as | Grid diameters with a trial on D | 9.6 in | 12 in | 24, 36, 48 in |
+|---|---|---|---|---|
+| The rebuild: `store(y + 0.2)`, 0.2 a double | 6 (above) | on D | on D | just past |
+| `y + .2` with the literal .2 a single (0.200000003), stored | the same 6 | on D | on D | just past |
+| A counter: `base + k·.2`, stored, so errors do not accumulate | 58: 9.6, 12.0, 16.8, 19.2, 21.6, 24.0, 26.4, 31.2, 33.6, 36.0, 38.4, 43.2, 45.6, 48.0, 50.4, 52.8, 55.2, 60.0, 62.4, 64.8, 67.2, 72.0, 74.4, 76.8, 79.2, 84.0, 86.4, 88.8, 91.2, 96.0, 98.4, 100.8, 105.6, 108.0, 110.4, 112.8, 117.6, 120.0, 122.4, 124.8, 129.6, 132.0, 134.4, 136.8, 141.6, 144.0, 146.4, 148.8, 153.6, 156.0, 158.4, 160.8, 165.6, 168.0, 170.4, 172.8, 177.6, 180.0 | on D | on D | on D |
+| The depth held in double precision and never stored | 2: 12.0, 108.0 | 1.2e-8 below D | on D | 2.2e-16 below to 8.9e-16 past |
+| `y + .2` stored, but tested against D before the store, as the 8087 holds it | 0 | past D | 1.49e-8 past | just past |
+
+The first two give identical trials on all 76 steps from 0.2 to 15.2 ft, so the single literal
+alone changes nothing on stepped trials. A counter puts every pipe whose diameter is a multiple
+of 0.2 ft on D. A double depth or a test before the store takes 9.6 in off D. Each is a way
+the program could be written, not an observation.
+
+### Predictions
+
+n .013 and slope .005 in all five. The rebuild column is what `solve()` prints today (N2).
+
+| Case | Diameter | Discharge | A·√(gA/T) reaches q at | Rebuild now (N2) | K1, the rebuild's trials | Counter `base + k·.2` | Double depth | Tested before the store |
+|---|---|---|---|---|---|---|---|---|
+| S1 | 12 | 3 | 0.7424·D | result (search depth 0.74182) | **result** (search depth 0.74139) | result, same fields | result, same fields | result, same fields |
+| S2 | 12 | 4 | 0.8474·D | never finishes | **on the diameter** (trial 5, 1.0 ft) | on the diameter | on the diameter | rejected |
+| S3 | 24 | 27 | 0.9041·D | rejected | **rejected** (trial 10, 2.00000024 ft, past D) | on the diameter | rejected | rejected |
+| S4 | 36 | 84 | 0.9348·D | rejected | **rejected** (trial 15, 3.00000048 ft, past D) | on the diameter | rejected | rejected |
+| S5 | 48 | 188 | 0.9518·D | rejected | **rejected** (trial 20, 4.00000048 ft, past D) | on the diameter | rejected | rejected |
+
+K1's trials, from the script:
+
+- S1: 0.2, 0.4, 0.6 (−34.048%), 0.8 (+16.907%); chord 0.733640 (−2.379%); 0.933640
+  (+78.695%); chord 0.739507 (−0.796%); 0.939507 (+83.620%); chord 0.741393 (−0.283%), stop.
+- S2: 0.2, 0.4, 0.6, 0.8 (−12.320%), then 1.0 ft, on D. The chord lands back on 0.8.
+- S3: the trial at 1.80000019 ft is 1.399% short; the next is past D.
+- S4: the trial at 2.80000043 ft is 0.651% short; the next is past D.
+- S5: the trial at 3.80000067 ft is 1.014% short; the next is past D.
+
+**Predicted screens under K1 with the rebuild's trials.**
+
+S1 prints every field below, echoes included, as the comparator compares them. N2 prints the
+same fields, so S1 does not separate K1 from N2. It is the first standard-size result.
+
+| Case | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 | 12.0 | 0.0130 | 3 | 0.73 | 0.0050 | 0.0088 | 0.6 | 2.1 | 4.8 | 0.3 | 0.9 | 1.0 | 4 | CRITICAL |
+
+S3, S4 and S5, a rejection as A-008 and A-010 saw it: "DEPTH is Greater than the DIAMETER" on
+0-based row 20, the Depth field `0.00`, Critical Slope and every output field blank. The
+rebuild does not model the Depth field, so `0.00` is copied from those runs, not computed. If
+the profile maps the rejection screen in the same session, as planned, each is stored as a
+`rejected` golden; otherwise each times out on `cd_form`.
+
+S2: the rebuild makes no prediction of QUICK-2's screen for a trial on the diameter. The only
+observation is Q-029's exploratory 9.6 in run, which ended on the shape menu with no result and
+no message. If QUICK-2 does here what it did there, the run times out on `shape_menu` and
+stores no golden.
+
+**What each outcome means.**
+
+- S1 prints the row above: K1 and the 0.2 ft search hold in a standard 12 in pipe. Any field
+  printed otherwise is a circle Critical Depth mismatch for the comparator.
+- S2 ends on the shape menu with no message: what the 9.6 in run showed happens on a second
+  pipe whose trial lands on D, so landing on D, not something about 9.6 in, is the likely
+  trigger. S2 printing the message instead points at a test before the store, and then the 9.6
+  in run needs another explanation, since that model takes 9.6 in past D. A result fits none of
+  the five.
+- S3 to S5 rejected with the message: the trials accumulate, as in the rebuild. Any of them
+  ending as S2 is predicted to end (on D) points at a counter. Then 58 grid diameters land on D
+  and the rebuild's trials are wrong for this spec. A result in any of them fits none of the
+  five.
+- The double depth is not separated from the rebuild by these five cases. It takes 9.6 in off
+  D, so if the 9.6 in run's shape menu comes from a trial on D, the double depth does not
+  explain it. That is a reading of one exploratory run, not a result.
