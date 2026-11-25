@@ -427,6 +427,13 @@
       "cite": ["cd-vdit-000001", "cd-rect-000001", "cd-rect-000002", "cd-trap-000001"]
     },
     {
+      "id": "cd_circ_rejected",
+      "kind": "rejected",
+      "marker": "DEPTH is Greater than the DIAMETER",
+      "message": {"row": 20, "col": 13, "width": 51},
+      "unobserved": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
+    },
+    {
       "id": "cd_form",
       "kind": "form",
       "marker": "CRITICAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL|CIRCULAR\\s+CHANNEL)",

@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 582,
+      "visits": 602,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 583,
+      "visits": 604,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 586,
+      "visits": 606,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 146,
+      "visits": 179,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 41,
+      "visits": 44,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -179,6 +179,17 @@
         "{F8}",
         "{F10}"
       ]
+    },
+    "cd_circ_rejected": {
+      "visits": 17,
+      "keys_tried": [
+        "{Enter}",
+        "{F2}",
+        "{F7}"
+      ],
+      "keys_untried": [
+        "{Esc}"
+      ]
     }
   },
   "fields": {
@@ -192,37 +203,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 211
+      "cases": 213
     },
     "in_discharge": {
-      "cases": 152
+      "cases": 154
     },
     "depth": {
-      "cases": 179
+      "cases": 181
     },
     "in_slope": {
-      "cases": 211
+      "cases": 213
     },
     "area": {
-      "cases": 235
+      "cases": 237
     },
     "wet_perimeter": {
-      "cases": 235
+      "cases": 237
     },
     "velocity": {
-      "cases": 211
+      "cases": 213
     },
     "hyd_radius": {
-      "cases": 235
+      "cases": 237
     },
     "top_width": {
-      "cases": 238
+      "cases": 240
     },
     "froude": {
-      "cases": 238
+      "cases": 240
     },
     "flow_type": {
-      "cases": 235
+      "cases": 237
     },
     "in_bank_left": {
       "cases": 27
@@ -252,13 +263,13 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 85
+      "cases": 87
     },
     "in_diameter": {
-      "cases": 63
+      "cases": 65
     },
     "max_discharge": {
-      "cases": 63
+      "cases": 65
     },
     "discharge": {
       "cases": 59
@@ -320,7 +331,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 29,
+      "result": 31,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -1819,6 +1830,261 @@
       "waited_for": "shape_menu",
       "capture": "oracle/out/runs/20261125-100815-dff8b0/final.txt",
       "at": "2026-11-25T10:08:15Z"
+    },
+    {
+      "run_id": "20261125-140843-0e1f6a",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "9.1",
+          "n": ".0216",
+          "discharge": "2",
+          "slope": "1.9915"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-140843-0e1f6a/final.txt",
+      "at": "2026-11-25T14:08:43Z"
+    },
+    {
+      "run_id": "20261125-141038-ce0b17",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "10.1",
+          "n": ".013",
+          "discharge": "3",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141038-ce0b17/final.txt",
+      "at": "2026-11-25T14:10:38Z"
+    },
+    {
+      "run_id": "20261125-141119-ba53a0",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "10.1",
+          "n": ".013",
+          "discharge": "4",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141119-ba53a0/final.txt",
+      "at": "2026-11-25T14:11:19Z"
+    },
+    {
+      "run_id": "20261125-141152-aeb033",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "4",
+          "diameter": "11.9",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141152-aeb033/final.txt",
+      "at": "2026-11-25T14:11:52Z"
+    },
+    {
+      "run_id": "20261125-141234-60ba75",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "1",
+          "diameter": "8",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141234-60ba75/final.txt",
+      "at": "2026-11-25T14:12:34Z"
+    },
+    {
+      "run_id": "20261125-141311-37cbba",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "23",
+          "diameter": "22.7",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141311-37cbba/final.txt",
+      "at": "2026-11-25T14:13:11Z"
+    },
+    {
+      "run_id": "20261125-141415-e06fc2",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "4",
+          "diameter": "12",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141415-e06fc2/final.txt",
+      "at": "2026-11-25T14:14:15Z"
+    },
+    {
+      "run_id": "20261125-141455-32c1dd",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "27",
+          "diameter": "24",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141455-32c1dd/final.txt",
+      "at": "2026-11-25T14:14:55Z"
+    },
+    {
+      "run_id": "20261125-141528-97d64c",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "84",
+          "diameter": "36",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141528-97d64c/final.txt",
+      "at": "2026-11-25T14:15:28Z"
+    },
+    {
+      "run_id": "20261125-141601-3cef76",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "188",
+          "diameter": "48",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141601-3cef76/final.txt",
+      "at": "2026-11-25T14:16:01Z"
+    },
+    {
+      "run_id": "20261125-141645-fb0830",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "7",
+          "diameter": "15",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141645-fb0830/final.txt",
+      "at": "2026-11-25T14:16:46Z"
+    },
+    {
+      "run_id": "20261125-141717-8eba31",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "12",
+          "diameter": "18",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141717-8eba31/final.txt",
+      "at": "2026-11-25T14:17:18Z"
+    },
+    {
+      "run_id": "20261125-141750-6e1c20",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "55",
+          "diameter": "30",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141750-6e1c20/final.txt",
+      "at": "2026-11-25T14:17:50Z"
+    },
+    {
+      "run_id": "20261125-141822-a7c47f",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "360",
+          "diameter": "60",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141822-a7c47f/final.txt",
+      "at": "2026-11-25T14:18:23Z"
+    },
+    {
+      "run_id": "20261125-141855-1d1517",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "7",
+          "diameter": "14.4",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "cd_circ_rejected",
+      "capture": "oracle/out/runs/20261125-141855-1d1517/final.txt",
+      "at": "2026-11-25T14:18:55Z"
     }
   ],
   "unknown_screens": [
@@ -2098,13 +2364,13 @@
     },
     "froude": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-25T10:32:22Z"
+      "count": 1,
+      "last_run": "2026-11-25T14:47:18Z"
     },
     "outcome": {
       "status": "untriaged",
       "count": 3,
-      "last_run": "2026-11-25T10:32:24Z"
+      "last_run": "2026-11-25T14:47:18Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2113,8 +2379,8 @@
     },
     "velocity": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-25T10:32:22Z"
+      "count": 3,
+      "last_run": "2026-11-25T14:47:18Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2144,8 +2410,8 @@
     },
     "critical_slope": {
       "status": "accepted",
-      "count": 0,
-      "last_run": "2026-11-25T10:32:22Z",
+      "count": 3,
+      "last_run": "2026-11-25T14:47:18Z",
       "classification": "spec_error",
       "why": "results/attempts.md A-008, cd-circ-000033. Skeptic review 2026-11-25: holds. Four exploratory runs at 11.9 in, q 3 (all result): n .013 S .005 printed Critical Slope 0.0090 as the golden (20261125-100502-72ee8b); n .13 S .005 printed 0.8955 (20261125-100502-2c83a6); n .3 S .005 printed 4.7692 (20261125-100602-583c5a); n .13 S .05 printed 0.8955 (20261125-100602-af58ea). Critical Slope scales with n squared and ignores the entered slope; the printed values put QUICK-2's depth about 0.00062 ft below the rebuild's chord at 0.74322, inside the claimed band, and the chord's own value (0.0089379) cannot print 0.0090 by rounding or truncation, so not a display rule. Skeptic's limits: with R^.6667 instead of .667 the depth would be about 0.00038 ft below the chord, just outside the band, and these cases do not separate the exponents; Area, Velocity, Froude and Max Discharge print too coarsely to confirm the same shifted depth. The runs are exploratory, not citations. Correction, 2026-11-25 (the text above is left as written): the limit on R^.6667 is wrong. With R^.6667 the depth at which Critical Slope prints 0.8955 at n .13 is 0.74236 to 0.74240 (0.74238), 0.00084 ft below the rebuild's chord, inside the claimed band (0.00043 to 0.00119 ft below the chord, A-008), not about 0.00038 ft and outside it. With R^.667 it is 0.74259 to 0.74263, 0.00059 to 0.00063 ft below. Both exponents fall inside the band, so these runs still do not separate them. Numbers from node scripts/circle_outputs.mts grade-a009 (1d035a7).",
       "evidence": [
@@ -2158,8 +2424,8 @@
     },
     "depth": {
       "status": "accepted",
-      "count": 0,
-      "last_run": "2026-11-25T10:30:42Z",
+      "count": 2,
+      "last_run": "2026-11-25T14:47:18Z",
       "classification": "spec_error",
       "why": "results/attempts.md A-003. Skeptic second review 2026-11-24: holds. CD: with QUICK-2's own Channel Capacity circle geometry (D 36, n .013, S .005), every depth up to 2.0549 prints Wet Per 5.8, yet cd-circ-000001 prints Depth 2.05 with Wet Per 5.9, so its outputs do not come from one depth (runs 20261124-105235-02c7bf, -c64753, 20261124-105250-b1a90a). ND: nd-circ-000007's pipe at Q 39168 printed 49.10 (20261124-105255-39224c), which neither a stop on the 49.0 trial nor a 49.0 to 49.5 interpolation gives. Spec error in the design's circle search; rule to be measured for the bugfix spec.",
       "evidence": [
@@ -2178,8 +2444,8 @@
     },
     "max_discharge": {
       "status": "untriaged",
-      "count": 1,
-      "last_run": "2026-11-25T10:32:24Z"
+      "count": 2,
+      "last_run": "2026-11-25T14:47:18Z"
     }
   },
   "unobserved": [
@@ -2198,6 +2464,10 @@
     {
       "profile_path": "screens[stray_listing]",
       "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+    },
+    {
+      "profile_path": "screens[cd_circ_rejected]",
+      "source": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
     }
   ],
   "harness_findings": {
@@ -2724,6 +2994,46 @@
       ],
       "status": "open",
       "asked_at": "2026-11-25T10:08:34Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-030",
+      "question": "With cd_circ_rejected mapped (kind rejected, marker 'DEPTH is Greater than the DIAMETER', ahead of cd_form), the profile re-read passed, but the recorded Q-022 run (9.1 in, .0216, 2, 1.9915) did not end as rejected: outcome timeout after 10.0 s waiting for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected'], and its final screen reads as cd_circ_rejected with the message on row 20, so nothing was stored (run 20261125-140843-0e1f6a). The runner's wait needs the marker to match and the screen to stay quiet for settle_ms (150). Does QUICK-2 keep redrawing this screen (cursor or busy loop) so it never settles, or does the wait miss the match for another reason? Harness finding for a person; the profile is not changed to make it fit.",
+      "evidence": [
+        "20261125-140843-0e1f6a",
+        "20261122-214714-6aaf2d"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-25T14:10:02Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-031",
+      "question": "cd_circ_rejected keeps its unobserved note: no golden shows it, because every recorded case that reached it (the six rejections and S2, S3, S4, S5, S7, S8, S9, S10, S11) timed out under Q-030 and stored nothing. Once Q-030 is fixed in the harness, the six rejections and the S cases that end on it need recording again before the note can become a cite. Should the unobserved note also list these 14 run ids, and who re-records them?",
+      "evidence": [
+        "20261125-140843-0e1f6a",
+        "20261125-141415-e06fc2",
+        "20261125-141855-1d1517"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-25T14:19:19Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-032",
+      "question": "Exploratory, S2 inputs by hand (12 in, .013, 4, .005), three sessions: on the rejection screen, {Enter} led to a screen that keeps 'DEPTH is Greater than the DIAMETER', shows Depth 1.00, blank Critical Slope and outputs, and adds 'Print <F5> New Shape <F9>' on row 21; {F2} led to the form at 'Enter Slope' with Depth 1.20 and no message; {F7} led to the main menu with a shadow row of block characters on row 0. {Esc} is not in keys.list and was not tried. Three things are open: (a) Why does Depth change to 1.00 after Enter and 1.20 after F2? (b) The Enter screen reads as cd_circ_result (its marker needs only 'Print <F5>'), so a case that reached it would be stored as a result with blank fields. (c) Do the other rejections (for example P1 or Q1) behave the same on these keys? None of this is recorded.",
+      "evidence": [
+        "20261125-141415-e06fc2",
+        "20261125-100815-dff8b0"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-25T14:25:50Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -3745,12 +4055,153 @@
       "why": "The session's three tasks are done: the skeptic review of A-008 (decision 77, triage accepted), A-009's four held-out runs (cd-circ-000035, cd-circ-000036 and runs 20261125-100706-f61649 and 20261125-100748-9dd937), and the 9.6 in exploratory run (Q-029). The user scoped this session to those tasks and ruled out profile, solver and A-009 changes. Grading A-009 is a script's job, so nothing left in scope is worth more credits.",
       "evidence": [],
       "at": "2026-11-25T10:08:45Z"
+    },
+    {
+      "n": 82,
+      "saw": "circle-short-chord bugfix.md Decision (accepted 2026-11-25) and 2.11: the six circle Critical Depth rejections end on cd_form with 'DEPTH is Greater than the DIAMETER' on 0-based row 20 from column 13 (final screen of run 20261124-225953-c32ec8), and time out because no screen maps the message (Q-022).",
+      "chose": "change_profile",
+      "why": "Add screen cd_circ_rejected, kind rejected, marker on the message text, message region row 20 col 13 width 51, no fields, placed ahead of cd_form, unobserved naming the six runs. The next tool that runs the program re-reads the goldens; profile_invalid means undo and stop.",
+      "evidence": [
+        "20261122-214714-6aaf2d",
+        "20261124-225953-c32ec8",
+        "20261124-230038-48c33a",
+        "20261124-230140-e185ee",
+        "20261125-100706-f61649",
+        "20261125-100748-9dd937"
+      ],
+      "at": "2026-11-25T14:07:35Z"
+    },
+    {
+      "n": 83,
+      "saw": "Profile now has cd_circ_rejected ahead of cd_form (decision 82); not yet re-read.",
+      "chose": "record_case",
+      "why": "bugfix.md 2.11: record the six rejections as goldens, inputs typed as in its table. The first recording call also runs the profile re-read; profile_invalid means undo and stop.",
+      "evidence": [
+        "20261122-214714-6aaf2d"
+      ],
+      "at": "2026-11-25T14:07:59Z"
+    },
+    {
+      "n": 84,
+      "saw": "Q-022 run recorded with record true timed out on cd_circ_rejected and stored nothing (Q-030); the re-read passed.",
+      "chose": "record_case",
+      "why": "The task says to record what a non-rejected ending shows as an open question and not to change the profile; it does not say to stop. P1 (10.1, .013, 3, .005) is next in the table. If it times out the same way, the cause is not the inputs.",
+      "evidence": [
+        "20261125-140843-0e1f6a",
+        "20261124-225953-c32ec8"
+      ],
+      "at": "2026-11-25T14:10:07Z"
+    },
+    {
+      "n": 85,
+      "saw": "P1 recorded with record true also timed out on cd_circ_rejected, nothing stored (run 20261125-141038-ce0b17). Two of two rejections time out on the mapped screen, so Q-030 is not about one input.",
+      "chose": "record_case",
+      "why": "Run the remaining four rejections (P2, P4, Q1, Q2) once each as the task orders, so every one has a run id and a final screen for the person to grade; no profile change.",
+      "evidence": [
+        "20261125-141038-ce0b17",
+        "20261125-140843-0e1f6a"
+      ],
+      "at": "2026-11-25T14:10:45Z"
+    },
+    {
+      "n": 86,
+      "saw": "All six rejections, recorded with record true and typed as in the circle-short-chord table, timed out after 10.0 s with the final screen read as cd_circ_rejected ('DEPTH is Greater than the DIAMETER' on row 20); none stored a golden (runs 20261125-140843-0e1f6a, -141038-ce0b17, -141119-ba53a0, -141152-aeb033, -141234-60ba75, -141311-37cbba). Q-030 holds for all six.",
+      "chose": "record_case",
+      "why": "Step 3 of the task: run S1 to S11 once each, in order, with record true and the inputs A-011 and its amendment type (n .013, slope .005), ungraded. S1 and S6 are predicted results and should store goldens; the predicted rejections will likely time out as under Q-030, and each still leaves a run id and a final screen.",
+      "evidence": [
+        "20261125-140843-0e1f6a",
+        "20261125-141038-ce0b17",
+        "20261125-141119-ba53a0",
+        "20261125-141152-aeb033",
+        "20261125-141234-60ba75",
+        "20261125-141311-37cbba"
+      ],
+      "at": "2026-11-25T14:13:26Z"
+    },
+    {
+      "n": 87,
+      "saw": "S1 (12, .013, 3, .005) stored cd-circ-000037, outcome result. S2 (12, .013, 4, .005) timed out after 10.0 s with its final screen read as cd_circ_rejected, 'DEPTH is Greater than the DIAMETER' on row 20 and Depth 0.00, nothing stored (run 20261125-141415-e06fc2). Not graded here; A-012's script grades.",
+      "chose": "record_case",
+      "why": "Continue S3 to S11 once each, in order, as typed by A-011 and its amendment.",
+      "evidence": [
+        "cd-circ-000037",
+        "20261125-141415-e06fc2"
+      ],
+      "at": "2026-11-25T14:14:25Z"
+    },
+    {
+      "n": 88,
+      "saw": "S3 to S11 run once each with record true. S6 (15, .013, 5, .005) stored cd-circ-000038, outcome result. S3, S4, S5, S7, S8, S9, S10 and S11 timed out after 10.0 s with final screens read as cd_circ_rejected ('DEPTH is Greater than the DIAMETER' on row 20, Depth 0.00) and stored nothing (runs 20261125-141455-32c1dd, -141528-97d64c, -141601-3cef76, -141645-fb0830, -141717-8eba31, -141750-6e1c20, -141822-a7c47f, -141855-1d1517). Not graded here.",
+      "chose": "change_profile",
+      "why": "Step 4 asks to replace cd_circ_rejected's unobserved note with a cite of the goldens that show it. No stored golden shows the screen: all 14 runs that reached it timed out (Q-030), and a run id cannot be a cite. So the unobserved note stays as written and nothing in the profile changes; recorded as an open question.",
+      "evidence": [
+        "cd-circ-000038",
+        "20261125-141455-32c1dd",
+        "20261125-141528-97d64c",
+        "20261125-141601-3cef76",
+        "20261125-141645-fb0830",
+        "20261125-141717-8eba31",
+        "20261125-141750-6e1c20",
+        "20261125-141822-a7c47f",
+        "20261125-141855-1d1517"
+      ],
+      "at": "2026-11-25T14:19:15Z"
+    },
+    {
+      "n": 89,
+      "saw": "S2 (12 in, 4 cfs), recorded, ended on cd_circ_rejected, not on the shape menu that Q-029's 9.6 in run showed (runs 20261125-141415-e06fc2, 20261125-100815-dff8b0).",
+      "chose": "probe_screen",
+      "why": "Task step 5a: run S2 again by hand and read every screen from the last Enter onward, for Q-029. Reading the screen repeatedly after it settles also shows whether it keeps changing (Q-030). Exploratory, not a citation.",
+      "evidence": [
+        "20261125-141415-e06fc2",
+        "20261125-100815-dff8b0"
+      ],
+      "at": "2026-11-25T14:19:29Z"
+    },
+    {
+      "n": 90,
+      "saw": "S2 by hand (session b4a5ac06, exploratory): after the Begin Calculations Enter, the one settled screen send_keys returned was cd_circ_rejected ('DEPTH is Greater than the DIAMETER', Depth 0.00, cursor row 20 col 52). Two later read_screen calls gave the same hash 3ff45274...; no shape menu appeared. send_keys shows only the settled screen, so any screen drawn in between is not visible to this tool. The text did not change between reads, which does not show whether output keeps arriving (Q-030).",
+      "chose": "probe_screen",
+      "why": "Task step 5b: on the rejection screen, try which keys leave it and where they go. Order: Enter (most likely ignored, so the screen stays for the next try), then F2, then rebuild the screen and try F7. Esc is not in keys.list, so it stays untried.",
+      "evidence": [
+        "20261125-141415-e06fc2",
+        "20261125-100815-dff8b0"
+      ],
+      "at": "2026-11-25T14:21:26Z"
+    },
+    {
+      "n": 91,
+      "saw": "Exploratory, S2 inputs by hand (session b4a5ac06): Enter on the rejection screen left it. The next settled screen kept 'DEPTH is Greater than the DIAMETER' on row 20, changed Depth from 0.00 to 1.00, left Critical Slope and every output field blank, and replaced row 22 with 'Print <F5>  New Shape <F9>' and row 23 with '<- Back Tab <F2>  Main Menu <F7>'. It reads as cd_circ_result (hash 80c232c2...), and two reads gave the same hash.",
+      "chose": "probe_screen",
+      "why": "Enter has been tried. To try F2 and F7 on the rejection screen itself, shut this session down and rebuild the rejection screen with the same S2 inputs in a fresh session, once for each key.",
+      "evidence": [
+        "20261125-141415-e06fc2"
+      ],
+      "at": "2026-11-25T14:22:04Z"
+    },
+    {
+      "n": 92,
+      "saw": "Exploratory, session dd494343, S2 inputs by hand. (1) send_keys {Enter} at Begin Calculations with expect cd_circ_rejected timed out after 10.0 s while the screen read as cd_circ_rejected (overlap cd_circ_rejected and cd_form), hash 3ff45274..., the same text as the settled screen in session b4a5ac06: Q-030 reproduced outside run_case. (2) {F2} on the rejection screen went to the form at the Slope prompt ('Enter Slope and Press <Enter>' on row 20), message gone, Depth now 1.20, footer row 22 '<- Back Tab <F2>  Main Menu <F7>' in the wider result spacing. Correction to decision 91: the Enter screen's 'Print <F5> New Shape <F9>' is on row 21 and the Back Tab line on row 22.",
+      "chose": "probe_screen",
+      "why": "F7 is the last listed key to try. Shut down, rebuild the rejection screen with the S2 inputs in a fresh session and send {F7}. Esc is not in keys.list and stays untried.",
+      "evidence": [
+        "20261125-141415-e06fc2"
+      ],
+      "at": "2026-11-25T14:24:05Z"
+    },
+    {
+      "n": 93,
+      "saw": "Every step of the task is done. Mapping cd_circ_rejected passed the re-read, but every case that reaches the screen times out because the screen is identified yet never counts as settled (Q-030, reproduced by hand in session dd494343). So none of the six rejections or the nine S cases that reach the screen stored a golden, and the screen keeps its unobserved note (Q-031). S1 and S6 stored cd-circ-000037 and cd-circ-000038. Q-029 stays open: S2, recorded and by hand, ended on the rejection screen, and send_keys shows only settled screens. Enter, F2 and F7 were tried on the rejection screen (Q-032); Esc is untried. A person must fix Q-030 in the harness before more recording here is worth its credits.",
+      "chose": "stop",
+      "why": "Every step of the task is done. Mapping cd_circ_rejected passed the re-read, but every case that reaches the screen times out because the screen is identified yet never counts as settled (Q-030, reproduced by hand in session dd494343). So none of the six rejections or the nine S cases that reach the screen stored a golden, and the screen keeps its unobserved note (Q-031). S1 and S6 stored cd-circ-000037 and cd-circ-000038. Q-029 stays open: S2, recorded and by hand, ended on the rejection screen, and send_keys shows only settled screens. Enter, F2 and F7 were tried on the rejection screen (Q-032); Esc is untried. A person must fix Q-030 in the harness before more recording here is worth its credits.",
+      "evidence": [],
+      "at": "2026-11-25T14:25:57Z"
     }
   ],
   "stopped": {
-    "why": "The session's three tasks are done: the skeptic review of A-008 (decision 77, triage accepted), A-009's four held-out runs (cd-circ-000035, cd-circ-000036 and runs 20261125-100706-f61649 and 20261125-100748-9dd937), and the 9.6 in exploratory run (Q-029). The user scoped this session to those tasks and ruled out profile, solver and A-009 changes. Grading A-009 is a script's job, so nothing left in scope is worth more credits.",
-    "decision": 81,
-    "at": "2026-11-25T10:08:45Z",
+    "why": "Every step of the task is done. Mapping cd_circ_rejected passed the re-read, but every case that reaches the screen times out because the screen is identified yet never counts as settled (Q-030, reproduced by hand in session dd494343). So none of the six rejections or the nine S cases that reach the screen stored a golden, and the screen keeps its unobserved note (Q-031). S1 and S6 stored cd-circ-000037 and cd-circ-000038. Q-029 stays open: S2, recorded and by hand, ended on the rejection screen, and send_keys shows only settled screens. Enter, F2 and F7 were tried on the rejection screen (Q-032); Esc is untried. A person must fix Q-030 in the harness before more recording here is worth its credits.",
+    "decision": 93,
+    "at": "2026-11-25T14:25:57Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -3798,6 +4249,9 @@
           "{F7}",
           "{F8}",
           "{F10}"
+        ],
+        "cd_circ_rejected": [
+          "{Esc}"
         ]
       },
       "unobserved_profile_facts": [
@@ -3816,15 +4270,17 @@
         {
           "profile_path": "screens[stray_listing]",
           "source": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+        },
+        {
+          "profile_path": "screens[cd_circ_rejected]",
+          "source": "exploratory runs 20261122-214714-6aaf2d, 20261124-225953-c32ec8, 20261124-230038-48c33a, 20261124-230140-e185ee, 20261125-100706-f61649 and 20261125-100748-9dd937, not yet recorded: circle Critical Depth leaves 'DEPTH is Greater than the DIAMETER' on the form at 0-based row 20 from column 13, Depth 0.00 and no output field; the cd_form marker also matches this screen, so it sits ahead of cd_form"
         }
       ],
       "untriaged_mismatches": [
-        "froude",
         "max_discharge",
-        "outcome",
-        "velocity"
+        "outcome"
       ],
-      "unanswered_runs": 55,
+      "unanswered_runs": 70,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }
