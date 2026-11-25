@@ -1388,3 +1388,167 @@ The trial each survivor stops at is in the script's output.
 **Not part of this.** The solver is unchanged, and circle-short-chord's bugfix.md is not
 edited. 2.6 and 2.7 (A-012) wait for these runs. Normal Depth's search (N2, Q-026) is not
 tested by any case here.
+
+## A-013 amendment: R3 and R5 withdrawn, T8 to T10 added, R6 to R9 (for the Exhumer)
+
+**Written and committed before any A-013 case runs. A-013's text above is unchanged; where
+this section differs from it, this section holds. The solver, circle-short-chord's bugfix.md
+and the ledger are not changed.**
+
+**R3 and R5 are withdrawn and will not be run. A-013 left out the single literal .2 summed in
+double; with it (T8 to T10), 23 more combinations fit all 47 observations, 39 in all. R1, R2
+and R4 stay, and four new cases, R6 to R9, join them. On those seven cases the 39 survivors
+fall into 14 groups, each with a different row. No survivor's answer on the seven changes
+when A·√(gA/T) is multiplied by 1 ± 1e-4.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a013-amendment`
+at the commit that adds this section (under a second; no grid scan). It uses A-013's
+observations, geometry and search unchanged, and its own scoring of the 136 combinations
+gives the same 16 survivors. It never runs the program. The stability check and the new
+trials come from the user, who wrote his own code from A-013's prose and got the same 16.
+
+### Why R3 and R5 are withdrawn
+
+In both cases the deciding trial is a chord plus 0.2 ft, and the chord sits about 0.2 ft below
+the diameter, so the chord's last digits decide whether the next trial lands on D, short of it
+or past it. At 160.4 in (R3), D1 gives D = 13.36666584 ft; T1·D1·X6's chord is 13.16666603
+and the next trial 13.36666584, exactly D (shape menu), while T1·D2·X6's chord 13.16666698
+gives 13.36666679 against its D of 13.36666679 (message). At 88.3 in (R5) the same happens at
+7.358333 ft. A prediction that turns on the seventh significant digit of a chord tests the
+model's rounding of A·√(gA/T), not the trial, diameter and test the cases were meant to tell
+apart.
+
+The check: multiply A·√(gA/T) by 1 ± ε before it is stored as a single, rerun every survivor,
+and count the survivors whose outcome changes.
+
+| Case | ε | A-013's 16 survivors | All 39 |
+|---|---|---|---|
+| R3 | 1e-6 | 12 change | 35 change (19 at 1 + ε, 16 at 1 − ε) |
+| R3 | 1e-4 | 16 change | 39 change |
+| R5 | 1e-6 | 6 change | 15 change (9 at 1 + ε, 10 at 1 − ε) |
+| R5 | 1e-4 | 4 change | 10 change |
+| R1, R2, R4 | 1e-6 and 1e-4 | none | none |
+
+The user's counts (R3 19, or 39 with T8 to T10; R5 up to 17) differ from these, and the
+difference was not traced. Both checks agree on what matters: R3 and R5 change
+at 1 ± 1e-6, and R1, R2 and R4 do not change even at 1 ± 1e-4. Every case that stays is held
+to 1 ± 1e-4.
+
+### T8 to T10: the single literal .2 summed in double
+
+`Y# = Y# + .2` in QuickBASIC adds the single-precision constant .2 (0.200000003) to a double.
+A-013's T4 to T7 add the double 0.2 and its T2 stores the sum; neither is this.
+
+- T8: y + .2 in double, .2 a single, the geometry given the double, chords kept in double.
+- T9: the same, the geometry given store(y).
+- T10: the same as T8, chords stored as a single.
+
+Scored with D1 to D4 and the tests X1, X2, X5 and X6 (X3 and X4 need a stored trial) on the
+same 47 observations: 48 combinations, 23 fit all 47, 24 fit 46 and 1 fits 45. 23 of the 25
+that miss, miss only the 9.6 in run: rejected at trial 0.800000012 under X2 and under D3 with
+X1, and at 0.800393 under every D4. T9·D2·X1 misses only S11 (shape menu at 1.200000018), and
+T9·D2·X2 misses both.
+
+### The corrected survivors, 39
+
+| Trial | Survivors |
+|---|---|
+| T1, store(y + 0.2) | T1·D1·X6, T1·D2·X6, T1·D3·X6 |
+| T2, store(y + .2) | T2·D1·X6, T2·D2·X6, T2·D3·X6 |
+| T3, a counter | T3·D1·X3, T3·D1·X6, T3·D2·X6, T3·D3·X6 |
+| T4, y + 0.2 in double | T4·D3·X6 |
+| T6, base + k·0.2 in double | T6·D3·X6 |
+| T7, base + k·0.2 in double, store(y) to the geometry | T7·D1·X2, T7·D1·X6, T7·D2·X6, T7·D3·X6 |
+| T8 | T8·D1·X1, T8·D1·X5, T8·D1·X6, T8·D2·X1, T8·D2·X5, T8·D2·X6, T8·D3·X5, T8·D3·X6 |
+| T9 | T9·D1·X1, T9·D1·X5, T9·D1·X6, T9·D2·X5, T9·D2·X6, T9·D3·X5, T9·D3·X6 |
+| T10 | T10·D1·X1, T10·D1·X5, T10·D1·X6, T10·D2·X1, T10·D2·X5, T10·D2·X6, T10·D3·X5, T10·D3·X6 |
+
+T8·D1·X1, T9·D1·X1 and T10·D1·X1 keep the rebuild's diameter store and test and change only
+the trial. With T8·D2·X1 and T10·D2·X1 they are the only survivors with the rebuild's test,
+trial > D.
+
+### The cases
+
+All multiples of 2.4 in, so the stepped trials reach the diameter (0.2 ft is 2.4 in). n .013
+and slope .005 in all seven. The four suggested cases each separate pairs no other case here
+separates (98.4 in 32 pairs, 129.6 in 43, 26.4 in 6, 57.6 in 4; R1 8, R2 28, R4 24), so all
+four are kept, numbered from R6 in the order suggested.
+
+| Case | Diameter | Discharge | Critical discharge at 0.9·D | Practical | Survivors that change at 1 ± 1e-4 |
+|---|---|---|---|---|---|
+| R1 | 19.2 | 15 | 15.239 | yes | none of 39 |
+| R2 | 21.6 | 20 | 20.457 | yes | none of 39 |
+| R4 | 55.2 | 276 | 213.582 | no | none of 39 |
+| R6 | 98.4 | 1369 | 906.160 | no | none of 39 |
+| R7 | 129.6 | 2924 | 1803.971 | no | none of 39 |
+| R8 | 26.4 | 36 | 33.785 | no | none of 39 |
+| R9 | 57.6 | 312 | 237.560 | no | none of 39 |
+
+R1 and R2 are the only cases in the generator's practical range; R4 and R6 to R9 are outside
+it. None of the seven changes at 1 ± 1e-6 either. In R1 every survivor's deciding trial is
+stepped from 0. In the others some follow a chord (R2 10 of 39, R4 4, R6 10, R7 19, R8 4,
+R9 6), but each such chord starts from the stepped trial about 0.2 ft below D, so the next trial is
+past D by about the chord's distance above that trial, 4.98e-7 ft at the least (T4·D3·X6 in
+R2). All of them get the message however the chord's last digits fall, and the 1 ± 1e-4 check
+agrees.
+
+### Predictions
+
+"Message" and "shape menu" mean what they mean in A-013. No survivor prints a result on any of
+the seven, so every prediction rests on A-013's one assumption that a geometry error at the
+diameter ends on the shape menu with no message.
+
+| Group | Survivors | R1 | R2 | R4 | R6 | R7 | R8 | R9 |
+|---|---|---|---|---|---|---|---|---|
+| G1 | T1·D1·X6, T2·D1·X6 | message | message | shape menu | message | message | message | shape menu |
+| G2 | T1·D2·X6, T2·D2·X6 | message | message | shape menu | message | message | message | message |
+| G3 | T1·D3·X6, T2·D3·X6 | message | message | message | message | message | message | message |
+| G4 | T3·D1·X3, T9·D1·X1 | shape menu | shape menu | message | message | shape menu | shape menu | message |
+| G5 | T3·D1·X6, T3·D2·X6, T7·D1·X6 | shape menu | message | shape menu | shape menu | shape menu | message | message |
+| G6 | T3·D3·X6, T7·D3·X6 | shape menu | message | message | message | shape menu | message | message |
+| G7 | T4·D3·X6 | shape menu | message | shape menu | shape menu | message | message | message |
+| G8 | T6·D3·X6, T7·D2·X6 | shape menu | shape menu | shape menu | shape menu | shape menu | message | message |
+| G9 | T7·D1·X2 | shape menu | message | message | message | shape menu | shape menu | message |
+| G10 | T8·D1·X1, T8·D2·X1, T10·D1·X1, T10·D2·X1 | shape menu | message | message | message | message | message | message |
+| G11 | T8·D1·X5, T8·D1·X6, T10·D1·X5, T10·D1·X6 | shape menu | message | message | shape menu | message | message | message |
+| G12 | T8·D2·X5, T8·D2·X6, T10·D2·X5, T10·D2·X6 | shape menu | shape menu | message | shape menu | message | message | message |
+| G13 | T8·D3·X5, T8·D3·X6, T9·D1·X5, T9·D1·X6, T9·D2·X5, T9·D2·X6, T10·D3·X5, T10·D3·X6 | shape menu | shape menu | message | shape menu | shape menu | message | message |
+| G14 | T9·D3·X5, T9·D3·X6 | shape menu | shape menu | message | message | shape menu | message | message |
+
+The trial each survivor stops at, and whether a chord comes before it, is in the script's
+output.
+
+**Groups no case separates.** The survivors inside each group of more than one give the same
+answer on all seven: T1 and T2 with the same diameter (G1 to G3, as in A-013's grid); T3·D1·X3
+and T9·D1·X1 (G4); T3·D1·X6, T3·D2·X6 and T7·D1·X6 (G5); T3·D3·X6 and T7·D3·X6 (G6); T6·D3·X6
+and T7·D2·X6 (G8); and, within T8 to T10, T8 against T10 (chords kept or stored), X5 against
+X6, and D1 against D2 under X1 (G10 to G13), T9·D1 and T9·D2 with T8·D3 and T10·D3 (G13), and
+X5 against X6 for T9·D3 (G14). No grid scan was run for this amendment, so whether some other
+case separates any of them is not known, except T1 from T2, which A-013's grid found no case
+to separate.
+
+**What each outcome would mean.**
+
+- R1, the message: G1 to G3, the trial is a stored single sum (T1 or T2) and the test is in
+  inches. Then R4 and R9 give the diameter store: shape menu on both, D1; shape menu on R4 and
+  the message on R9, D2; the message on both, D3. R2 and R6 to R8 print the message for all
+  three.
+- R1, the shape menu: G4 to G14, a counter, a double depth, or .2 summed in double. R2 then
+  splits them: shape menu G4, G8, G12, G13, G14; the message G5, G6, G7, G9, G10, G11.
+  - After the shape menu on R2, in this order: R4's shape menu is G8; otherwise R8's shape
+    menu is G4; otherwise the shape menu on R6 with the message on R7 is G12, the shape menu on
+    both G13, and the message on R6 with the shape menu on R7 G14.
+  - After the message on R2: the message on all of R4 and R6 to R9 is G10, which holds
+    T8·D1·X1, the rebuild with only the trial changed. R7's message with R4's shape menu is G7,
+    and with R6's shape menu and R4's message G11. R8's shape menu is G9. R7's shape menu with
+    R4's shape menu is G5, and with the message on R4, R6 and R8 G6.
+- A result on any of the seven, or a row of seven answers that is not in the table, fits no
+  survivor; then the model space or A-013's assumption is wrong.
+- R1 is the case the generator could draw; R2 is practical too. The other five are outside
+  the generator's practical range: their discharges are above the critical discharge at 0.9·D,
+  so the generator would not draw them.
+- The 9.6 in run is still one exploratory run with only its final screen kept (Q-029), as
+  A-013 says.
+
+**Not part of this.** A-013's text, the solver, circle-short-chord's bugfix.md and the ledger
+are unchanged. 2.6 and 2.7 (A-012) wait for R1, R2, R4 and R6 to R9.

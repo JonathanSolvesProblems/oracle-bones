@@ -12,6 +12,8 @@
 //   node scripts/circle_outputs.mts a013       A-013: trial, diameter and test combinations on every circle Critical Depth
 //                                              observation, the grid scan (about 45 min), and predictions
 //   node scripts/circle_outputs.mts a013 predictions   the same without the check and the grid scan
+//   node scripts/circle_outputs.mts a013-amendment     the A-013 amendment: T8 to T10, the survivors, R3 and R5 at 1 ± 1e-6,
+//                                              every case at 1 ± 1e-4, the cases kept, the groups (seconds)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -1252,25 +1254,25 @@ const DTESTS: Dtest[] = [
   { id: 'X5', name: 'in inches: trial·12 > store(VAL)', past: (t, _p, _D, s) => t * 12 > f(val(s)) },
   { id: 'X6', name: 'in inches: trial·12 >= store(VAL)', past: (t, _p, _D, s) => t * 12 >= f(val(s)) },
 ];
-type A013Outcome = { outcome: 'result' | 'rejected' | 'menu' | 'no_end'; y?: number; at?: number };
+type A013Outcome = { outcome: 'result' | 'rejected' | 'menu' | 'no_end'; y?: number; at?: number; from?: number; k?: number };
 /** K1 with the trial, diameter and test of one combination. A trial the test passes is rejected
  * with the message. Otherwise the geometry is given the trial; if that depth is at or past the
  * diameter the geometry has, T = 0 divides by zero or √ of a negative is taken, a QuickBASIC
  * error, read as the shape menu with no message (quick2-solver design, Negative values and
  * abandoned calculations, an inference). */
-function a013Search(text: string, q: number, t: Former, ds: Dstore, x: Dtest, bracket?: { lo: number; flo: number; hi: number; fhi: number }): A013Outcome {
+function a013Search(text: string, q: number, t: Former, ds: Dstore, x: Dtest, bracket?: { lo: number; flo: number; hi: number; fhi: number }, scale = 1): A013Outcome {
   const D = ds.D(text), F = circleCriticalDischarge(D);
   const close = (v: number) => Math.abs(v - q) <= CIRCLE_TOL * q;
-  const ev = (y: number): number | null => { const yg = t.geo(y); return yg >= D ? null : f(F(yg)); };
+  const ev = (y: number): number | null => { const yg = t.geo(y); return yg >= D ? null : f(F(yg) * scale); };
   let lo = 0, flo = 0, base = 0, k = 1, prev = 0;
   for (let guard = 0; guard < 20000; guard++) {
     let hi: number, fhi: number;
     if (bracket) { ({ lo, flo, hi, fhi } = bracket); bracket = undefined; }
     else {
       const y = t.next(prev, k, base), pre = t.pre(prev, k, base);
-      if (x.past(y, pre, D, text)) return { outcome: 'rejected', at: y };
+      if (x.past(y, pre, D, text)) return { outcome: 'rejected', at: y, from: base, k };
       const fy = ev(y);
-      if (fy === null) return { outcome: 'menu', at: y };
+      if (fy === null) return { outcome: 'menu', at: y, from: base, k };
       if (close(fy)) return { outcome: 'result', y: t.geo(y) };
       if (fy < q) { lo = y; flo = fy; prev = y; k++; continue; }
       hi = y; fhi = fy;
@@ -1518,6 +1520,120 @@ function a013Predict(fits: { t: Former; ds: Dstore; x: Dtest; id: string }[], m2
   row(`pairs the chosen cases that differ in outcome leave together: ${afterOutcomes.length ? afterOutcomes.join('; ') : 'none'}`);
   row(`pairs of survivors R1 to R${chosen.length} leave together: ${left.length ? left.join('; ') : 'none'}`);
 }
+// ---- A-013 amendment: T8 to T10, the 1 ± 1e-4 check, cases from R6 ---------------------------
+/** The single literal .2 summed in double, as `Y# = Y# + .2` does in QuickBASIC. */
+const A013_ADDED_FORMERS: Former[] = [
+  { id: 'T8', name: 'y + .2 in double with .2 a single, the geometry given the double, chords kept in double', next: (p) => p + S02, pre: (p) => p + S02, keep: (y) => y, geo: (y) => y, stored: false },
+  { id: 'T9', name: 'y + .2 in double with .2 a single, the geometry given store(y), chords kept in double', next: (p) => p + S02, pre: (p) => p + S02, keep: (y) => y, geo: f, stored: false },
+  { id: 'T10', name: 'y + .2 in double with .2 a single, the geometry given the double, chords stored', next: (p) => p + S02, pre: (p) => p + S02, keep: f, geo: (y) => y, stored: false },
+];
+const A013_ADDED_TESTS = ['X1', 'X2', 'X5', 'X6'];
+/** A-013's five cases, then the four suggested for the amendment (multiples of 2.4 in). */
+const A013_AMENDMENT_POOL: { name: string; text: string; q: number; old: boolean }[] = [
+  { name: 'R1', text: '19.2', q: 15, old: true }, { name: 'R2', text: '21.6', q: 20, old: true },
+  { name: 'R3', text: '160.4', q: 5238, old: true }, { name: 'R4', text: '55.2', q: 276, old: true },
+  { name: 'R5', text: '88.3', q: 1013, old: true },
+  { name: '98.4 in', text: '98.4', q: 1369, old: false }, { name: '129.6 in', text: '129.6', q: 2924, old: false },
+  { name: '26.4 in', text: '26.4', q: 36, old: false }, { name: '57.6 in', text: '57.6', q: 312, old: false },
+];
+const A013_EPS = [1e-6, 1e-4];
+type Combo = { t: Former; ds: Dstore; x: Dtest; id: string };
+function a013Amendment() {
+  const m2 = atShare(0.9382), obs = a013Observations();
+  const fitAll = (c: Combo) => obs.map((o) => ({ o, ...a013Fits(o, c.t, c.ds, c.x, m2) })).filter((r) => !r.ok);
+  const old = combos().filter((c) => !fitAll(c).length);
+  h(`A-013's survivors, recomputed on the same ${obs.length} observations: ${old.length}`);
+  row(old.map((c) => c.id).join(', '));
+
+  const tests = DTESTS.filter((x) => A013_ADDED_TESTS.includes(x.id));
+  const added: Combo[] = A013_ADDED_FORMERS.flatMap((t) => DSTORES.flatMap((ds) => tests.map((x) => ({ t, ds, x, id: `${t.id}·${ds.id}·${x.id}` }))));
+  h(`T8 to T10 with D1 to D4 and ${A013_ADDED_TESTS.join(', ')}: ${added.length} combinations`);
+  for (const t of A013_ADDED_FORMERS) row(`${t.id}: ${t.name}`);
+  const addedFits: Combo[] = [];
+  for (const c of added) {
+    const bad = fitAll(c);
+    row(`${c.id}: ${obs.length - bad.length} of ${obs.length}${bad.length ? `; misses ${bad.map((r) => `${r.o.name} (${r.got})`).join(', ')}` : ''}`);
+    if (!bad.length) addedFits.push(c);
+  }
+  const fits = [...old, ...addedFits];
+  h(`Survivors: ${fits.length} (${old.length} from A-013, ${addedFits.length} added)`);
+  row(addedFits.map((c) => c.id).join(', '));
+
+  // One survivor's printed answer for a case, A·√(gA/T) multiplied by `scale`.
+  const answer = (c: Combo, text: string, q: number, scale = 1) => {
+    const r = a013Search(text, q, c.t, c.ds, c.x, undefined, scale);
+    if (r.outcome === 'menu') return { r, a: 'shape menu' };
+    if (r.outcome === 'rejected') return { r, a: 'message' };
+    if (r.outcome !== 'result') return { r, a: r.outcome };
+    const v = vals('critical_depth', { diameter: text, n: '.013', discharge: String(q), slope: '.005' });
+    return { r, a: `result ${line('critical_depth', show('critical_depth', v, cdFields(v, GEO_C2, m2, r.y!, CD_RULE.offset, 'q/A', c.ds.D(text))))}` };
+  };
+  const decided = (r: A013Outcome, D: number) => r.at === undefined ? '' : r.from === undefined ? `the chord ${r.at.toPrecision(10)}` : r.from === 0 ? `stepped trial ${r.k} from 0, ${r.at.toPrecision(10)}` : `chord ${r.from.toPrecision(10)} + ${r.k}·0.2 = ${r.at.toPrecision(10)} (D ${D.toPrecision(10)})`;
+
+  h('Every case at 1, 1 ± 1e-6 and 1 ± 1e-4 times A·√(gA/T): survivors whose printed answer changes');
+  interface Row { name: string; text: string; q: number; old: boolean; practical: boolean; cap: number; ans: string[]; stable: boolean; changes: Record<string, string[]> }
+  const rows: Row[] = A013_AMENDMENT_POOL.map((p) => {
+    const D0 = DSTORES[0]!.D(p.text), cap = circleCriticalDischarge(D0)(f(0.9 * D0));
+    const base = fits.map((c) => answer(c, p.text, p.q));
+    const changes: Record<string, string[]> = {}, outcomes: Record<string, string[]> = {};
+    for (const e of A013_EPS) for (const s of [1 + e, 1 - e]) {
+      const got = fits.map((c) => answer(c, p.text, p.q, s)), key = `${s > 1 ? '+' : '−'}${e}`;
+      changes[key] = fits.filter((_c, i) => got[i]!.a !== base[i]!.a).map((c) => c.id);
+      outcomes[key] = fits.filter((_c, i) => got[i]!.r.outcome !== base[i]!.r.outcome).map((c) => c.id);
+    }
+    const any = (e: number) => new Set([...changes[`+${e}`]!, ...changes[`−${e}`]!]);
+    const oldIds = new Set(old.map((c) => c.id));
+    row(`${p.name}: Diameter ${p.text}, Discharge ${p.q}; critical discharge at 0.9·D ${cap.toFixed(3)}, ${p.q <= cap ? 'practical' : 'not practical'}`);
+    for (const e of A013_EPS) {
+      const ch = any(e);
+      const oc = new Set([...outcomes[`+${e}`]!, ...outcomes[`−${e}`]!]);
+      row(`    1 ± ${e}, outcome only: ${oc.size} of ${fits.length} change (${[...oc].filter((id) => oldIds.has(id)).length} of A-013's ${old.length}); +${e}: ${outcomes[`+${e}`]!.length}, −${e}: ${outcomes[`−${e}`]!.length}`);
+      row(`    1 ± ${e}: ${ch.size} of ${fits.length} change in printed answer (${[...ch].filter((id) => oldIds.has(id)).length} of A-013's ${old.length}); +${e}: ${changes[`+${e}`]!.length}, −${e}: ${changes[`−${e}`]!.length}${ch.size ? `; ${[...ch].join(', ')}` : ''}`);
+    }
+    const fromChord = base.filter(({ r }) => r.from !== 0 && r.at !== undefined).length;
+    row(`    deciding trial: ${fromChord} of ${fits.length} come after a chord; ${base.filter(({ r }) => r.from === 0).length} are stepped from 0`);
+    fits.forEach((c, i) => row(`      ${c.id}: ${base[i]!.a}${base[i]!.r.at !== undefined ? `, at ${decided(base[i]!.r, c.ds.D(p.text))}` : ` (search depth ${base[i]!.r.y?.toFixed(5)})`}`));
+    return { ...p, practical: p.q <= cap, cap, ans: base.map((b) => b.a), stable: !any(1e-4).size && !any(1e-6).size, changes };
+  });
+
+  // Kept: stable at 1 ± 1e-4 (and 1e-6), and separating at least two survivors.
+  const kept = rows.filter((r) => r.stable && new Set(r.ans).size > 1);
+  const withdrawn = rows.filter((r) => r.old && !kept.includes(r));
+  const dropped = rows.filter((r) => !r.old && !kept.includes(r));
+  let next = 6;
+  const label = (r: Row) => (r.old ? r.name : `R${next++}`);
+  const labels = new Map(kept.map((r) => [r, label(r)]));
+  h('Cases');
+  row(`withdrawn: ${withdrawn.map((r) => `${r.name} (${r.stable ? 'separates no survivors' : 'not stable at 1 ± 1e-4'})`).join(', ') || 'none'}`);
+  row(`suggested and not kept: ${dropped.map((r) => `${r.name} (${r.stable ? 'separates no survivors' : 'not stable at 1 ± 1e-4'})`).join(', ') || 'none'}`);
+  for (const r of kept) row(`${labels.get(r)}: Diameter ${r.text}, n .013, Discharge ${r.q}, Slope .005; critical discharge at 0.9·D ${r.cap.toFixed(3)}, ${r.practical ? 'practical' : 'outside the practical range'}; 1 ± 1e-4 changes no survivor's answer`);
+  // Each kept case alone: which pairs only it separates.
+  const sepBy = (r: Row, i: number, j: number) => r.ans[i] !== r.ans[j];
+  for (const r of kept) {
+    let only = 0;
+    for (let i = 0; i < fits.length; i++) for (let j = i + 1; j < fits.length; j++) if (sepBy(r, i, j) && !kept.some((o) => o !== r && sepBy(o, i, j))) only++;
+    row(`${labels.get(r)} alone separates ${only} pairs no other kept case separates`);
+  }
+
+  h('Survivor groups: survivors with the same answer on every kept case');
+  const short = (a: string) => (a.startsWith('result') ? 'result' : a);
+  const groups = new Map<string, number[]>();
+  fits.forEach((_c, i) => { const k = kept.map((r) => r.ans[i]).join('\u0000'); if (!groups.has(k)) groups.set(k, []); groups.get(k)!.push(i); });
+  row(`${groups.size} groups`);
+  console.log(`\n| Group | Survivors | ${kept.map((r) => labels.get(r)).join(' | ')} |`);
+  console.log(`|---|---|${kept.map(() => '---|').join('')}`);
+  [...groups.values()].forEach((ix, g) => console.log(`| G${g + 1} | ${ix.map((i) => fits[i]!.id).join(', ')} | ${kept.map((r) => short(r.ans[ix[0]!]!)).join(' | ')} |`));
+  const results = new Set(kept.flatMap((r) => r.ans.filter((a) => a.startsWith('result')).map((a) => `${labels.get(r)}: ${a}`)));
+  row(`results among the predictions: ${results.size ? [...results].join('; ') : 'none'}`);
+  const together = [...groups.values()].filter((ix) => ix.length > 1);
+  row(`groups no kept case separates: ${together.length ? together.map((ix) => ix.map((i) => fits[i]!.id).join(' and ')).join('; ') : 'none'}`);
+  h('What each answer would mean: the groups each kept case puts in each answer');
+  for (const r of kept) {
+    const by = new Map<string, number[]>();
+    [...groups.values()].forEach((ix, g) => { const a = short(r.ans[ix[0]!]!); if (!by.has(a)) by.set(a, []); by.get(a)!.push(g + 1); });
+    row(`${labels.get(r)}: ${[...by].map(([a, gs]) => `${a}: ${gs.map((g) => `G${g}`).join(', ')}`).join('; ')}`);
+  }
+}
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a009') a009();
@@ -1528,4 +1644,5 @@ else if (which === 'grade-a009') gradeA009();
 else if (which === 'a011') a011();
 else if (which === 'grade-a011') gradeA011();
 else if (which === 'a013') a013();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013'); process.exit(2); }
+else if (which === 'a013-amendment') a013Amendment();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment'); process.exit(2); }
