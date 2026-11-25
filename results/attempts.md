@@ -1223,3 +1223,168 @@ listed triggers fired, but S2 contradicts 1.4, 2.6 and 2.7, below.
 
 **Full set now:** 280 of 289. cd-circ-000037 (S1) matches; cd-circ-000038 (S6) misses Depth,
 Critical Slope and Velocity, where K1 and the rebuild differ. The rebuild is not changed.
+
+## A-013: what separates the 9.6 in run from S2 (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**Of 136 ways of forming the trial, storing the diameter and testing one against the other, 16
+fit all 47 circle Critical Depth observations. 14 of the 16 test the trial in inches against
+the diameter as typed, trial·12 ≥ store(VAL). The rebuild's combination misses S2 only. Five
+cases nobody has run separate the survivors into 13 groups; two of them are in the generator's
+practical range, and they are the only two practical grid cases where the survivors differ in
+outcome. Three pairs of survivors cannot be told apart by any grid case.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a013` at the
+commit that adds this section (about 45 minutes, most of it the grid scan);
+`node scripts/circle_outputs.mts a013 predictions` prints the same without the check and the
+grid scan. It uses the rebuild's geometry C2, Max Discharge at .9382·D, the 0.01 ft Depth
+offset, the 0.5% stop and K1 after a short chord (A-009, A-010); only the trial, the diameter
+and the test vary. It never runs the program.
+
+**The two runs.** The 9.6 in run (20261125-100815-dff8b0, exploratory: 9.6 in, n .013, 2 cfs,
+slope .005) typed `{Enter} 1{Enter} C{Enter} 9.6{Enter} .013{Enter} 2{Enter} .005{Enter}
+{Enter}`, resent no key, and ended on the shape menu with no result and no message. S2 (run
+20261125-141415-e06fc2: 12 in, 4 cfs, same n and slope) printed "DEPTH is Greater than the
+DIAMETER". In the rebuild both pipes step to a trial exactly on the diameter: 0.800000012 ft
+(trial 4) and 1.0 ft (trial 5). Both discharges are above what the last trial inside gives, so
+both searches reach that trial (A-011).
+
+**One assumption.** A trial the test lets through at or past the diameter reaches the
+geometry. There T = 0 divides by zero (so does x/√(1−x²) in the angle), and past it √ of a
+negative is taken. Both are QuickBASIC run-time errors. The model reads either as the shape
+menu with no message, the way the quick2-solver design reads Normal Depth with Slope -1 or
+Discharge -1 (Negative values and abandoned calculations). That reading is an inference, not
+an observation. Without it no combination ends on the shape menu: a trial on the diameter
+would never finish, as in the rebuild.
+
+**The combinations.**
+
+- Trial, 7 ways. T1: store(y + 0.2) with 0.2 a double (the rebuild). T2: store(y + .2) with .2
+  a single. T3: a counter, store(base + k·.2). T4: y + .2 in double, the geometry given the
+  double. T5: the same, the geometry given store(y). T6: base + k·.2 in double, the geometry
+  given the double. T7: the same, the geometry given store(y). Chords are stored for T1 to T3
+  and kept in double for T4 to T7.
+- Diameter, 4 ways. D1: store(store(VAL)/12) (the rebuild). D2: store(VAL/12). D3: VAL/12 in
+  double. D4: store(VAL)/12 in double. The geometry uses the same diameter as the test.
+- Test, 6 ways. X1: trial > D (the rebuild). X2: trial ≥ D. X3 and X4: the sum before it is
+  stored, > D and ≥ D (stored trials only, T1 to T3). X5 and X6: in inches, trial·12 > store(VAL)
+  and trial·12 ≥ store(VAL).
+
+That is 7 × 4 × 6 less the 32 before-the-store tests on unstored trials: 136.
+
+**The observations, 47.** All 31 circle Critical Depth result goldens, scored on every printed
+field; the six rejections (the runs in circle-short-chord's table); S2 to S5 and S7 to S11
+(A-012's run folders, not goldens yet); and the 9.6 in run. S1 and S6 are among the 31.
+
+**Scores.** 16 combinations fit 47 of 47, 63 fit 46, 28 fit 45, 4 fit 44, 1 fits 43, 9 fit
+42 and 15 fit 41. Every one of the 136 prints every field of all 31 results and rejects all six
+rejections, so those 37 observations do not separate any of them. Only seven do: S2, S3, S4,
+S5, S10, S11 and the 9.6 in run. The rebuild's T1·D1·X1 misses S2 (it reaches the geometry at
+1.0 ft). With a `≥` test (T1·D1·X2) or A-011's test before the store (T1·D1·X3), the rebuild's
+trials miss the 9.6 in run instead: both reject at 0.800000012 ft. 48 combinations miss only the
+9.6 in run and 9 only S2.
+
+**The 16 that fit all 47.**
+
+| Combination | Trial | Diameter | Test |
+|---|---|---|---|
+| T1·D1·X6, T1·D2·X6, T1·D3·X6 | store(y + 0.2), 0.2 a double | D1, D2, D3 | trial·12 ≥ store(VAL) |
+| T2·D1·X6, T2·D2·X6, T2·D3·X6 | store(y + .2), .2 a single | D1, D2, D3 | trial·12 ≥ store(VAL) |
+| T3·D1·X6, T3·D2·X6, T3·D3·X6 | a counter, store(base + k·.2) | D1, D2, D3 | trial·12 ≥ store(VAL) |
+| T3·D1·X3 | a counter, store(base + k·.2) | D1 | the sum before the store > D |
+| T4·D3·X6 | y + .2 in double, the geometry given the double | D3 | trial·12 ≥ store(VAL) |
+| T6·D3·X6 | base + k·.2 in double, the geometry given the double | D3 | trial·12 ≥ store(VAL) |
+| T7·D1·X2 | base + k·.2 in double, the geometry given store(y) | D1 | trial ≥ D |
+| T7·D1·X6, T7·D2·X6, T7·D3·X6 | base + k·.2 in double, the geometry given store(y) | D1, D2, D3 | trial·12 ≥ store(VAL) |
+
+**What separates the two pipes, in every survivor.** At 9.6 in the value tested falls just
+short of the diameter, so the trial goes on to the geometry, and the depth the geometry gets
+equals the diameter it has. At 12 in the value tested reaches the diameter, and the case is
+rejected before the geometry sees it. The survivors get there three ways:
+
+- In inches (14 survivors): trial 4 is 0.800000012 ft, and 0.800000012 × 12 = 9.60000014 in,
+  2.4e-7 in short of the typed 9.6 stored as a single (9.60000038). The geometry gets 0.800000012
+  ft, which equals D. At 12 in, 1.0 × 12 = 12 meets 12.
+- A counter tested before the store (T3·D1·X3): 4 × 0.200000003 = 0.800000012 equals D, so it
+  is not past it; 5 × 0.200000003 = 1.0000000149 is past 1.0.
+- A double counter whose geometry gets a single (T7·D1·X2): the double 0.8 is 1.19e-8 ft below D
+  and passes the test, and the geometry gets store(0.8) = 0.800000012 = D. At 12 in the double
+  1.0 meets 1.0.
+
+None of these was proposed before the runs. A test in inches is a way the program could be
+written (`IF Y * 12 >= DIA`), not an observation.
+
+**Where the survivors part.** 8 to 180 in by 0.1 in, every whole discharge from 1 cfs to the
+critical discharge at 0.99·D. n and slope do not change a Critical Depth outcome, since the
+search uses only D and q. Printed fields are compared only in the practical range (q at most
+the critical discharge at 0.9·D, the generator's range); above it, outcomes only. The scan
+checks its lookup of stepped trials against the full search first: 3227456 of 3227456 on every
+20th diameter. 11358 grid cases separate at least two survivors. 10015 differ in outcome, and
+only 2 of those are practical: 19.2 in at 15 cfs and 21.6 in at 20 cfs. 1343 practical cases
+differ only in printed fields. In the generator's practical range, then, the survivors almost
+never differ in outcome. No grid case separates T1 from T2 with the same diameter and test
+(three pairs), so whether .2 is a single or a double is not testable this way.
+
+### Predictions
+
+n .013 and slope .005 in all five. Chosen by the scan: practical cases that differ in outcome
+first, then any case that differs in outcome, until every pair of survivors a grid case can
+separate is separated. Together they give each of the 13 groups a different row. "Message" is
+the rejection screen as A-012 saw it: "DEPTH is Greater than the DIAMETER" on 0-based row 20,
+Depth `0.00`, Critical Slope and every output field blank. "Shape menu" is the 9.6 in run's
+ending: the shape menu, no message.
+
+| Case | Diameter | Discharge | Critical discharge at 0.9·D | Practical |
+|---|---|---|---|---|
+| R1 | 19.2 | 15 | 15.239 | yes |
+| R2 | 21.6 | 20 | 20.457 | yes |
+| R3 | 160.4 | 5238 | 3074.170 | no |
+| R4 | 55.2 | 276 | 213.582 | no |
+| R5 | 88.3 | 1013 | 691.224 | no |
+
+| Survivor | R1 | R2 | R3 | R4 | R5 |
+|---|---|---|---|---|---|
+| T1·D1·X6, T2·D1·X6 | message | message | shape menu | shape menu | message |
+| T1·D2·X6, T2·D2·X6 | message | message | message | shape menu | shape menu |
+| T1·D3·X6, T2·D3·X6 | message | message | message | message | message |
+| T3·D1·X3 | shape menu | shape menu | result | message | message |
+| T3·D1·X6 | shape menu | message | result | shape menu | message |
+| T3·D2·X6 | shape menu | message | result | shape menu | shape menu |
+| T3·D3·X6 | shape menu | message | result | message | message |
+| T4·D3·X6 | shape menu | message | message | shape menu | message |
+| T6·D3·X6 | shape menu | shape menu | message | shape menu | message |
+| T7·D1·X2 | shape menu | message | shape menu | message | message |
+| T7·D1·X6 | shape menu | message | shape menu | shape menu | message |
+| T7·D2·X6 | shape menu | shape menu | message | shape menu | shape menu |
+| T7·D3·X6 | shape menu | message | message | message | message |
+
+R3's result, the same under all four counters (search depth 13.16671; 13.16672 with D2),
+every field as the comparator compares it:
+
+| Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 160.4 | 0.0130 | 5238 | 13.16 | 0.0050 | 0.0193 | 139.9 | 38.7 | 37.4 | 3.6 | 3.2 | 1.0 | 5363 | CRITICAL |
+
+The trial each survivor stops at is in the script's output.
+
+**What each outcome means.**
+
+- R1 printing the message: the trials accumulate as single sums (T1 or T2). The shape menu: a
+  counter or a double depth. R1 is a practical case, so this is also the one prediction here
+  the generator could draw.
+- R2 separates T3·D1·X3, T6·D3·X6 and T7·D2·X6 (shape menu) from the rest (message).
+- R3 printing a result: a counter (T3), the only family that finishes there. R3, R4 and R5
+  then tell the diameter stores apart within each family, and R5 also separates T6·D3·X6 from
+  T7·D2·X6. Every two rows of the table differ in at least one of the five cases.
+- A result in R1, R2, R4 or R5, or a result other than the row above in R3, fits no survivor.
+  A row of the five that matches no row of the table fits none either, and then the model space
+  or the assumption above is wrong.
+- Whatever they show, the 9.6 in run is still one exploratory run with only its final screen
+  kept (Q-029). Recording it, once a screen like the shape menu can end a case, would make it a
+  citation.
+
+**Not part of this.** The solver is unchanged, and circle-short-chord's bugfix.md is not
+edited. 2.6 and 2.7 (A-012) wait for these runs. Normal Depth's search (N2, Q-026) is not
+tested by any case here.
