@@ -1440,3 +1440,52 @@ the seven, so every prediction rests on A-013's reading of a geometry error as t
 The command prints all of it in under a second. Not run.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-013 amendment session
+
+The session in the last entry used 21.22 credits over 8 min 17 s.
+
+### The Exhumer on A-013: 22 goldens and the 9.6 in run
+
+Settings: the `exhumer` custom agent, in its own session.
+
+With Q-030 fixed, the Exhumer recorded the six rejections as cd-circ-000039 to -000044
+(decision 94), S2 to S5 and S7 to S11 as cd-circ-000045 to -000053 (decision 95), and A-013's
+R1, R2, R4 and R6 to R9 as cd-circ-000054 to -000060 (decision 97). All 22 ended rejected with
+the message. It replaced `cd_circ_rejected`'s unobserved note with a cite of the first fifteen
+(decision 96). For the 9.6 in run it added the control obs-cdmenu-000001, which ended on the
+shape menu again; a second run of the same inputs did too and stored nothing (decision 98).
+Q-022, Q-029, Q-030 and Q-031 are answered, and Q-033 asks what key leaves the rejection
+screen and where its boundary is. R3 and R5 were not run.
+
+Credits: 23.09. Time: 9 min 21 s.
+
+### A-014: one group left, three held-out cases, and the requirements revised
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed** (75897a7), and the quick set rebuilt (0ff5d3e): 17 of 200
+cases swapped, cd-circ-000041, -000053, -000055 and -000057 among those in. Quick set 194 of
+200 before, 193 after; the new miss is cd-circ-000057, which QUICK-2 rejected and the rebuild
+prints. Full set 290 of 311.
+
+**A-014** (f066861). `grade-a013` grades the amendment's 14 groups on cd-circ-000054 to
+-000060. QUICK-2 printed the message on all seven, and only G3 (T1·D3·X6, T2·D3·X6) is right on
+all seven. Of the 184 combinations, those two alone fit all 54 circle Critical Depth goldens,
+which is what my own code, written from A-013's prose, also leaves. That is seven new cases for
+one group, and those cases picked it, so A-014 predicts three held-out cases before any runs:
+4.8 in and 2.4 in end on the shape menu, 7.2 in prints the message (n .013, slope .005, 1 cfs).
+With the stepped trials only, 9.60 in is the only diameter typed to 0.01 in from 8 to 180 in
+that ends on the shape menu. The run folders A-012 graded match their new goldens, and
+obs-cdmenu-000001 repeats the 9.6 in run's final screen. Report only: holding the diameter as
+VAL/12 in double changes none of the 876 printed fields on the 65 circle result goldens, and
+changes the outcome of cd-circ-000056 and -000060. Not run.
+
+**circle-short-chord** (b2695bd). The rule for circle Critical Depth goes in 2.4, 2.6 and 2.7:
+the inches test against store(VAL), the diameter in feet as VAL/12 in double, and a trial that
+passes the test at or past the diameter as `error` with `returns_to_menu`, cited to
+obs-cdmenu-000001. 1.4 loses its list of pipes and 2.7 its "not established", 2.5 cites
+H-009's goldens, 2.9 takes the comparator's counts, and 2.11 and 2.12 ask for the three held-out
+cases before the design, with a revision if any misses. The design is not written.
+
+Credits: not counted here; they go in the next entry.
