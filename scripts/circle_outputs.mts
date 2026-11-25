@@ -7,10 +7,14 @@
 //   node scripts/circle_outputs.mts critical-slope  A-008: cd-circ-000033's Critical Slope
 //   node scripts/circle_outputs.mts a009       A-009: the short-chord rule, its scores and predictions
 //   node scripts/circle_outputs.mts grade-a009 A-010: QUICK-2's four answers against A-009 as committed
+//   node scripts/circle_outputs.mts a011       A-011 and its amendment: trials on the diameter, S1 to S11
+//   node scripts/circle_outputs.mts grade-a011 A-012: S1 to S11 against A-011 (b4950f7) and the amendment (3d9bf3a)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
 // which is not committed, so Q1 and Q2 can be graded only on a machine that holds them.
+// grade-a011 does the same with decisions 87 and 88: S1 and S6 from their goldens, the other
+// nine from their run folders' final screens.
 //
 // It builds candidate rules on the rebuild's own form reader and printer (app/src) and compares
 // printed fields with the stored goldens. It never runs the program and never writes a file.
@@ -1025,6 +1029,193 @@ function a011() {
   for (const c of A011_AMENDMENT_CASES) report(c);
 }
 
+// ---- A-012: grade S1 to S11 against A-011 and its amendment as committed ----------------------
+/** The commits that hold A-011 and its amendment as written before the runs. */
+const A011_COMMIT = 'b4950f7', A011_AMENDMENT_COMMIT = '3d9bf3a';
+/** The ledger decisions that list the S runs and goldens (the Exhumer's, 2026-11-25). */
+const A011_DECISIONS = [87, 88];
+/** The models graded, in the amendment's column order. */
+const A012_MODELS = ['N2', 'K1', 'y + .2 single', 'Counter', 'Double depth', 'Tested before the store', 'K1, D = store(VAL/12)'] as const;
+type A012Model = (typeof A012_MODELS)[number];
+type PredOutcome = 'result' | 'rejected' | 'on_diameter' | 'never_finishes';
+interface A011Pred { id: string; inputs: Record<string, string>; said: Partial<Record<A012Model, string>>; derived: Partial<Record<A012Model, string>>; fields: Partial<Record<A012Model, Record<string, string>>> }
+const committedSection = (commit: string, title: string) => {
+  const text = execFileSync('git', ['show', `${commit}:results/attempts.md`], { cwd: ROOT, encoding: 'utf-8' });
+  const start = text.indexOf(`\n${title}`);
+  if (start < 0) throw new Error(`no "${title}" at ${commit}`);
+  const rest = text.slice(start + 1), end = rest.slice(3).search(/\n## /);
+  return end < 0 ? rest : rest.slice(0, end + 3);
+};
+const tableCells = (l: string) => l.split('|').slice(1, -1).map((c) => c.trim().replace(/\*\*/g, ''));
+const predOutcome = (cell: string): PredOutcome => {
+  if (/^result/.test(cell)) return 'result';
+  if (/^rejected/.test(cell)) return 'rejected';
+  if (/^on the diameter/.test(cell)) return 'on_diameter';
+  if (/^never finishes/.test(cell)) return 'never_finishes';
+  throw new Error(`unread prediction "${cell}"`);
+};
+function a011AsCommitted(): A011Pred[] {
+  const preds = new Map<string, A011Pred>();
+  const fieldRow = (header: string[], c: string[], from: number) => {
+    const rec: Record<string, string> = {};
+    header.slice(from).forEach((hd, i) => { const k = HEADER_KEYS[hd]; if (!k) throw new Error(`unknown column ${hd}`); rec[k] = c[i + from]!; });
+    return rec;
+  };
+  // A-011 (S1 to S5).
+  const a = committedSection(A011_COMMIT, '## A-011: trials');
+  const common = /n ([\d.]+) and slope ([\d.]+) in all five/.exec(a);
+  if (!common) throw new Error(`A-011 at ${A011_COMMIT}: no common n and slope`);
+  // A-011 gives no column for these two models on S1 to S5; its text and the amendment's say they
+  // predict what K1 predicts there. The sentences are checked, and the predictions marked derived.
+  const singleSame = /the single literal\s+alone changes nothing on stepped trials/.test(a);
+  const n2Same = /N2 prints the\s+same fields, so S1 does not separate K1 from N2/.test(a);
+  const am = committedSection(A011_AMENDMENT_COMMIT, '## A-011, amendment of 2026-11-25');
+  const storeSame = /S1 to S5 are unaffected: 12, 24, 36 and 48 in give the same D both ways, and every outcome is\s+the same/.test(am);
+  if (!singleSame || !n2Same || !storeSame) throw new Error('a sentence the derived predictions rest on is missing');
+  let header: string[] = [];
+  for (const l of a.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^S\d+$/.test(c[0]!)) continue;
+    if (header[4] === 'Rebuild now (N2)') {
+      const cols: Record<string, A012Model> = { 'Rebuild now (N2)': 'N2', "K1, the rebuild's trials": 'K1', 'Counter `base + k·.2`': 'Counter', 'Double depth': 'Double depth', 'Tested before the store': 'Tested before the store' };
+      const said: Partial<Record<A012Model, string>> = {};
+      header.forEach((hd, i) => { const m = cols[hd]; if (m) said[m] = c[i]!; });
+      if (Object.keys(said).length !== 5) throw new Error(`A-011 at ${A011_COMMIT}: read ${Object.keys(said).length} model columns`);
+      preds.set(c[0]!, { id: c[0]!, inputs: { diameter: c[1]!, n: common[1]!, discharge: c[2]!, slope: common[2]! }, said,
+        derived: { 'y + .2 single': said.K1!, 'K1, D = store(VAL/12)': said.K1! }, fields: {} });
+    } else if (header[1] === 'Diameter' && header[4] === 'Depth') {
+      const p = preds.get(c[0]!)!, rec = fieldRow(header, c, 1);
+      // The row is K1's; "same fields" in a model's cell, and the sentence for N2, give it to them.
+      for (const m of A012_MODELS) if (m === 'K1' || m === 'N2' || /same fields/.test(p.said[m] ?? '') || p.derived[m]) p.fields[m] = rec;
+    }
+  }
+  // The amendment (S6 to S11).
+  const common2 = /n ([\d.]+) and slope ([\d.]+) in all six/.exec(am);
+  if (!common2) throw new Error(`amendment at ${A011_AMENDMENT_COMMIT}: no common n and slope`);
+  header = [];
+  for (const l of am.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^S\d+$/.test(c[0]!)) continue;
+    if (header[4] === 'N2 (today)') {
+      const cols: Record<string, A012Model> = { 'N2 (today)': 'N2', K1: 'K1', 'y + .2, .2 single': 'y + .2 single', Counter: 'Counter', 'Double depth': 'Double depth', 'Tested before the store': 'Tested before the store', 'K1, D = store(VAL/12)': 'K1, D = store(VAL/12)' };
+      const said: Partial<Record<A012Model, string>> = {};
+      header.forEach((hd, i) => { const m = cols[hd]; if (m) said[m] = c[i]!; });
+      if (Object.keys(said).length !== 7) throw new Error(`amendment at ${A011_AMENDMENT_COMMIT}: read ${Object.keys(said).length} model columns`);
+      preds.set(c[0]!, { id: c[0]!, inputs: { diameter: c[1]!, n: common2[1]!, discharge: c[2]!, slope: common2[2]! }, said, derived: {}, fields: {} });
+    } else if (header[1] === 'Rule') {
+      const p = preds.get(c[0]!)!, rec = fieldRow(header, c, 2);
+      if (c[1] === 'N2') p.fields.N2 = rec;
+      else if (c[1] === 'K1, and every trial model') { for (const m of A012_MODELS) if (m !== 'N2' && /K1's fields|^result \(/.test(p.said[m]!)) p.fields[m] = rec; }
+      else throw new Error(`unknown rule row ${c[1]}`);
+    }
+  }
+  if (preds.size !== 11) throw new Error(`read ${preds.size} of the 11 S cases`);
+  return [...preds.values()].sort((x, y) => Number(x.id.slice(1)) - Number(y.id.slice(1)));
+}
+type Seen = { outcome: 'result' | 'rejected' | 'shape_menu' | 'other'; source: string; golden: boolean; printed?: Record<string, string>; screen?: string[]; resends?: number };
+/** The final screen of a run folder read as an observation. */
+function seenInRun(r: RunFolder): Seen {
+  const said = r.screen.some((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+  const t = (r.run as unknown as { transcript?: { resend: boolean }[]; resends?: number });
+  const resends = (t.transcript ?? []).filter((x) => x.resend).length + (t.resends ?? 0);
+  const outcome = said && ['cd_circ_rejected', 'cd_form'].includes(r.run.screen_id) ? 'rejected'
+    : !said && r.run.screen_id === 'shape_menu' ? 'shape_menu' : 'other';
+  return { outcome, source: `run ${r.id}`, golden: false, screen: r.screen, resends };
+}
+/** What QUICK-2 did for these inputs: a golden one of `decisions` lists, else a run folder it lists. */
+function observeListed(inputs: Record<string, string>, decisions: number[]): Seen {
+  const ledger = JSON.parse(readFileSync(join(ROOT, 'results', 'ledger.json'), 'utf-8'));
+  const listed = new Set<string>();
+  for (const n of decisions) {
+    const d = ledger.decisions.find((x: { n: number }) => x.n === n);
+    if (!d) throw new Error(`ledger decision ${n} not found`);
+    for (const e of d.evidence) listed.add(e);
+  }
+  const g = ALL.find((x) => listed.has(x.id) && x.mode === 'critical_depth' && x.shape === 'circle' && sameInputs(x.inputs, inputs));
+  if (g) return { outcome: g.outcome === 'result' ? 'result' : g.outcome === 'rejected' ? 'rejected' : 'other', source: g.id, golden: true, printed: g.printed };
+  for (const id of listed) {
+    const r = runFolder(id);
+    if (!r || r.run.mode !== 'critical_depth' || r.run.shape !== 'circle' || !sameInputs(r.run.inputs, inputs)) continue;
+    return seenInRun(r);
+  }
+  throw new Error(`no golden and no run folder for ${JSON.stringify(inputs)}; ledger decisions ${decisions.join(' and ')} list the runs (oracle/out is not committed, so only a machine that holds the run folders can grade them)`);
+}
+/** The rejection screen as A-008 and A-010 describe it: message row, Depth field, blank outputs. */
+function rejectionScreen(screen: string[]): string {
+  const at = screen.findIndex((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+  const depth = /Depth \(ft\)\s+(\S+)/.exec(screen.find((l) => l.includes('Depth (ft)')) ?? '')?.[1] ?? '';
+  const outputs = screen.filter((l) => /Area \(sq ft\)|Velocity \(ft\/s\)|Top Width \(ft\)|Max Discharge\(cfs\)/.test(l));
+  const sl = screen.find((l) => l.includes('Critical Slope')) ?? '';
+  const blank = !/\d/.test(sl.slice(sl.indexOf('Critical Slope'))) && outputs.every((l) => !/\d/.test(l.replace(/\(sq ft\)|\(ft\/s\)|\(ft\)|\(cfs\)/g, '')));
+  return `message on 0-based row ${at}; Depth field \`${depth}\`; Critical Slope and output fields ${blank ? 'all blank' : 'NOT blank'}`;
+}
+function gradeA011() {
+  const preds = a011AsCommitted();
+  console.log(`A-011 read from ${A011_COMMIT} (S1 to S5) and its amendment from ${A011_AMENDMENT_COMMIT} (S6 to S11): ${preds.length} cases.`);
+  console.log(`Derived, not in a column: on S1 to S5, "y + .2 single" and "K1, D = store(VAL/12)" predict K1's column (A-011: "the single literal alone changes nothing on stepped trials"; amendment: "S1 to S5 are unaffected"), and N2's S1 fields are K1's row (A-011: "N2 prints the same fields").`);
+  const score = Object.fromEntries(A012_MODELS.map((m) => [m, 0])) as Record<A012Model, number>;
+  const notGolden: string[] = [];
+  const seen = new Map<string, Seen>();
+  for (const p of preds) {
+    const o = observeListed(p.inputs, A011_DECISIONS);
+    seen.set(p.id, o);
+    if (!o.golden) notGolden.push(`${p.id} (${o.source})`);
+    row(`${p.id} ${inputText(p.inputs)}: QUICK-2 ${o.outcome} (${o.golden ? `golden ${o.source}` : `${o.source}, final screen, not a golden yet`})`);
+    if (o.outcome === 'rejected' && o.screen) row(`    screen: ${rejectionScreen(o.screen)}`);
+    for (const m of A012_MODELS) {
+      const said = p.said[m] ?? p.derived[m]!, predicted = predOutcome(said);
+      const tag = p.said[m] ? '' : ' [derived]';
+      let verdict = predicted === o.outcome ? 'right' : 'wrong', note = '';
+      const fr = p.fields[m];
+      if (verdict === 'right' && o.outcome === 'result') {
+        if (!fr || !o.printed) throw new Error(`${p.id} ${m}: a result with no predicted fields`);
+        const diff = Object.entries(fr).filter(([k, x]) => o.printed![k]!.trim() !== x).map(([k, x]) => `${k} predicted \`${x}\`, printed \`${o.printed![k]!.trim()}\``);
+        note = `; fields ${Object.keys(fr).length - diff.length} of ${Object.keys(fr).length} as predicted${diff.length ? ': ' + diff.join('; ') : ''}`;
+        if (diff.length) verdict = 'wrong';
+      }
+      if (predicted === 'on_diameter' && o.outcome !== 'shape_menu') note += '; A-011 read "on the diameter" as the 9.6 in run\'s ending, the shape menu with no message';
+      if (verdict === 'right') score[m]++;
+      row(`    ${m}${tag} predicted "${said}": ${verdict}${note}`);
+    }
+  }
+  console.log(`\nAll eleven, outcome and every predicted field: ${A012_MODELS.map((m) => `${m} ${score[m]} of ${preds.length}`).join(', ')}.`);
+  console.log(`Not goldens yet (run folder final screens, under oracle/out, not committed): ${notGolden.join(', ')}.`);
+
+  h('K1 against the rebuild today (solve) on S6 to S10');
+  let k1 = 0, n2 = 0;
+  for (const p of preds.filter((x) => ['S6', 'S7', 'S8', 'S9', 'S10'].includes(x.id))) {
+    const o = seen.get(p.id)!, now = solve({ mode: 'critical_depth', shape: 'circle', inputs: p.inputs });
+    const nowOut = now.outcome === 'result' ? 'result' : now.outcome;
+    const said = predOutcome(p.said.N2!);
+    const nowFields = now.outcome === 'result' ? FIELDS.critical_depth.filter((k) => p.fields.N2?.[k] !== undefined && now.printed[k]!.trim() !== p.fields.N2![k]) : [];
+    row(`${p.id}: QUICK-2 ${o.outcome}; solve() today ${nowOut}${said === nowOut && !nowFields.length ? ', as the amendment\'s N2 column says' : `, NOT as the amendment's N2 column (${p.said.N2})`}`);
+    let k1Right = predOutcome(p.said.K1!) === o.outcome, n2Right = nowOut === o.outcome;
+    if (o.outcome === 'result' && o.printed) {
+      const k1d = FIELDS.critical_depth.filter((k) => p.fields.K1![k] !== o.printed![k]!.trim());
+      const n2d = now.outcome === 'result' ? FIELDS.critical_depth.filter((k) => now.printed[k] !== o.printed![k]) : FIELDS.critical_depth;
+      row(`    K1: ${k1d.length ? 'differs on ' + k1d.join(', ') : 'every field as printed'}; today's rebuild: ${n2d.length ? `differs on ${n2d.map((k) => `${k} \`${now.printed[k]?.trim()}\` against \`${o.printed![k]!.trim()}\``).join(', ')}` : 'every field as printed'}`);
+      k1Right &&= !k1d.length; n2Right &&= !n2d.length;
+    }
+    if (k1Right) k1++; if (n2Right) n2++;
+    row(`    K1 ${k1Right ? 'right' : 'wrong'}, today's rebuild ${n2Right ? 'right' : 'wrong'}`);
+  }
+  row(`K1 ${k1} of 5, today's rebuild ${n2} of 5`);
+
+  h('S2 and the trial on the diameter (circle-short-chord 1.4, 2.6, 2.7)');
+  const s2 = preds.find((x) => x.id === 'S2')!, v2 = vals('critical_depth', s2.inputs), D2 = diameterFeet(v2.diameter!);
+  const now2 = solve({ mode: 'critical_depth', shape: 'circle', inputs: s2.inputs });
+  const tr = steppedTrials(D2, TRIAL_MODELS[0]!);
+  row(`S2: D ${D2.toPrecision(9)} ft; the rebuild's stepped trials ${tr.map((t) => t.toPrecision(9)).join(', ')}; the last ${tr[tr.length - 1] === D2 ? 'equals' : 'does not equal'} D`);
+  row(`solve() today: ${now2.outcome}${now2.flags.length ? ` [${now2.flags.map((x) => x.code).join(', ')}]` : ''}; QUICK-2: ${seen.get('S2')!.outcome} (${seen.get('S2')!.source})`);
+  const q029 = runFolder('20261125-100815-dff8b0');
+  if (q029) { const o = seenInRun(q029); row(`9.6 in run ${q029.id} (Q-029, exploratory): ${o.outcome}, ${o.resends} resent keys in its transcript; inputs ${inputText(q029.run.inputs)}`); }
+  else row('9.6 in run 20261125-100815-dff8b0: no run folder on this machine');
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a009') a009();
@@ -1033,4 +1224,5 @@ else if (which === 'grade-a005') gradeA005();
 else if (which === 'critical-slope') criticalSlopeA008();
 else if (which === 'grade-a009') gradeA009();
 else if (which === 'a011') a011();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011'); process.exit(2); }
+else if (which === 'grade-a011') gradeA011();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011'); process.exit(2); }

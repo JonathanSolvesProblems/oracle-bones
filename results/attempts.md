@@ -1131,3 +1131,95 @@ blank, stored as `rejected` goldens once the profile maps the screen.
 - S11 rejected: the rebuild's diameter store holds. S11 ending on the shape menu points at
   `store(VAL/12)`. The diameter store is used by every circle mode, so that would also need
   checking against every circle golden.
+
+## A-012: S1 to S11, graded against A-011 and its amendment as committed
+
+**K1 with the rebuild's trials gets 10 of 11: every outcome and every printed field except S2.
+S2 (12 in, 4 cfs) printed "DEPTH is Greater than the DIAMETER", where the rebuild's fifth trial
+lands on the diameter and A-011 predicted "on the diameter". The only model right on all
+eleven is "tested before the store", and it takes the 9.6 in pipe past the diameter, where
+QUICK-2's one run there ended on the shape menu with no message (Q-029). The rebuild today
+(N2) gets 5 of 11. On S6 to S10, K1 gets 5 of 5 and the rebuild 0 of 5.**
+
+**How graded.** The Exhumer ran S1 to S11 once each, n .013 and slope .005, as A-011 and its
+amendment type them (ledger decisions 87 and 88). `node scripts/circle_outputs.mts grade-a011`
+reads A-011 from commit b4950f7 (S1 to S5) and the amendment from 3d9bf3a (S6 to S11) with
+`git show`, finds the golden that decision 87 or 88 lists with the same mode and typed inputs,
+or else the run folder it lists for them, and compares the outcome and every predicted field.
+The numbers below are that command's output. A-011 and the amendment are unchanged.
+
+**What is a golden and what is not.** S1 is golden cd-circ-000037 and S6 is golden
+cd-circ-000038. The other nine are not goldens yet. Each reached the rejection screen and timed
+out under Q-030, so each observation is the final screen of its run folder: S2
+20261125-141415-e06fc2, S3 -141455-32c1dd, S4 -141528-97d64c, S5 -141601-3cef76, S7
+-141645-fb0830, S8 -141717-8eba31, S9 -141750-6e1c20, S10 -141822-a7c47f and S11
+-141855-1d1517. The run folders are under `oracle/out`, which is not committed, so those nine
+can be re-graded only on a machine that holds them, until they are recorded (Q-031). On every
+one of the nine the message is on 0-based row 20, the Depth field shows `0.00`, and Critical
+Slope and every output field are blank.
+
+**Derived predictions, labelled.** A-011's S1 to S5 table has no column for ".2 a single" or
+for `store(VAL/12)`. A-011 says the single literal "alone changes nothing on stepped trials",
+and the amendment says "S1 to S5 are unaffected" by the diameter store, so both are graded with
+K1's column there. N2's S1 fields are graded with K1's row, because A-011 says "N2 prints the
+same fields". The script checks that these sentences are in the committed text.
+
+| Case | Diameter | Discharge | QUICK-2 | Evidence | N2 (today) | K1 | .2 single | Counter | Double depth | Tested before the store | K1, D = store(VAL/12) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 | 12 | 3 | result | cd-circ-000037 | right, 14 of 14 | right, 14 of 14 | right (derived) | right | right | right | right (derived) |
+| S2 | 12 | 4 | rejected | run 20261125-141415-e06fc2 | wrong (never finishes) | wrong (on the diameter) | wrong (derived) | wrong | wrong | **right** | wrong (derived) |
+| S3 | 24 | 27 | rejected | run 20261125-141455-32c1dd | right | right | right (derived) | wrong (on the diameter) | right | right | right (derived) |
+| S4 | 36 | 84 | rejected | run 20261125-141528-97d64c | right | right | right (derived) | wrong (on the diameter) | right | right | right (derived) |
+| S5 | 48 | 188 | rejected | run 20261125-141601-3cef76 | right | right | right (derived) | wrong (on the diameter) | right | right | right (derived) |
+| S6 | 15 | 5 | result | cd-circ-000038 | wrong: Depth `0.90`, Critical Slope `0.0078`, Velocity `5.2` predicted; `0.89`, `0.0079`, `5.3` printed | right, 14 of 14 | right | right | right | right | right |
+| S7 | 15 | 7 | rejected | run 20261125-141645-fb0830 | wrong (a result) | right | right | right | right | right | right |
+| S8 | 18 | 12 | rejected | run 20261125-141717-8eba31 | wrong (a result) | right | right | right | right | right | right |
+| S9 | 30 | 55 | rejected | run 20261125-141750-6e1c20 | wrong (a result) | right | right | right | right | right | right |
+| S10 | 60 | 360 | rejected | run 20261125-141822-a7c47f | wrong (a result) | right | right | wrong (on the diameter) | right | right | right |
+| S11 | 14.4 | 7 | rejected | run 20261125-141855-1d1517 | right | right | right | right | right | right | wrong (on the diameter) |
+| **All eleven** | | | | | **5 of 11** | **10 of 11** | **10 of 11** | **6 of 11** | **10 of 11** | **11 of 11** | **9 of 11** |
+
+A-011 gave no screen for "on the diameter". It read the 9.6 in run's ending (the shape menu, no
+message) as what a trial on the diameter would show, and said "S2 printing the message instead
+points at a test before the store, and then the 9.6 in run needs another explanation, since
+that model takes 9.6 in past D." Every "on the diameter" above met the message instead.
+
+**K1 against the rebuild today, S6 to S10.** `solve()` today gives what the amendment's N2
+column says on all five. S6: K1 prints every field as QUICK-2 printed it; the rebuild differs on
+Depth (`0.90` against `0.89`), Critical Slope (`0.0078` against `0.0079`) and Velocity (`5.2`
+against `5.3`). S7 to S10: QUICK-2 rejected all four, as K1 predicted; the rebuild prints a
+result on each. K1 5 of 5, the rebuild 0 of 5.
+
+**What the triggers of circle-short-chord 2.12 say.** No result where K1 rejects and no
+rejection where K1 prints a result: K1's one miss, S2, is a case K1 predicted to land on the
+diameter. S6's fields are K1's row. S3 to S5 and S10 printed the message, not the shape menu,
+so they do not point at a counter; the counter is wrong on four of the eleven. S11 printed the
+message, so the rebuild's diameter store holds against `store(VAL/12)` on it. None of the four
+listed triggers fired, but S2 contradicts 1.4, 2.6 and 2.7, below.
+
+**What S2 does to circle-short-chord 1.4, 2.6 and 2.7.** bugfix.md is not edited here.
+
+- **1.4** (current behaviour) is right about the rebuild: on S2 the stepped trials are
+  0.200000003, 0.400000006, 0.600000024, 0.800000012 and 1.00000000, the fifth equals D, and
+  `solve()` returns `error` with `never_finishes`. What 1.4 says about QUICK-2 is now too narrow.
+  It names one contradiction, the 9.6 in run's shape menu against the flag text. S2 adds a
+  second, different one: in the 12 in pipe of its list QUICK-2 printed the rejection. So 12 in,
+  4 cfs belongs in the defect as a case where the rebuild's outcome is wrong, not only its flag
+  text. The two pipes where the rebuild's trial lands on the diameter ended differently in
+  QUICK-2, so 1.4's list is a list of where the rebuild's trials land, not of where QUICK-2's
+  do.
+- **2.6** says that a trial on the diameter, in any pipe, gives `error` with no printed field.
+  Built as written it gives `error` on S2, where QUICK-2 printed the message. Once S2 is
+  recorded as a rejected golden, that is an outcome mismatch. Its premise, that a trial on the
+  diameter ends the same way in every pipe, fails on the only two pipes run. Which pipes still
+  end on the shape menu, and why, is A-013's question; 2.6 cannot be kept as written.
+- **2.7** says the app shows "what QUICK-2 does with this input has not been established" for
+  every trial on the diameter, "12 in included". For 12 in at 4 cfs it is now observed, in a
+  run that is not a golden yet: the rejection. Kept as written, the app would say "not
+  established" for an input whose answer is known. Its words still fit the 9.6 in case, which
+  rests on one exploratory run.
+- 2.9's last row ("ten more, since S2 stores none") also changes: with Q-030 fixed, S2 would
+  store a `rejected` golden, so recording S1 to S11 adds eleven.
+
+**Full set now:** 280 of 289. cd-circ-000037 (S1) matches; cd-circ-000038 (S6) misses Depth,
+Critical Slope and Velocity, where K1 and the rebuild differ. The rebuild is not changed.
