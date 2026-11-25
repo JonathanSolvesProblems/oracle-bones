@@ -1195,3 +1195,77 @@ Credits and times:
   1 min 24 s;
 - the prompt that wrote tasks.md: 10.74, 1 min 24 s;
 - the build, tasks 1 to 7 in a new session: 69.09, 1 h 20 min 49 s.
+
+### Task 3.6: hauntings, and predictions for Q-022 (A-007)
+
+Settings: Claude Opus 5.5, a new session.
+
+Task 3.6 recorded four hauntings in `results/hauntings.md` (bea0505): H-005, the 1% search
+stop (nd-trap-000001 prints 3.27 where the exact depth is 3.2853); H-006, the .667 exponent
+(cc-vdit-000012 Velocity 5104.8 against 5095.17 with 2/3); H-007, circle Critical Depth's Max
+Discharge at the critical slope (cd-circ-000001 prints 53, 50.73 at the entered slope); and
+H-008, negative inputs computed as typed (cc-trap-000015). Q-008 and Q-009 were answered.
+Comparator: quick set 195 of 200, full set 279 of 284, nothing new to triage. Task 3.6 is not
+ticked: Q-002, Q-003 and Q-022 stay open.
+
+For Q-022 the session wrote predictions before anything ran (A-007, dcd4e85). QUICK-2 had
+printed "DEPTH is Greater than the DIAMETER" once, and no golden records it. The rebuild rejects
+when a 0.2 ft trial would pass the diameter, which fits that one run but says nothing about
+where the boundary lies. A-007 chose four cases (10.1 in and 11.9 in pipes at 3 and 4 cfs) on
+which the rebuild's rule (R1), a 0.1 ft grid (G1) and any fixed share of the diameter (S(f))
+the observed run allows predict different outcomes, and listed every printed field for the
+two predicted results.
+
+Credits: 39.74. Time: 50 min 37 s.
+
+### A-007 and A-008: the rejection boundary is wrong
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5, in its own session.
+
+The Exhumer ran A-007's four cases as typed (decision 75). The three rejections store no golden;
+each observation is the final screen of its run folder. P3 is golden cd-circ-000033.
+
+Kiro graded them against A-007 as committed (A-008, d766894), with `node
+scripts/q022_boundary.mts grade-a007`, which reads A-007 from dcd4e85. R1 got 3 of 4 outcomes:
+QUICK-2 rejected P1 (10.1 in, 3 cfs), where R1 and G1 predicted a result, so the rebuild's
+boundary is wrong. G1 got 2 of 4. S(f) with 0.750 ≤ f < 0.847 predicted all four. P3 printed
+13 of 14 fields as R1 predicted; Critical Slope printed `0.0090` against `0.0089`. The quick set
+was rebuilt with the new golden (2dcaf77): 194 of 200, full set 279 of 285.
+
+Credits for the Exhumer's run: 4.28. Time: 4 min 55 s.
+
+### cd-circ-000033 and A-009: one rule for both misses
+
+Settings: Claude Opus 5.5, a new session. The laptop closed partway through and the session
+resumed with a second prompt. The shell also stopped answering for a while, after a PowerShell
+here-string reached it broken and left it waiting for input; scripts were written to files
+from then on.
+
+**cd-circ-000033's Critical Slope** (933a546). It is not on a rounding boundary the way
+cc-circ-000035 is: 0.0089380 is 0.134% from 0.00895, where cc-circ-000035 sits about three
+single-precision steps from its boundary. No constant factor fits the 27 circle Critical Depth
+results, five hypotheses from inside the design each leave it at `0.0089` or `0.0092`, and no
+rounding rule prints `0.0090` without breaking cd-circ-000001. Every field prints as QUICK-2
+printed it at a search depth 0.0004 to 0.0012 ft below the rebuild's chord. The claim for the
+Skeptic and its classification (a spec error in the circle Critical Depth search) are
+proposed, not reviewed, and it is not listed as a known difference.
+
+**A-009** (80c87fd). In cd-circ-000033 and P1 the first chord is still short of q, a branch
+where no earlier Critical Depth golden told the rules apart. The rebuild takes the chord again
+on the narrowed bracket (N2), a rule chosen for Normal Depth. If stepping instead resumes from
+the chord with the same 0.2 ft step (K1, the shared search's rule for every other shape), P1's
+next trial passes the diameter and rejects, and cd-circ-000033 stops at 0.74259, where every
+field matches. K1 scores 31 of 31 on the circle Critical Depth results and the four rejections;
+the rebuild 29, and three other rules 26 to 29. Two cases already seen chose K1, so A-009
+commits predictions for four the Exhumer has not run: two where K1 rejects and the rebuild
+prints a result (8 in at 1 cfs, 22.7 in at 23 cfs), and two where both print a result and
+differ (37 in at 77 cfs on Depth, 51 in at 4 cfs on Critical Slope, Velocity and Max
+Discharge). The solver is unchanged; the Skeptic's review of the cd-circ-000033 claim and the
+A-009 runs go to an Exhumer session.
+
+**The live marker** (dd613c4). `pytest -m "not live"` deselected nothing, because the live
+tests used the `live` fixture and nothing applied the marker. `conftest.py` now marks every test
+whose fixtures include `live`: 34 of 208 are live, 174 offline. The offline run passes in 290 s.
+It is not quick: one repository scan
+(`test_no_program_file_inside_repository_outside_vendor`) takes 112 s, because it hashes the
+gitignored run folders and `node_modules` too. That test is unchanged.
