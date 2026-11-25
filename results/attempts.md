@@ -1552,3 +1552,171 @@ to separate.
 
 **Not part of this.** A-013's text, the solver, circle-short-chord's bugfix.md and the ledger
 are unchanged. 2.6 and 2.7 (A-012) wait for R1, R2, R4 and R6 to R9.
+
+## A-014: A-013 and its amendment graded on cd-circ-000054 to -000060, and three held-out cases for G3 (for the Exhumer)
+
+**The grade below is written after the runs. The predictions are written and committed with
+the script before any of their cases runs, and nothing in them changes after the runs; the
+results go in a new section. The solver is not changed.**
+
+**G3 (T1·D3·X6 and T2·D3·X6) is the only one of the amendment's 14 groups right on all seven
+cases: QUICK-2 printed "DEPTH is Greater than the DIAMETER" on R1, R2, R4 and R6 to R9
+(cd-circ-000054 to -000060). G2 and G10 get 6 of 7; the other eleven get 2 to 5. Of all 184
+combinations, only T1·D3·X6 and T2·D3·X6 fit every one of the 54 circle Critical Depth
+goldens. The score is seven new cases for one group, and the group was picked by these same
+seven cases, so it has not yet passed a test it was not chosen on. It needs one more held-out
+test; three held-out cases are predicted below.**
+
+**How graded.** `node scripts/circle_outputs.mts grade-a013` (about 2 s) reads A-013 from
+commit 69338b5 and its amendment from 6ecfb3c with `git show`: both case tables, n .013 and
+slope .005, and the amendment's group table. For each case it finds the golden that ledger
+decision 97 lists with the same mode and typed inputs, and reads its outcome and its last
+captured screen. Before grading it checks three things and prints them: R1, R2 and R4 have the
+same inputs in A-013's table and the amendment's; A-013's cells on R1, R2 and R4 agree with the
+amendment's for all 16 of A-013's survivors (48 of 48 cells); and the model, rerun now, gives
+the committed cell on 273 of 273 (survivor, case) pairs. Every number in this section is that
+command's output. It never runs the program.
+
+| Group | Survivors | R1 | R2 | R4 | R6 | R7 | R8 | R9 | Right |
+|---|---|---|---|---|---|---|---|---|---|
+| QUICK-2 | | message | message | message | message | message | message | message | |
+| Golden | | cd-circ-000054 | cd-circ-000055 | cd-circ-000056 | cd-circ-000057 | cd-circ-000058 | cd-circ-000059 | cd-circ-000060 | |
+| G1 | T1·D1·X6, T2·D1·X6 | message | message | **shape menu** | message | message | message | **shape menu** | 5 of 7 |
+| G2 | T1·D2·X6, T2·D2·X6 | message | message | **shape menu** | message | message | message | message | 6 of 7 |
+| G3 | T1·D3·X6, T2·D3·X6 | message | message | message | message | message | message | message | 7 of 7 |
+| G4 | T3·D1·X3, T9·D1·X1 | **shape menu** | **shape menu** | message | message | **shape menu** | **shape menu** | message | 3 of 7 |
+| G5 | T3·D1·X6, T3·D2·X6, T7·D1·X6 | **shape menu** | message | **shape menu** | **shape menu** | **shape menu** | message | message | 3 of 7 |
+| G6 | T3·D3·X6, T7·D3·X6 | **shape menu** | message | message | message | **shape menu** | message | message | 5 of 7 |
+| G7 | T4·D3·X6 | **shape menu** | message | **shape menu** | **shape menu** | message | message | message | 4 of 7 |
+| G8 | T6·D3·X6, T7·D2·X6 | **shape menu** | **shape menu** | **shape menu** | **shape menu** | **shape menu** | message | message | 2 of 7 |
+| G9 | T7·D1·X2 | **shape menu** | message | message | message | **shape menu** | **shape menu** | message | 4 of 7 |
+| G10 | T8·D1·X1, T8·D2·X1, T10·D1·X1, T10·D2·X1 | **shape menu** | message | message | message | message | message | message | 6 of 7 |
+| G11 | T8·D1·X5, T8·D1·X6, T10·D1·X5, T10·D1·X6 | **shape menu** | message | message | **shape menu** | message | message | message | 5 of 7 |
+| G12 | T8·D2·X5, T8·D2·X6, T10·D2·X5, T10·D2·X6 | **shape menu** | **shape menu** | message | **shape menu** | message | message | message | 4 of 7 |
+| G13 | T8·D3·X5, T8·D3·X6, T9·D1·X5, T9·D1·X6, T9·D2·X5, T9·D2·X6, T10·D3·X5, T10·D3·X6 | **shape menu** | **shape menu** | message | **shape menu** | **shape menu** | message | message | 3 of 7 |
+| G14 | T9·D3·X5, T9·D3·X6 | **shape menu** | **shape menu** | message | message | **shape menu** | message | message | 4 of 7 |
+
+A bold cell is a wrong prediction. On all seven goldens the message is on 0-based row 20, the
+Depth field shows `0.00`, and Critical Slope and every output field are blank. None ended on
+the shape menu and none printed a result.
+
+**What the seven say.** R1's message puts every group but G1 to G3 out: the trial is a stored
+single sum (T1 or T2) and the test is in inches. R4 and R9 then give the diameter store. Under
+D1 and D2, the 55.2 in pipe of R4 (cd-circ-000056) reaches the geometry at stepped trial
+4.599999905 ft, which is its stored diameter, and A-013's assumption reads that as the shape
+menu. Under D3 the diameter is 4.6 ft, the same trial is inside it, the search takes a chord
+below it, and the next trial fails the inches test: the message, which QUICK-2 printed. R9
+(57.6 in, cd-circ-000060) does the same to D1 alone, at trial 4.799999714 ft.
+
+**The run folders A-012 graded are goldens now.** A-012 graded S2 to S5 and S7 to S11 from the
+final screens of their run folders. They are now cd-circ-000045 to -000053 (ledger decision
+95), and each golden has the same outcome as its run folder, rejected, and the same rejection
+screen. A-012's grades stand as written. The six rejections of circle-short-chord are
+cd-circ-000039 to -000044 (decision 94), the same on all six. The 9.6 in run repeated as
+obs-cdmenu-000001 (decision 98): the same inputs ended on the shape menu with no result and no
+message, and its last captured screen is the run folder's final screen on every row. A second
+run of the same inputs in that session (20261125-184734-96cde0) also ended on the shape menu
+and stored no golden. obs-cdmenu-000001 is a behaviour case, so the comparator never grades it
+and it is not in the quick set. Its capture holds one screen per step, so what happens between
+the last Enter and the shape menu is still not seen.
+
+**All 184 combinations on the 54 goldens.** A-013's 136 and the amendment's 48 (T8 to T10 with
+D1 to D4 and X1, X2, X5, X6), scored the way A-013 scored its 47 observations: the 31 circle
+Critical Depth results on every printed field, the 22 rejections with the message
+(cd-circ-000039 to -000060), and obs-cdmenu-000001 as the shape menu. The run folders are no
+longer needed. cd-circ-000003, -000007 and -000008 are held at a prompt by an input of 0 and
+are not search outcomes, so they are left out. Scores: 2 fit 54, 67 fit 53, 33 fit 52, 20 fit
+51, 21 fit 50, 11 fit 49, 13 fit 48, 5 fit 47, 2 fit 46, 5 fit 45, 3 fit 44, 1 fits 43 and 1
+fits 42. The two that fit all 54 are T1·D3·X6 and T2·D3·X6. This agrees with the person's own
+code, written from A-013's prose over the same 184 combinations, which leaves only those two.
+Nothing outside the amendment's 39 survivors fits all 54. The nearest misses are G2 (T1·D2·X6
+and T2·D2·X6 miss cd-circ-000056) and G10 (T8·D1·X1, T8·D2·X1, T10·D1·X1 and T10·D2·X1 miss
+cd-circ-000054), one case each.
+
+**What the score is.** Seven new cases for one group. The amendment chose the seven so that its
+14 groups would each give a different row. Whatever QUICK-2 printed could match at most one
+row, and the row it matched is the group these cases pick. G3 matching is how G3 was selected,
+so it is not yet a test of G3. G3 needs at least one case it was not chosen on: the three
+below.
+
+**Room for models outside A-013's space.** The 184 are only the combinations A-013 and its
+amendment wrote down: ten ways of forming the trial, four diameter stores and six tests, all
+on K1 with the rebuild's geometry C2, Max Discharge at .9382·D, the 0.01 ft Depth offset and
+the 0.5% stop, and all under A-013's assumption that a trial the test lets through at or past
+the diameter ends on the shape menu. A model outside that space could fit all 54 too, and
+nothing here looks for one. Three limits in particular:
+- G3's answer on all seven is the message, so these cases do not test the shape-menu ending.
+  The only shape-menu observation is obs-cdmenu-000001, one pipe.
+- T1 and T2 (0.2 a double or .2 a single, the sum stored) gave the same answer on every grid
+  case A-013 scanned, so which one QUICK-2 uses is not known.
+- A-013's assumption is still an inference. No capture shows a QuickBASIC error.
+
+### Predictions for G3: three held-out cases
+
+T1·D3·X6 and T2·D3·X6 give the same answer on all three, so "G3" below means both. n .013,
+slope .005 and 1 cfs in all three. "Message" and "shape menu" mean what they mean in A-013.
+
+| Case | Diameter | Discharge | G3 predicts | Deciding trial, stepped from 0 | Trial·12 | store(VAL) | D = VAL/12 |
+|---|---|---|---|---|---|---|---|
+| H1 | 4.8 | 1 | shape menu, no message | trial 2, 0.4000000060 | 4.800000072 | 4.800000191 | 0.4 |
+| H2 | 2.4 | 1 | shape menu, no message | trial 1, 0.2000000030 | 2.400000036 | 2.400000095 | 0.2 |
+| H3 | 7.2 | 1 | message | trial 3, 0.6000000238 | 7.200000286 | 7.199999809 | 0.6 |
+
+In H1 and H2 the trial in inches falls short of the typed diameter stored as a single, so the
+test lets it through, and in feet the trial is past VAL/12. The geometry is then given a depth
+past the crown, which A-013's assumption reads as the shape menu. In H3, store(7.2) rounds
+down, the trial in inches is past it, and the test rejects the trial: the message. 1 cfs
+reaches the deciding trial in all three. It is above A·√(gA/T) at the last stepped trial inside
+divided by 0.995 (0.1420 cfs in H1, 0.6794 cfs in H3), and H2 has no trial inside. No answer
+changes when A·√(gA/T) is multiplied by 1 ± 1e-6 or 1 ± 1e-4. No golden has any of the three
+inputs.
+
+**Why these three.** With the stepped trials only, T1·D3·X6 and T2·D3·X6 over every diameter
+typed to 0.01 in from 8.00 to 180.00 in (17201 diameters), 9.60 in is the only one whose
+stepped trials end on the shape menu. This confirms the person's count. From 0.01 to 7.99 in,
+2.40 and 4.80 are the only ones. So G3 puts a stepped shape-menu ending at three typed
+diameters up to 180 in: 2.4, 4.8 and 9.6. H1 and H2 are the two that have not run. H3, 7.2 in,
+is the multiple of 2.4 between them and 9.6 in, where G3 predicts the message. None of the three
+was used to choose G3, and none is in the generator's range of 8 to 180 in.
+
+**What is not known about them.** No circle golden has a typed diameter below 3.9 in
+(cc-circ-000007, held at the Depth prompt after the form took the Diameter), so whether
+QUICK-2's form accepts 2.4 in is unobserved. A hold at the Diameter prompt, a result, or any
+answer other than the one in the table counts as a miss.
+
+**What each answer would mean.**
+- All three as predicted: G3 has passed three cases it was not chosen on.
+- H1 or H2 printing the message: the inches test letting a trial through at the crown does not
+  explain the shape menu beyond 9.6 in, and the 9.6 in ending needs another explanation.
+- H3 ending on the shape menu: G3's inches test is wrong where store(VAL) rounds down.
+- Any miss: circle-short-chord's requirements are revised again before the design (its 2.12).
+
+### D1 against D3 on every circle golden (report only)
+
+The question: does holding the diameter in feet as VAL/12 in double (D3) change any circle
+golden, against the rebuild's `store(store(VAL)/12)` (D1)?
+
+The same command loads a second copy of the rebuild's solver (`app/src`) through a Node module
+hook, with only `diameterFeet` changed to return VAL/12 of the typed diameter, and runs both
+copies on every circle golden of Critical Depth, Channel Capacity and Normal Depth. No file
+under `app/` is changed. As a check, the second copy with no override prints what `solve()`
+prints on 107 of 107 goldens. The form's hold on a Channel Capacity Depth above the diameter
+(`forms.ts`) keeps its own store and is not changed.
+
+| Mode | Goldens | Results | Result fields | Missed by D1 | Missed by D3 | Printed differently by D1 and D3 | Outcome differs |
+|---|---|---|---|---|---|---|---|
+| Critical Depth | 56 | 31 | 434 | 8 | 8 | 0 | 2 |
+| Channel Capacity | 34 | 20 | 260 | 1 | 1 | 0 | 0 |
+| Normal Depth | 17 | 14 | 182 | 2 | 2 | 0 | 0 |
+
+D3 changes none of the 876 printed fields of the 65 circle result goldens. D1 and D3 miss the
+same 11 fields: cd-circ-000033, -000035, -000036 and -000038 (8 fields, the short-chord rule),
+cc-circ-000035 (Max Discharge) and nd-circ-000020 (Velocity and Froude). Two outcomes differ,
+both at the crown: cd-circ-000056 (55.2 in) and -000060 (57.6 in) give `error` under D1, where
+the rebuild's trial lands on its stored diameter, and a result under D3. QUICK-2 rejected both,
+so neither store gets them with the rebuild's test. With K1 and the inches test, T1·D1·X6
+against T1·D3·X6, the 434 fields again print the same, and the same two outcomes differ: the
+shape menu under D1, the message under D3, which is what QUICK-2 printed.
+
+**Not part of this.** The solver is unchanged. circle-short-chord's bugfix.md is revised in a
+later commit. Normal Depth's search (N2, Q-026) is not tested by any case here.
