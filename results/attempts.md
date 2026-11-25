@@ -606,3 +606,54 @@ run is needed. P1 or P3 printing a result with fields
 other than those above is a circle Critical Depth mismatch for the comparator, not part of this
 question. Q-022's other parts, the screen mapping and the key that leaves the message, are not
 tested here.
+
+## A-008: the A-007 cases, graded against A-007 as committed
+
+**R1, the rebuild's rule, gets 3 of 4 outcomes. It is wrong about the boundary: QUICK-2
+rejected P1 (10.1 in, 3 cfs), where R1 and G1 predicted a result. G1 gets 2 of 4; P4 refutes
+it on the rejection too. S(f) with 0.750 ≤ f < 0.847 predicted all four. P3 printed 13 of its
+14 fields as R1 predicted; the miss is Critical Slope `0.0090`, predicted `0.0089`.**
+
+**How graded.** The Exhumer ran the four cases as A-007 types them (ledger decision 75). P3
+ended on a result and is golden cd-circ-000033. P1, P2 and P4 timed out on `cd_form` with
+the message on the form, so they store no golden; each observation is the final screen of its
+run folder, and decision 75 names the runs. `node scripts/q022_boundary.mts grade-a007` reads
+A-007 from commit dcd4e85 with `git show`, finds the golden with the same mode and typed inputs
+or else the run that decision 75 lists for them, and compares. The numbers below are that
+command's output. A-007 is unchanged. The run folders are under `oracle/out`, which is not
+committed, so the grade can be repeated only on a machine that holds them.
+
+| Case | Diameter | Discharge | QUICK-2 | Evidence | R1 (rebuild) | G1 | S(f): a result needs |
+|---|---|---|---|---|---|---|---|
+| P1 | 10.1 | 3 | rejected | run 20261124-225953-c32ec8 | wrong (predicted a result) | wrong (predicted a result) | f ≥ 0.894, so f < 0.894 |
+| P2 | 10.1 | 4 | rejected | run 20261124-230038-48c33a | right | right | f ≥ 0.959, so f < 0.959 |
+| P3 | 11.9 | 3 | result | cd-circ-000033 (run 20261124-230059-fa1771) | right | right | f ≥ 0.750, so f ≥ 0.750 |
+| P4 | 11.9 | 4 | rejected | run 20261124-230140-e185ee | right | wrong (predicted a result) | f ≥ 0.855, so f < 0.855 |
+
+n is .013 and the slope .005 in all four.
+
+**The rejection screens.** All three are what A-007 predicted: the run ends as `timeout` on
+`cd_form`, "DEPTH is Greater than the DIAMETER" is on the form, the Depth field shows `0.00`,
+and no output field is filled. The message is on 0-based row 20 of the 25-row screen, the row
+on which the observed run 20261122-214714-6aaf2d printed it. A-007 and Q-022 call that row 19;
+the row is the same, and the name is theirs.
+
+**P3, cd-circ-000033.** Every field prints as R1 predicted (Depth `0.73`, Area `0.6`, Wet Per
+`2.1`, Velocity `4.8`, Hyd R `0.3`, Top Width `0.9`, Froude `1.0`, Max Discharge `4`, CRITICAL,
+and the echoes) except Critical Slope: QUICK-2 printed `0.0090`, the rebuild prints `0.0089`.
+That is a circle Critical Depth mismatch for the comparator, not part of Q-022 (A-007, What each
+outcome means). It is examined separately.
+
+**What it means for Q-022.** For the 10.1 in pipe, R1's last 0.2 ft trial inside the pipe is
+0.8 ft (0.950·D), where A·√(gA/T) is 3.790 cfs, so R1 gives a result up to 3.809 cfs. QUICK-2
+rejects 3 cfs. So QUICK-2's rejection does not come from a 0.2 ft trial passing the diameter,
+and the rebuild's boundary is wrong. The search that sets the result fields is not in question:
+P3 and the 26 other circle Critical Depth results still fit the 0.2 ft step (A-006). With the
+observed run, five outcomes are now known, and S(f) with 0.750 ≤ f < 0.847 fits all five. That
+range comes from three of the five (P3, and the observed run's 0.847); it is not yet a rule.
+Q-022 stays open.
+
+**Full set after recording cd-circ-000033:** 279 of 285. The misses are cd-circ-000033 (Critical
+Slope, new), cc-circ-000035 (Max Discharge, Q-028), nd-circ-000020 (Velocity, Froude; Q-026)
+and sb-irr-000001 to -000003 (Step-Backwater, not built). The table-driven circle test in
+`app/test/circle.test.ts` fails on cd-circ-000033 until its Critical Slope is settled.

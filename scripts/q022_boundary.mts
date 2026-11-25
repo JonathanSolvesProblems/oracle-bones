@@ -4,16 +4,18 @@
 //   node scripts/q022_boundary.mts observed   the one run that printed it, trial by trial
 //   node scripts/q022_boundary.mts rate       how often the rebuild rejects generated practical cases
 //   node scripts/q022_boundary.mts a007       A-007's cases under each candidate rule
+//   node scripts/q022_boundary.mts grade-a007 A-008: QUICK-2's four answers against A-007 as committed
 //
 // It uses the rebuild's own search and circle geometry (app/src). It never runs the program and
 // never writes a file. `rate` draws its inputs with oracle/generator.py through Python (PYTHON,
-// else the .venv).
-import { existsSync } from 'node:fs';
+// else the .venv). `grade-a007` reads A-007 from git, the result from the stored golden, and
+// each rejection from the run folder that ledger decision 75 names (oracle/out, not committed).
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
 import { diameterFeet } from '../app/src/solver/geometry/circle.ts';
-import { circleCriticalDischarge, searchCircle } from '../app/src/solver/modes/circle.ts';
+import { circleCriticalDischarge, DEPTH_ABOVE_DIAMETER, searchCircle } from '../app/src/solver/modes/circle.ts';
 import { solve } from '../app/src/solver/index.ts';
 import { store } from '../app/src/solver/single.ts';
 
@@ -108,8 +110,127 @@ function a007(): void {
   }
 }
 
+// ---- A-008: grade the A-007 runs against A-007 as committed --------------------------------
+/** The commit that holds A-007 as written before the runs. */
+const A007_COMMIT = 'dcd4e85';
+/** The ledger decision that lists the A-007 runs (the Exhumer's, 2026-11-24). */
+const A007_DECISION = 75;
+const RESULT_KEYS: Record<string, string> = {
+  Diameter: 'in_diameter', n: 'in_n', Discharge: 'in_discharge', Depth: 'depth', Slope: 'in_slope',
+  'Critical Slope': 'critical_slope', Area: 'area', 'Wet Per': 'wet_perimeter', Velocity: 'velocity',
+  'Hyd R': 'hyd_radius', 'Top Width': 'top_width', 'Froude #': 'froude', 'Max Discharge': 'max_discharge',
+  'Flow Type': 'flow_type',
+};
+interface A007Row { id: string; inputs: Inputs; r1: string; g1: string; sf: string }
+interface Observation { outcome: 'result' | 'rejected' | 'other'; source: string; printed?: Record<string, string>; screen?: string[] }
+
+function a007AsCommitted(): { fMax: number; rows: A007Row[]; fields: Map<string, Record<string, string>> } {
+  const text = execFileSync('git', ['show', `${A007_COMMIT}:results/attempts.md`], { cwd: ROOT, encoding: 'utf-8' });
+  const start = text.indexOf('## A-007');
+  if (start < 0) throw new Error(`no A-007 section at ${A007_COMMIT}`);
+  const rest = text.slice(start + 1);
+  const end = rest.search(/\n## /);
+  const lines = (end < 0 ? rest : rest.slice(0, end)).split('\n');
+  const cells = (l: string) => l.split('|').slice(1, -1).map((c) => c.trim());
+  const rows: A007Row[] = [];
+  const fields = new Map<string, Record<string, string>>();
+  let fMax = NaN;
+  let header: string[] = [];
+  for (const l of lines) {
+    if (!l.startsWith('| ')) continue;
+    const c = cells(l);
+    if (c[0] === 'Case') {
+      header = c;
+      const m = /S\(f\), f < ([\d.]+)/.exec(l);
+      if (m) fMax = Number(m[1]);
+      continue;
+    }
+    if (!/^P\d$/.test(c[0]!)) continue;
+    if (header.includes('R1 (rebuild)')) {
+      rows.push({ id: c[0]!, inputs: { diameter: c[1]!, n: c[2]!, discharge: c[3]!, slope: c[4]! }, r1: c[5]!, g1: c[6]!, sf: c[7]! });
+    } else if (header.includes('Critical Slope')) {
+      const rec: Record<string, string> = {};
+      header.slice(1).forEach((h, i) => { rec[RESULT_KEYS[h]!] = c[i + 1]!; });
+      fields.set(c[0]!, rec);
+    }
+  }
+  if (rows.length !== 4 || Number.isNaN(fMax)) throw new Error(`A-007 at ${A007_COMMIT}: read ${rows.length} rows, f bound ${fMax}`);
+  return { fMax, rows, fields };
+}
+
+const sameInputs = (a: Record<string, string>, b: Record<string, string>) =>
+  Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => b[k] === v);
+
+/** What QUICK-2 did for these inputs: a stored golden, else a run listed in ledger decision 75. */
+function observe(inputs: Inputs): Observation {
+  const cases = join(ROOT, 'oracle', 'goldens', 'cases');
+  for (const n of readdirSync(cases).filter((x) => x.endsWith('.json'))) {
+    const g = JSON.parse(readFileSync(join(cases, n), 'utf-8'));
+    if (g.mode === 'critical_depth' && g.shape === 'circle' && sameInputs(g.inputs, inputs)) {
+      return { outcome: g.outcome === 'result' ? 'result' : 'other', source: g.id, printed: g.printed };
+    }
+  }
+  const ledger = JSON.parse(readFileSync(join(ROOT, 'results', 'ledger.json'), 'utf-8'));
+  const d = ledger.decisions.find((x: { n: number }) => x.n === A007_DECISION);
+  if (!d) throw new Error(`ledger decision ${A007_DECISION} not found`);
+  for (const id of d.evidence as string[]) {
+    const dir = join(ROOT, 'oracle', 'out', 'runs', id);
+    if (!existsSync(join(dir, 'run.json'))) continue;
+    const run = JSON.parse(readFileSync(join(dir, 'run.json'), 'utf-8'));
+    if (run.mode !== 'critical_depth' || run.shape !== 'circle' || !sameInputs(run.inputs, inputs)) continue;
+    const screen = readFileSync(join(dir, 'final.txt'), 'utf-8').split(/\r?\n/);
+    const said = screen.some((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+    return { outcome: run.outcome === 'timeout' && run.screen_id === 'cd_form' && said ? 'rejected' : 'other', source: `run ${id}`, screen };
+  }
+  throw new Error(`no golden and no run folder for ${JSON.stringify(inputs)}; ledger decision ${A007_DECISION} lists the runs (oracle/out is not committed)`);
+}
+
+/** The share threshold a cell names: "a result needs f ≥ X" or "result for f ≥ X". */
+const shareThreshold = (cell: string) => {
+  const m = /f ≥ ([\d.]+)/.exec(cell);
+  if (!m) throw new Error(`no threshold in "${cell}"`);
+  return Number(m[1]);
+};
+
+function gradeA007(): void {
+  const { fMax, rows, fields } = a007AsCommitted();
+  console.log(`A-007 read from ${A007_COMMIT}: ${rows.length} cases, S(f) for f < ${fMax}, predicted fields for ${[...fields.keys()].join(' and ')}.`);
+  const score = { R1: 0, G1: 0 };
+  let lo = 0, hi = fMax;
+  for (const p of rows) {
+    const o = observe(p.inputs);
+    const said = o.outcome;
+    const verdict = (cell: string) => (cell.startsWith(said) ? 'right' : 'wrong');
+    if (verdict(p.r1) === 'right') score.R1++;
+    if (verdict(p.g1) === 'right') score.G1++;
+    const t = shareThreshold(p.sf);
+    if (said === 'rejected') hi = Math.min(hi, t); else if (said === 'result') lo = Math.max(lo, t);
+    console.log(`\n${p.id} ${JSON.stringify(p.inputs)}: QUICK-2 ${said} (${o.source})`);
+    console.log(`  R1 predicted "${p.r1}": ${verdict(p.r1)}`);
+    console.log(`  G1 predicted "${p.g1}": ${verdict(p.g1)}`);
+    console.log(`  S(f): a result needs f ≥ ${t}; this outcome leaves f ${said === 'rejected' ? '<' : '≥'} ${t}`);
+    if (said === 'rejected' && o.screen) {
+      const row = o.screen.findIndex((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+      const depth = o.screen.find((l) => l.includes('Depth (ft)'));
+      const outputs = o.screen.filter((l) => /Area \(sq ft\)|Velocity \(ft\/s\)|Top Width \(ft\)|Max Discharge\(cfs\)/.test(l));
+      const blank = outputs.every((l) => !/\d/.test(l.replace(/\(sq ft\)|\(ft\/s\)|\(ft\)|\(cfs\)/g, '')));
+      console.log(`  screen: message on 0-based row ${row}; Depth field \`${/Depth \(ft\)\s+(\S+)/.exec(depth ?? '')?.[1] ?? ''}\`; output fields ${blank ? 'all blank' : 'NOT blank'}`);
+    }
+    const pred = fields.get(p.id);
+    if (pred && said === 'result' && o.printed) {
+      const diff = Object.entries(pred).filter(([k, v]) => o.printed![k]!.trim() !== v).map(([k, v]) => `${k} predicted \`${v}\`, printed \`${o.printed![k]!.trim()}\``);
+      console.log(`  printed fields under R1: ${Object.keys(pred).length - diff.length} of ${Object.keys(pred).length} as predicted${diff.length ? '; ' + diff.join('; ') : ''}`);
+    } else if (pred) {
+      console.log(`  A-007 predicted fields for ${p.id}; QUICK-2 printed none`);
+    }
+  }
+  console.log(`\nOutcomes: R1 ${score.R1} of ${rows.length}, G1 ${score.G1} of ${rows.length}.`);
+  console.log(lo < hi ? `S(f) fits all ${rows.length} for ${lo} ≤ f < ${hi}.` : `No S(f) with f < ${fMax} fits all ${rows.length}.`);
+}
+
 const cmd = process.argv[2];
 if (cmd === 'observed') observed();
 else if (cmd === 'rate') rate();
 else if (cmd === 'a007') a007();
-else { console.error('usage: node scripts/q022_boundary.mts observed | rate | a007'); process.exit(4); }
+else if (cmd === 'grade-a007') gradeA007();
+else { console.error('usage: node scripts/q022_boundary.mts observed | rate | a007 | grade-a007'); process.exit(4); }

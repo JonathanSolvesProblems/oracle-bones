@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 569,
+      "visits": 573,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 570,
+      "visits": 574,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 572,
+      "visits": 576,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 133,
+      "visits": 137,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 34,
+      "visits": 35,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -192,37 +192,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 208
+      "cases": 209
     },
     "in_discharge": {
-      "cases": 149
+      "cases": 150
     },
     "depth": {
-      "cases": 176
+      "cases": 177
     },
     "in_slope": {
-      "cases": 208
+      "cases": 209
     },
     "area": {
-      "cases": 232
+      "cases": 233
     },
     "wet_perimeter": {
-      "cases": 232
+      "cases": 233
     },
     "velocity": {
-      "cases": 208
+      "cases": 209
     },
     "hyd_radius": {
-      "cases": 232
+      "cases": 233
     },
     "top_width": {
-      "cases": 235
+      "cases": 236
     },
     "froude": {
-      "cases": 235
+      "cases": 236
     },
     "flow_type": {
-      "cases": 232
+      "cases": 233
     },
     "in_bank_left": {
       "cases": 27
@@ -252,13 +252,13 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 82
+      "cases": 83
     },
     "in_diameter": {
-      "cases": 60
+      "cases": 61
     },
     "max_discharge": {
-      "cases": 60
+      "cases": 61
     },
     "discharge": {
       "cases": 59
@@ -320,7 +320,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 26,
+      "result": 27,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -1717,6 +1717,57 @@
       "waited_for": "cd_form",
       "capture": "oracle/out/runs/20261122-214714-6aaf2d/final.txt",
       "at": "2026-11-22T21:47:14Z"
+    },
+    {
+      "run_id": "20261124-225953-c32ec8",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "10.1",
+          "n": ".013",
+          "discharge": "3",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261124-225953-c32ec8/final.txt",
+      "at": "2026-11-24T22:59:53Z"
+    },
+    {
+      "run_id": "20261124-230038-48c33a",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "4",
+          "diameter": "10.1",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261124-230038-48c33a/final.txt",
+      "at": "2026-11-24T23:00:38Z"
+    },
+    {
+      "run_id": "20261124-230140-e185ee",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "4",
+          "diameter": "11.9",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261124-230140-e185ee/final.txt",
+      "at": "2026-11-24T23:01:40Z"
     }
   ],
   "unknown_screens": [
@@ -1997,12 +2048,12 @@
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T21:26:05Z"
+      "last_run": "2026-11-25T00:18:33Z"
     },
     "outcome": {
       "status": "untriaged",
       "count": 3,
-      "last_run": "2026-11-24T21:26:05Z"
+      "last_run": "2026-11-25T00:18:33Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2012,7 +2063,7 @@
     "velocity": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T21:26:05Z"
+      "last_run": "2026-11-25T00:18:33Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2042,8 +2093,8 @@
     },
     "critical_slope": {
       "status": "untriaged",
-      "count": 0,
-      "last_run": "2026-11-24T20:23:14Z"
+      "count": 1,
+      "last_run": "2026-11-25T00:18:33Z"
     },
     "depth": {
       "status": "accepted",
@@ -2068,7 +2119,7 @@
     "max_discharge": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-24T21:26:05Z"
+      "last_run": "2026-11-25T00:18:33Z"
     }
   },
   "unobserved": [
@@ -3542,12 +3593,34 @@
       "why": "The A-005 held-out run is complete: all 17 cases are recorded, and each one ended on a result screen. The task was record-only, so grading is left to the script that compares these goldens with A-005. No further questions were opened in this session.",
       "evidence": [],
       "at": "2026-11-24T17:20:33Z"
+    },
+    {
+      "n": 75,
+      "saw": "A-007 held-out cases, circle Critical Depth, n .013, slope .005, each run with run_case record=true. P1 (10.1 in, 3 cfs): run 20261124-225953-c32ec8, outcome timeout on cd_form, not recorded; final screen shows 'DEPTH is Greater than the DIAMETER' on row 19, Depth 0.00, no output field filled. P2 (10.1 in, 4 cfs): run 20261124-230038-48c33a, timeout on cd_form, not recorded; same final screen text with Discharge 4. P3 (11.9 in, 3 cfs): case cd-circ-000033 (run 20261124-230059-fa1771), outcome result on cd_circ_result, printed Depth 0.73, Critical Slope 0.0090, Area 0.6, Wet Per 2.1, Velocity 4.8, Hyd R 0.3, Top Width 0.9, Froude 1.0, Max Discharge 4, Flow Type CRITICAL. P4 (11.9 in, 4 cfs): run 20261124-230140-e185ee, timeout on cd_form, not recorded; final screen shows 'DEPTH is Greater than the DIAMETER', Depth 0.00, no output field filled.",
+      "chose": "record_case",
+      "why": "Held-out check requested by the person: record the four A-007 cases as typed, no fitting, no profile change, no grading against A-007 (a script grades afterwards). The three timeouts store no golden, so their observation is the final screen in each run folder (final.txt).",
+      "evidence": [
+        "cd-circ-000033",
+        "20261124-225953-c32ec8",
+        "20261124-230038-48c33a",
+        "20261124-230059-fa1771",
+        "20261124-230140-e185ee"
+      ],
+      "at": "2026-11-24T23:02:01Z"
+    },
+    {
+      "n": 76,
+      "saw": "Session scope was the four A-007 held-out cases only, recorded with no fitting and no profile change; all four have run and decision 75 lists their outcomes. Grading against A-007 is left to the script.",
+      "chose": "stop",
+      "why": "Session scope was the four A-007 held-out cases only, recorded with no fitting and no profile change; all four have run and decision 75 lists their outcomes. Grading against A-007 is left to the script.",
+      "evidence": [],
+      "at": "2026-11-24T23:02:05Z"
     }
   ],
   "stopped": {
-    "why": "The A-005 held-out run is complete: all 17 cases are recorded, and each one ended on a result screen. The task was record-only, so grading is left to the script that compares these goldens with A-005. No further questions were opened in this session.",
-    "decision": 74,
-    "at": "2026-11-24T17:20:33Z",
+    "why": "Session scope was the four A-007 held-out cases only, recorded with no fitting and no profile change; all four have run and decision 75 lists their outcomes. Grading against A-007 is left to the script.",
+    "decision": 76,
+    "at": "2026-11-24T23:02:05Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -3616,17 +3689,12 @@
         }
       ],
       "untriaged_mismatches": [
-        "area",
-        "critical_slope",
         "froude",
-        "hyd_radius",
         "max_discharge",
         "outcome",
-        "top_width",
-        "velocity",
-        "wet_perimeter"
+        "velocity"
       ],
-      "unanswered_runs": 49,
+      "unanswered_runs": 52,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }
