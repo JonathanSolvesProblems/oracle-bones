@@ -55,9 +55,9 @@ goldens show: on A-007's 2000 generated practical circles (seed 20261126), K1 di
 current rebuild in outcome or in a printed field on 79, and it rejects 27 where the rebuild
 rejects 11 (A-009). Those 79 are predictions, not observations, and are not reported as coverage.
 
-Every number below comes from `results/attempts.md` A-008 to A-015, from the ledger, or from
-the comparator. The run folders cited are under `oracle/out`, which is not committed. The
-rejection screen is mapped (accepted, see Order of work), and the six rejections, S1 to S11,
+Every number below comes from `results/attempts.md` A-008 to A-016, from
+`node scripts/circle_outputs.mts floor` (2.7), from the ledger, or from the comparator. The run
+folders cited are under `oracle/out`, which is not committed. The rejection screen is mapped (accepted, see Order of work), and the six rejections, S1 to S11,
 A-013's seven cases and A-014's three are committed goldens (2.11).
 
 Terms:
@@ -191,9 +191,27 @@ open).
 rejection of 2.4, and SHALL say nothing about the shape menu, since the solver returns
 `rejected`. The limits page of the app SHALL list the 9.6 in difference: for 9.6 in, n .013, 2
 cfs, slope .005, QUICK-2 went to its shape menu with no message (obs-cdmenu-000001), and
-Quickened shows "DEPTH is Greater than the DIAMETER". The `never_finishes` flag SHALL NOT be
-raised by any circle Critical Depth input: under 2.4 every trial that reaches the geometry is
-below D, so the search of 1.4 no longer arises.
+Quickened shows "DEPTH is Greater than the DIAMETER".
+
+A trial on or past D SHALL no longer raise the `never_finishes` flag, so every input named in
+1.4 is rejected instead: cd-circ-000045, -000056, -000060, -000061 and -000062, the inputs of
+obs-cdmenu-000001, and 50.4 in at 216 cfs and 52.8 in at 245 cfs, which reach D, all `error`
+with the flag today and `rejected` under 2.4 (`node scripts/circle_outputs.mts floor`). A
+discharge under or just above the least value of A·√(g·A/T) in the pipe SHALL still raise it,
+as now. With π = 3.1416 the area does not go to 0 as y does, while the top width does, so
+A·√(g·A/T) has a floor: 6.34E-8 cfs at 12 in, 1.15E-5 at 96 in, .570 at 7254 in and 1.27 at
+9999 in (6.34E-8·D^2.5 cfs at y = 1.95E-5·D, from the rebuild's stored geometry; the same
+formulas unstored give the same values). The first trial, 0.2 ft, is above q, so the chords
+are taken on [0, 0.2], and each lands lower, where A·√(g·A/T) is higher, until one is 0, where
+T = 0. The search cannot get under the floor or close above it: 12 in at 1E-7 cfs (1.6 times
+the floor), 7254 in at .5 and 9999 in at 1 give `error` with the flag today, and never finish
+in A-015's model of 2.4 with K1; in the 12 in pipe that model first gives a result at about
+2.8 times the floor. What
+QUICK-2 does for these inputs is unobserved. The flag's text, "it keeps searching", is a
+prediction for them, with no capture, and T = 0 is the division A-013's assumption reads as a
+run-time error. No golden is near the floor: the nearest circle Critical Depth golden,
+cd-circ-000019 (2200 in, 2000 cfs), is 6.9E4 times its pipe's floor. A-016's last two cases
+are under it.
 
 **Records**
 
@@ -236,7 +254,12 @@ rule 7).
 
 **Order of work**
 
-2.11 WHEN the design is written THEN no further oracle run SHALL be needed before it. Done: the
+2.11 WHEN the design is written THEN no further oracle run SHALL be needed before it, and
+WHEN the solver is changed THEN A-016's cases SHALL have run first: 8 in at 1.6, 1.71 and 1.8
+cfs, 15 in at 10.5, 10.8 and 11 cfs, 9.6 in at 1.5, 1.8, 3 and 10 cfs, 9999 in at .5 cfs and
+7254 in at .3 cfs, n .013 and slope .005, as `results/attempts.md` A-016 types them,
+committed before any of them runs. They are the first predictions made for K1 with 2.4's
+rule before the cases ran. A case that times out stores no golden. Done before A-016: the
 rejection screen is mapped (`cd_circ_rejected`); the six rejections are cd-circ-000039 to
 -000044, S1 and S6 are cd-circ-000037 and -000038, S2 to S5 and S7 to S11 are cd-circ-000045 to
 -000053, A-013's R1, R2, R4 and R6 to R9 are cd-circ-000054 to -000060, and the 9.6 in run is
@@ -253,7 +276,9 @@ S2 contradicted 1.4, 2.6 and 2.7 as first written; A-014 graded R1, R2, R4 and R
 picked G3 (T1·D3·X6 and T2·D3·X6); A-015 graded H1 to H3, which refuted G3, and rescored all
 184 combinations: none fits all 57 circle Critical Depth outcomes, and 56 miss only
 obs-cdmenu-000001. The rule of 2.4 is one of the 56, and no case was predicted for it before it
-ran.
+ran. A-016's cases are graded the same way, against A-016 as committed, before the solver
+changes. A miss on any of them revises these requirements again, and the revision is shown
+before the solver changes.
 
 ### Unchanged Behavior (Regression Prevention)
 
@@ -288,7 +313,8 @@ change only the Slope echo (Property 6; H-007).
 
 3.8 WHEN n is -1 in prismatic Normal Depth, or a section has one ground point (nd-irr-000026)
 THEN the system SHALL CONTINUE TO return `error` with the `never_finishes` flag and its text.
-2.7 removes the flag from circle Critical Depth only.
+Circle Critical Depth SHALL CONTINUE TO do the same when the discharge is under or just above
+the floor of 2.7; 2.7 removes the flag only where a trial lands on or past the diameter.
 
 3.9 WHEN the solver or format source is checked THEN it SHALL CONTINUE TO pass the guard
 tests: no case id or golden path in the source, and every constant in `constants.ts` cited.
@@ -341,6 +367,10 @@ What it costs:
   menu are not seen, and no capture shows a QuickBASIC error. What was tried is in A-015. The
   person also searched about 32,000 wider models after the fact; the 16 that fit were chosen by
   one pipe, so none is adopted.
+- What QUICK-2 does when the discharge is under or just above the floor of 2.7. The rebuild
+  raises `never_finishes` there, before and after this fix, and the flag's text, "it keeps
+  searching", is a prediction with no capture. A-016's 9999 in at .5 cfs and 7254 in at .3 cfs
+  ask it; a run that times out stores no golden. No golden is near the floor (2.7).
 - How QUICK-2 forms its trials and stores the diameter. None of the 184 combinations A-013 and
   its amendment wrote down fits all 57 circle Critical Depth outcomes; 56 miss only
   obs-cdmenu-000001 and give the same outcome on every observation (A-015). No grid case

@@ -1853,3 +1853,7 @@ What was tried:
 **Not part of this.** The solver is unchanged. circle-short-chord's bugfix.md is revised in a
 later commit, and its design is not written. Normal Depth's search (N2, Q-026) is not tested
 by any case here.
+
+**Correction, 2026-11-25:** R1, R2, R4, R6 to R9 and H1 to H3 are not "the ten cases it was
+not chosen on": they are ten cases that ran after A-013 dropped T1·D1·X2, and the rule was
+brought back after seeing them (the heading in `grade-a014` now says so).

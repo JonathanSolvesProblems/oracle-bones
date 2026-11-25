@@ -17,6 +17,8 @@
 //   node scripts/circle_outputs.mts grade-a013         A-014: A-013 (69338b5) and its amendment (6ecfb3c) against the
 //                                              goldens, the 184 combinations on every circle Critical Depth golden,
 //                                              G3's held-out cases, D1 against D3 (seconds)
+//   node scripts/circle_outputs.mts floor      circle-short-chord 2.7: the least A·√(g·A/T) a pipe gives, the discharges
+//                                              under or near it, and 1.4's inputs, today and under T1·D1·X2 (about 1 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -37,7 +39,7 @@ import { echoes, readRegularForm } from '../app/src/solver/forms.ts';
 import { solve } from '../app/src/solver/index.ts';
 import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
 import { circleCriticalDischarge, DEPTH_ABOVE_DIAMETER } from '../app/src/solver/modes/circle.ts';
-import { diameterFeet } from '../app/src/solver/geometry/circle.ts';
+import { diameterFeet, wetCircle } from '../app/src/solver/geometry/circle.ts';
 import { search as appSearch } from '../app/src/solver/search.ts';
 import { val } from '../app/src/solver/parse.ts';
 import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
@@ -1975,7 +1977,7 @@ function gradeA014() {
   const best = Math.max(...scores.map((s) => obs.length - s.bad.length));
   if (best < obs.length) row(`the best fit is ${best} of ${obs.length}, by ${scores.filter((s) => obs.length - s.bad.length === best).length} combinations`);
 
-  h(`${A015_RULE} on the ten cases it was not chosen on: the amendment's R1, R2, R4, R6 to R9 and A-014's H1 to H3`);
+  h(`${A015_RULE} on ten cases that ran after A-013 dropped it, and that it was brought back after seeing: the amendment's R1, R2, R4, R6 to R9 and A-014's H1 to H3`);
   const rule = byIdC.get(A015_RULE)!;
   const A = a013AsCommitted();
   const ten = [...[...A.amCases.values()].map((c) => ({ name: c.name, d: c.diameter, q: c.discharge, dec: A014_DECISIONS.r })),
@@ -2004,8 +2006,72 @@ function gradeA014() {
     row(`${d} in: D ${rule.ds.D(d).toPrecision(10)}; stepped trials inside ${st.ys.map((y) => y.toPrecision(10)).join(', ') || 'none'}; the trial on D is reached for q above ${lastF === undefined ? '0' : (lastF / (1 - CIRCLE_TOL)).toFixed(4)} cfs; typed ${q} cfs; QUICK-2: ${seen}`);
   }
 }
+// ---- circle-short-chord 2.7: the floor of A·√(g·A/T) ----------------------------------------
+/** The least A·√(g·A/T) over 0 < y < D, and the depth where it is, by a log scan of y from
+ * 1e-14·D/2 to D/2 and a linear scan around the least. `stored`: the rebuild's stored geometry
+ * (π = 3.1416, A and T stored); otherwise the same formulas in double, nothing stored. */
+function cdFloor(D: number, stored = true): { q: number; y: number } {
+  const F = stored ? (y: number) => f(circleCriticalDischarge(D)(y))
+    : (y: number) => { const w = wetCircle(D, y); return w.area * Math.sqrt((G * w.area) / w.topWidth); };
+  let q = Infinity, y = 0;
+  const N = 20000;
+  for (let i = 0; i <= N; i++) { const t = (D / 2) * Math.pow(10, -14 + (14 * i) / N), v = F(stored ? f(t) : t); if (v < q) { q = v; y = t; } }
+  const lo = y / 1.01, hi = y * 1.01;
+  for (let i = 0; i <= N; i++) { const t = lo + ((hi - lo) * i) / N, v = F(stored ? f(t) : t); if (v < q) { q = v; y = t; } }
+  return { q, y };
+}
+const T1D1X2 = () => all184().find((c) => c.id === 'T1·D1·X2')!;
+/** What solve() returns today for circle Critical Depth, n .013, slope .005. */
+function solveToday(d: string, q: string) {
+  const r = solve({ mode: 'critical_depth', shape: 'circle', inputs: { diameter: d, n: '.013', discharge: q, slope: '.005' } });
+  return { r, text: `${r.outcome}${r.flags.length ? ` [${r.flags.map((x) => x.code).join(', ')}]` : ''}${r.message ? ` "${r.message}"` : ''}${r.raw.search_depth !== undefined ? ` at ${r.raw.search_depth.toFixed(5)}` : ''}` };
+}
+function floorReport() {
+  const rule = T1D1X2();
+  h('The least A·√(g·A/T) in the pipe (circle-short-chord 2.7): π = 3.1416, so A does not go to 0 as y does, and T does');
+  for (const d of ['12', '96', '7254', '9999']) {
+    const D = f(f(val(d)) / 12), s = cdFloor(D), u = cdFloor(D, false);
+    row(`${d} in, D ${D.toPrecision(10)} ft: least ${s.q.toPrecision(4)} cfs at y ${s.y.toPrecision(3)} ft (y/D ${(s.y / D).toPrecision(3)}); unstored ${u.q.toPrecision(4)} cfs at ${u.y.toPrecision(3)} ft; least/D^2.5 ${(s.q / D ** 2.5).toPrecision(4)}`);
+  }
+  row('with the true π the area goes to 0 with y, and A·√(g·A/T) goes to 0 with it: no floor');
+  h('Discharges under or near the floor: the rebuild today, and T1·D1·X2 with K1 (A-015\'s model)');
+  for (const [d, q] of [['12', '1E-7'], ['7254', '.5'], ['9999', '1'], ['7254', '.3'], ['9999', '.5']] as const) {
+    const D = f(f(val(d)) / 12), fl = cdFloor(D).q, m = answerOf(rule, d, f(val(q)));
+    row(`${d} in at ${q} cfs (q/least ${(val(q) / fl).toPrecision(4)}): today ${solveToday(d, q).text}; T1·D1·X2 ${m.a}${m.r.at !== undefined ? ` at ${m.r.at.toPrecision(10)}` : ''}`);
+  }
+  for (const [d, q] of [['12', 1e-7], ['9999', 1]] as const) { // where the chords go: the bracket [0, first trial past q]
+    const D = f(f(val(d)) / 12), F = circleCriticalDischarge(D);
+    let lo = 0, flo = 0, hi = f(0.2), fhi = f(F(hi)), n = 0, zeroAt = -1;
+    const seen: string[] = [`trial ${hi.toPrecision(10)} ${fhi.toPrecision(4)}`];
+    for (; n < 1000; n++) {
+      const yc = f(lo + ((q - flo) * (hi - lo)) / (fhi - flo)), fc = f(F(yc));
+      if (n < 4 || (yc === 0 && zeroAt < 0)) seen.push(`chord ${n + 1} ${yc.toPrecision(4)} ${fc.toPrecision(4)}`);
+      if (yc === 0 && zeroAt < 0) zeroAt = n + 1;
+      if (Math.abs(fc - q) <= CIRCLE_TOL * q) break;
+      if (fc > q) { hi = yc; fhi = fc; } else { lo = yc; flo = fc; }
+    }
+    row(`${d} in at ${q} cfs, the chords on [0, first trial] (y, A·√(g·A/T)): ${seen.join('; ')}; ${zeroAt > 0 ? `chord ${zeroAt} is 0, where T = 0` : 'no chord reaches 0'}; ${n >= 1000 ? 'none within 0.5% in 1000' : `chord ${n + 1} within 0.5%`}`);
+  }
+  { const D = f(f(val('12')) / 12), fl = cdFloor(D).q;
+    const ks = [1.001, 1.01, 1.1, 1.58, 2, 5, 10, 100, 1000, 1e4, 1e5, 1e6];
+    row(`12 in, q = least × k: ${ks.map((k) => { const q = fl * k, a = answerOf(rule, '12', q).a; return `${k}: ${a}`; }).join('; ')}`);
+    let lo = 1, hi = 1e6; // the smallest k that finishes, assuming the outcome changes once
+    if (answerOf(rule, '12', fl * hi).a === 'result') { for (let i = 0; i < 60; i++) { const mid = Math.sqrt(lo * hi); if (answerOf(rule, '12', fl * mid).a === 'result') hi = mid; else lo = mid; } row(`12 in: T1·D1·X2 gives a result from about q = least × ${hi.toPrecision(3)} (${(fl * hi).toPrecision(3)} cfs), bisected on the ratio`); }
+  }
+  h('Every input of circle-short-chord 1.4 under T1·D1·X2, and today');
+  const reach = (d: string) => { const st = stepped(d, rule.t, rule.ds, DTESTS[0]!), last = st.Fs[st.Fs.length - 1] ?? 0; return String(Math.ceil(last / (1 - CIRCLE_TOL)) + 1); };
+  for (const [d, q, src] of [['12', '4', 'cd-circ-000045'], ['55.2', '276', 'cd-circ-000056'], ['57.6', '312', 'cd-circ-000060'], ['4.8', '1', 'cd-circ-000061'], ['2.4', '1', 'cd-circ-000062'], ['9.6', '2', OBS_MENU], ['50.4', reach('50.4'), 'no golden'], ['52.8', reach('52.8'), 'no golden']] as const) {
+    const m = answerOf(rule, d, f(val(q)));
+    row(`${d} in at ${q} cfs (${src}): today ${solveToday(d, q).text}; T1·D1·X2 ${m.a}${m.r.at !== undefined ? ` at ${m.r.at.toPrecision(10)}` : ''}`);
+  }
+  h('Circle Critical Depth goldens against the floor: the least q/least');
+  const cds = ALL.filter((g) => g.shape === 'circle' && g.mode === 'critical_depth' && g.inputs.discharge !== undefined && val(g.inputs.diameter!) > 0 && val(g.inputs.discharge!) > 0);
+  const ratios = cds.map((g) => ({ id: g.id, d: g.inputs.diameter!, q: g.inputs.discharge!, k: val(g.inputs.discharge!) / cdFloor(f(f(val(g.inputs.diameter!)) / 12)).q })).sort((a, b) => a.k - b.k);
+  row(`${cds.length} goldens with a positive diameter and discharge; the three nearest: ${ratios.slice(0, 3).map((r) => `${r.id} (${r.d} in, ${r.q} cfs) ${r.k.toPrecision(3)}`).join('; ')}`);
+}
 const which = process.argv[2];
-if (which === 'a004') a004();
+if (which === 'floor') floorReport();
+else if (which === 'a004') a004();
 else if (which === 'a009') a009();
 else if (which === 'a005') a005();
 else if (which === 'grade-a005') gradeA005();
@@ -2017,4 +2083,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor'); process.exit(2); }
