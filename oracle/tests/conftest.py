@@ -36,3 +36,11 @@ def live():
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "live: needs Docker and the verified program")
+
+
+def pytest_collection_modifyitems(config, items):
+    """Mark every test that uses the `live` fixture, directly or through another fixture, so
+    `-m "not live"` runs only the offline tests."""
+    for item in items:
+        if "live" in getattr(item, "fixturenames", ()):
+            item.add_marker(pytest.mark.live)
