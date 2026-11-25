@@ -1537,3 +1537,61 @@ and 1.5 and 2.10 are brought up to date. K1, N2 and Normal Depth are unchanged. 
 not written.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-015 session
+
+The session in the last entry used 45.24 credits over 1 h 20 min 12 s. About 67 min of that
+was the session waiting for me to answer a permission prompt.
+
+### My review of the A-015 requirements, A-016 and the design
+
+Settings: Claude Opus 5.5, a new session.
+
+I reviewed circle-short-chord's bugfix.md at ea96487. A-015's numbers matched mine: none of the
+184 combinations fits all 57 outcomes, 56 miss only obs-cdmenu-000001, and T1·D1·X2 gets 10 of
+10. I approved the requirements with three corrections. Two of them fix errors the session had
+written.
+
+- **2.7 was false.** It said `never_finishes` would no longer be raised by any circle Critical
+  Depth input. It still is, with K1 and trial >= D, when the discharge is smaller than anything
+  the geometry can give: 12 in at 1E-7 cfs, 7254 in at .5, 9999 in at 1. With π = 3.1416 the
+  area does not go to 0 as y does while the top width does, so A·√(g·A/T) has a floor.
+- **A-015's wording was wrong.** It and its script called R1, R2, R4, R6 to R9 and H1 to H3
+  "the ten cases it was not chosen on". A-013 dropped T1·D1·X2 and it was brought back after
+  those cases ran, so they are cases it was brought back after seeing, not held-out cases.
+- **Discharge going up.** While checking, I found that in the 8 in and 15 in pipes the rule
+  refuses a discharge and answers a higher one, because a stepped trial sits within 0.5% of the
+  higher one. I asked for those cases as A-016's first predictions.
+
+**circle-short-chord** (b17afe9). `floor` (new, about 1 s) confirms my floor numbers from the
+rebuild's stored geometry: 6.34E-8 cfs at 12 in, 1.15E-5 at 96 in, .570 at 7254 in, 1.27 at
+9999 in, which is 6.34E-8·D^2.5. The chords on [0, 0.2] fall to y = 0, where T = 0, and in the
+12 in pipe the model first finishes at about 2.8 times the floor. 2.7 now says a trial on or
+past D no longer raises the flag, so every input of 1.4 is rejected, and a discharge under or
+just above the floor still raises it. What QUICK-2 does there is unobserved, "it keeps
+searching" is a prediction with no capture, and the nearest golden is 6.9E4 times its floor.
+3.8 and the Open points agree. A-015 gets a dated correction line and `grade-a014` a corrected
+heading. 2.11 and 2.12 put A-016 before the solver change, with a revision on any miss.
+
+**A-016** (414cad4), committed before anything runs. `a016` (about 3 s) writes out the search
+with K1 or N2 and trial > D or >= D, and checks itself against `solve()` and A-015's model on
+all twelve cases. n .013, slope .005: 8 in at 1.6, 1.71, 1.8 cfs and 15 in at 10.5, 10.8, 11
+cfs give the message, a result, the message (the rebuild today answers 1.6 and 10.5); 9.6 in
+at 1.5, 1.8, 3, 10 cfs give a result and then the message three times; 9999 in at .5 and 7254
+in at .3 never finish. U1 and U4 separate K1 from N2 on outcome, and 9.6 in at 1.5 on Critical
+Slope alone (`0.0086` against `0.0085`). Nothing changes at 1 ± 1e-4. The closest call is 8 in
+at 1.71, whose Critical Slope is 0.015% under a rounding boundary. Two things it found
+unobserved: the Discharge echo of a fractional discharge (no result golden has one), and
+whether the form takes a 9999 in diameter. A-015's script had given its model the typed
+discharge as a double instead of the stored single; that changes none of these outcomes.
+
+**circle-short-chord design** (728c662), for my approval. `SearchSpec.rejectAtCeiling`, and
+`circleSearchSpec(D, mode)` so the spec object says which rule a mode uses. `design` (about 1 s)
+shows 18 goldens starting to match and none stopping, and a largest depth of 0.9999998·D given
+to the geometry over 20000 generated circles. It also gives H-009's exact critical depths, 2.2
+to 2.3 in below the crown. The limits-page text goes in a new Known differences section of
+hauntings.md, and each ledger change is assigned to the comparator or an Exhumer session. One
+decision is open: `ledger_write` cannot reopen Q-029. tasks.md is not written, and the solver
+is not changed. Not run.
+
+Credits: not counted here; they go in the next entry.
