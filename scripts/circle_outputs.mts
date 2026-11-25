@@ -19,6 +19,7 @@
 //                                              G3's held-out cases, D1 against D3 (seconds)
 //   node scripts/circle_outputs.mts floor      circle-short-chord 2.7: the least A·√(g·A/T) a pipe gives, the discharges
 //                                              under or near it, and 1.4's inputs, today and under T1·D1·X2 (about 1 s)
+//   node scripts/circle_outputs.mts a016       A-016: predictions for K1 with T1·D1·X2, every model, the 1 ± ε check (about 3 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -2069,8 +2070,134 @@ function floorReport() {
   const ratios = cds.map((g) => ({ id: g.id, d: g.inputs.diameter!, q: g.inputs.discharge!, k: val(g.inputs.discharge!) / cdFloor(f(f(val(g.inputs.diameter!)) / 12)).q })).sort((a, b) => a.k - b.k);
   row(`${cds.length} goldens with a positive diameter and discharge; the three nearest: ${ratios.slice(0, 3).map((r) => `${r.id} (${r.d} in, ${r.q} cfs) ${r.k.toPrecision(3)}`).join('; ')}`);
 }
+// ---- A-016: predictions for K1 with T1·D1·X2 before any case runs -----------------------------
+/** The search of app/src/solver/search.ts, written out with the short-chord rule (K1 resumes
+ * stepping from the chord, N2 takes the chord again on the narrowed bracket) and the test against
+ * the diameter (trial > D or trial >= D) as options. Trial and D as the rebuild stores them. */
+interface A016Model { id: string; after: 'K1' | 'N2'; ge: boolean }
+const A016_MODELS: A016Model[] = [
+  { id: 'K1, trial >= D (2.4, T1·D1·X2)', after: 'K1', ge: true },
+  { id: 'K1, trial > D', after: 'K1', ge: false },
+  { id: 'N2, trial > D (the rebuild today)', after: 'N2', ge: false },
+  { id: 'N2, trial >= D', after: 'N2', ge: true },
+];
+type A016Out = { outcome: 'result' | 'rejected' | 'no_end'; y?: number; at?: number; trace: { kind: 'trial' | 'chord'; y: number; F: number }[]; trials: number };
+function a016Search(text: string, q: number, m: A016Model, scale = 1): A016Out {
+  const D = f(f(val(text)) / 12), F = circleCriticalDischarge(D), ev = (y: number) => f(F(y) * scale);
+  const close = (v: number) => Math.abs(v - q) <= CIRCLE_TOL * q, trace: A016Out['trace'] = [];
+  const log = (kind: 'trial' | 'chord', y: number, v: number) => { if (trace.length < 40) trace.push({ kind, y, F: v }); };
+  let lo = 0, flo = 0, y = f(CIRCLE_CD_STEP), trials = 0, fy: number;
+  for (;;) {
+    for (;;) {
+      if (m.ge ? y >= D : y > D) return { outcome: 'rejected', at: y, trace, trials };
+      fy = ev(y); trials++; log('trial', y, fy);
+      if (close(fy)) return { outcome: 'result', y, trace, trials };
+      if (fy > q) break;
+      if (trials > 1e6) return { outcome: 'no_end', trace, trials };
+      lo = y; flo = fy; y = f(y + CIRCLE_CD_STEP);
+    }
+    let hi = y, fhi = fy;
+    for (;;) {
+      if (!(fhi > flo) || trials > 1e6) return { outcome: 'no_end', trace, trials };
+      y = f(lo + ((q - flo) * (hi - lo)) / (fhi - flo)); fy = ev(y); trials++; log('chord', y, fy);
+      if (close(fy)) return { outcome: 'result', y, trace, trials };
+      if (fy < q) { if (m.after === 'N2') { lo = y; flo = fy; continue; } break; }
+      hi = y; fhi = fy;
+    }
+    lo = y; flo = fy; y = f(y + CIRCLE_CD_STEP);
+  }
+}
+const A016_CASES: { name: string; d: string; q: string }[] = [
+  { name: 'U1', d: '8', q: '1.6' }, { name: 'U2', d: '8', q: '1.71' }, { name: 'U3', d: '8', q: '1.8' },
+  { name: 'U4', d: '15', q: '10.5' }, { name: 'U5', d: '15', q: '10.8' }, { name: 'U6', d: '15', q: '11' },
+  { name: 'V1', d: '9.6', q: '1.5' }, { name: 'V2', d: '9.6', q: '1.8' }, { name: 'V3', d: '9.6', q: '3' }, { name: 'V4', d: '9.6', q: '10' },
+  { name: 'W1', d: '9999', q: '.5' }, { name: 'W2', d: '7254', q: '.3' },
+];
+const A016_FIELDS = ['in_diameter', 'in_n', 'in_discharge', 'in_slope', 'depth', 'critical_slope', 'area', 'wet_perimeter', 'velocity', 'hyd_radius', 'top_width', 'froude', 'max_discharge', 'flow_type'];
+const A016_COMPUTED = A016_FIELDS.filter((k) => !k.startsWith('in_') && k !== 'flow_type');
+const a016Word = (o: { outcome: string }) => (o.outcome === 'rejected' ? 'message' : o.outcome === 'no_end' ? 'never finishes' : o.outcome);
+function a016() {
+  const m2 = atShare(0.9382), all = all184(), rule = T1D1X2(), K1X2 = A016_MODELS[0]!;
+  const n = '.013', slope = '.005', inputsOf = (d: string, q: string) => ({ diameter: d, n, discharge: q, slope });
+  h('The 56 combinations that miss only obs-cdmenu-000001 (A-015), rescored now');
+  const { obs } = a014Observations();
+  const fifty6 = all.filter((c) => { const bad = obs.filter((o) => !a013Fits(o, c.t, c.ds, c.x, m2).ok); return bad.length === 1 && bad[0]!.name === OBS_MENU; });
+  row(`${fifty6.length} of ${all.length}; ${rule.id} among them: ${fifty6.some((c) => c.id === rule.id) ? 'yes' : 'no'}`);
+
+  h('Checks: the written-out search against solve() and against A-015\'s model, on every A-016 case');
+  for (const c of A016_CASES) {
+    const today = solveToday(c.d, c.q).r, n2 = a016Search(c.d, f(val(c.q)), A016_MODELS[2]!), k1 = a016Search(c.d, f(val(c.q)), K1X2), a = answerOf(rule, c.d, f(val(c.q)));
+    const todayWord = today.outcome === 'rejected' ? 'message' : today.outcome === 'error' ? 'never finishes' : 'result';
+    const okToday = todayWord === a016Word(n2) && (today.outcome !== 'result' || today.raw.search_depth === n2.y);
+    const okRule = a.a === (k1.outcome === 'rejected' ? 'message' : k1.outcome) && (k1.outcome !== 'result' || a.r.y === k1.y);
+    row(`${c.name}: N2, trial > D against solve() ${okToday ? 'same' : `DIFFERENT (${todayWord} ${today.raw.search_depth}, ${a016Word(n2)} ${n2.y})`}; K1, trial >= D against ${rule.id} ${okRule ? 'same' : `DIFFERENT (${a.a} ${a.r.y}, ${k1.outcome} ${k1.y})`}`);
+  }
+
+  h('Goldens with these inputs, or these diameters');
+  for (const d of [...new Set(A016_CASES.map((c) => c.d))]) {
+    const same = ALL.filter((g) => g.shape === 'circle' && g.inputs.diameter !== undefined && val(g.inputs.diameter) === val(d));
+    const sameCase = A016_CASES.filter((c) => c.d === d).flatMap((c) => same.filter((g) => g.mode === 'critical_depth' && g.inputs.discharge !== undefined && val(g.inputs.discharge) === val(c.q)).map((g) => `${c.name} = ${g.id}`));
+    row(`${d} in: ${same.length ? same.map((g) => `${g.id} (${g.mode}, ${g.inputs.discharge ?? g.inputs.depth})`).join(', ') : 'no circle golden'}; same diameter and discharge in Critical Depth: ${sameCase.join(', ') || 'none'}`);
+  }
+
+  h('Each pipe: D, the stepped trials and A·√(g·A/T) at each, and the discharges each trial stops on (within 0.5%)');
+  for (const d of [...new Set(A016_CASES.map((c) => c.d))]) {
+    const D = f(f(val(d)) / 12), F = circleCriticalDischarge(D), ys: number[] = [];
+    for (let y = f(CIRCLE_CD_STEP); y < D && ys.length < 6; y = f(y + CIRCLE_CD_STEP)) ys.push(y);
+    const big = ys.length === 6;
+    row(`${d} in: D ${D.toPrecision(10)}; ${big ? 'first trials' : 'trials inside'} ${ys.map((y) => { const v = f(F(y)); return `${y.toPrecision(10)}: ${v.toPrecision(6)} (stops for q ${(v / (1 + CIRCLE_TOL)).toPrecision(6)} to ${(v / (1 - CIRCLE_TOL)).toPrecision(6)})`; }).join('; ')}`);
+    if (!big) { const next = f(ys[ys.length - 1]! + CIRCLE_CD_STEP); row(`    next stepped trial ${next.toPrecision(10)}, ${next === D ? 'equal to D' : next > D ? `past D by ${(next - D).toPrecision(3)}` : 'inside'}`); }
+  }
+
+  h('A-016: each case under every model, the trace under 2.4, the printed fields, and the 1 ± ε check');
+  const table: string[] = [];
+  for (const c of A016_CASES) {
+    const v = vals('critical_depth', inputsOf(c.d, c.q)), q = v.discharge!, D = f(f(val(c.d)) / 12);
+    const outs = A016_MODELS.map((m) => ({ m, o: a016Search(c.d, q, m) })), k1 = outs[0]!.o;
+    row(`${c.name}: ${c.d} in at ${c.q} cfs`);
+    row(`    ${outs.map(({ m, o }) => `${m.id}: ${a016Word(o)}${o.y !== undefined ? ` at ${o.y.toPrecision(7)}` : o.at !== undefined ? ` at trial ${o.at.toPrecision(10)}` : ''}`).join('; ')}`);
+    row(`    trace under 2.4: ${k1.trace.slice(0, 8).map((t) => `${t.kind} ${t.y.toPrecision(7)} ${t.F.toPrecision(6)} (${pct(t.F, q)})`).join(', ')}${k1.trace.length > 8 ? ` ... ${k1.trials} evaluations` : ''}${k1.at !== undefined ? `; then trial ${k1.at.toPrecision(10)} against D ${D.toPrecision(10)} (${k1.at === D ? 'equal' : `${(k1.at - D).toPrecision(3)} ft`})` : ''}`);
+    const today = solveToday(c.d, c.q);
+    row(`    solve() today: ${today.text}`);
+    for (const eps of [1e-6, 1e-4]) {
+      const ch = [1 + eps, 1 - eps].map((s) => a016Word(a016Search(c.d, q, K1X2, s)));
+      row(`    at 1 ± ${eps}: ${ch.join(', ')}${ch.every((x) => x === a016Word(k1)) ? ' (no change)' : ' (CHANGES)'}`);
+    }
+    const g56 = new Map<string, number>(); for (const cc of fifty6) { const a = answerOf(cc, c.d, q).a; g56.set(a, (g56.get(a) ?? 0) + 1); }
+    const g184 = new Map<string, number>(); for (const cc of all) { const a = answerOf(cc, c.d, q).a; g184.set(a, (g184.get(a) ?? 0) + 1); }
+    row(`    the 56: ${[...g56].map(([a, k]) => `${k} ${a}`).join(', ')}; all 184: ${[...g184].map(([a, k]) => `${k} ${a}`).join(', ')}`);
+    let cells = A016_FIELDS.map(() => '');
+    if (k1.outcome === 'result') {
+      const raw = cdFields(v, GEO_C2, m2, k1.y!, CD_RULE.offset, 'q/A', D), p = show('critical_depth', v, raw);
+      cells = A016_FIELDS.map((k) => (p[k] ?? '').trim());
+      row(`    raw under 2.4: ${A016_COMPUTED.map((k) => `${k} ${Number(raw[k]).toPrecision(6)}`).join(', ')}`);
+      { // the printed field nearest a rounding boundary: distance from the nearest half step, as a share of the value
+        const edge = A016_COMPUTED.map((k) => {
+          const x = Number(raw[k]), dec = ((p[k] ?? '').trim().split('.')[1] ?? '').length, u = 10 ** -dec;
+          const half = (Math.floor(x / u) + 0.5) * u, near = Math.abs(x - half) < Math.abs(x - (half - u)) ? half : half - u;
+          return { k, x, near, rel: Math.abs(x - near) / Math.abs(x) };
+        }).sort((a, b) => a.rel - b.rel);
+        row(`    nearest rounding boundaries: ${edge.slice(0, 2).map((e) => `${e.k} ${e.x.toPrecision(6)} against ${e.near.toPrecision(6)} (${(e.rel * 100).toPrecision(2)}%)`).join('; ')}`);
+      }
+      for (const s of [1 + 1e-4, 1 - 1e-4]) {
+        const o = a016Search(c.d, q, K1X2, s);
+        const ps = o.outcome === 'result' ? show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y!, CD_RULE.offset, 'q/A', D)) : {};
+        const diff = A016_FIELDS.filter((k) => (ps[k] ?? '').trim() !== (p[k] ?? '').trim());
+        row(`    printed at ×${s}: ${diff.length ? `differs on ${diff.map((k) => `${k} ${(ps[k] ?? '').trim()}`).join(', ')}` : 'the same on every field'}`);
+      }
+      const tp = today.r.outcome === 'result' ? today.r.printed : null;
+      row(`    printed under 2.4: ${A016_FIELDS.map((k, i) => `${k} ${cells[i]}`).join(', ')}`);
+      if (tp) row(`    printed today: ${A016_FIELDS.map((k) => `${k} ${(tp[k] ?? '').trim()}`).join(', ')}`);
+    } else if (today.r.outcome === 'result') row(`    printed today: ${A016_FIELDS.map((k) => `${k} ${(today.r.printed[k] ?? '').trim()}`).join(', ')}`);
+    table.push(`| ${c.name} | ${c.d} | ${c.q} | ${a016Word(k1)} | ${cells.join(' | ')} |`);
+  }
+  console.log(`\n| Case | Diameter | Discharge | Predicted | ${A016_FIELDS.join(' | ')} |`);
+  console.log(`|${'---|'.repeat(4 + A016_FIELDS.length)}`);
+  for (const l of table) console.log(l);
+}
 const which = process.argv[2];
 if (which === 'floor') floorReport();
+else if (which === 'a016') a016();
 else if (which === 'a004') a004();
 else if (which === 'a009') a009();
 else if (which === 'a005') a005();
@@ -2083,4 +2210,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016'); process.exit(2); }

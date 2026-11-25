@@ -1857,3 +1857,160 @@ by any case here.
 **Correction, 2026-11-25:** R1, R2, R4, R6 to R9 and H1 to H3 are not "the ten cases it was
 not chosen on": they are ten cases that ran after A-013 dropped T1·D1·X2, and the rule was
 brought back after seeing them (the heading in `grade-a014` now says so).
+
+## A-016: predictions for K1 with T1·D1·X2, before any case runs (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**These are the first predictions made for circle-short-chord's rule, K1 after a short chord
+with the test trial ≥ D (A-015's T1·D1·X2), before the cases run. Twelve cases, n .013 and
+slope .005. In the 8 in and the 15 in pipes the rule refuses a discharge, answers a higher one,
+and refuses a higher one again: 1.6 cfs the message, 1.71 a result, 1.8 the message; 10.5 the
+message, 10.8 a result, 11 the message. The rebuild today gives a result for 1.6 and 10.5. In
+the 9.6 in pipe, 1.5 cfs is a result and 1.8, 3 and 10 cfs the message. 9999 in at .5 cfs and
+7254 in at .3 cfs never finish.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a016` (about 3 s)
+at the commit that adds this section. It writes out the search of `app/src/solver/search.ts`
+with two options, K1 or N2 after a short chord and trial > D or trial ≥ D, with the trial and D
+stored as the rebuild stores them, and it checks itself on all twelve cases: N2 with trial > D
+gives what `solve()` gives today (outcome and search depth), and K1 with trial ≥ D gives what
+A-015's model of T1·D1·X2 gives. Printed fields come from the rebuild's printer at the search
+depth, as in A-013. The discharge is the stored single the form reads; A-015's `grade-a014`
+gave its model the typed discharge as a double, which changes no outcome here. It never runs
+the program.
+
+**No golden has these inputs.** No stored case has a 9999 or 7254 in circle (cd-circ-000008 is
+7254.7 in, held at the Slope prompt). The 8 in golden is cd-circ-000043 (Q1, 1 cfs) and the 15
+in goldens are cd-circ-000038 (5 cfs) and -000049 (7 cfs). The only stored case at 9.6 in is
+obs-cdmenu-000001, 2 cfs, a behaviour case whose inputs are in its transcript.
+
+### The cases
+
+"Message" is the rejection screen as A-012 saw it: "DEPTH is Greater than the DIAMETER" on
+0-based row 20, Depth `0.00`, Critical Slope and every output field blank. "Shape menu" is
+obs-cdmenu-000001's ending. "Never finishes": no result, no message and no shape menu; the
+runner waits 10 s for a screen (`wait_timeout_s`) within a 60 s case limit
+(`case_time_limit_s`, both in `oracle/targets/quick2.json`), and a case that times out stores
+no golden. The percentages are A·√(g·A/T) at the trial against q; a trial stops the search
+within 0.5%.
+
+| Case | Diameter | Discharge | Predicted | How the search ends under K1 and trial ≥ D | The rebuild today |
+|---|---|---|---|---|---|
+| U1 | 8 | 1.6 | message | trial 0.6 is +6.74%; chord 0.5782145 is −3.83%; K1 steps to 0.7782145, 0.112 ft past D (0.6666667) | result, search depth 0.58610 |
+| U2 | 8 | 1.71 | result | stepped trial 0.6, 1.70782 cfs, −0.13% | result, the same fields |
+| U3 | 8 | 1.8 | message | trial 0.6 is −5.12%; trial 0.8000000 is 0.133 ft past D | message |
+| U4 | 15 | 10.5 | message | trial 1.2 is +2.86%; chord 1.1871434 is −3.40%; K1 steps to 1.3871434, 0.137 ft past D (1.25) | result, search depth 1.19412 |
+| U5 | 15 | 10.8 | result | stepped trial 1.2, 10.8004 cfs, +0.004% | result, the same fields |
+| U6 | 15 | 11 | message | trial 1.2 is −1.81%; trial 1.4000001 is 0.150 ft past D | message |
+| V1 | 9.6 | 1.5 | result | trial 0.6 is +16.9%; chords 0.5469216 (−2.83%) and 0.5521857 (−0.99%), each followed by a trial 0.2 ft up that is over q and inside D; chord 0.5539467, −0.37% | result, search depth 0.55454 |
+| V2 | 9.6 | 1.8 | message | trial 0.6 is −2.60%; trial 4, 0.8000000119, equals D | `error`, `never_finishes` |
+| V3 | 9.6 | 3 | message | trial 0.6 is −41.6%; trial 4 equals D | `error`, `never_finishes` |
+| V4 | 9.6 | 10 | message | trial 0.6 is −82.5%; trial 4 equals D | `error`, `never_finishes` |
+| W1 | 9999 | .5 | never finishes | trial 0.2 gives 9.20 cfs; the chords on [0, 0.2] fall toward 0 and rise above q; none within 0.5% in 1,000,000 evaluations | `error`, `never_finishes` |
+| W2 | 7254 | .3 | never finishes | trial 0.2 gives 7.15 cfs; the same | `error`, `never_finishes` |
+
+The printed fields of the three results, every field the comparator compares:
+
+| Case | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| U2 | 8.0 | 0.0130 | 2 | 0.59 | 0.0050 | 0.0176 | 0.3 | 1.7 | 5.2 | 0.2 | 0.4 | 1.0 | 2 | CRITICAL |
+| U5 | 15.0 | 0.0130 | 11 | 1.19 | 0.0050 | 0.0244 | 1.2 | 3.4 | 8.9 | 0.4 | 0.5 | 1.0 | 11 | CRITICAL |
+| V1 | 9.6 | 0.0130 | 2 | 0.54 | 0.0050 | 0.0086 | 0.4 | 1.6 | 4.0 | 0.2 | 0.7 | 1.0 | 2 | CRITICAL |
+
+The rebuild today prints the same for U2 and U5, and for V1 the same except Critical Slope
+`0.0085`. For U1 it prints Depth `0.58`, Critical Slope `0.0158`, Velocity `4.9`, Max
+Discharge `2`; for U4 Depth `1.18`, Critical Slope `0.0230`, Velocity `8.7`, Max Discharge
+`11`.
+
+**Four discharges in one pipe.** With Q1 (8 in, 1 cfs, the message, cd-circ-000043), the 8 in
+pipe has four: 1 cfs the message, 1.6 the message, 1.71 a result, 1.8 the message. A higher
+discharge gets an answer after a lower one is refused, because the stepped trial 0.6 ft is
+within 0.5% of 1.71 cfs and the 1.6 cfs search reaches the crown through a short chord. The 15
+in pipe does the same with the stepped trial 1.2 ft. So the discharge at which QUICK-2 starts
+to refuse a pipe is not one number, and a requirement that says a rejected input stays rejected
+when the discharge goes up would be false if these hold.
+
+### What the cases separate
+
+| Case | K1, trial ≥ D (2.4) | K1, trial > D | N2, trial > D (today) | N2, trial ≥ D | The 56 of A-015 | All 184 |
+|---|---|---|---|---|---|---|
+| U1 | message | message | result | result | 56 message | 184 message |
+| U2 | result | result | result | result | 56 result | 184 result |
+| U3 | message | message | message | message | 56 message | 184 message |
+| U4 | message | message | result | result | 56 message | 184 message |
+| U5 | result | result | result | result | 56 result | 184 result |
+| U6 | message | message | message | message | 56 message | 184 message |
+| V1 | result, `0.0086` | result, `0.0086` | result, `0.0085` | result, `0.0085` | 56 result | 184 result |
+| V2, V3, V4 | message | never finishes | never finishes | message | 56 message | 110 message, 74 shape menu |
+| W1, W2 | never finishes | never finishes | never finishes | never finishes | 56 never finish | 184 never finish |
+
+The 56 are A-015's combinations that miss only obs-cdmenu-000001, rescored by this command
+(T1·D1·X2 among them); the 184 all use K1 (A-013).
+
+- U1 and U4 separate K1 from N2 on the outcome, and V1 on Critical Slope alone. Trial > D
+  against trial ≥ D does not matter in them.
+- U2, U3, U5 and U6 do not separate any model here: every one gives the same answer. They test
+  the 0.2 ft step and the 0.5% stop at the trial just below the crown, the part every model
+  shares.
+- V2 to V4 separate trial ≥ D from trial > D, which five goldens already decide (1.4), and the
+  56 from the 74 of the 184 that give the shape menu. If any of the three ends on the shape
+  menu, every one of the 56 is wrong there, and Q-029 narrows to the pipe, not the discharge.
+  If all three print the message, 9.6 in ends on the menu at 2 cfs and not at these three.
+  V1 never reaches the trial on D, which a search reaches only above 1.7619 cfs (A-015).
+- No case here separates any two of the 56.
+- W1 and W2 separate nothing. They ask what QUICK-2 does when the discharge is under the
+  least A·√(g·A/T) the pipe gives (circle-short-chord 2.7): 1.271 cfs at 9999 in, so .5 cfs is
+  0.39 of it, and 0.570 cfs at 7254 in, so .3 cfs is 0.53 of it (`floor`).
+
+### How far each prediction is from a knife edge
+
+- **Rounding of A·√(g·A/T).** Multiplied by 1 ± 1e-6 and by 1 ± 1e-4 before it is stored, no
+  outcome of the twelve changes, and no printed field of U2, U5 or V1 changes at 1 ± 1e-4.
+- **The 0.5% stop.** Trial 0.6 in the 8 in pipe stops the search for q from 1.69932 to 1.71640
+  cfs: 1.71 is 0.0064 cfs (0.37%) under the top, 1.8 is 0.084 cfs over it, and 1.6 is 0.099
+  cfs under the bottom, where its chord is 3.83% short. Trial 1.2 in the 15 in pipe stops it
+  from 10.7467 to 10.8547: 10.8 is 0.053 and 0.055 cfs from the ends, 11 is 0.145 over the top, and
+  10.5 is 0.247 under the bottom, where its chord is 3.40% short. V1's last chord is 0.37%
+  short, 0.13 points inside the stop, and the chord before it 0.99% short.
+- **The diameter.** The trial that rejects U1, U3, U4 and U6 is 0.112 to 0.150 ft past D, so
+  trial > D and trial ≥ D agree there. In V2 to V4 trial 4 equals D exactly: that tie is what
+  these cases are for, and the test decides it by construction. V2's 1.8 cfs is 2.2% over the
+  top of trial 0.6's stop, 1.7619 cfs, so it reaches trial 4.
+- **The floor.** W1 and W2 are at 0.39 and 0.53 of the floor. In the 12 in pipe the model first
+  finishes at about 2.8 times the floor (`floor`), so both are well inside the range where it
+  never finishes.
+- **Printed fields.** The nearest any printed value comes to a rounding boundary is U2's
+  Critical Slope, 0.0176473, which is 0.015% under 0.01765. U5's is 0.0243685, 0.076% over
+  0.02435. V1's is 0.0085626, 0.15% over 0.00855, and today's 0.0085383 is 0.14% under it. In
+  U2 and U5 the search depth is a stepped trial, which the search cannot move, so a miss on
+  their Critical Slope points at its arithmetic, not at the search.
+- **The Discharge echo.** No result golden has a fractional discharge, so the echo `2` for
+  1.71 and 1.5 cfs and `11` for 10.8, which the form's `######` mask gives (`layout.ts`), is
+  itself unobserved. A different echo is a format miss, not a search miss.
+- **The form.** No stored circle has a diameter above 8190.5 in, so whether the form takes
+  9999 is unobserved. A hold at the Diameter prompt counts as a miss of W1's premise and says
+  nothing about the floor.
+
+### What each answer would mean
+
+- U1 or U4 giving a result: K1 is wrong for a chord short of q just under the crown, where N2,
+  today's rule, gives the result. U1's result under N2 prints the fields above.
+- U2 or U5 refused, or U3 or U6 answered: the step or the stop near the crown is wrong. Every
+  model here and every one of the 184 misses it.
+- V1 printing Critical Slope `0.0085`: N2 on this pipe, where K1 says `0.0086`.
+- V2, V3 or V4 on the shape menu: Q-029 narrows to the pipe, as above, and the 56 are all wrong
+  there.
+- W1 or W2 timing out: what the model predicts. It stores no golden, and the run folder's last
+  screen is the only record. A message, a result or the shape menu are misses, and each says
+  what QUICK-2 does under the floor. The model's chords reach y = 0, where T = 0, the division
+  A-013's assumption reads as a run-time error, so the shape menu is a live alternative to
+  "it keeps searching".
+- Any miss: circle-short-chord's requirements are revised again before the solver changes (its
+  2.12).
+
+The cases can run in any order. W1 and W2 each take up to the 60 s case limit.
+
+**Not part of this.** The solver, circle-short-chord's bugfix.md and the ledger are unchanged.
+Normal Depth's search (N2, Q-026) is not tested by any case here.
