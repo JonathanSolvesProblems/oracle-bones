@@ -6,6 +6,11 @@
 //   node scripts/circle_outputs.mts grade-a005 A-006: the goldens against A-005 as committed
 //   node scripts/circle_outputs.mts critical-slope  A-008: cd-circ-000033's Critical Slope
 //   node scripts/circle_outputs.mts a009       A-009: the short-chord rule, its scores and predictions
+//   node scripts/circle_outputs.mts grade-a009 A-010: QUICK-2's four answers against A-009 as committed
+//
+// `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
+// rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
+// which is not committed, so Q1 and Q2 can be graded only on a machine that holds them.
 //
 // It builds candidate rules on the rebuild's own form reader and printer (app/src) and compares
 // printed fields with the stored goldens. It never runs the program and never writes a file.
@@ -19,7 +24,7 @@ import { REGULAR_RESULT } from '../app/src/format/layout.ts';
 import { echoes, readRegularForm } from '../app/src/solver/forms.ts';
 import { solve } from '../app/src/solver/index.ts';
 import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
-import { circleCriticalDischarge } from '../app/src/solver/modes/circle.ts';
+import { circleCriticalDischarge, DEPTH_ABOVE_DIAMETER } from '../app/src/solver/modes/circle.ts';
 import { diameterFeet } from '../app/src/solver/geometry/circle.ts';
 import { search as appSearch } from '../app/src/solver/search.ts';
 import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
@@ -707,10 +712,137 @@ function a009() {
   }
 }
 
+// ---- A-010: grade the A-009 runs against A-009 as committed --------------------------------
+/** The commit that holds A-009 as written before the runs. */
+const A009_COMMIT = '80c87fd';
+/** The ledger decision that lists the A-009 runs and goldens (the Exhumer's, 2026-11-25). */
+const A009_DECISION = 80;
+/** The Skeptic's exploratory runs on cd-circ-000033's pipe at n .13 and n .3 (decision 80). */
+const SKEPTIC_RUNS = ['20261125-100502-2c83a6', '20261125-100602-583c5a'];
+const HEADER_KEYS: Record<string, string> = {
+  Diameter: 'in_diameter', n: 'in_n', Discharge: 'in_discharge', Depth: 'depth', Slope: 'in_slope',
+  'Critical Slope': 'critical_slope', Area: 'area', 'Wet Per': 'wet_perimeter', Velocity: 'velocity',
+  'Hyd R': 'hyd_radius', 'Top Width': 'top_width', 'Froude #': 'froude', 'Max Discharge': 'max_discharge',
+  'Flow Type': 'flow_type',
+};
+interface A009Pred { id: string; inputs: Record<string, string>; outcome: Record<string, string>; fields: Record<string, Record<string, string>> }
+function a009AsCommitted(): A009Pred[] {
+  const text = execFileSync('git', ['show', `${A009_COMMIT}:results/attempts.md`], { cwd: ROOT, encoding: 'utf-8' });
+  const start = text.indexOf('## A-009');
+  if (start < 0) throw new Error(`no A-009 section at ${A009_COMMIT}`);
+  const rest = text.slice(start + 1), end = rest.search(/\n## /);
+  const sec = end < 0 ? rest : rest.slice(0, end);
+  const common = /n ([\d.]+) and slope ([\d.]+) in all four/.exec(sec);
+  if (!common) throw new Error(`A-009 at ${A009_COMMIT}: no common n and slope`);
+  const cells = (l: string) => l.split('|').slice(1, -1).map((c) => c.trim().replace(/\*\*/g, ''));
+  const preds = new Map<string, A009Pred>();
+  let header: string[] = [];
+  for (const l of sec.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = cells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^Q\d$/.test(c[0]!)) continue;
+    if (header[3] === 'Rebuild (N2)') {
+      preds.set(c[0]!, { id: c[0]!, inputs: { diameter: c[1]!, n: common[1]!, discharge: c[2]!, slope: common[2]! }, outcome: { Rebuild: c[3]!, K1: c[4]!, 'S(f)': c[5]! }, fields: {} });
+    } else if (header[1] === 'Rule') {
+      const rec: Record<string, string> = {};
+      header.slice(2).forEach((hd, i) => { const k = HEADER_KEYS[hd]; if (!k) throw new Error(`unknown column ${hd}`); rec[k] = c[i + 2]!; });
+      preds.get(c[0]!)!.fields[c[1]!] = rec;
+    }
+  }
+  if (preds.size !== 4) throw new Error(`A-009 at ${A009_COMMIT}: read ${preds.size} cases`);
+  return [...preds.values()];
+}
+const sameInputs = (a: Record<string, string>, b: Record<string, string>) =>
+  Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => b[k] === v);
+interface RunFolder { id: string; run: { mode: string; shape: string; inputs: Record<string, string>; outcome: string; screen_id: string; printed: Record<string, string> }; screen: string[] }
+const runFolder = (id: string): RunFolder | null => {
+  const dir = join(ROOT, 'oracle', 'out', 'runs', id);
+  if (!existsSync(join(dir, 'run.json'))) return null;
+  return { id, run: JSON.parse(readFileSync(join(dir, 'run.json'), 'utf-8')), screen: readFileSync(join(dir, 'final.txt'), 'utf-8').split(/\r?\n/) };
+};
+/** What QUICK-2 did for these inputs: a golden that decision 80 lists, else a run folder it lists. */
+function observeA009(inputs: Record<string, string>): { outcome: 'result' | 'rejected' | 'other'; source: string; printed?: Record<string, string>; screen?: string[] } {
+  const ledger = JSON.parse(readFileSync(join(ROOT, 'results', 'ledger.json'), 'utf-8'));
+  const d = ledger.decisions.find((x: { n: number }) => x.n === A009_DECISION);
+  if (!d) throw new Error(`ledger decision ${A009_DECISION} not found`);
+  const listed = new Set<string>(d.evidence);
+  const g = ALL.find((x) => listed.has(x.id) && x.mode === 'critical_depth' && x.shape === 'circle' && sameInputs(x.inputs, inputs));
+  if (g) return { outcome: g.outcome === 'result' ? 'result' : 'other', source: g.id, printed: g.printed };
+  for (const id of listed) {
+    const r = runFolder(id);
+    if (!r || r.run.mode !== 'critical_depth' || r.run.shape !== 'circle' || !sameInputs(r.run.inputs, inputs)) continue;
+    const said = r.screen.some((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+    return { outcome: r.run.outcome === 'timeout' && r.run.screen_id === 'cd_form' && said ? 'rejected' : 'other', source: `run ${id}`, screen: r.screen };
+  }
+  throw new Error(`no golden and no run folder for ${JSON.stringify(inputs)}; ledger decision ${A009_DECISION} lists the runs (oracle/out is not committed, so only a machine that holds the run folders can grade Q1 and Q2)`);
+}
+function gradeA009() {
+  const preds = a009AsCommitted(), rules = ['Rebuild', 'K1', 'S(f)'];
+  console.log(`A-009 read from ${A009_COMMIT}: ${preds.length} cases, predicted fields for ${preds.map((p) => `${p.id} (${Object.keys(p.fields).join(', ')})`).join(', ')}.`);
+  const score: Record<string, number> = { Rebuild: 0, K1: 0, 'S(f)': 0 };
+  for (const p of preds) {
+    const o = observeA009(p.inputs);
+    row(`${p.id} ${inputText(p.inputs)}: QUICK-2 ${o.outcome} (${o.source})`);
+    if (o.outcome === 'rejected' && o.screen) {
+      const at = o.screen.findIndex((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+      const depth = /Depth \(ft\)\s+(\S+)/.exec(o.screen.find((l) => l.includes('Depth (ft)')) ?? '')?.[1] ?? '';
+      const outputs = o.screen.filter((l) => /Area \(sq ft\)|Velocity \(ft\/s\)|Top Width \(ft\)|Max Discharge\(cfs\)/.test(l));
+      const sl = o.screen.find((l) => l.includes('Critical Slope')) ?? '';
+      const blank = !/\d/.test(sl.slice(sl.indexOf('Critical Slope'))) && outputs.every((l) => !/\d/.test(l.replace(/\(sq ft\)|\(ft\/s\)|\(ft\)|\(cfs\)/g, '')));
+      row(`    screen: message on 0-based row ${at}; Depth field \`${depth}\`; Critical Slope and output fields ${blank ? 'all blank' : 'NOT blank'}`);
+    }
+    for (const rule of rules) {
+      const said = p.outcome[rule]!, predicted = said.startsWith('result') ? 'result' : said.startsWith('rejected') ? 'rejected' : '?';
+      let verdict = predicted === o.outcome ? 'right' : 'wrong', note = '';
+      const fr = p.fields[rule];
+      if (verdict === 'right' && o.outcome === 'result' && fr && o.printed) {
+        const diff = Object.entries(fr).filter(([k, x]) => o.printed![k]!.trim() !== x).map(([k, x]) => `${k} predicted \`${x}\`, printed \`${o.printed![k]!.trim()}\``);
+        note = `; fields ${Object.keys(fr).length - diff.length} of ${Object.keys(fr).length} as predicted${diff.length ? ': ' + diff.join('; ') : ''}`;
+        if (diff.length) verdict = 'wrong';
+      } else if (verdict === 'right' && o.outcome === 'result' && !fr) note = '; outcome only (no fields predicted)';
+      if (verdict === 'right') score[rule]!++;
+      row(`    ${rule} predicted "${said}": ${verdict}${note}`);
+    }
+  }
+  console.log(`\nEvery case, outcome and every predicted field: ${rules.map((r) => `${r} ${score[r]} of ${preds.length}`).join(', ')}.`);
+
+  const m2 = atShare(0.9382), g33 = byId('cd-circ-000033');
+  h('Check found after the runs, not part of A-009: K1\'s depth for cd-circ-000033 at the n of the Skeptic\'s runs');
+  const k1 = cd(vals('critical_depth', g33.inputs), GEO_C2, m2, { ...CD_RULE, after: 'resume' })!;
+  row(`K1's search depth for cd-circ-000033: ${k1.found.y.toFixed(6)}`);
+  for (const id of SKEPTIC_RUNS) {
+    const r = runFolder(id);
+    if (!r) { row(`run ${id}: no run folder on this machine (oracle/out is not committed)`); continue; }
+    const v = vals('critical_depth', r.run.inputs), sc = cdFields(v, GEO_C2, m2, k1.found.y, CD_RULE.offset);
+    const p = show('critical_depth', v, sc), miss = FIELDS.critical_depth.filter((k) => p[k] !== r.run.printed[k]);
+    const nb = cd(v, GEO_C2, m2, { ...CD_RULE, after: 'narrow' })!, pb = show('critical_depth', v, nb.out);
+    row(`run ${id} (${inputText(r.run.inputs)}): QUICK-2 printed Critical Slope \`${r.run.printed.critical_slope!.trim()}\`; at K1's depth \`${p.critical_slope!.trim()}\` (${(sc.critical_slope as number).toFixed(6)}), every field ${miss.length ? 'except ' + miss.join(', ') : 'as printed'}; the rebuild \`${pb.critical_slope!.trim()}\` at ${nb.found.y.toFixed(5)}`);
+  }
+
+  h('Ledger critical_slope triage: the depth at which Critical Slope prints 0.8955 at n .13, by exponent');
+  const v33 = vals('critical_depth', g33.inputs), D = diam(v33), F = qc(GEO_C2, D), q = v33.discharge!;
+  const chord = solve({ mode: 'critical_depth', shape: 'circle', inputs: g33.inputs }).raw!.search_depth!;
+  const span = (ok: (y: number) => boolean) => {
+    let a = NaN, b = NaN;
+    for (let i = 0; i <= 40000; i++) { const y = f(0.73 + (0.02 * i) / 40000); if (ok(y)) { if (isNaN(a)) a = y; b = y; } }
+    return [a, b] as const;
+  };
+  const [bLo, bHi] = span((y) => !misses(g33, show('critical_depth', v33, cdFields(v33, GEO_C2, m2, y, 0.01))).length && F(y) >= 0.995 * q);
+  row(`A-008's band (every field of cd-circ-000033 at one depth, within the 0.5% stop): y ${bLo.toFixed(5)} to ${bHi.toFixed(5)}, ${(chord - bHi).toFixed(5)} to ${(chord - bLo).toFixed(5)} ft below the rebuild's chord at ${chord.toFixed(5)}`);
+  const v13 = vals('critical_depth', { ...g33.inputs, n: '.13' });
+  for (const exp of [EXP_A, EXP_B]) {
+    const [a, b] = span((y) => show('critical_depth', v13, { ...cdFields(v13, GEO_C2, m2, y, 0.01), critical_slope: scAt(GEO_C2, exp)(v13, y, 0) }).critical_slope!.trim() === '0.8955');
+    const mid = (a + b) / 2, below = chord - mid;
+    row(`R^${exp}: prints 0.8955 for y ${a.toFixed(5)} to ${b.toFixed(5)} (mid ${mid.toFixed(5)}), ${below.toFixed(5)} ft below the chord; ${below >= chord - bHi && below <= chord - bLo ? 'inside' : 'outside'} the band`);
+  }
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a009') a009();
 else if (which === 'a005') a005();
 else if (which === 'grade-a005') gradeA005();
 else if (which === 'critical-slope') criticalSlopeA008();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope'); process.exit(2); }
+else if (which === 'grade-a009') gradeA009();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009'); process.exit(2); }

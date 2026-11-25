@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 573,
+      "visits": 582,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 574,
+      "visits": 583,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 576,
+      "visits": 586,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 137,
+      "visits": 146,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 35,
+      "visits": 41,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -192,37 +192,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 209
+      "cases": 211
     },
     "in_discharge": {
-      "cases": 150
+      "cases": 152
     },
     "depth": {
-      "cases": 177
+      "cases": 179
     },
     "in_slope": {
-      "cases": 209
+      "cases": 211
     },
     "area": {
-      "cases": 233
+      "cases": 235
     },
     "wet_perimeter": {
-      "cases": 233
+      "cases": 235
     },
     "velocity": {
-      "cases": 209
+      "cases": 211
     },
     "hyd_radius": {
-      "cases": 233
+      "cases": 235
     },
     "top_width": {
-      "cases": 236
+      "cases": 238
     },
     "froude": {
-      "cases": 236
+      "cases": 238
     },
     "flow_type": {
-      "cases": 233
+      "cases": 235
     },
     "in_bank_left": {
       "cases": 27
@@ -252,13 +252,13 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 83
+      "cases": 85
     },
     "in_diameter": {
-      "cases": 61
+      "cases": 63
     },
     "max_discharge": {
-      "cases": 61
+      "cases": 63
     },
     "discharge": {
       "cases": 59
@@ -320,7 +320,7 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 27,
+      "result": 29,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -1768,6 +1768,57 @@
       "waited_for": "cd_form",
       "capture": "oracle/out/runs/20261124-230140-e185ee/final.txt",
       "at": "2026-11-24T23:01:40Z"
+    },
+    {
+      "run_id": "20261125-100706-f61649",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "8",
+          "n": ".013",
+          "discharge": "1",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261125-100706-f61649/final.txt",
+      "at": "2026-11-25T10:07:06Z"
+    },
+    {
+      "run_id": "20261125-100748-9dd937",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "22.7",
+          "n": ".013",
+          "discharge": "23",
+          "slope": ".005"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "cd_form",
+      "capture": "oracle/out/runs/20261125-100748-9dd937/final.txt",
+      "at": "2026-11-25T10:07:49Z"
+    },
+    {
+      "run_id": "20261125-100815-dff8b0",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "2",
+          "diameter": "9.6",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261125-100815-dff8b0/final.txt",
+      "at": "2026-11-25T10:08:15Z"
     }
   ],
   "unknown_screens": [
@@ -2048,12 +2099,12 @@
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-25T00:20:04Z"
+      "last_run": "2026-11-25T10:30:42Z"
     },
     "outcome": {
       "status": "untriaged",
       "count": 3,
-      "last_run": "2026-11-25T00:20:04Z"
+      "last_run": "2026-11-25T10:30:42Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2062,8 +2113,8 @@
     },
     "velocity": {
       "status": "untriaged",
-      "count": 1,
-      "last_run": "2026-11-25T00:20:04Z"
+      "count": 2,
+      "last_run": "2026-11-25T10:30:42Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2092,14 +2143,23 @@
       ]
     },
     "critical_slope": {
-      "status": "untriaged",
-      "count": 1,
-      "last_run": "2026-11-25T00:20:04Z"
+      "status": "accepted",
+      "count": 2,
+      "last_run": "2026-11-25T10:30:42Z",
+      "classification": "spec_error",
+      "why": "results/attempts.md A-008, cd-circ-000033. Skeptic review 2026-11-25: holds. Four exploratory runs at 11.9 in, q 3 (all result): n .013 S .005 printed Critical Slope 0.0090 as the golden (20261125-100502-72ee8b); n .13 S .005 printed 0.8955 (20261125-100502-2c83a6); n .3 S .005 printed 4.7692 (20261125-100602-583c5a); n .13 S .05 printed 0.8955 (20261125-100602-af58ea). Critical Slope scales with n squared and ignores the entered slope; the printed values put QUICK-2's depth about 0.00062 ft below the rebuild's chord at 0.74322, inside the claimed band, and the chord's own value (0.0089379) cannot print 0.0090 by rounding or truncation, so not a display rule. Skeptic's limits: with R^.6667 instead of .667 the depth would be about 0.00038 ft below the chord, just outside the band, and these cases do not separate the exponents; Area, Velocity, Froude and Max Discharge print too coarsely to confirm the same shifted depth. The runs are exploratory, not citations.",
+      "evidence": [
+        "cd-circ-000033",
+        "20261125-100502-72ee8b",
+        "20261125-100502-2c83a6",
+        "20261125-100602-583c5a",
+        "20261125-100602-af58ea"
+      ]
     },
     "depth": {
       "status": "accepted",
-      "count": 0,
-      "last_run": "2026-11-24T20:23:14Z",
+      "count": 1,
+      "last_run": "2026-11-25T10:30:42Z",
       "classification": "spec_error",
       "why": "results/attempts.md A-003. Skeptic second review 2026-11-24: holds. CD: with QUICK-2's own Channel Capacity circle geometry (D 36, n .013, S .005), every depth up to 2.0549 prints Wet Per 5.8, yet cd-circ-000001 prints Depth 2.05 with Wet Per 5.9, so its outputs do not come from one depth (runs 20261124-105235-02c7bf, -c64753, 20261124-105250-b1a90a). ND: nd-circ-000007's pipe at Q 39168 printed 49.10 (20261124-105255-39224c), which neither a stop on the 49.0 trial nor a 49.0 to 49.5 interpolation gives. Spec error in the design's circle search; rule to be measured for the bugfix spec.",
       "evidence": [
@@ -2118,8 +2178,8 @@
     },
     "max_discharge": {
       "status": "untriaged",
-      "count": 1,
-      "last_run": "2026-11-25T00:20:04Z"
+      "count": 2,
+      "last_run": "2026-11-25T10:30:42Z"
     }
   },
   "unobserved": [
@@ -2652,6 +2712,18 @@
       ],
       "status": "open",
       "asked_at": "2026-11-24T17:42:32Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-029",
+      "question": "Circle Critical Depth, Diameter 9.6 (D 0.8 ft), n .013, Discharge 2, Slope .005: after the last Enter on cd_form, QUICK-2 left the form and showed the shape menu, with no result, no message and no rejection, and the run timed out on shape_menu (run 20261125-100815-dff8b0, exploratory; only the final screen was kept, and it has a shadow row on row 0 above the menu). Did the program go back to the shape menu by itself, crash and restart its menu, or did something else happen between the Enter and the menu? The profile maps no outcome for this, so nothing is stated as a value.",
+      "evidence": [
+        "20261125-100815-dff8b0"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-25T10:08:34Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -3615,12 +3687,70 @@
       "why": "Session scope was the four A-007 held-out cases only, recorded with no fitting and no profile change; all four have run and decision 75 lists their outcomes. Grading against A-007 is left to the script.",
       "evidence": [],
       "at": "2026-11-24T23:02:05Z"
+    },
+    {
+      "n": 77,
+      "saw": "critical_slope mismatch untriaged; results/attempts.md A-008 proposes spec_error for cd-circ-000033's Critical Slope (circle Critical Depth, 11.9 in, n .013, q 3).",
+      "chose": "ask_skeptic",
+      "why": "A classification is proposed and must be reviewed before it is accepted. The skeptic gets the claim, the class and the case id only.",
+      "evidence": [
+        "cd-circ-000033"
+      ],
+      "at": "2026-11-25T10:03:36Z"
+    },
+    {
+      "n": 78,
+      "saw": "results/attempts.md A-009 (committed 80c87fd) lists four held-out circle Critical Depth cases, Q1 to Q4, none run yet.",
+      "chose": "record_case",
+      "why": "Held-out check: record each with run_case record true, inputs typed as A-009 shows them (n .013, slope .005), no fitting and no grading in this session.",
+      "evidence": [],
+      "at": "2026-11-25T10:06:36Z"
+    },
+    {
+      "n": 79,
+      "saw": "Q1 and Q2 ended as timeout on cd_form (not stored); Q3 and Q4 recorded as cd-circ-000035 and cd-circ-000036. No exploratory run yet on a 9.6 in pipe (D 0.8 ft), where the rebuild never finishes.",
+      "chose": "run_case",
+      "why": "One exploratory run, outside A-009: circle Critical Depth, Diameter 9.6, n .013, Discharge 2, Slope .005, record false, to see what QUICK-2 shows when a trial lands on the diameter.",
+      "evidence": [
+        "20261125-100706-f61649",
+        "20261125-100748-9dd937",
+        "cd-circ-000035",
+        "cd-circ-000036"
+      ],
+      "at": "2026-11-25T10:07:56Z"
+    },
+    {
+      "n": 80,
+      "saw": "Session outcomes. Skeptic on A-008 (cd-circ-000033 Critical Slope, spec_error): holds, from exploratory runs 20261125-100502-72ee8b, 20261125-100502-2c83a6, 20261125-100602-583c5a, 20261125-100602-af58ea (all result); triage set to accepted. A-009 held-out cases, all with record true, circle Critical Depth, n .013, slope .005: Q1 (8 in, 1 cfs) run 20261125-100706-f61649, timeout on cd_form with 'DEPTH is Greater than the DIAMETER' on the form and Depth 0.00, no case stored; Q2 (22.7 in, 23 cfs) run 20261125-100748-9dd937, timeout on cd_form with the same message and Depth 0.00, no case stored; Q3 (37 in, 77 cfs) case cd-circ-000035, result, Depth 2.74; Q4 (51 in, 4 cfs) case cd-circ-000036, result, Depth 0.56. Exploratory run, not part of A-009: 9.6 in, 2 cfs, record false, run 20261125-100815-dff8b0, timeout on shape_menu with no result or message (Q-029).",
+      "chose": "run_case",
+      "why": "Closing record of the session as asked. No further case is run: A-009 is graded afterwards by a script, the profile, solver and A-009 stay unchanged in this session, and the 9.6 in behaviour stays an open question (Q-029). Next op is stop.",
+      "evidence": [
+        "cd-circ-000033",
+        "20261125-100502-72ee8b",
+        "20261125-100502-2c83a6",
+        "20261125-100602-583c5a",
+        "20261125-100602-af58ea",
+        "20261125-100706-f61649",
+        "20261125-100748-9dd937",
+        "cd-circ-000035",
+        "cd-circ-000036",
+        "20261125-100815-dff8b0"
+      ],
+      "at": "2026-11-25T10:08:41Z"
+    },
+    {
+      "n": 81,
+      "saw": "The session's three tasks are done: the skeptic review of A-008 (decision 77, triage accepted), A-009's four held-out runs (cd-circ-000035, cd-circ-000036 and runs 20261125-100706-f61649 and 20261125-100748-9dd937), and the 9.6 in exploratory run (Q-029). The user scoped this session to those tasks and ruled out profile, solver and A-009 changes. Grading A-009 is a script's job, so nothing left in scope is worth more credits.",
+      "chose": "stop",
+      "why": "The session's three tasks are done: the skeptic review of A-008 (decision 77, triage accepted), A-009's four held-out runs (cd-circ-000035, cd-circ-000036 and runs 20261125-100706-f61649 and 20261125-100748-9dd937), and the 9.6 in exploratory run (Q-029). The user scoped this session to those tasks and ruled out profile, solver and A-009 changes. Grading A-009 is a script's job, so nothing left in scope is worth more credits.",
+      "evidence": [],
+      "at": "2026-11-25T10:08:45Z"
     }
   ],
   "stopped": {
-    "why": "Session scope was the four A-007 held-out cases only, recorded with no fitting and no profile change; all four have run and decision 75 lists their outcomes. Grading against A-007 is left to the script.",
-    "decision": 76,
-    "at": "2026-11-24T23:02:05Z",
+    "why": "The session's three tasks are done: the skeptic review of A-008 (decision 77, triage accepted), A-009's four held-out runs (cd-circ-000035, cd-circ-000036 and runs 20261125-100706-f61649 and 20261125-100748-9dd937), and the 9.6 in exploratory run (Q-029). The user scoped this session to those tasks and ruled out profile, solver and A-009 changes. Grading A-009 is a script's job, so nothing left in scope is worth more credits.",
+    "decision": 81,
+    "at": "2026-11-25T10:08:45Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -3694,7 +3824,7 @@
         "outcome",
         "velocity"
       ],
-      "unanswered_runs": 52,
+      "unanswered_runs": 55,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }

@@ -830,3 +830,60 @@ result refutes K1 for the rejection; if it prints the rebuild's fields, the rebu
 right there and a third rule is needed for P1. Q3 or Q4 printing the rebuild's row refutes K1 for
 results. Q3 rejected with Q1 a result would point back to a share rule like S(f). Any other
 printed field is a mismatch for the comparator and is examined separately.
+
+## A-010: the A-009 cases, graded against A-009 as committed
+
+**K1 gets 4 of 4: QUICK-2 rejected Q1 and Q2, and Q3 and Q4 printed K1's row on every field.
+The rebuild gets 0 of 4. S(f) gets 2 of 4 and is refuted: it predicted a result for Q1, which
+QUICK-2 rejected (it also predicted a rejection for Q3, which printed a result).**
+
+**How graded.** The Exhumer ran the four cases as A-009 types them, n .013 and slope .005
+(ledger decisions 78 to 80). Q3 ended on a result and is golden cd-circ-000035; Q4 is golden
+cd-circ-000036. Q1 and Q2 timed out on `cd_form` with the message on the form, so they store no
+golden; each observation is the final screen of the run folder that decision 80 names.
+`node scripts/circle_outputs.mts grade-a009` reads A-009 from commit 80c87fd with `git show`,
+finds the golden that decision 80 lists with the same mode and typed inputs, or else the run it
+lists for them, and compares outcome and every predicted field. The numbers below are that
+command's output. A-009 is unchanged. The run folders are under `oracle/out`, which is not
+committed, so Q1 and Q2 can be re-graded only on a machine that holds them. Q3 and Q4 come from
+committed goldens.
+
+| Case | Diameter | Discharge | QUICK-2 | Evidence | Rebuild (N2) | K1 | S(f) |
+|---|---|---|---|---|---|---|---|
+| Q1 | 8 | 1 | rejected | run 20261125-100706-f61649 | wrong (predicted a result) | right | wrong (predicted a result) |
+| Q2 | 22.7 | 23 | rejected | run 20261125-100748-9dd937 | wrong (predicted a result) | right | right |
+| Q3 | 37 | 77 | result | cd-circ-000035 | wrong: Depth predicted `2.75`, printed `2.74`; 13 of 14 fields | right, 14 of 14 fields | wrong (predicted a rejection) |
+| Q4 | 51 | 4 | result | cd-circ-000036 | wrong: predicted Critical Slope `0.0038`, Velocity `3.5`, Max Discharge `112`; printed `0.0039`, `3.6`, `113`; 11 of 14 fields | right, 14 of 14 fields | right (outcome only; S(f) predicts no fields) |
+
+**The rejection screens.** Both are what A-009 predicted: the run ends as `timeout` on
+`cd_form`, "DEPTH is Greater than the DIAMETER" is on 0-based row 20 (the row A-008 found),
+the Depth field shows `0.00`, and Critical Slope and every output field are blank.
+
+**What it means.** By A-009's own reading ("All four as K1 predicts"), K1 holds on four cases it
+was not chosen on. Q1 is rejected in the smallest practical pipe although A·√(gA/T) reaches q at
+0.712·D, where every S(f) in A-008's range gives a result. Q2 is rejected in a 22.7 in pipe,
+twice the size of any rejection seen before. Q3 and Q4 print what K1's search depths (2.75394
+and 0.56735) give, not what the rebuild's (2.75615 and 0.56793) give. This supports A-008's claim for cd-circ-000033 and its classification (a spec error in
+the circle Critical Depth search, the short-chord rule). Nothing in the solver changes here.
+Normal Depth's rule after a short chord (Q-026) is not tested by these cases.
+
+**Full set after recording cd-circ-000035 and -000036:** 279 of 287. The misses are
+cd-circ-000033 (Critical Slope), cd-circ-000035 (Depth) and cd-circ-000036 (Critical Slope,
+Velocity, Max Discharge), all three where K1 and the rebuild differ; cc-circ-000035 (Max
+Discharge, Q-028); nd-circ-000020 (Velocity, Froude; Q-026); and sb-irr-000001 to -000003
+(Step-Backwater, not built).
+
+**Not part of A-009.** The Exhumer's exploratory run on a 9.6 in pipe (D 0.8 ft), run
+20261125-100815-dff8b0, ended on the shape menu with no result and no message. It is ledger
+Q-029 and is not graded here.
+
+### A check found after the runs
+
+**Found after the A-009 runs, not predicted.** K1's search depth for cd-circ-000033 is 0.742594.
+At that depth the design's Critical Slope, ((q/A)·n/(1.486·R^.667))², prints `0.8955` at n .13
+(0.895548) and `4.7692` at n .3 (4.769189). Those are what the Skeptic's exploratory runs
+printed on the same pipe and discharge: run 20261125-100502-2c83a6 (n .13, slope .005) and run
+20261125-100602-583c5a (n .3, slope .005). The rebuild's chord at 0.74322 prints `0.8938` and
+`4.7599`. `node scripts/circle_outputs.mts grade-a009` prints these numbers too; it reads the
+two runs from their folders, so this check also needs a machine that holds them. The runs were
+exploratory, so they are not citations for a requirement.
