@@ -1274,3 +1274,56 @@ whose fixtures include `live`: 34 of 208 are live, 174 offline. The offline run 
 It is not quick: one repository scan
 (`test_no_program_file_inside_repository_outside_vendor`) takes 112 s, because it hashes the
 gitignored run folders and `node_modules` too. That test is unchanged.
+
+Credits for this session's last message: 49.24. Time: 33 min 23 s. The session's earlier
+messages are not included.
+
+### A-009 at the Exhumer, and A-010: K1 holds
+
+Settings: the `exhumer` custom agent, Claude Opus 5.5, in its own session; then Claude Opus 5.5
+in a new session for the grading script, the corrections and the commits.
+
+**The Exhumer's session** (decisions 77 to 81). The Skeptic reviewed A-008's claim for
+cd-circ-000033 and found that it holds, from four exploratory runs on the same pipe and
+discharge (n .013, .13 and .3, and slope .05); the critical_slope triage is accepted as a spec
+error. The Exhumer then ran A-009's four cases as typed. Q1 (8 in, 1 cfs) and Q2 (22.7 in,
+23 cfs) timed out on the Critical Depth form with "DEPTH is Greater than the DIAMETER" and Depth
+`0.00`, and store no golden. Q3 (37 in, 77 cfs) is cd-circ-000035 and Q4 (51 in, 4 cfs) is
+cd-circ-000036. One exploratory run outside A-009, a 9.6 in pipe at 2 cfs, went back to the
+shape menu with no result and no message; it is Q-029.
+
+Credits for the Exhumer's session: 10.25. Time: 5 min 59 s.
+
+**A-010** (1d035a7). I graded it against A-009 as committed in 80c87fd: K1 4 of 4 (Q1 and Q2
+rejected; Q3 and Q4 match K1's row on every field), the rebuild 0 of 4. S(f) is refuted, since
+it predicted a result for Q1. `node scripts/circle_outputs.mts grade-a009` gives the same
+grade: it reads A-009 from 80c87fd with `git show`, Q3 and Q4 from their goldens, and Q1 and Q2
+from the run folders that decision 80 names. Those are under `oracle/out`, which is not
+committed, so Q1 and Q2 can be re-graded only on a machine that holds them. The script scores
+S(f) 2 of 4: it also predicted a rejection for Q3. A-010 reports one check found after the
+runs, labelled that way: K1's depth for cd-circ-000033 (0.742594) gives Critical Slope `0.8955`
+at n .13 and `4.7692` at n .3, which is what the Skeptic's runs 20261125-100502-2c83a6 and
+20261125-100602-583c5a printed. Full set: 279 of 287. The three new misses (cd-circ-000033's
+Critical Slope, cd-circ-000035's Depth, cd-circ-000036's Critical Slope, Velocity and Max
+Discharge) are all where K1 and the rebuild differ. The solver is unchanged.
+
+**The quick set** (844aeb4), rebuilt on its own after the new goldens: 16 of 200 cases swapped,
+and it went from 194 to 196 of 200. That is not a fix. cd-circ-000033 and nd-circ-000020 left the
+set and neither new golden entered it, so the quick set now holds no circle miss but
+cc-circ-000035.
+
+**Corrections** (306703d), as dated notes beside the original text:
+- A-008 and this log said S(f) "predicted all four". As committed in A-007 it predicted P1, P2
+  and P4, and its 0.750 lower bound came from P3 afterwards, so it fitted that one. The wording
+  came from my prompt.
+- The ledger's critical_slope triage repeated the Skeptic's limit that with R^.6667 the depth
+  would sit about 0.00038 ft below the rebuild's chord, outside the claimed band. The depth that
+  prints 0.8955 at n .13 with R^.6667 is 0.74238, 0.00084 ft below the chord and inside the band
+  (0.00043 to 0.00119 ft). Kiro checked it with `grade-a009` before correcting the triage with
+  `ledger_write`. The runs still do not separate the two exponents.
+
+**The repository scan** (9fd91ec). `test_no_program_file_inside_repository_outside_vendor` now
+checks only what git could commit (`git ls-files -co --exclude-standard`) and takes 4 s instead
+of 112 s. It still fails when a program file is planted at a committable path: a renamed copy of
+QUICK2.EXE under `tmp/` failed it on the hash check, and a stand-in `docs/QT.EXE` on the name
+check. Both were removed. The offline run passes 174 tests in 154 s, down from 290 s.
