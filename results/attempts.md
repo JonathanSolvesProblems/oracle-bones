@@ -1017,3 +1017,117 @@ stores no golden.
 - The double depth is not separated from the rebuild by these five cases. It takes 9.6 in off
   D, so if the 9.6 in run's shape menu comes from a trial on D, the double depth does not
   explain it. That is a reading of one exploratory run, not a result.
+
+## A-011, amendment of 2026-11-25: two corrections and six cases (for the Exhumer)
+
+**Written and committed before any A-011 case runs, in its own commit. A-011's text above is
+left as committed in b4950f7. Nothing in this amendment changes after the runs; the results go
+in A-012, which grades S1 to S11.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a011` at the
+commit that adds this amendment. The script's diameter check is fixed (correction 1). For S1 to
+S5 it now also prints every trial, every field and the outcome with `store(VAL/12)`; the
+numbers A-011 gives are unchanged. S6 to S11 were chosen by the person running the task: S1 to
+S5 do not separate K1 from N2.
+
+### Correction 1: how the diameter is stored
+
+A-011 says: "The diameter in feet is the same whether it is formed as `store(d/12)` or
+`store(store(d)/12)`: no diameter on the grid differs." That is wrong. The script took d from
+the form reader, which has already stored VAL's value (`parse.ts`, `readSingle`), so it
+compared a value with itself. From the typed text, `store(VAL/12)` and the rebuild's
+`store(store(VAL)/12)` give a different diameter in feet for 525 of the 1721 grid diameters
+(the first are 8.6, 8.7, 8.9, 9.1, 9.3, 9.4 and 10.1 in).
+
+So the pipes where a stepped trial lands on the diameter depend on how the diameter is stored:
+
+| Diameter store | Trials `store(y + 0.2)` | Pipes with a trial on D, 8 to 180 in by 0.1 in |
+|---|---|---|
+| The rebuild: `store(store(VAL)/12)` | the rebuild's | 9.6, 12.0, 50.4, 52.8, 55.2, 57.6 (as in A-011) |
+| `store(VAL/12)` | the rebuild's | 9.6, 12.0, 14.4, 52.8, 55.2 |
+
+With `store(VAL/12)`, 14.4 in has D 1.20000005 ft and its sixth trial lands on it. The search
+reaches it for q above 6.0943 cfs, below the critical discharge at 0.9·D (7.424 cfs), so the
+generator can draw it. With the rebuild's store, D is 1.19999993 ft and the sixth trial,
+1.20000005, is 1.19e-7 ft past it.
+
+S1 to S5 are unaffected: 12, 24, 36 and 48 in give the same D both ways, and every outcome is
+the same.
+
+### Correction 2: the counter
+
+A-011 says: "A counter puts every pipe whose diameter is a multiple of 0.2 ft on D." That is
+wrong. Of the 72 multiples of 2.4 in from 9.6 to 180 in, a counter (`base + k·.2`, stored)
+puts 58 on D with either diameter store, and leaves out 14:
+
+- The rebuild's store: 14.4, 28.8, 40.8, 57.6, 69.6, 81.6, 93.6, 103.2, 115.2, 127.2, 139.2,
+  151.2, 163.2 and 175.2 in.
+- `store(VAL/12)`: 21.6, 31.2, 43.2, 50.4, 62.4, 74.4, 86.4, 100.8, 112.8, 124.8, 136.8, 148.8,
+  160.8 and 172.8 in.
+
+A-011's list of 58 for the rebuild's store is right as printed.
+
+### Six more cases
+
+n .013 and slope .005 in all six. "N2" is what `solve()` prints today. "K1" is `search.ts`
+with `afterShortChord: 'resume'`. The five trial models are A-011's, with the rebuild's
+diameter store; the last column is K1 with the rebuild's trials and `store(VAL/12)`.
+
+| Case | Diameter | Discharge | A·√(gA/T) reaches q at | N2 (today) | **K1** | y + .2, .2 single | Counter | Double depth | Tested before the store | K1, D = store(VAL/12) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S6 | 15 | 5 | 0.7253·D | result (0.90591) | **result (0.90489)** | result, K1's fields | result, K1's fields | result, K1's fields | result, K1's fields | result, K1's fields |
+| S7 | 15 | 7 | 0.8480·D | result (1.05853) | **rejected** | rejected | rejected | rejected | rejected | rejected |
+| S8 | 18 | 12 | 0.8761·D | result (1.31296) | **rejected** | rejected | rejected | rejected | rejected | rejected |
+| S9 | 30 | 55 | 0.9416·D | result (2.35330) | **rejected** | rejected | rejected | rejected | rejected | rejected |
+| S10 | 60 | 360 | 0.9657·D | result (4.82503) | **rejected** | rejected | on the diameter | rejected | rejected | rejected |
+| S11 | 14.4 | 7 | 0.8821·D | rejected | **rejected** | rejected | rejected | rejected | rejected | on the diameter |
+
+The person running the task expected K1 to reject S7 to S10, where the rebuild prints a result
+today. `search.ts` agrees on all four.
+
+K1's trials, from the script (percent of q):
+
+- S6: 0.2, 0.4, 0.6, 0.8 (−21.738%), 1.0 (+22.537%); chord 0.898194 (−1.848%); 1.098194
+  (+53.328%); chord 0.904894 (−0.381%), stop.
+- S7: … 1.0 (−12.474%), 1.2 (+54.292%); chord 1.037365 (−4.983%); 1.237365 (+119.808%); chord
+  1.045352 (−3.270%); 1.245352 (+182.354%); chord 1.048875 (−2.499%); 1.248875 (+302.461%);
+  chord 1.050514 (−2.137%); the next trial, 1.250514, is 5.14e-4 ft past D.
+- S8: … 1.2 (−19.460%), 1.4 (+22.938%); chord 1.291798 (−4.382%); 1.491798 (+135.934%); chord
+  1.298045 (−3.193%); 1.498045 (+237.598%); chord 1.300697 (−2.679%); the next trial, 1.500697,
+  is 6.97e-4 ft past D.
+- S9: … 2.2 (−20.793%), 2.4 (+11.085%); chord 2.330456 (−4.301%); the next trial, 2.530456, is
+  3.05e-2 ft past D.
+- S10: … 4.79999971 (−3.996%); trial 25 at 4.99999952, 4.77e-7 ft below D (+2367.863%); chord
+  4.800337 (−3.952%); the next trial, 5.000337, is 3.37e-4 ft past D.
+- S11: 0.2, 0.4, 0.6, 0.8, 1.0 (−13.374%); the next trial, 1.20000005, is 1.19e-7 ft past D
+  (1.19999993). No chord is taken, so N2 rejects too.
+
+**Every field of every result.** Echoes included, as the comparator compares them.
+
+| Case | Rule | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| S6 | K1, and every trial model | 15.0 | 0.0130 | 5 | 0.89 | 0.0050 | 0.0079 | 1.0 | 2.5 | 5.3 | 0.4 | 1.1 | 1.0 | 6 | CRITICAL |
+| S6 | N2 | 15.0 | 0.0130 | 5 | 0.90 | 0.0050 | 0.0078 | 1.0 | 2.5 | 5.2 | 0.4 | 1.1 | 1.0 | 6 | CRITICAL |
+| S7 | N2 | 15.0 | 0.0130 | 7 | 1.05 | 0.0050 | 0.0111 | 1.1 | 2.9 | 6.3 | 0.4 | 0.9 | 1.0 | 7 | CRITICAL |
+| S8 | N2 | 18.0 | 0.0130 | 12 | 1.30 | 0.0050 | 0.0118 | 1.6 | 3.6 | 7.3 | 0.5 | 1.0 | 1.0 | 12 | CRITICAL |
+| S9 | N2 | 30.0 | 0.0130 | 55 | 2.34 | 0.0050 | 0.0155 | 4.8 | 6.6 | 11.5 | 0.7 | 1.2 | 1.0 | 55 | CRITICAL |
+| S10 | N2 | 60.0 | 0.0130 | 360 | 4.82 | 0.0050 | 0.0167 | 19.4 | 13.8 | 18.5 | 1.4 | 1.8 | 1.0 | 362 | CRITICAL |
+
+S6 under N2 and K1 differs on Depth, Critical Slope and Velocity.
+
+**Predicted screens under K1** with the rebuild's trials and diameter store: S6 prints the K1
+row above. S7 to S11 are rejections as A-008 and A-010 saw them: "DEPTH is Greater than the
+DIAMETER" on 0-based row 20, the Depth field `0.00`, Critical Slope and every output field
+blank, stored as `rejected` goldens once the profile maps the screen.
+
+**What each outcome means.**
+
+- S6 prints the K1 row: K1 holds on a result where it and N2 print differently. The N2 row
+  refutes K1 there.
+- S7 to S10 rejected: K1 holds on four more cases where N2 prints a result, in 15, 18, 30 and 60
+  in pipes. Any of them printing the N2 row refutes K1 for that case.
+- S10 ending on the shape menu, as Q-029's 9.6 in run did, points at a counter, and so would S3
+  to S5 (A-011).
+- S11 rejected: the rebuild's diameter store holds. S11 ending on the shape menu points at
+  `store(VAL/12)`. The diameter store is used by every circle mode, so that would also need
+  checking against every circle golden.

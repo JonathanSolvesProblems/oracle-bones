@@ -27,6 +27,7 @@ import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
 import { circleCriticalDischarge, DEPTH_ABOVE_DIAMETER } from '../app/src/solver/modes/circle.ts';
 import { diameterFeet } from '../app/src/solver/geometry/circle.ts';
 import { search as appSearch } from '../app/src/solver/search.ts';
+import { val } from '../app/src/solver/parse.ts';
 import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
 
 const ROOT = join(import.meta.dirname, '..');
@@ -153,8 +154,8 @@ function nd(v: Vals, geo: Geo, qmax: QmaxRule, rule: NdRule = ND_RULE): { out: O
 }
 const qc = (geo: Geo, D: number) => (y: number) => { const w = geo(D, y); return w.A * Math.sqrt((G * w.A) / w.T); };
 /** Critical Depth fields at the search depth y; Depth printed y − offset; Velocity q/A or √(gA/T). */
-function cdFields(v: Vals, geo: Geo, qmax: QmaxRule, y: number, offset: number, velocity: 'q/A' | 'celerity' = 'q/A'): Out {
-  const D = diam(v), q = v.discharge!, n = v.n!, w = geo(D, y), R = f(w.A / w.P), cel = Math.sqrt((G * w.A) / w.T);
+function cdFields(v: Vals, geo: Geo, qmax: QmaxRule, y: number, offset: number, velocity: 'q/A' | 'celerity' = 'q/A', Dft?: number): Out {
+  const D = Dft ?? diam(v), q = v.discharge!, n = v.n!, w = geo(D, y), R = f(w.A / w.P), cel = Math.sqrt((G * w.A) / w.T);
   const vel = velocity === 'q/A' ? f(q / w.A) : f(cel);
   const sc = f((((q / w.A) * n) / (K * Math.pow(R, EXP_A))) ** 2);
   return { depth: f(y - offset), critical_slope: sc, area: w.A, wet_perimeter: w.P, velocity: vel, hyd_radius: R, top_width: w.T, froude: f(vel / cel), max_discharge: qmax(geo, D, (K / n) * f(Math.sqrt(sc))), flow_type: 'CRITICAL' };
@@ -850,6 +851,22 @@ const A011_CASES: { id: string; inputs: Record<string, string> }[] = [
   { id: 'S4', inputs: { diameter: '36', n: '.013', discharge: '84', slope: '.005' } },
   { id: 'S5', inputs: { diameter: '48', n: '.013', discharge: '188', slope: '.005' } },
 ];
+/** Cases added by the amendment of 2026-11-25, chosen by the person running the task to separate
+ * K1 from N2 (S6 to S10) and the two ways of storing the diameter (S11). */
+const A011_AMENDMENT_CASES: { id: string; inputs: Record<string, string> }[] = [
+  { id: 'S6', inputs: { diameter: '15', n: '.013', discharge: '5', slope: '.005' } },
+  { id: 'S7', inputs: { diameter: '15', n: '.013', discharge: '7', slope: '.005' } },
+  { id: 'S8', inputs: { diameter: '18', n: '.013', discharge: '12', slope: '.005' } },
+  { id: 'S9', inputs: { diameter: '30', n: '.013', discharge: '55', slope: '.005' } },
+  { id: 'S10', inputs: { diameter: '60', n: '.013', discharge: '360', slope: '.005' } },
+  { id: 'S11', inputs: { diameter: '14.4', n: '.013', discharge: '7', slope: '.005' } },
+];
+/** How the diameter in feet could be formed from the typed text. The rebuild stores VAL's value
+ * first (parse.ts) and then the quotient (geometry/circle.ts diameterFeet). */
+const DIAMETER_STORES: { name: string; D: (text: string) => number }[] = [
+  { name: 'the rebuild: store(store(VAL)/12)', D: (text) => f(f(val(text)) / 12) },
+  { name: 'store(VAL/12)', D: (text) => f(val(text) / 12) },
+];
 /** How a trial depth could be formed. `next(prev, k, base)` is the k-th trial after `base` (0 at
  * the start, or the short chord stepping resumes from). `keep` stores a depth (chords too). */
 interface TrialModel { name: string; next: (prev: number, k: number, base: number) => number; keep: (y: number) => number; cmp?: (prev: number, k: number, base: number) => number }
@@ -904,6 +921,7 @@ const signed = (x: number) => (x === 0 ? '0' : `${x > 0 ? '+' : '−'}${Math.abs
 function a011() {
   const m2 = atShare(0.9382), rebuildModel = TRIAL_MODELS[0]!;
   const dv = (text: string) => vals('critical_depth', { diameter: text, n: '.013', discharge: '1', slope: '.005' }).diameter!;
+  const grid = Array.from({ length: 1721 }, (_, i) => ((80 + i) / 10).toFixed(1));
 
   h('Check: the rebuild model here gives the outcome search.ts gives with K1 (on_diameter = never_finishes), n .013, slope .005');
   let same = 0, total = 0;
@@ -917,17 +935,20 @@ function a011() {
     }
   }
   row(`${same} of ${total}`);
+  { let ok = 0; for (const text of grid) if (DIAMETER_STORES[0]!.D(text) === diameterFeet(dv(text))) ok++;
+    row(`the rebuild's diameter store here equals diameterFeet(parse) on ${ok} of ${grid.length} grid diameters`); }
 
-  h('Does the diameter in feet depend on how it is formed? store(d/12) against store(store(d)/12), 8 to 180 in by 0.1 in');
-  const dDiff: string[] = [];
-  for (let t = 80; t <= 1800; t++) { const d = dv((t / 10).toFixed(1)); if (f(d / 12) !== f(f(d) / 12)) dDiff.push((t / 10).toFixed(1)); }
-  row(`${dDiff.length} diameters differ${dDiff.length ? ': ' + dDiff.slice(0, 30).join(', ') + (dDiff.length > 30 ? ', …' : '') : ''}`);
+  // Corrected by the amendment of 2026-11-25: A-011 compared store(d/12) with store(store(d)/12)
+  // for a d that parse.ts had already stored, so the two were the same value.
+  h('Does the diameter in feet depend on how it is formed? From the typed text: store(VAL/12) against the rebuild\'s store(store(VAL)/12), 8 to 180 in by 0.1 in');
+  const dDiff = grid.filter((text) => DIAMETER_STORES[0]!.D(text) !== DIAMETER_STORES[1]!.D(text));
+  row(`${dDiff.length} of ${grid.length} diameters differ; the first 20: ${dDiff.slice(0, 20).join(', ')}`);
 
   h('Do the rebuild\'s stepped trials differ from y + .2 with .2 a single? Every trial from 0.2 ft to 15.2 ft');
   { let a = 0, b = 0, n = 0, first = ''; for (let k = 1; k <= 76; k++) { a = TRIAL_MODELS[0]!.next(a, k, 0); b = TRIAL_MODELS[1]!.next(b, k, 0); n++; if (a !== b && !first) first = `trial ${k}: ${a} against ${b}`; }
     row(first ? `they differ from ${first}` : `identical on all ${n} trials`); }
 
-  h('Table 6-2 diameters: the stepped trial nearest the crown under each trial model (D stored from Diameter/12)');
+  h('Table 6-2 diameters: the stepped trial nearest the crown under each trial model (the rebuild\'s diameter store)');
   for (const d of TABLE_6_2_DIAMETERS) {
     const D = diameterFeet(dv(String(d)));
     const parts = TRIAL_MODELS.map((m) => {
@@ -936,65 +957,72 @@ function a011() {
         : last === D ? `trial ${t.length} on the diameter` : `trial ${t.length} ${signed(last - D)} ft past; last inside ${(D - prev).toFixed(5)} ft below`;
       return `${m.name}: ${near}`;
     });
-    row(`${d} in (D ${D.toPrecision(9)} ft)`);
+    const same = DIAMETER_STORES[0]!.D(String(d)) === DIAMETER_STORES[1]!.D(String(d));
+    row(`${d} in (D ${D.toPrecision(9)} ft; store(VAL/12) ${same ? 'gives the same D' : `gives ${DIAMETER_STORES[1]!.D(String(d)).toPrecision(9)}`})`);
     for (const p of parts) row(`    ${p}`);
   }
 
-  h('8 to 180 in by 0.1 in: diameters where a stepped trial lands exactly on the diameter');
-  for (const m of TRIAL_MODELS) {
-    const on: string[] = [];
-    for (let t = 80; t <= 1800; t++) {
-      const text = (t / 10).toFixed(1), D = diameterFeet(dv(text)), tr = steppedTrials(D, m);
-      if (tr[tr.length - 1] === D) on.push(text);
+  h('8 to 180 in by 0.1 in: diameters where a stepped trial lands exactly on the diameter, by diameter store and trial model');
+  for (const ds of DIAMETER_STORES) for (const m of TRIAL_MODELS) {
+    const on = grid.filter((text) => { const D = ds.D(text), tr = steppedTrials(D, m); return tr[tr.length - 1] === D; });
+    row(`${ds.name}; ${m.name}: ${on.length} diameters: ${on.join(', ')}`);
+  }
+
+  h('Diameters that are a multiple of 0.2 ft (2.4 in) and where the counter base + k·.2 does not land on D');
+  for (const ds of DIAMETER_STORES) {
+    const mult = grid.filter((text) => Math.round(Number(text) * 10) % 24 === 0);
+    const off = mult.filter((text) => { const D = ds.D(text), tr = steppedTrials(D, TRIAL_MODELS[2]!); return tr[tr.length - 1] !== D; });
+    row(`${ds.name}: ${mult.length - off.length} of ${mult.length} multiples land on D; not: ${off.join(', ')}`);
+  }
+
+  h('The rebuild\'s trials, by diameter store: where the stepped search reaches the diameter, and above what discharge (F at the last trial inside, divided by 0.995)');
+  for (const ds of DIAMETER_STORES) {
+    row(ds.name);
+    for (const text of grid) {
+      const D = ds.D(text), tr = steppedTrials(D, rebuildModel);
+      if (tr[tr.length - 1] !== D) continue;
+      const prev = tr[tr.length - 2]!, F = circleCriticalDischarge(D), fp = f(F(prev));
+      row(`    ${text} in: D ${D.toPrecision(9)} ft, trial ${tr.length} on it; last trial inside ${prev.toPrecision(9)} ft (A·√(gA/T) ${fp.toFixed(4)} cfs); reaches D for q above ${(fp / (1 - CIRCLE_TOL)).toFixed(4)} cfs; critical discharge at 0.9·D ${F(f(0.9 * D)).toFixed(3)} cfs, ${prev < 0.9 * D ? 'so the generator can draw it' : 'so the generator cannot draw it'}`);
     }
-    row(`${m.name}: ${on.length} diameters: ${on.join(', ')}`);
   }
 
-  h('The rebuild\'s list, with the discharge above which the stepped search reaches the diameter (F at the last trial inside, divided by 0.995)');
-  for (let t = 80; t <= 1800; t++) {
-    const text = (t / 10).toFixed(1), D = diameterFeet(dv(text)), tr = steppedTrials(D, rebuildModel);
-    if (tr[tr.length - 1] !== D) continue;
-    const prev = tr[tr.length - 2]!, F = circleCriticalDischarge(D), fp = f(F(prev));
-    row(`${text} in: D ${D.toPrecision(9)} ft, trial ${tr.length} on it; last trial inside ${prev.toPrecision(9)} ft (A·√(gA/T) ${fp.toFixed(4)} cfs); never finishes for q above ${(fp / (1 - CIRCLE_TOL)).toFixed(4)} cfs, up to the critical discharge at 0.9·D, ${F(f(0.9 * D)).toFixed(3)} cfs, ${prev < 0.9 * D ? 'so the generator can draw it' : 'beyond 0.9·D, so the generator cannot draw it'}`);
-  }
-
-  h('A-011 predictions: n .013, slope .005');
-  for (const c of A011_CASES) {
+  const report = (c: { id: string; inputs: Record<string, string> }) => {
     const v = vals('critical_depth', c.inputs), D = diameterFeet(v.diameter!), q = v.discharge!, F = circleCriticalDischarge(D);
     let lo = 0.01, hi = 0.999999; for (let k = 0; k < 80; k++) { const mm = (lo + hi) / 2; if (F(mm * D) < q) lo = mm; else hi = mm; }
-    row(`${c.id} ${inputText(c.inputs)} [D ${D.toPrecision(9)} ft; A·√(gA/T) reaches q at ${((lo + hi) / 2).toFixed(4)}·D]`);
+    const D2 = DIAMETER_STORES[1]!.D(c.inputs.diameter!);
+    row(`${c.id} ${inputText(c.inputs)} [D ${D.toPrecision(9)} ft; store(VAL/12) ${D2 === D ? 'gives the same D' : `gives ${D2.toPrecision(9)} ft`}; A·√(gA/T) reaches q at ${((lo + hi) / 2).toFixed(4)}·D]`);
     const head: string[] = [], tail: string[] = []; let nTrials = 0, lastY = 0;
     const rec = appSearch((y) => {
       const x = F(y), s = `${y.toPrecision(9)} (${pct(f(x), q)})`; nTrials++; lastY = y;
-      if (head.length < 4) head.push(s); else { tail.push(s); if (tail.length > 6) tail.shift(); }
+      if (head.length < 30) head.push(s); else { tail.push(s); if (tail.length > 6) tail.shift(); }
       return x;
     }, q, { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: D, tol: CIRCLE_TOL, afterShortChord: 'resume' });
     const shown = nTrials > head.length + tail.length ? [...head, `… ${nTrials - head.length - tail.length} more …`, ...tail] : [...head, ...tail];
     row(`    K1 trials (search.ts, ${nTrials}): ${shown.join(', ')}; ${rec.ok ? `stops at ${rec.y.toFixed(5)}` : rec.reason === 'past_ceiling' ? `the next trial, ${f(lastY + CIRCLE_CD_STEP).toPrecision(9)}, is ${signed(f(lastY + CIRCLE_CD_STEP) - D)} ft past the diameter: rejected` : rec.reason}`);
+    const now = solve({ mode: 'critical_depth', shape: 'circle', inputs: c.inputs });
     const n2 = appOutcome(v, 'narrow');
-    row(`    the rebuild now (N2): ${n2.outcome}${n2.r.ok ? ` (search depth ${n2.r.y.toFixed(5)})` : ''}`);
+    row(`    N2, the rebuild now (solve): ${now.outcome}${now.flags.length ? ` [${now.flags.map((x) => x.code).join(', ')}]` : ''}${n2.r.ok ? ` (search depth ${n2.r.y.toFixed(5)}) ${line('critical_depth', now.printed)}` : ''}`);
     const k1 = cd(v, GEO_C2, m2, { ...CD_RULE, after: 'resume' });
-    if (rec.ok && k1) {
-      if (Math.abs(k1.found.y - rec.y) > 1e-9) row(`    WARNING: cd() stops at ${k1.found.y} where search.ts stops at ${rec.y}`);
-      row(`    K1: result (search depth ${rec.y.toFixed(5)}) ${line('critical_depth', show('critical_depth', v, k1.out))}`);
-      if (n2.r.ok) {
-        const nb = cd(v, GEO_C2, m2, { ...CD_RULE, after: 'narrow' })!, pa = show('critical_depth', v, nb.out), pb = show('critical_depth', v, k1.out);
-        const dk = FIELDS.critical_depth.filter((k) => pa[k] !== pb[k]);
-        row(`    N2 prints ${dk.length ? 'differently on ' + dk.map((k) => `${k} \`${pa[k]!.trim()}\``).join(', ') : 'the same fields'}`);
-      }
-    } else row(`    K1: ${appOutcome(v, 'resume').outcome}`);
-    for (const m of TRIAL_MODELS) {
-      const o = k1Model(F, q, D, m);
-      let extra = '';
-      if (o.outcome === 'result' && o.y !== undefined) {
-        const p = show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y, CD_RULE.offset));
-        const base = k1 && rec.ok ? show('critical_depth', v, k1.out) : null;
-        const dk = base ? FIELDS.critical_depth.filter((k) => p[k] !== base[k]) : [];
-        extra = ` at ${o.y.toFixed(5)}${base ? (dk.length ? `, differs from K1 on ${dk.map((k) => `${k} \`${p[k]!.trim()}\``).join(', ')}` : ', same fields as K1') : ` ${line('critical_depth', p)}`}`;
-      }
-      row(`    ${m.name}: ${o.outcome}${extra}`);
+    const k1p = rec.ok && k1 ? show('critical_depth', v, k1.out) : null;
+    if (rec.ok && k1 && Math.abs(k1.found.y - rec.y) > 1e-9) row(`    WARNING: cd() stops at ${k1.found.y} where search.ts stops at ${rec.y}`);
+    row(`    K1 (search.ts): ${k1p ? `result (search depth ${rec.y.toFixed(5)}) ${line('critical_depth', k1p)}` : appOutcome(v, 'resume').outcome}`);
+    if (k1p && n2.r.ok) {
+      const dk = FIELDS.critical_depth.filter((k) => now.printed[k] !== k1p[k]);
+      row(`    N2 against K1: ${dk.length ? 'differ on ' + dk.map((k) => `${k} \`${now.printed[k]!.trim()}\`/\`${k1p[k]!.trim()}\``).join(', ') : 'the same fields'}`);
     }
-  }
+    const modelLine = (o: ModelOutcome, Dft: number) => {
+      if (o.outcome !== 'result' || o.y === undefined) return o.outcome;
+      const p = show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y, CD_RULE.offset, 'q/A', Dft));
+      const dk = k1p ? FIELDS.critical_depth.filter((k) => p[k] !== k1p[k]) : [];
+      return `result at ${o.y.toFixed(5)} ${line('critical_depth', p)}${k1p ? (dk.length ? `; differs from K1 on ${dk.join(', ')}` : '; the same fields as K1') : ''}`;
+    };
+    for (const m of TRIAL_MODELS) row(`    ${m.name}: ${modelLine(k1Model(F, q, D, m), D)}`);
+    row(`    K1 with the rebuild's trials and D = store(VAL/12): ${modelLine(k1Model(circleCriticalDischarge(D2), q, D2, rebuildModel), D2)}`);
+  };
+  h('A-011 predictions (S1 to S5, as committed in A-011): n .013, slope .005');
+  for (const c of A011_CASES) report(c);
+  h('Amendment of 2026-11-25: S6 to S11, n .013, slope .005');
+  for (const c of A011_AMENDMENT_CASES) report(c);
 }
 
 const which = process.argv[2];
