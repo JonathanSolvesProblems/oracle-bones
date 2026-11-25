@@ -657,3 +657,65 @@ Q-022 stays open.
 Slope, new), cc-circ-000035 (Max Discharge, Q-028), nd-circ-000020 (Velocity, Froude; Q-026)
 and sb-irr-000001 to -000003 (Step-Backwater, not built). The table-driven circle test in
 `app/test/circle.test.ts` fails on cd-circ-000033 until its Critical Slope is settled.
+
+### cd-circ-000033's Critical Slope
+
+**Not a rounding boundary. Five hypotheses from inside the design fail, and no constant factor
+fits. The claim for the Skeptic is that QUICK-2's search ends 0.0004 to 0.0012 ft lower than
+the rebuild's chord in this pipe. Classification proposed: spec error. Nothing is changed in
+the solver, and cd-circ-000033 is not listed as a known difference.**
+
+`node scripts/circle_outputs.mts critical-slope` prints every number here.
+
+**The boundary.** The rebuild's Critical Slope is 0.0089380 and prints `0.0089`; the boundary
+to `0.0090` is 0.00895, 1.2e-5 away, which is 0.134% of the value. cc-circ-000035's Max
+Discharge is 101165.516 against a boundary at 101165.5, 1.5e-7 of the value, about three steps
+of single precision (2⁻²⁴, 6.0e-8). cd-circ-000033 is about 20,000 such steps from its
+boundary. Single precision cannot move it there, so it does not sit on a rounding boundary in
+the sense cc-circ-000035 does.
+
+**Measurement: a factor on Critical Slope.** Each printed Critical Slope bounds the factor
+between QUICK-2's value and the rebuild's. Over the 27 circle Critical Depth results,
+cd-circ-000033 needs at least 1.00134, and three cases allow at most 1.00040 to 1.00042:
+cd-circ-000015 (30.8 in, R 0.694), cd-circ-000026 (16.5 in, R 0.418) and cd-circ-000029
+(100.9 in, R 1.035). So no constant explains it: not 1.486, g, a folded 1.486², or n as read.
+
+**Hypotheses.** Each changes Critical Slope only; Max Discharge is recomputed from it, and every
+other field is the rebuild's. Scored on the 27 circle Critical Depth results; the quick set
+holds 16 of them.
+
+| Hypothesis | Critical Slope matches | Every field | Quick set | cd-circ-000033 prints | Breaks |
+|---|---|---|---|---|---|
+| As built: ((q/A)·n/(1.486·R^.667))², A and R at the search depth y | 26 of 27 | 26 | 15 of 16 | `0.0089` (0.0089380) | |
+| H1: R^.6667, the exponent of the circle's discharge | 26 | 18 | 10 of 16 | `0.0089` (0.0089316) | 8, on Max Discharge |
+| H2: every intermediate stored in single precision (q/A, R^.667, the quotient) | 26 | 26 | 15 of 16 | `0.0089` (0.0089380) | none |
+| H3: A and R at the printed Depth, y − 0.01 | 15 | 1 | 1 of 16 | `0.0092` (0.0092283) | 25 |
+| H4: the search's velocity √(g·A/T) in place of q/A | 17 | 7 | 3 of 16 | `0.0089` (0.0089069) | 19 |
+| H5: A and R from the θ geometry the rebuild had before C2 | 26 | 23 | 12 of 16 | `0.0089` (0.0089380) | 3 (cd-circ-000019 to -000021) |
+
+None prints `0.0090`. A format rule cannot either: of the four-decimal roundings, only rounding
+up gives `0.0090`, and rounding up prints cd-circ-000001's 0.0054245 as `0.0055`, where QUICK-2
+printed `0.0054`.
+
+**Measurement: one depth for every field.** With every field at one depth y and Depth printed
+at y − 0.01, as the design has it, cd-circ-000033 prints every field as QUICK-2 printed it for
+y from 0.74049 to 0.74279 ft. A·√(gA/T) there is 0.920% to 0.291% short of q; within the 0.5%
+stop, y is 0.74203 to 0.74279. The rebuild's trials are 0.6 ft (1.9689 cfs) and 0.8 ft (3.4981
+cfs, 0.807·D), and its chord lands at 0.74322, 0.174% short. So the printed fields are
+consistent with the design's Critical Slope rule at a search depth 0.00043 to 0.00119 ft below
+the rebuild's chord.
+
+**Claim for the Skeptic.** In circle Critical Depth on the 11.9 in pipe (n .013, q 3),
+QUICK-2's search ends 0.0004 to 0.0012 ft below the rebuild's chord at 0.74322, and its Critical
+Slope is the design's ((q/A)·n/(1.486·R^.667))² at that depth. cd-circ-000033 is the only circle
+Critical Depth result in a pipe under 1 ft (the next smallest is cd-circ-000023, 15.6 in), and
+A-008 shows QUICK-2's search also rejects differently from the rebuild's in pipes this small.
+That connection is a lead, not part of the claim. What changes the search depth is not known;
+none of the five hypotheses above touches the search, so the claim is not yet a rule.
+
+**Classification proposed: spec error** in the circle Critical Depth search (quick2-solver
+design, The depth search; circle-outputs 2.9). It is not a display rule, because no rounding
+rule prints `0.0090` without breaking another case. It is not a haunting, because it compares
+the rebuild with QUICK-2, not QUICK-2 with exact hydraulics. If the Skeptic finds it holds, a
+bugfix spec follows. The table-driven circle test fails on cd-circ-000033's Critical Slope
+until then.

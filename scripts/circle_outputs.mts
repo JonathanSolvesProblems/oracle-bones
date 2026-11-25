@@ -15,6 +15,7 @@ import { printed } from '../app/src/format/screen.ts';
 import { REGULAR_RESULT } from '../app/src/format/layout.ts';
 import { echoes, readRegularForm } from '../app/src/solver/forms.ts';
 import { solve } from '../app/src/solver/index.ts';
+import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
 
 const ROOT = join(import.meta.dirname, '..');
 const CASES = join(ROOT, 'oracle', 'goldens', 'cases');
@@ -481,8 +482,83 @@ function gradeA005() {
   }
 }
 
+// ---- A-008: cd-circ-000033's Critical Slope ---------------------------------------------
+/** Critical Slope rules, each given the case and the rebuild's search depth y. */
+type ScRule = (v: Vals, y: number, fy: number) => number;
+const scAt = (geo: Geo, exp: number, vel: 'q/A' | 'F/A' = 'q/A', stores = false): ScRule => (v, y, fy) => {
+  const D = diam(v), w = geo(D, y), R = f(w.A / w.P), q = vel === 'q/A' ? v.discharge! : fy;
+  if (!stores) return f((((q / w.A) * v.n!) / (K * Math.pow(R, exp))) ** 2);
+  const V = f(q / w.A), Rp = f(Math.pow(R, exp)), x = f((V * v.n!) / f(K * Rp));
+  return f(x * x);
+};
+function criticalSlopeA008() {
+  const quick = new Set<string>(JSON.parse(readFileSync(join(ROOT, 'oracle', 'quickset.json'), 'utf-8')).cases ?? []);
+  const gs = circles('critical_depth');
+  const run = (g: Golden) => solve({ mode: 'critical_depth', shape: 'circle', inputs: g.inputs });
+  h('Is cd-circ-000033 on a rounding boundary, as cc-circ-000035 is?');
+  const r33 = run(byId('cd-circ-000033')), sc = r33.raw!.critical_slope!;
+  row(`cd-circ-000033 Critical Slope: rebuild ${sc.toFixed(7)}, prints ${r33.printed.critical_slope!.trim()}; boundary 0.00895 is ${(0.00895 - sc).toExponential(2)} away, ${((0.00895 / sc - 1) * 100).toFixed(3)}% of the value`);
+  const r35 = solve({ mode: 'channel_capacity', shape: 'circle', inputs: byId('cc-circ-000035').inputs }), m = r35.raw!.max_discharge!;
+  row(`cc-circ-000035 Max Discharge: rebuild ${m.toFixed(3)}, prints ${r35.printed.max_discharge!.trim()}; boundary 101165.5 is ${(m - 101165.5).toFixed(3)} away, ${(((m - 101165.5) / m) * 100).toExponential(2)}% of the value`);
+  row(`single precision resolves about ${(2 ** -24 * 100).toExponential(1)}% of a value`);
+
+  h('The factor by which each golden lets QUICK-2\'s Critical Slope differ from the rebuild\'s');
+  let lo = 0, hi = Infinity, loId = '', hiId = '';
+  for (const g of gs) {
+    const raw = run(g).raw!.critical_slope!, p = Number(g.printed.critical_slope);
+    const a = (p - 0.00005) / raw, b = (p + 0.00005) / raw;
+    if (a > lo) { lo = a; loId = g.id; }
+    if (b < hi) { hi = b; hiId = g.id; }
+  }
+  row(`${gs.length} circle Critical Depth results: at least ${lo.toFixed(5)} (${loId}), at most ${hi.toFixed(5)} (${hiId}); ${lo < hi ? 'a constant factor fits' : 'no constant factor fits all'}`);
+  for (const g of gs) {
+    const raw = run(g).raw!.critical_slope!, p = Number(g.printed.critical_slope), b = (p + 0.00005) / raw;
+    if (b < 1.001) row(`  ${g.id} (D ${g.inputs.diameter} in, R ${run(g).raw!.hyd_radius!.toFixed(3)}): at most ${b.toFixed(5)}`);
+  }
+
+  h('Hypotheses: Critical Slope only; Max Discharge follows it; every other field is the rebuild\'s');
+  const rules: [string, ScRule][] = [
+    ['as built: ((q/A)·n/(1.486·R^.667))², A and R at y', scAt(GEO_C2, EXP_A)],
+    ['H1: R^.6667, the exponent of the circle\'s discharge', scAt(GEO_C2, EXP_B)],
+    ['H2: every intermediate stored (V, R^.667, the quotient)', scAt(GEO_C2, EXP_A, 'q/A', true)],
+    ['H3: A and R at the printed Depth, y − 0.01', (v, y, fy) => scAt(GEO_C2, EXP_A)(v, f(y - 0.01), fy)],
+    ['H4: the search\'s velocity F(y)/A = √(g·A/T) in place of q/A', scAt(GEO_C2, EXP_A, 'F/A')],
+    ['H5: A and R from the θ geometry the rebuild had before C2', scAt(GEO_BUILT, EXP_A)],
+  ];
+  for (const [name, rule] of rules) {
+    let ok = 0, all = 0, okQ = 0, nQ = 0; const lost: string[] = [];
+    let hit33 = '';
+    for (const g of gs) {
+      const r = run(g), v = vals('critical_depth', g.inputs), y = r.raw!.search_depth!, fy = r.raw!.search_discharge!;
+      const s = rule(v, y, fy), qm = maxDischarge(diam(v), v.n!, s);
+      const p = show('critical_depth', v, { ...(r.raw as Out), depth: r.raw!.depth!, critical_slope: s, max_discharge: qm, flow_type: 'CRITICAL' });
+      const scOk = p.critical_slope === g.printed.critical_slope, every = !misses(g, p).length;
+      if (scOk) ok++; if (every) all++;
+      if (quick.has(g.id)) { nQ++; if (every) okQ++; }
+      if (g.id === 'cd-circ-000033') hit33 = `${p.critical_slope!.trim()} (${s.toFixed(7)})`;
+      else if (!every && !misses(g, r.printed as Record<string, string>).length) lost.push(g.id);
+    }
+    row(`${name}: Critical Slope ${ok} of ${gs.length}, every field ${all} of ${gs.length} (quick set ${okQ} of ${nQ}); cd-circ-000033 prints ${hit33}${lost.length ? `; breaks ${lost.length} that matched: ${lost.join(', ')}` : ''}`);
+  }
+  row('format rule: no rounding of 0.0089380 to four decimals gives 0.0090 but rounding up, and rounding up prints cd-circ-000001\'s 0.0054245 as 0.0055 (QUICK-2: 0.0054)');
+
+  h('Measurement: the depths at which every field of cd-circ-000033 prints as QUICK-2 printed it');
+  const g = byId('cd-circ-000033'), v = vals('critical_depth', g.inputs), D = diam(v), F = qc(GEO_C2, D), q = v.discharge!;
+  const at = (y: number) => show('critical_depth', v, { ...cdFields(v, GEO_C2, atShare(0.9382), y, 0.01) });
+  let a = NaN, b = NaN;
+  for (let i = 0; i <= 20000; i++) { const y = f(0.73 + (0.02 * i) / 20000); if (!misses(g, at(y)).length) { if (isNaN(a)) a = y; b = y; } }
+  row(`all fields at one depth y, Depth printed y − 0.01: y ${a.toFixed(5)} to ${b.toFixed(5)}; A·√(gA/T) there ${pct(F(a), q)} to ${pct(F(b), q)} of q`);
+  const y33 = r33.raw!.search_depth!;
+  row(`the rebuild's trials: 0.6 ft ${f(F(0.6)).toFixed(4)} cfs, 0.8 ft ${f(F(f(0.8))).toFixed(4)} cfs (${(0.8 / D).toFixed(3)}·D), chord ${y33.toFixed(5)} at ${pct(r33.raw!.search_discharge!, q)}`);
+  let sLo = 0.73, sHi = y33;
+  for (let k = 0; k < 60; k++) { const mm = (sLo + sHi) / 2; if (F(mm) < 0.995 * q) sLo = mm; else sHi = mm; }
+  const c = Math.max(a, sHi);
+  row(`within the 0.5% stop as well: y ${c.toFixed(5)} to ${b.toFixed(5)}, ${(y33 - b).toFixed(5)} to ${(y33 - c).toFixed(5)} ft below the rebuild's chord`);
+}
+
 const which = process.argv[2];
 if (which === 'a004') a004();
 else if (which === 'a005') a005();
 else if (which === 'grade-a005') gradeA005();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005'); process.exit(2); }
+else if (which === 'critical-slope') criticalSlopeA008();
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope'); process.exit(2); }
