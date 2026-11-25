@@ -1327,3 +1327,81 @@ checks only what git could commit (`git ls-files -co --exclude-standard`) and ta
 of 112 s. It still fails when a program file is planted at a committable path: a renamed copy of
 QUICK2.EXE under `tmp/` failed it on the hash check, and a stand-in `docs/QT.EXE` on the name
 check. Both were removed. The offline run passes 174 tests in 154 s, down from 290 s.
+
+Credits for the grading session (A-010, the quick set, the corrections, the scan and the log
+entry above): 35.46. Time: 12 min 51 s. They were left out of the entry when it was written.
+
+### A-011 and the circle-short-chord requirements
+
+Settings: a new session, four messages.
+
+**A-011** (b4950f7). A circle Critical Depth trial that lands exactly on the diameter has top
+width 0, so A·√(gA/T) is infinite, and the rebuild never finishes there under N2 or K1. With the
+rebuild's trials, a stepped trial lands on the diameter in 6 pipes from 8 to 180 in (9.6, 12,
+50.4, 52.8, 55.2 and 57.6 in), and 12 in is the only standard size among them. A-011 compared
+five ways QUICK-2 could form its trials (the rebuild's sum, a single-precision .2, a counter, a
+double depth, a test before the store) and committed predictions for five standard-size cases,
+S1 to S5, before any ran.
+
+**The amendment** (3d9bf3a), in its own commit before any run. Two corrections: the check that
+the diameter store does not matter compared a stored value with itself (from the typed text,
+`store(VAL/12)` and the rebuild's store differ on 525 of 1721 grid diameters, and 14.4 in
+lands on D with the first), and a counter puts 58 of the 72 multiples of 2.4 in on D, not all
+of them. S6 to S11, chosen by me, separate K1 from N2 (S6 to S10) and the two diameter stores
+(S11).
+
+**circle-short-chord** (054897b), a bugfix spec: K1 for circle Critical Depth, N2 kept for
+Normal Depth, the rejection screen mapped in the profile and the six rejections recorded before
+any solver change, and the design held until A-012 grades S1 to S11. Approved.
+
+Credits: 18.7 (11 min 35 s), 37.85 (58 min 24 s, about 25 min of it waiting on an approval
+prompt), 22.99 (4 min 40 s) and 4.43 (12 s). Total 83.97 credits, 1 h 14 min 51 s.
+
+### The Exhumer on circle-short-chord 2.11: a harness fault
+
+Settings: the `exhumer` custom agent, in its own session.
+
+The Exhumer mapped the rejection screen (`cd_circ_rejected`, decision 82) and the profile
+re-read passed. Then every case that reached the screen timed out: the six rejections and nine
+of the S cases, 15 runs, none stored (Q-030). S1 and S6 printed results and are cd-circ-000037
+and cd-circ-000038. By hand it tried Enter, F2 and F7 on the rejection screen (Q-032) and found
+that the screen after Enter would read as a result. It stopped at the fault rather than change
+the profile to get past it, and left Q-030 for a person (decision 93).
+
+Credits: 48.4. Time: 19 min 35 s.
+
+### The harness fault fixed, A-012 and A-013
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed** (4773535), and the quick set rebuilt (85efd6a): 2 of 200
+cases swapped, cd-circ-000033 and -000036 in. Quick set 196 of 200 before, 194 after; both new
+misses were already full-set misses. Full set 280 of 289.
+
+**Q-030 in the harness** (40b8f6d). With S2's inputs the rejection screen received 73 output
+chunks in 4 s, the longest gap 98 ms, and its text and cursor never changed (measured by me).
+The runner counted quiet from the last output chunk, so the screen never reached settle_ms
+(150). A profile screen can now be marked `keeps_output`; it settles once its text has been
+unchanged for settle_ms. Every other screen keeps the output rule. `cd_circ_rejected` is
+marked. Q-032 (b) is fixed in the same commit: the screen after Enter on the rejection would
+have been stored as a result with blank fields, and now reads as the rejection. 15 offline
+tests drive the rule on a simulated clock, including a marked screen whose text keeps changing
+and does not settle. The live check runs S2 without recording: rejected with the message in
+6.1 s, where the same run with the mark removed timed out after 25.5 s. No golden was recorded.
+Offline run: 189 passed. Q-030 to Q-032 stay open in the ledger.
+
+**A-012** (ee6f6a9). `grade-a011` grades S1 to S11 against A-011 and its amendment as
+committed: K1 with the rebuild's trials 10 of 11, the rebuild today 5 of 11; on S6 to S10, K1 5
+of 5 and the rebuild 0 of 5. K1's one miss is S2, which printed the message where the rebuild's
+trial lands on the diameter. Only "tested before the store" got all eleven, and it takes the
+9.6 in pipe past the diameter, where QUICK-2 went to the shape menu. Nine of the eleven are run
+folders, not goldens. S2 contradicts circle-short-chord 1.4, 2.6 and 2.7; bugfix.md is not
+edited.
+
+**A-013** (69338b5). 136 combinations of trial, diameter store and test, on all 47 circle
+Critical Depth observations: 16 fit, 14 of them testing the trial in inches against the typed
+diameter. Five predictions, two of them practical, give each of the 13 separable groups of
+survivors a different answer. Not run. The grid scan takes about 45 minutes, and the shell
+stopped answering for a few minutes near its end.
+
+Credits: not counted here; they go in the next entry.
