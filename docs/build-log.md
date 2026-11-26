@@ -2596,3 +2596,68 @@ a copy of the ledger: 1315 of 1339 on the full set and 195 of 200 on the quick s
 
 **Left open by the limit.** The six findings of the clean install, the README, and tasks 6.2
 and 7.2 of `resurrection-power`.
+
+## 2026-11-26, outside Kiro: the clean install's findings fixed, the README, and the app published
+
+**Written and done by the person from the command line, with an AI coding assistant, not in a
+Kiro session.** Kiro's monthly usage limit was reached in session 16, so nothing below is Kiro's
+work. The prompt that had been prepared for Kiro lists the same items.
+
+### The six findings of the clean install (b9830a8)
+
+Tests first, in `oracle/tests/test_power_first_run.py` and `test_power_package.py`.
+
+- The package moved from `power/` to `powers/oracle-bones/`, since Kiro names a power installed
+  from a folder after the folder. A test fails when the folder's name is not plugin.json's.
+- `init_workspace` replies with a `next` list: hooks shown as disabled stay off until the window
+  is reopened, and the guard does not run while they are off; `set_workspace` is needed in each
+  new window; where the rebuild's command is named.
+- In a workspace made by the power the grading script takes the rebuild from
+  `oracle/rebuild.json`. With none it prints one line, grades nothing and exits 0.
+- The guard's message names what works where it runs.
+- A recording that first records the profile's own control cases lists them in its reply.
+- The `resurrect` skill says each of these before the user meets it.
+
+Requirement 10, a design note and task 9 were added to the `resurrection-power` spec, each dated
+and marked as written outside Kiro.
+
+**Checked.** The server was driven from a copy of the package outside this repository through
+`set_workspace`, `init_workspace` and the control case: 12 tools listed, the no-workspace message
+before `set_workspace`, 12 files copied, depth `3.27`, and nothing written into the copy.
+pytest `-m "not live"`: 248 passed, 49 deselected. The comparator's full set is unchanged at
+1315 of 1339. `scripts/build_power.py --check` passes.
+
+**Not done.** The renamed package has not been installed in Kiro again, so that it registers as
+"oracle-bones" is expected from what the first install showed and is not observed. The install
+from the repository's address and an Exhumer run in a clean folder are still not run.
+
+### The README (7d88e69)
+
+`README.md` at the repository's root, with "How to run it" near the top, and
+`oracle/tests/test_readme.py`, which reads every count in it from a results file and fails when
+they disagree, when a row of the held-out record is missing or reworded, or when a sentence reads
+as acceptance by FEMA.
+
+The app's commands were run in a fresh clone under `tmp/`: `npm ci`, `npm test` and
+`npm run build`. The first `npm test` there ran while the offline pytest suite was running on the
+same machine: 2607 of 2608 passed, and the preservation test of `search.test.ts` failed on its
+30 s limit at 33 s. Run again with the machine quiet: 2608 passed in 26 s. The limit in
+`app/vitest.config.ts` is now 120 s, so a busy machine does not fail a test that passes.
+
+### The app published
+
+The built pages are public at https://jonathansolvesproblems.github.io/quickened/, served by
+GitHub Pages from the repository `JonathanSolvesProblems/quickened`, which holds only the output
+of `npm run build` in `app/` at commit 227cb2f, a README and `BUILD.txt` naming that commit.
+
+Checked from outside after it went live: each file answers 200; the script and the service
+worker have the same sha256 as the local build; and in a browser with a new profile the first
+screen shows the headline read from `results/headline.md`, the main example prints `594.37`, the
+proof and limits pages load, and the first screen and the example work again with the network
+off.
+
+### The gallery and the sources (not in this repository yet)
+
+`devpost/gallery/build.mjs` renders the submission page's pictures from the results files and
+from captures of the running app, and stops when a number cannot be found. `devpost/sources.md`
+lists each outside source. Both were written outside Kiro and are not committed.
