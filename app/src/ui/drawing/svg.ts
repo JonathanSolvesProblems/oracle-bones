@@ -4,6 +4,7 @@
 // #ws-mark, used on the drawing at the water surface and before the main figure.
 import { h, type Child, type VNode } from '../vnode.ts';
 import { BOX, coord, frameFor } from './axis.ts';
+import { bankTickTop, placeLabels } from './labels.ts';
 import type { DrawingModel, Pt } from './section.ts';
 
 const MARK = 24;
@@ -53,24 +54,12 @@ export function drawingView(m: DrawingModel, opts: { links: boolean } = { links:
       m.spans.map((s) => h('line', { class: s.assumed ? 'ws-line assumed' : 'ws-line', x1: coord(f.px(s.from)), x2: coord(f.px(s.to)), y1: coord(ws), y2: coord(ws) })),
       m.walls.map((w) => h('line', { class: 'wall', x1: coord(f.px(w.x)), x2: coord(f.px(w.x)), y1: coord(f.py(w.bottom)), y2: coord(f.py(w.top)) })),
       m.banks.map((x) => {
-        const v = m.values.find((y) => y.role === 'bank' && y.at.x === x);
-        const top = f.py(v?.at.y ?? m.waterLevel);
+        const top = bankTickTop(m, f, x);
         return h('line', { class: 'bank', x1: coord(f.px(x)), x2: coord(f.px(x)), y1: coord(top - 4), y2: coord(top - 16) });
       }),
       main ? h('use', { href: '#ws-mark', class: 'ws-mark-on', x: coord(f.px((main.from + main.to) / 2) - MARK / 2), y: coord(ws - MARK / 2), width: String(MARK), height: String(MARK) }) : null,
-      m.values.map((v) => {
-        const x = f.px(v.at.x);
-        const y = f.py(v.at.y);
-        if (v.role === 'ws') return text('value ws-value', x, ws - MARK / 2 - 4, v.prefix + v.text);
-        if (v.role === 'bank') return text('value bank-value', x, y - 20, v.prefix + v.text);
-        return text('value depth-value', x + 6, y + 4, v.prefix + v.text, 'start');
-      }),
-      m.words.filter((w) => w.at).map((w) => text('words', f.px(w.at!.x), f.py(w.at!.y) + 16, w.text)),
-      f.ticks.flatMap((t) => [
-        h('line', { class: 'tick', x1: coord(f.px(t.x)), x2: coord(f.px(t.x)), y1: coord(bottom), y2: coord(bottom + 6) }),
-        text('scale', f.px(t.x), bottom + 20, t.label),
-      ]),
-      text('scale', BOX.left, BOX.height - 8, f.scaleLabel, 'start')),
+      f.ticks.map((t) => h('line', { class: 'tick', x1: coord(f.px(t.x)), x2: coord(f.px(t.x)), y1: coord(bottom), y2: coord(bottom + 6) })),
+      placeLabels(m, f).map((l) => text(l.cls, l.x, l.y, l.text, l.anchor))),
     m.words.some((w) => !w.at)
       ? h('figcaption', {}, m.words.filter((w) => !w.at).map((w) => h('p', { class: 'note' }, w.text,
         w.haunting ? [' ', opts.links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)))

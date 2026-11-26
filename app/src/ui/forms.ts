@@ -9,7 +9,7 @@ import { isBuilt, type Mode, type Shape } from '../solver/index.ts';
 import { FIXED_FIELDS, ND_IRREGULAR_PROMPTS, regularPrompts } from '../solver/forms.ts';
 import { GROUND_POINTS_MAX } from '../solver/constants.ts';
 import { ND_IRR_RESULT, REGULAR_RESULT, type ResultScreen } from '../format/layout.ts';
-import { pictureFor, printed } from '../format/screen.ts';
+import { pictureFor, pictures, printed } from '../format/screen.ts';
 
 type RegularMode = Exclude<Mode, 'step_backwater'>;
 type RegularShape = Exclude<Shape, 'irregular'>;
@@ -68,10 +68,14 @@ function partHeading(part: Part, keys: readonly string[]): string {
   }
 }
 
-/** The text before a field's picture on its row: the last label there, without a row heading. */
+/**
+ * A field's label: the text between the picture before it on its row (or the row's start) and its
+ * own picture, the last label there, without a row heading. It never holds another field's mask.
+ */
 function labelFor(layout: ResultScreen, window: string): string {
   const p = pictureFor(layout, window);
-  const before = (layout.rows[p.row] ?? '').slice(0, p.col);
+  const prevEnd = Math.max(0, ...pictures(layout.rows).filter((q) => q.row === p.row && q.col < p.col).map((q) => q.col + q.text.length));
+  const before = (layout.rows[p.row] ?? '').slice(prevEnd, p.col);
   const chunks = before.split(/\s{2,}|[║╔╗╚╝╟╢]/).map((s) => s.trim()).filter((s) => s !== '');
   const last = chunks[chunks.length - 1] ?? '';
   const heading = last.lastIndexOf(': ');

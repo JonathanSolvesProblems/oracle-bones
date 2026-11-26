@@ -46,6 +46,7 @@
   --page-max: 1200px;      /* the desktop spread */
   --drawing-phone-height: 200px; /* the drawing at 343 x 200 on a phone */
   --sketch-lines: 12;      /* ruled lines of the empty sketch page on a desktop */
+  --print-drawing-width: 6in; /* the drawing on the printed sheet: 6 x 3 in, near the top */
 }
 
 /* Print (design: The print view): US Letter portrait with 0.5 in margins, black ink on white,

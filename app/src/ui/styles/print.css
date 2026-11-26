@@ -1,27 +1,40 @@
-/* The print view (quickened-app design: The print view; criteria 4.1, 4.4, 4.6). Black ink on
-   white: tokens.css sets the print colours and the US Letter page. The print hides the top line
-   and every control; the print view itself holds none. */
+/* The print view (quickened-app design: The print view; criteria 4.1, 4.4 to 4.6). Black ink on
+   white: tokens.css sets the print colours and the US Letter page. The print is a sheet: one
+   header line, the drawing near the top, inputs and outputs side by side with label and value on
+   one row, then the notes, ground points, flags and the notice, on one page; a worked example's
+   sources start a second page under their own head. app.css imports this file before its own
+   rules, so a rule here that must beat one there is more specific (body ...), and the print's
+   tables use classes app.css does not style. */
 @media print {
-  .top-line, button, nav, .examples, .paste, .row-controls { display: none; }
-  .page { max-width: none; padding: 0; }
-  body { font: var(--text-sm) var(--font-body); }
-  .print-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: var(--margin-rule); margin-bottom: var(--space-2); }
-  .print-header p { margin: 0; }
-  .print-name { font: var(--text-lg) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); }
-  .print-view .main-figure { margin: 0 0 var(--space-2); }
-  .print-view .main-figure .main-value { font: var(--text-xl) var(--font-figures); }
-  .print-view table.printed { margin-bottom: var(--space-2); }
-  .print-view table.printed th, .print-view table.printed td { height: auto; font: var(--text-xs) var(--font-figures); }
-  .print-view table.printed .exact-label { display: none; }
-  .print-view table.printed td.row-extra { font: var(--text-xs) var(--font-body); }
-  .ground-print { border-collapse: collapse; width: 100%; margin-bottom: var(--space-2); }
-  .ground-print caption { text-align: left; font: var(--text-xs) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); }
+  body .top-line, button, nav, .examples, .paste, .row-controls { display: none; }
+  body .page { max-width: none; padding: 0; }
+  body { font: var(--text-xs) var(--font-body); }
+  .print-view .print-header { border-bottom: var(--margin-rule); margin: 0 0 var(--space-2); }
+  .print-view .print-header p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .print-view .print-name { font: var(--text-sm) var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: var(--label-tracking); }
+  .print-view .main-figure { margin: 0 0 var(--space-1); }
+  .print-view .main-figure .main-label { font: var(--text-sm) var(--font-figures); }
+  .print-view .main-figure .main-value { font: var(--text-lg) var(--font-figures); }
+  .print-view .drawing { margin: 0 auto var(--space-2); width: var(--print-drawing-width); break-inside: avoid; }
+  .print-view .section-drawing { height: auto; }
+  .print-view .drawing figcaption .note { margin: var(--space-1) 0 0; font: var(--text-xs) var(--font-body); }
+  .print-fields { display: grid; grid-template-columns: 2fr 3fr; gap: var(--space-4); break-inside: avoid; }
+  .print-fields h2 { font: var(--text-xs) var(--font-body); font-weight: 600; margin: 0 0 var(--space-1); white-space: nowrap; }
+  .print-table { border-collapse: collapse; width: 100%; }
+  .print-table th, .print-table td { font: var(--text-xs) var(--font-figures); padding: 0 var(--space-2) 0 0; border-bottom: var(--hairline); text-align: left; vertical-align: baseline; white-space: nowrap; }
+  .print-table th { font-weight: 400; }
+  .print-table td.figures { white-space: pre; }
+  .print-table .row-heading { color: var(--ink-muted); }
+  .print-table .exact-label { display: none; }
+  .print-table td.row-extra { font: var(--text-xs) var(--font-body); }
+  .print-view .exact-caption { font: var(--text-xs) var(--font-body); margin: var(--space-1) 0 0; }
+  .print-view .print-notes { margin: var(--space-1) 0 0; padding-left: var(--space-6); font: var(--text-xs) var(--font-body); }
+  .ground-print { border-collapse: collapse; width: 100%; margin: var(--space-2) 0; }
+  .ground-print caption { text-align: left; font: var(--text-xs) var(--font-body); font-weight: 600; white-space: nowrap; padding-bottom: var(--space-1); }
   .ground-print th, .ground-print td { font: var(--text-xs) var(--font-figures); text-align: right; padding: 0 var(--space-1); border-bottom: var(--hairline); }
   .print-view .flags { margin: var(--space-2) 0; font: var(--text-xs) var(--font-body); }
-  .print-view .drawing { margin: 0 0 var(--space-2); break-inside: avoid; }
-  .print-view .section-drawing { height: auto; }
-  .print-sources { font: var(--text-xs) var(--font-body); }
-  .print-sources h2 { font: var(--text-sm) var(--font-body); font-weight: 600; margin: var(--space-2) 0 var(--space-1); }
+  .print-view .notice { margin: var(--space-2) 0 0; font: var(--text-xs) var(--font-body); }
+  .print-sources { break-before: page; font: var(--text-xs) var(--font-body); }
+  .print-sources h2 { font: var(--text-sm) var(--font-body); font-weight: 600; margin: 0 0 var(--space-2); }
   .print-sources dd { margin: 0 0 var(--space-1); }
-  .print-view .notice { margin-top: var(--space-2); font: var(--text-xs) var(--font-body); }
 }

@@ -358,6 +358,14 @@ solver geometry as the result, so a disagreement is a drawing bug, found by the 
 The drawing is an SVG with a text alternative: one sentence naming the shape, the water
 surface and each wet span, so that it is readable without sight (criterion 1.11).
 
+Labels (amended 2026-11-26, person, after the bank stations and the elevation printed over each
+other on nd-irr-000006 and nd-irr-000010): `drawing/labels.ts` gives each text a box from its
+length at the drawing's 12px type and places it at the first of its positions that stays inside
+the drawing and overlaps no text placed before it: the scale and station ticks, then the
+water-surface elevation (or the depth) at the right end of the water line, each bank station
+under its tick, and Quickened's words; a full pipe's assumption goes above the line. A Vitest
+test checks, over every result golden, that no two label boxes overlap.
+
 ## The worked examples
 
 Two controls sit above the picker on the first screen (criterion 8.1), side by side on a
@@ -404,7 +412,18 @@ shown, the drawing, the sources and discharge sentence when the job is either wo
 and the notice. Ground
 points print four station and elevation pairs to a row, as QUICK-2's editor shows them
 (solver 3.1). The page is set for US Letter portrait with 0.5 in margins, and the Playwright run
-checks that it prints to one page for a 40-point section and for a regular shape.
+checks that the job prints to one page for a 40-point section and for a regular shape.
+
+Amended 2026-11-26 (person), after the main example printed to three pages: the print is laid
+out as a sheet. One header line ("Quickened", the date, the version and build); the main figure
+and the drawing near the top, 6 in wide; the inputs and outputs side by side, each field one row
+with QUICK-2's label and the printed value on one line, flags and notes as numbers on the row;
+the notes once under them; then the ground points, the flags and the notice. That is the job,
+and it fits one page (criterion 4.4). A worked example's sources and their limits follow under
+their own head, "Where this example comes from", starting a second page (criterion 4.5). The
+print's tables use their own classes, so the screen's phone rules (label above value) do not
+reach them; `print.css` is imported by `app.css` before its own rules, so a print rule that must
+override a screen rule, such as hiding the top line, is the more specific one.
 
 Print uses black ink on white: the paper colour is dropped, the water fill turns to a light
 tint that survives a monochrome printer, and the pencil-red rule turns to a heavy black rule.
