@@ -2,8 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { solve } from '../src/solver/index.ts';
-import * as circleMode from '../src/solver/modes/circle.ts';
-import { DEPTH_ABOVE_DIAMETER, circleCriticalDischarge, circleNormalDischarge } from '../src/solver/modes/circle.ts';
+import { DEPTH_ABOVE_DIAMETER, circleCriticalDischarge, circleNormalDischarge, circleSearchSpec } from '../src/solver/modes/circle.ts';
 import { diameterFeet, wetCircleStored } from '../src/solver/geometry/circle.ts';
 import { readRegularForm } from '../src/solver/forms.ts';
 import { readSingle } from '../src/solver/parse.ts';
@@ -258,15 +257,8 @@ describe('circle-short-chord: the flag text (2.7)', () => {
   });
 });
 
-/**
- * The spec circle Critical Depth searches with. Before circle-short-chord task 3.2 the mode has
- * no circleSearchSpec, and this is the spec searchCircle passes it today; task 3.2 removes it.
- */
-function cdSpec(D: number): SearchSpec {
-  const own = (circleMode as Record<string, unknown>).circleSearchSpec as ((D: number, mode: string) => SearchSpec) | undefined;
-  if (own) return own(D, 'critical_depth');
-  return { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: D, tol: CIRCLE_TOL, afterShortChord: 'narrow' };
-}
+/** The spec circle Critical Depth searches with: the object criticalDepthCircle uses. */
+const cdSpec = (D: number): SearchSpec => circleSearchSpec(D, 'critical_depth');
 
 /**
  * Diameters 2.4 to 180 in, half of them multiples of 2.4 in, where stepped trials land on D

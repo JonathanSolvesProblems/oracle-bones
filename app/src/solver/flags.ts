@@ -13,7 +13,7 @@ export const FLAG_TEXT: Readonly<Record<FlagCode, string>> = {
   never_finishes:
     'QUICK-2 never finishes this calculation; it keeps searching. Quickened stops and shows no answer.',
   returns_to_menu:
-    'QUICK-2 abandons this calculation and goes back to the shape menu without a message.',
+    'QUICK-2 returns to its shape menu with no result for this input.',
 };
 
 export function flag(code: FlagCode, fields: string[] = []): Flag {
