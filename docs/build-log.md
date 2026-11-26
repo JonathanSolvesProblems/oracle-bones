@@ -1944,3 +1944,64 @@ The on-save hook ran the quick comparator after the search.ts edit. That run cha
 ledger entries of 2.10, is the Exhumer's. Nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the circle-short-chord build and the Exhumer's ledger session
+
+The first part of the circle-short-chord session in the last entry (tasks 1 to 4.2, stopped at
+4.3) used 69.48 credits over 20 min 17 s. The second part (the stale tests, the quick set, and
+tasks 4.3 to 6) used 61.14 credits over 13 min 49 s.
+
+The Exhumer then did circle-short-chord task 7.1 in its own session, through `ledger_write`
+only and with no case run: decisions 108 to 110 (K1 and trial >= D, 2.6 (a) to (d), the floor
+of 2.7) and 111 (stop), Q-033 answered for its part (2), and Q-036 and Q-037 opened. That
+session used 12.45 credits over 2 min 53 s. It could not commit; the next session did.
+
+### quickened-app: the spec brought up to date after the solver
+
+Settings: Claude Opus 5.5, a new session.
+
+> The quickened-app spec was drafted before the solver existed. Bring it up to date and make it
+> yours: revise requirements.md, then rewrite design.md and tasks.md from the requirements.
+> Don't build anything in this session.
+
+The person's rules: edits with the file tool only; short shell commands; commit messages in a
+file without a byte order mark, passed with `git commit -F`; no run of the program. The person
+listed what the requirements had to add (a to h), kept `.XSC` and the HEC-2 export in the spec
+and last in the tasks, and asked that the deploy task stop before publishing.
+
+**The Exhumer's commits.** results/ledger.json by itself (712f795), then task 7 ticked in
+circle-short-chord's tasks.md (61177fc). The first message had no blank line after its subject,
+so git read the whole message as the subject. The commit was not pushed, and its message was
+amended.
+
+**What was read.** quick2-solver's requirements and design, results/hauntings.md with its
+Limits section, `flags.ts`, `forms.ts`, `index.ts`, `types.ts`, `groundPoints.ts`, the
+irregular mode, the ledger's open questions, the golden nd-irr-000010 and
+realdata/huntington-section-01.json. Findings that shaped the spec:
+
+- `solve()` builds 13 pairs and answers `not built` for Step-Backwater and for Critical Depth
+  and Channel Capacity on the irregular section. QUICK-2's shape menu offers Irregular in every
+  mode, so all three are shown as not built.
+- A held prompt has no message in QUICK-2. The app says so in its own words, apart from
+  QUICK-2's messages.
+- nd-irr-000010's discharge of 3000 cfs was chosen by the Exhumer to fill the cut-off low
+  ground. It is above the StreamStats 1-percent AEP estimate (1,200 cfs, 90% interval 624 to
+  2,310), so the example says it is a test value.
+- The worked example is H-001's case, so it shows the exact answer beside the printed one.
+- `results/headline.md`, which Requirement 5.2 reads, does not exist yet (exhume-loop task
+  5.1). The proof page says that no headline run is recorded until it does.
+- `realdata/huntington-section-01.tsv` is a valid tab-delimited paste, but its text (`0.00`,
+  `660.40`) is not the golden's typed text (`0`, `660.4`). The example therefore loads the
+  golden's inputs.
+
+**The spec** (2610fd2). requirements.md keeps the five requirements and their numbers, and
+adds Requirements 6 to 9 and an Open points list. design.md has the components, the Job model
+and screen states, `runJob` as the UI's one call to `solve()`, `isBuilt` as the one solver
+addition, the drawing built from the solver's geometry, the visual design with its tokens and
+two layouts, nine properties and the Playwright run. tasks.md has 13 core tasks, then the files
+in tasks 14 and 15, which wait for the Exhumer.
+
+Nothing was built and nothing was run on the oracle. The session stopped for the person's
+review.
+
+Credits: not counted here; they go in the next entry.
