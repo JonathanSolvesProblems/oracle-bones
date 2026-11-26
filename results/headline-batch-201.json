@@ -1,0 +1,57 @@
+{
+ "what": "Summary of the headline batch's report (oracle/out/runs/batch-20261126-153103-ac2b37.json, which is not committed) and the one case QUICK-2 did not finish.",
+ "command": "python -m oracle.record --seed 201 --count 1000 --ranges practical --modes critical_depth channel_capacity normal_depth",
+ "seed": 201,
+ "count": 1000,
+ "range_set": "practical",
+ "generator_version": "2",
+ "outcomes": {
+  "result": 998,
+  "rejected": 1,
+  "timeout": 1
+ },
+ "recorded": 999,
+ "not_finished": [
+  {
+   "generated_id": "nd-circ-000036",
+   "run_id": "20261126-151351-7f218b",
+   "mode": "normal_depth",
+   "shape": "circle",
+   "inputs": {
+    "diameter": "38.3",
+    "n": ".0241",
+    "discharge": "13",
+    "slope": "4.9766"
+   },
+   "screen_id": "nd_reg_form",
+   "reason": "waited 10.0s for ['nd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+   "last_screen": [
+    "                                                                                ",
+    "                                                                                ",
+    "           ╔═════════════════════════════════════════════════════╗              ",
+    "           ║                    NORMAL  DEPTH                    ║██            ",
+    "           ║                  CIRCULAR  CHANNEL                  ║██            ",
+    "           ║                                                     ║██            ",
+    "           ║                   INPUT VARIABLES                   ║██            ",
+    "           ║                                                     ║██            ",
+    "           ║                                                     ║██            ",
+    "           ║ Diameter (in)       38.3   Manning's n       0.0241 ║██            ",
+    "           ║ Discharge (cfs)       13   Depth (ft)          0.00 ║██            ",
+    "           ║ Slope (ft/ft)     4.9766                            ║██            ",
+    "           ╟─────────────────────────────────────────────────────╢██            ",
+    "           ║                  OUTPUT VARIABLES                   ║██            ",
+    "           ║                                                     ║██            ",
+    "           ║ Area (sq ft)               Wet Perimeter (ft)       ║██            ",
+    "           ║ Velocity (ft/s)            Hyd Radius (ft)          ║██            ",
+    "           ║ Top Width (ft)             Froude #                 ║██            ",
+    "           ║ Max Discharge(cfs)         Flow Type                ║██            ",
+    "           ╟─────────────────────────────────────────────────────╢██            ",
+    "           ║ Begin Calculations  <Enter>                         ║██            ",
+    "           ║                                                     ║██            ",
+    "           ║ <- Back Tab  <F2>                  Main Menu  <F7>  ║██            ",
+    "           ╚═════════════════════════════════════════════════════╝██            ",
+    "            ████████████████████████████████████████████████████████            "
+   ]
+  }
+ ]
+}
