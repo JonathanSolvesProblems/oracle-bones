@@ -9,8 +9,10 @@
     "node": ">=24"
   },
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.ui.json",
     "oracle": "node src/oracle/entry.ts",
     "snapshot:search": "node test/searchSnapshot.ts write",
     "snapshot:circle": "node test/circleSnapshot.ts record"
@@ -19,6 +21,7 @@
     "@types/node": "24.19.2",
     "fast-check": "4.11.0",
     "typescript": "6.0.3",
+    "vite": "8.3.8",
     "vitest": "5.1.1"
   }
 }
