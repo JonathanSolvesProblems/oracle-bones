@@ -169,3 +169,18 @@ QUICK-2's own search and constants; it is not an observation.
   0.5867 ft (0.880·D, 0.96 in below the crown) and 0.6002 ft (0.900·D, 0.80 in below); 1.71 cfs
   prints Depth `0.59` because A·√(g·A/T) at the stepped trial 0.6 ft is within 0.5% of 1.71
   cfs, and Depth prints 0.01 ft below the search depth (H-004).
+
+# Limits
+
+The hauntings above compare QUICK-2 with exact hydraulics. This section lists where Quickened
+gives no answer because QUICK-2 gave none, and the rule behind it is described but not
+explained. The app's limits page shows the paragraph after **Limits page:** of each entry; the
+quickened-app spec reads it from here and does not copy it.
+
+### Circle Critical Depth, a discharge under the full-pipe number at a trial on D
+
+- **Cases:** obs-cdmenu-000001, -000002, -000005 to -000012 (behaviour cases; ledger decisions 98, 102, 104, 106).
+- **QUICK-2:** went back to its shape menu with no message and no answer, in every run.
+- **Quickened:** returns no result and says "QUICK-2 returns to its shape menu with no result for this input."
+- **Why it is described, not explained:** circle-short-chord 2.6 (c); results/attempts.md A-017 graded and A-018 graded; the question that carries Q-029.
+- **Limits page:** For Critical Depth in a circular pipe of 4.8, 9.6, 12, 50.4, 52.8, 55.2 or 57.6 in, QUICK-2's search can reach a depth equal to the diameter. There, when the discharge is more than 0.5% below what the full pipe carries at critical flow, QUICK-2 went back to its shape menu without a message or an answer. It did this ten times in the 9.6, 12 and 4.8 in pipes, and three of the ten were predicted before they were run. Quickened gives no answer there either, and says that QUICK-2 returns to its shape menu. Why QUICK-2 does this is not known.

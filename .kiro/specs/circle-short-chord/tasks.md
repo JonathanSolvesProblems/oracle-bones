@@ -130,15 +130,15 @@ details. The full-set counts do not change.
   - [x] 5.5 Commit 5.1 to 5.4 together.
     - _Requirements: 2.5, 2.8_
 
-- [ ] 6. The limits text for the app
-  - [ ] 6.1 `results/hauntings.md`: add the section "Limits" after the hauntings, with one entry
+- [x] 6. The limits text for the app
+  - [x] 6.1 `results/hauntings.md`: add the section "Limits" after the hauntings, with one entry
     for 2.6 (c) in the design's shape: the ten behaviour cases and their ledger decisions, what
     QUICK-2 did, what Quickened returns, why it is described and not explained, and the
     **Limits page:** paragraph from the design's draft. The paragraph says, in plain words, that
     QUICK-2 was seen to do this ten times in three pipes, that three of the ten were predicted
     before they ran, and that why is not known. No case id in the paragraph.
     - _Requirements: 2.6 (c), 2.7_
-  - [ ] 6.2 Check the section against 2.7 and the product rules: no FEMA styling or claim, no
+  - [x] 6.2 Check the section against 2.7 and the product rules: no FEMA styling or claim, no
     mascot, and no "Known differences" section added for circle Critical Depth. Commit.
     - _Requirements: 2.7, 2.12_
 
