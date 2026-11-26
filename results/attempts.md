@@ -2619,3 +2619,154 @@ a result or a rejection before it ends.
 
 **Not part of this.** The solver, circle-short-chord's bugfix.md and design.md, and the ledger
 are unchanged. Normal Depth's search (N2, Q-026) is not tested by any case here.
+
+## A-018 graded: candidate 1 with the full-pipe number is right on 12 of 12, the rule to build on 5 of 13
+
+**Written after A-018's thirteen cases ran (ledger decisions 106 and 107; recorded in 0f7e517).
+The grade is against A-018 as committed (3a8075b). Nothing in this section is a prediction. The
+solver is not changed.**
+
+**M2, M3, M4, M7 and M10 gave a result at the trial on D (cd-circ-000081, -000082, -000083,
+-000085, -000087), and each prints what A-018's table has on every printed field: 70 of 70, M7's
+Hyd R `0.3` among them. M5, M8, M11 and L1 printed the message (cd-circ-000084, -000086, -000088,
+-000089). M1, M6, M9 and F1 ended on the shape menu (obs-cdmenu-000010 to -000013). Candidate 1
+with the full-pipe number is right on all twelve cases it predicts. The rule to build is right on
+5 of 13 (M5, M8, M11, L1 and F1), and T1·D1·X1 F on 10 of 13 (it misses M1, M6 and M9). None of
+the 203 tied variants is right on all 13; the best are right on 10. This agrees with the
+person's account on every point. The misses trigger circle-short-chord 2.12: the rule that fits
+best is now the full-pipe number at the trial on D.**
+
+**How graded.** `node scripts/circle_outputs.mts grade-a018` (about 4 s) works as `grade-a017`
+does. It reads A-018 from commit 3a8075b with `git show`: the case table, the table of printed
+fields, and the common n and slope. It reruns A-018's models on the 82 observations A-018 had
+(every circle Critical Depth observation except the records decision 106 added): the best of
+the 736 variants fits 75, by 203, as A-018 says, and the models give the committed cell on 52 of
+52 (four columns, each case) and the committed printed field on 70 of 70. For each case it lists
+every golden, behaviour case and run folder that ledger decision 106 names with the same typed
+inputs. It never runs the program. Every number in this section is that command's output. Each
+case has a stored record, a golden for the five results and the four messages and a behaviour
+case for the four menus, and each agrees with its run folder under `oracle/out` (not
+committed).
+
+"-" predicts nothing and is not graded. The 203 tied are graded variant by variant; the cell
+gives how many of them were right on the case.
+
+| Case | Diameter | Discharge | QUICK-2 | Seen in | Rule to build | Candidate 1, full-pipe number | T1·D1·X1 F | The 203 tied |
+|---|---|---|---|---|---|---|---|---|
+| M1 | 9.6 | 2.24 | shape menu | obs-cdmenu-000010, run 20261126-103746-339088 | **message** | shape menu | **message** | 203 message: 0 right |
+| M6 | 12 | 3.91 | shape menu | obs-cdmenu-000011, run 20261126-103948-39aeec | **message** | shape menu | **message** | 193 message, 10 shape menu: 10 right |
+| M9 | 4.8 | .395 | shape menu | obs-cdmenu-000012, run 20261126-104105-fdeabb | **message** | shape menu | **message** | 203 message: 0 right |
+| M2 | 9.6 | 2.25 | result | cd-circ-000081, run 20261126-103834-b8334c | **message** | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message: 44 right |
+| M3 | 9.6 | 2.26 | result | cd-circ-000082, run 20261126-103856-4dd294 | **message** | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message: 44 right |
+| M4 | 9.6 | 2.27 | result | cd-circ-000083, run 20261126-103910-7f0886 | **message** | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message: 44 right |
+| M7 | 12 | 3.95 | result | cd-circ-000085, run 20261126-104031-2f7951 | **message** | result, Depth `0.99` | result, Depth `0.99` | 44 result, 149 message, 10 shape menu: 44 right |
+| M10 | 4.8 | .4 | result | cd-circ-000087, run 20261126-104209-940fa8 | **message** | result, Depth `0.39` | result, Depth `0.39` | 50 result, 153 message: 50 right |
+| M5 | 9.6 | 2.28 | message | cd-circ-000084, run 20261126-103924-74c308 | message | message | message | 203 message: 203 right |
+| M8 | 12 | 3.99 | message | cd-circ-000086, run 20261126-104043-bc2e94 | message | message | message | 193 message, 10 shape menu: 193 right |
+| M11 | 4.8 | .405 | message | cd-circ-000088, run 20261126-104221-397c76 | message | message | message | 203 message: 203 right |
+| L1 | 50.4 | 216 | message | cd-circ-000089, run 20261126-104340-4cf0f7 | message | message | message | 203 message: 203 right |
+| F1 | 768 | .0023 | shape menu | obs-cdmenu-000013, run 20261126-104249-0cb6f5 | shape menu | - | shape menu | 203 shape menu: 203 right |
+
+A bold cell is a wrong prediction. The rows that two predictions miss come first, then the rows
+only the rule to build misses, then the hits. Every source for a case agrees with the others:
+M1, M6, M9 and F1 each ended on the menu twice, in the run and again when the behaviour case was
+recorded, and none of their last screens has the message. Each of the four messages is on
+0-based row 20, with the Depth field `0.00` and Critical Slope and every output field blank.
+
+| Prediction | Graded | Right | Misses |
+|---|---|---|---|
+| Rule to build (2.4 with K1, 2.7) | 13 | 5 | M1, M2, M3, M4, M6, M7, M9, M10 |
+| Candidate 1, full-pipe number | 12 | 12 | none |
+| T1·D1·X1 F | 13 | 10 | M1, M6, M9 |
+| The 203 tied, each | 13 | 5 to 10 | 129 right on 5, 30 on 6, 24 on 9, 20 on 10 (T1·D1·X1 F among them); none on 13 |
+
+### The five results
+
+| Case | Golden | Fields as A-018's table | Depth | Critical Slope | Hyd R | Discharge |
+|---|---|---|---|---|---|---|
+| M2 | cd-circ-000081 | 14 of 14 | `0.79` | `0.0131` | `0.2` | `2` |
+| M3 | cd-circ-000082 | 14 of 14 | `0.79` | `0.0132` | `0.2` | `2` |
+| M4 | cd-circ-000083 | 14 of 14 | `0.79` | `0.0134` | `0.2` | `2` |
+| M7 | cd-circ-000085 | 14 of 14 | `0.99` | `0.0123` | `0.3` | `4` |
+| M10 | cd-circ-000087 | 14 of 14 | `0.39` | `0.0167` | `0.1` | `0` |
+
+The knife edges A-018 named went as predicted. M2, 0.014% inside the bottom of its band, gave a
+result. M3's Critical Slope printed `0.0132` and M4's `0.0134`. M10's Discharge and Max Discharge
+printed `0` through the mask. M7's Hyd R printed `0.3`, which A = 3.1416·D²/4 and the assumed P
+= 3.1416·D give at A/P = 0.25 exactly. That agrees with the assumed P; it does not single it out,
+since any A and P whose ratio prints `0.3` print the same.
+
+### What the misses say
+
+M1, M6 and M9 are the cases where candidate 1 and every model disagreed: candidate 1 predicted
+the menu, and T1·D1·X1 F and 193 to 203 of the tied variants predicted the message. QUICK-2
+ended all three on the menu. With them, QUICK-2 has ended on the shape menu ten times in three
+pipes with a trial on D (9.6, 12 and 4.8 in: obs-cdmenu-000001, -000002, -000005 to -000012),
+each time with q more than 0.5% under the full-pipe number, from 0.93% under (M1) to 49.96%
+under (obs-cdmenu-000008). Every discharge in those pipes more than 0.5% over the number printed
+the message, and every one within 0.5% gave a result at the trial on D. M5, M8 and M11 bound the
+band from above within 0.84%, 1.02% and 1.33% over the number. No mechanism for the menu was
+found: in the model the search below the number takes a chord below D and ends on a result or
+the message (A-017 graded, 3b), and M1, M6 and M9 follow that path to the message.
+
+The 2.4 in pipe has no stepped trial inside D and stays as it was: E3 (cd-circ-000080), 29.23%
+under its number, printed the message.
+
+L1 (50.4 in, 216 cfs) printed the message, as every prediction said. It is the first observation
+at 50.4 in, and it is 51% over that pipe's number.
+
+F1 ended on the menu, as the rule to build and every model with a run-time error read as the menu
+predicted. Q-035 limits what it shows (below).
+
+### What Q-035 changes and what it does not
+
+After the discharge was typed, the Discharge field showed `0` for .395 (M9), .405 (M11) and .0023
+(F1) (decision 106, Q-035). The field shows no decimals, so the screen does not say what the form
+stored. `grade-a018` tries six readings of the typed text:
+
+| Reading | M9, M10, M11 stored | Three values | F1 stored |
+|---|---|---|---|
+| Every digit | 0.395, 0.4, 0.405 | yes | 0.0023, 1.11 times the floor (0.002078 cfs) |
+| Three decimals, rounded half up | 0.395, 0.4, 0.405 | yes | 0.002, 0.963 times the floor |
+| Three decimals, cut | 0.395, 0.4, 0.405 | yes | 0.002, 0.963 times the floor |
+| Two decimals, rounded half up | 0.40, 0.40, 0.41 | no | 0 |
+| Two decimals, rounded half to even | 0.40, 0.40, 0.40 | no | 0 |
+| Two decimals, cut | 0.39, 0.40, 0.40 | no | 0 |
+
+What it changes:
+- M9, M10 and M11 ended three different ways (the menu, a result, the message), so the form
+  stored three different numbers. Each two-decimal reading stores two or three of them as the
+  same number and is ruled out, assuming the same stored inputs end the same way, as every
+  repeated input has so far.
+- Each two-decimal reading also stores F1 as 0. A Discharge of 0 is held at the discharge prompt
+  (cd-circ-000007), and F1's form moved on to Enter Slope. That rules them out a second time, if
+  the hold tests the stored value.
+- Under every reading that keeps three values, candidate 1 gives M9 the menu, M10 a result and
+  M11 the message, as seen. Its grade on M9 to M11 does not depend on Q-035.
+
+What it does not change:
+- Whether the form keeps the fourth decimal of .0023. With three decimals F1 is 0.002 cfs,
+  under the floor; with every digit it is 1.11 times the floor. The rule to build ends both on
+  the menu. So F1 tests 2.7 just above the floor only if the fourth decimal was kept, and what
+  QUICK-2 does just above the floor stays unobserved until Q-035 is answered.
+- Whether the form rounds or cuts at a third decimal. No case here separates them.
+
+Q-035 stays open.
+
+### What the grade leaves
+
+Candidate 1 with the full-pipe number fits every case it predicts. Read inside the rebuild's
+search, it gives the rule circle-short-chord 2.12 now requires: at a stepped trial equal to D, q
+within 0.5% of the full-pipe number a result at D printed from the full pipe; more than 0.5% over
+it the message; more than 0.5% under it, in a pipe with a stepped trial inside D, the shape menu.
+Everything else stays as 2.4 and 2.7 have it. `node scripts/circle_outputs.mts full-pipe-rule`
+(about 3 s) runs it on all 95 stored circle Critical Depth observations: 95 of 95, every printed
+field of the 39 results among them. The rule to build gets 80 of 95. The two differ on 15: the
+five results of A-018, and the ten menu endings in pipes with a trial on D, where the rule to
+build prints the message.
+
+The menu below the number is described, not explained. It was seen ten times in three pipes, and
+M1, M6 and M9 were predicted before they ran, but no form written here produces it.
+
+**Not part of this.** The solver is not changed. circle-short-chord's bugfix.md and design.md
+are revised in the next commit. Normal Depth's search (N2, Q-026) is not tested by any case here.

@@ -30,6 +30,12 @@
 //   node scripts/circle_outputs.mts grade-a017 A-017's thirteen answers against A-017 (d57eed5), the bounds on c now, and the
 //                                              184 with run-time errors read as the shape menu, with and without the full pipe
 //                                              (T = D) at a trial on D, on every circle Critical Depth outcome (about 3 s)
+//   node scripts/circle_outputs.mts grade-a018 A-018's thirteen answers against A-018 (3a8075b): its models rerun on the
+//                                              82 observations it had, each column graded, the five results' printed fields,
+//                                              and the readings of the typed discharge Q-035 leaves (about 4 s)
+//   node scripts/circle_outputs.mts full-pipe-rule  circle-short-chord 2.12 after A-018 graded: the full-pipe number at a
+//                                              stepped trial on D, on every circle Critical Depth observation, 2.9's goldens
+//                                              today and after, and Property 10's draw (about 3 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -2879,8 +2885,292 @@ function a018() {
     row(`observations on which the rule to build never finishes: ${nf.map((o) => o.name).join(', ') || 'none'}`);
     for (const o of obs.filter((x) => ['obs-cdmenu-000003', 'obs-cdmenu-000004'].includes(x.name))) { const v = vals('critical_depth', o.inputs), r = crownSearch(o.inputs.diameter!, v.discharge!, rule, false); row(`${o.name} (${o.inputs.diameter} in, ${o.inputs.discharge} cfs): ${menuHow(r)}; ${r.trace.slice(-3).join(', ')}`); } }
 }
+// ---- A-018 graded: QUICK-2's thirteen answers against A-018 as committed ------------------------
+const A018_COMMIT = '3a8075b';
+/** The ledger decision that lists A-018's runs, goldens and behaviour cases (the Exhumer's, 2026-11-26). */
+const A018_DECISION = 106;
+const A018_COLS = ['Rule to build', 'Candidate 1, full-pipe number', 'T1·D1·X1 F', 'The 203 tied'] as const;
+type A018Col = (typeof A018_COLS)[number];
+type A018Case = { name: string; d: string; q: string; cells: Record<A018Col, string> };
+/** The records A-018's runs added (decision 106); left out to rerun A-018's models on the 82 it had. */
+const A018_NEW = (id: string) => /^cd-circ-0000(8[1-9])$/.test(id) || /^obs-cdmenu-0000(1[0-3])$/.test(id);
+/** A-018's case table, its table of printed fields and its common n and slope, read from git. */
+function a018AsCommitted() {
+  const a = committedSection(A018_COMMIT, '## A-018: the result band');
+  const common = /Thirteen cases, n ([\d.]+) and\s+slope ([\d.]+)\./.exec(a);
+  if (!common) throw new Error(`A-018 at ${A018_COMMIT}: no common n and slope`);
+  const cases: A018Case[] = [], fields: Record<string, Record<string, string>> = {};
+  let header: string[] = [];
+  for (const l of a.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^[MLF]\d+$/.test(c[0]!)) continue;
+    if (header[3] === 'Rule to build') {
+      const cells = {} as Record<A018Col, string>;
+      for (const col of A018_COLS) { const i = header.indexOf(col); if (i < 0) throw new Error(`no column "${col}"`); cells[col] = c[i]!; }
+      cases.push({ name: c[0]!, d: c[1]!, q: c[2]!, cells });
+    } else if (header[1] === 'Diameter' && header[4] === 'Depth') {
+      const rec: Record<string, string> = {};
+      header.slice(1).forEach((hd, i) => { const k = HEADER_KEYS[hd]; if (!k) throw new Error(`unknown column ${hd}`); rec[k] = c[i + 1]!; });
+      fields[c[0]!] = rec;
+    }
+  }
+  if (cases.length !== 13) throw new Error(`read ${cases.length} of A-018's thirteen cases`);
+  return { n: common[1]!, slope: common[2]!, cases, fields };
+}
+type A018Cell = { kind: 'word'; word: Word; depth?: string } | { kind: 'counts'; counts: Map<string, number> } | { kind: 'none' };
+function readA018Cell(s: string): A018Cell {
+  if (s === '-') return { kind: 'none' };
+  if (s === 'message' || s === 'shape menu') return { kind: 'word', word: s };
+  const r = /^result, Depth `([\d.]+)`$/.exec(s);
+  if (r) return { kind: 'word', word: 'result', depth: r[1]! };
+  if (/^\d+ (result|message|shape menu)(, \d+ (result|message|shape menu))*$/.test(s))
+    return { kind: 'counts', counts: new Map(s.split(', ').map((p) => { const i = p.indexOf(' '); return [p.slice(i + 1), Number(p.slice(0, i))] as [string, number]; })) };
+  throw new Error(`unread prediction "${s}"`);
+}
+const cellText = (w: string, depth?: string) => (w === 'result' && depth ? `result, Depth \`${depth}\`` : w);
+/** The 736 variants of A-017 graded (3a): each of the 184 with errors only (E) or the full pipe at a trial on D (F), resumed trials tested or not (u). */
+const variants736 = (all: Combo[]) => all.flatMap((c) => [false, true].flatMap((full) => [true, false].map((rt) => ({ c, full, rt, id: `${c.id} ${full ? 'F' : 'E'}${rt ? '' : 'u'}` }))));
+
+function gradeA018() {
+  const m2 = atShare(0.9382), all = all184(), tol = CIRCLE_TOL;
+  const rule = all.find((c) => c.id === RULE_E.id)!, X1 = all.find((c) => c.id === 'T1·D1·X1')!;
+  const A = a018AsCommitted();
+  const inputsOf = (c: { d: string; q: string }) => ({ diameter: c.d, n: A.n, discharge: c.q, slope: A.slope });
+  h(`A-018 read from ${A018_COMMIT}: ${A.cases.length} cases, n ${A.n}, slope ${A.slope}; printed fields for ${Object.keys(A.fields).join(', ')}`);
+  // A-018's models rerun on the 82 observations A-018 had (everything but the records decision 106 added).
+  const obs82 = a016Observations().filter((o) => !A018_NEW(o.name));
+  if (obs82.length !== 82) throw new Error(`${obs82.length} observations without A-018's, not 82`);
+  const scored = variants736(all).map((vr) => ({ vr, n: obs82.filter((o) => crownFits(o, vr.c, vr.full, m2, vr.rt).ok).length }));
+  const best = Math.max(...scored.map((s) => s.n)), top = scored.filter((s) => s.n === best);
+  row(`on the 82 observations A-018 had, the best of the 736 variants fits ${best}, by ${top.length}`);
+  const pipes = onDiameterPipes();
+  const model: Record<string, Record<A018Col, A018Cell>> = {};
+  { let same = 0, n = 0, fs = 0, fsame = 0;
+    for (const c of A.cases) {
+      const v = vals('critical_depth', inputsOf(c)), q = v.discharge!, D = f(f(val(c.d)) / 12), p = pipes.find((x) => val(x.d) === val(c.d));
+      const depthAt = (y: number) => show('critical_depth', v, cdFields(v, crownGeo(true), m2, y, CD_RULE.offset, 'q/A', D)).depth!.trim();
+      const word = (r: CrownOut): A018Cell => ({ kind: 'word', word: crownWord(r), depth: r.outcome === 'result' ? depthAt(r.y!) : undefined });
+      const num = p ? (crownEv(p.D, p.D, true) as { v: number }).v : NaN;
+      const c1: A018Cell = !p || !(q > p.reach) ? { kind: 'none' } : Math.abs(num - q) <= tol * q ? { kind: 'word', word: 'result', depth: depthAt(D) } : { kind: 'word', word: num < q ? 'message' : 'shape menu' };
+      const g = new Map<string, number>(); for (const s of top) { const w = crownWord(crownSearch(c.d, q, s.vr.c, s.vr.full, 1, s.vr.rt)); g.set(w, (g.get(w) ?? 0) + 1); }
+      const rf = crownSearch(c.d, q, X1, true);
+      model[c.name] = { 'Rule to build': word(crownSearch(c.d, q, rule, false)), 'Candidate 1, full-pipe number': c1, 'T1·D1·X1 F': word(rf), 'The 203 tied': { kind: 'counts', counts: g } };
+      for (const col of A018_COLS) {
+        const m = model[c.name]![col], t = readA018Cell(c.cells[col]);
+        const txt = m.kind === 'none' ? '-' : m.kind === 'word' ? cellText(m.word, m.depth) : [...m.counts].map(([w, k]) => `${k} ${w}`).join(', ');
+        const ok = t.kind === 'counts' && m.kind === 'counts' ? [...t.counts].every(([w, k]) => m.counts.get(w) === k) && [...m.counts].every(([w, k]) => t.counts.get(w) === k) : txt === c.cells[col];
+        n++; if (ok) same++; else row(`differs: ${c.name} ${col}: committed ${c.cells[col]}, model ${txt}`);
+      }
+      if (rf.outcome === 'result' && A.fields[c.name]) {
+        const pr = show('critical_depth', v, cdFields(v, crownGeo(true), m2, rf.y!, CD_RULE.offset, 'q/A', D));
+        for (const k of Object.keys(A.fields[c.name]!)) { fs++; if ((pr[k] ?? '').trim() === A.fields[c.name]![k]) fsame++; else row(`differs: ${c.name} ${k}: committed ${A.fields[c.name]![k]}, model ${(pr[k] ?? '').trim()}`); }
+      }
+    }
+    row(`the models, rerun now, give the committed cell on ${same} of ${n} (four columns, each case) and the committed printed field on ${fsame} of ${fs}`); }
+
+  h(`What QUICK-2 did: every golden, behaviour case and run folder ledger decision ${A018_DECISION} lists for each case's inputs`);
+  const seen: Record<string, { word: Word | 'other' | 'DIFFERENT'; sources: string[]; golden?: Golden }> = {};
+  for (const c of A.cases) {
+    const s = seenEvery(inputsOf(c), A018_DECISION);
+    if (!s.length) throw new Error(`${c.name}: decision ${A018_DECISION} lists nothing with these inputs`);
+    const words = [...new Set(s.map((x) => x.word))];
+    const gid = s.find((x) => x.source.startsWith('golden '))?.source.slice(7);
+    seen[c.name] = { word: words.length === 1 ? words[0]! : 'DIFFERENT', sources: s.map((x) => x.source.replace(/^(golden|behaviour case) /, '')), golden: gid ? byId(gid) : undefined };
+    row(`${c.name} ${inputText(inputsOf(c))}: ${s.map((x) => `${x.source}: ${x.word} (${x.screen})`).join('; ')}`);
+  }
+  for (const w of ['shape menu', 'result', 'message'] as const) row(`${w}: ${A.cases.filter((c) => seen[c.name]!.word === w).map((c) => c.name).join(', ') || 'none'}`);
+
+  // Each column graded. "-" predicts nothing. The 203 tied are graded variant by variant.
+  const verdict: Record<string, Record<A018Col, { graded: boolean; ok: boolean }>> = {};
+  const summary: string[] = [];
+  for (const col of A018_COLS) {
+    let right = 0, graded = 0; const wrong: string[] = [];
+    for (const c of A.cases) {
+      const cell = readA018Cell(c.cells[col]), w = seen[c.name]!.word;
+      const v = cell.kind === 'word' ? { graded: true, ok: cell.word === w } : cell.kind === 'counts' ? { graded: true, ok: (cell.counts.get(w) ?? 0) === best && cell.counts.size === 1 } : { graded: false, ok: true };
+      (verdict[c.name] ??= {} as Record<A018Col, { graded: boolean; ok: boolean }>)[col] = v;
+      if (col === 'The 203 tied') continue;
+      if (v.graded) { graded++; if (v.ok) right++; else wrong.push(c.name); }
+    }
+    if (col !== 'The 203 tied') summary.push(`${col}: right on ${right} of ${graded} graded; misses ${wrong.join(', ') || 'none'}`);
+  }
+  { const per = top.map((s) => ({ s, right: A.cases.filter((c) => crownWord(crownSearch(c.d, vals('critical_depth', inputsOf(c)).discharge!, s.vr.c, s.vr.full, 1, s.vr.rt)) === seen[c.name]!.word).length }));
+    const hist = new Map<number, number>(); for (const x of per) hist.set(x.right, (hist.get(x.right) ?? 0) + 1);
+    summary.push(`the ${top.length} tied, variant by variant: ${[...hist].sort((a, b) => b[0] - a[0]).map(([k, n]) => `${n} right on ${k} of 13`).join(', ')}; the best: ${per.filter((x) => x.right === Math.max(...per.map((y) => y.right))).slice(0, 4).map((x) => x.s.vr.id).join(', ')}${per.filter((x) => x.right === Math.max(...per.map((y) => y.right))).length > 4 ? ', ...' : ''}`);
+    const rightOn = (c: A018Case) => { const k = readA018Cell(c.cells['The 203 tied']); return k.kind === 'counts' ? k.counts.get(seen[c.name]!.word as string) ?? 0 : 0; };
+    summary.push(`the ${top.length} tied, case by case, right: ${A.cases.map((c) => `${c.name} ${rightOn(c)}`).join(', ')}`); }
+  const ruleMiss = (c: A018Case) => !verdict[c.name]!['Rule to build'].ok;
+  const anyMiss = (c: A018Case) => A018_COLS.slice(0, 3).some((col) => verdict[c.name]![col].graded && !verdict[c.name]![col].ok);
+  const order = [...A.cases.filter(ruleMiss), ...A.cases.filter((c) => !ruleMiss(c) && anyMiss(c)), ...A.cases.filter((c) => !anyMiss(c))];
+  const mark = (c: A018Case, col: A018Col) => { const v = verdict[c.name]![col], t = c.cells[col]; if (col === 'The 203 tied') { const k = readA018Cell(t) as { kind: 'counts'; counts: Map<string, number> }; return `${t}: ${k.counts.get(seen[c.name]!.word as string) ?? 0} right`; } return !v.graded || v.ok ? t : `**${t}**`; };
+  console.log(`\n| Case | Diameter | Discharge | QUICK-2 | Seen in | ${A018_COLS.join(' | ')} |`);
+  console.log(`|${'---|'.repeat(5 + A018_COLS.length)}`);
+  for (const c of order) console.log(`| ${c.name} | ${c.d} | ${c.q} | ${seen[c.name]!.word} | ${seen[c.name]!.sources.join(', ')} | ${A018_COLS.map((col) => mark(c, col)).join(' | ')} |`);
+  for (const s of summary) row(s);
+
+  h('The five results: A-018\'s printed fields against the goldens, every field the comparator compares');
+  { let all70 = 0, same70 = 0;
+    for (const c of A.cases.filter((x) => A.fields[x.name])) {
+      const g = seen[c.name]!.golden; if (!g || g.outcome !== 'result') { row(`${c.name}: no result golden (QUICK-2 ${seen[c.name]!.word})`); continue; }
+      const keys = Object.keys(A.fields[c.name]!), d = keys.filter((k) => (g.printed[k] ?? '').trim() !== A.fields[c.name]![k]);
+      const extra = Object.keys(g.printed).filter((k) => !keys.includes(k));
+      all70 += keys.length; same70 += keys.length - d.length;
+      row(`${c.name} (${g.id}): ${keys.length - d.length} of ${keys.length} the same${d.length ? `; differ: ${d.map((k) => `${k} QUICK-2 ${(g.printed[k] ?? '').trim()}, A-018 ${A.fields[c.name]![k]}`).join(', ')}` : ''}${extra.length ? `; golden fields not in A-018's table: ${extra.join(', ')}` : ''}; Depth \`${g.printed.depth!.trim()}\`, Critical Slope \`${g.printed.critical_slope!.trim()}\`, Hyd R \`${g.printed.hyd_radius!.trim()}\`, Discharge \`${g.printed.in_discharge!.trim()}\``);
+    }
+    row(`all five: ${same70} of ${all70} printed fields as A-018's table has them`); }
+
+  h('The rejections and the menu endings: the screens');
+  for (const c of A.cases.filter((x) => seen[x.name]!.word === 'message')) {
+    const g = seen[c.name]!.golden!, s = lastCapture(g.id), r = s.findIndex((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+    row(`${c.name} (${g.id}): ${r >= 0 ? rejectionScreen(s) : "NO MESSAGE"}; printed fields stored: ${Object.keys(g.printed).length}`);
+  }
+  for (const c of A.cases.filter((x) => seen[x.name]!.word === 'shape menu')) {
+    const id = seen[c.name]!.sources.find((s) => s.startsWith('obs-'))!;
+    row(`${c.name} (${id}): last screen has the message: ${lastCapture(id).some((l) => l.includes(DEPTH_ABOVE_DIAMETER)) ? 'YES' : 'no'}`);
+  }
+
+  // Q-035: the Discharge field showed `0` for .395, .405 and .0023. What the form could have stored.
+  h('Q-035: readings of the typed discharge, and what each leaves of M9, M10, M11 and F1');
+  { const held0 = byId('cd-circ-000007');
+    row(`a Discharge of 0 on this form: ${held0.id} (Discharge ${held0.inputs.discharge}) is held at the ${rawCase(held0.id).held_prompt} prompt; F1's form moved on to Enter Slope (decision ${A018_DECISION}, Q-035)`);
+    const readings: [string, (s: string) => number][] = [
+      ['every digit', (s) => f(val(s))],
+      ['3 decimals, half up', (s) => f(Math.round(Number(s) * 1000 + 1e-9) / 1000)],
+      ['3 decimals, cut', (s) => f(Math.floor(Number(s) * 1000 + 1e-9) / 1000)],
+      ['2 decimals, half up', (s) => f(Math.round(Number(s) * 100 + 1e-9) / 100)],
+      ['2 decimals, half to even', (s) => { const x = Number(s) * 100, fl = Math.floor(x + 1e-9), fr = x - fl; return f((Math.abs(fr - 0.5) < 1e-9 ? (fl % 2 ? fl + 1 : fl) : Math.round(x)) / 100); }],
+      ['2 decimals, cut', (s) => f(Math.floor(Number(s) * 100 + 1e-9) / 100)],
+    ];
+    const D48 = f(f(val('4.8')) / 12), N48 = (crownEv(D48, D48, true) as { v: number }).v, D768 = f(f(val('768')) / 12), fl768 = cdFloor(D768).q;
+    const c1 = (q: number) => (Math.abs(N48 - q) <= tol * q ? 'result' : N48 < q ? 'message' : 'shape menu');
+    row(`4.8 in: the full-pipe number ${N48.toPrecision(5)} cfs, result band ${(N48 / (1 + tol)).toPrecision(5)} to ${(N48 / (1 - tol)).toPrecision(5)}; 768 in: the floor ${fl768.toPrecision(4)} cfs`);
+    for (const [name, rd] of readings) {
+      const q9 = rd('.395'), q10 = rd('.4'), q11 = rd('.405'), qF = rd('.0023');
+      const distinct = new Set([q9, q10, q11]).size === 3;
+      const fr = qF === 0 ? 'stored 0, which the form holds (cd-circ-000007)' : `${qF.toPrecision(3)}, ${(qF / fl768).toPrecision(3)} of the floor, rule to build ${crownWord(crownSearch('768', qF, rule, false))}`;
+      row(`${name}: M9 ${q9.toPrecision(4)}, M10 ${q10.toPrecision(4)}, M11 ${q11.toPrecision(4)}: ${distinct ? 'three values' : 'NOT three values, so not three endings'}; candidate 1 gives ${[q9, q10, q11].map(c1).join(', ')}; F1 ${fr}`);
+    }
+    row(`seen: M9 ${seen.M9!.word}, M10 ${seen.M10!.word}, M11 ${seen.M11!.word}, F1 ${seen.F1!.word}`); }
+}
+
+// ---- The rule to build after A-018 graded: the full-pipe number at a stepped trial on D ----------
+/** circle-short-chord 2.4 with K1 and 2.7, and at a stepped trial equal to D (2.12 after A-018):
+ * q within 0.5% of the full-pipe number a result at D; more than 0.5% over it the message; more
+ * than 0.5% under it the shape menu in a pipe with a stepped trial inside D, the message in one
+ * without (E3's path, as now). `onDepth` sees every depth given to the circle formula. */
+function fullPipeSearch(text: string, q: number, scale = 1, onDepth?: (y: number) => void): CrownOut {
+  const { t, ds, x } = all184().find((c) => c.id === RULE_E.id)!, D = ds.D(text), close = (v: number) => Math.abs(v - q) <= CIRCLE_TOL * q, trace: string[] = [];
+  const log = (s: string) => { trace.push(s); if (trace.length > 8) trace.shift(); };
+  const ev = (y: number) => { onDepth?.(y); return crownEv(D, y, false, scale); };
+  let lo = 0, flo = 0, base = 0, k = 1, prev = 0;
+  for (let guard = 0; guard < 20000; guard++) {
+    const y = t.next(prev, k, base), pre = t.pre(prev, k, base), kind = base === 0 ? 'stepped trial' as const : 'resumed trial' as const;
+    if (kind === 'stepped trial' && t.geo(y) === D) {
+      const N = (crownEv(D, D, true, scale) as { v: number }).v;
+      log(`stepped trial ${y.toPrecision(7)} on D (trial ${k}): the full-pipe number ${N.toPrecision(5)} (${pct(N, q)})`);
+      if (close(N)) return { outcome: 'result', y: D, kind, k, trace };
+      if (N < q || k === 1) return { outcome: 'rejected', at: y, kind, k, trace };
+      return { outcome: 'menu', at: y, kind, k, why: 'q more than 0.5% under the full-pipe number', trace };
+    }
+    if (x.past(y, pre, D, text)) { log(`${kind} ${y.toPrecision(7)} past D: message`); return { outcome: 'rejected', at: y, kind, k, trace }; }
+    const e = ev(t.geo(y));
+    if ('err' in e) { log(`${kind} ${y.toPrecision(7)}: ${e.err}`); return { outcome: 'menu', at: y, kind, why: e.err, k, trace }; }
+    const fy = e.v;
+    log(`${kind} ${y.toPrecision(7)} ${fy.toPrecision(5)} (${pct(fy, q)})`);
+    if (close(fy)) return { outcome: 'result', y: t.geo(y), kind, trace };
+    if (fy < q) { lo = y; flo = fy; prev = y; k++; continue; }
+    let hi = y, fhi = fy, resumed = false;
+    for (let n = 0; n < 1000 && !resumed; n++) {
+      const yc = t.keep(lo + ((q - flo) * (hi - lo)) / (fhi - flo)), ec = ev(t.geo(yc));
+      if ('err' in ec) { log(`chord ${yc.toPrecision(7)}: ${ec.err}`); return { outcome: 'menu', at: yc, kind: 'chord', why: ec.err, trace }; }
+      const fc = ec.v;
+      log(`chord ${yc.toPrecision(7)} ${fc.toPrecision(5)} (${pct(fc, q)})`);
+      if (close(fc)) return { outcome: 'result', y: t.geo(yc), kind: 'chord', trace };
+      if (fc > q) { hi = yc; fhi = fc; continue; }
+      lo = yc; flo = fc; base = yc; prev = yc; k = 1; resumed = true;
+    }
+    if (!resumed) return { outcome: 'no_end', trace };
+  }
+  return { outcome: 'no_end', trace };
+}
+function fullPipeFits(o: A013Obs, m2: QmaxRule): { ok: boolean; got: string; r: CrownOut } {
+  const v = vals('critical_depth', o.inputs), r = fullPipeSearch(o.inputs.diameter!, v.discharge!);
+  if (r.outcome === 'result') {
+    if (o.seen !== 'result') return { ok: false, got: `result at ${r.y!.toFixed(5)}`, r };
+    const p = show('critical_depth', v, cdFields(v, crownGeo(true), m2, r.y!, CD_RULE.offset, 'q/A', f(f(val(o.inputs.diameter!)) / 12)));
+    const d = misses(o.golden!, p);
+    return { ok: !d.length, got: d.length ? `result, misses ${d.join('; ')}` : 'result, every field', r };
+  }
+  return { ok: (r.outcome === 'menu' ? 'shape_menu' : r.outcome) === o.seen, got: crownWord(r), r };
+}
+function fullPipeRule() {
+  const m2 = atShare(0.9382), all = all184(), rule = all.find((c) => c.id === RULE_E.id)!, obs = a016Observations(), tol = CIRCLE_TOL;
+  const word = (o: A013Obs) => (o.seen === 'shape_menu' ? 'shape menu' : o.seen === 'rejected' ? 'message' : o.seen);
+  const by = (s: string) => obs.filter((o) => o.seen === s);
+  const stored = obs.filter((o) => !o.name.startsWith('run '));
+  h(`The full-pipe rule (circle-short-chord 2.12 after A-018 graded) on every circle Critical Depth observation: ${obs.length}, ${stored.length} of them stored`);
+  row(`${by('result').length} results, ${by('rejected').length} rejections with the message, ${by('shape_menu').length} shape-menu endings; not stored (run folders only): ${obs.filter((o) => o.name.startsWith('run ')).map((o) => o.name).join(', ') || 'none'}`);
+  const res = obs.map((o) => ({ o, ...fullPipeFits(o, m2), old: crownFits(o, rule, false, m2) }));
+  const bad = res.filter((r) => !r.ok);
+  row(`the full-pipe rule: ${res.length - bad.length} of ${res.length} as QUICK-2 ended them, every printed field of every result among them; misses: ${bad.map((r) => `${r.o.name} (${r.got}, seen ${word(r.o)})`).join('; ') || 'NONE'}`);
+  row(`stored observations: ${stored.length - bad.filter((r) => stored.includes(r.o)).length} of ${stored.length}`);
+  const oldBad = res.filter((r) => !r.old.ok);
+  row(`the rule to build (${RULE_E.id} E) on the same ${res.length}: ${res.length - oldBad.length}; misses ${oldBad.map((r) => `${r.o.name} (${r.old.got})`).join(', ')}`);
+  row(`where the two differ: ${res.filter((r) => r.ok !== r.old.ok || crownWord(r.r) !== crownWord(r.old.r)).map((r) => `${r.o.name} ${crownWord(r.old.r)} to ${crownWord(r.r)}`).join(', ')}`);
+
+  h('Every observation that reaches a stepped trial on D, under the full-pipe rule');
+  for (const r of res.filter((x) => x.r.trace.some((s) => s.includes('on D (trial')))) {
+    const D = f(f(val(r.o.inputs.diameter!)) / 12), N = (crownEv(D, D, true) as { v: number }).v, q = vals('critical_depth', r.o.inputs).discharge!;
+    row(`${r.o.name} (${r.o.inputs.diameter} in${r.o.inputs.n !== '.013' ? `, n ${r.o.inputs.n}` : ''}, ${r.o.inputs.discharge} cfs): q ${((q / N - 1) * 100).toFixed(2)}% from the number ${N.toPrecision(5)}, trial ${r.r.k}; ${crownWord(r.r)}; QUICK-2 ${word(r.o)}${r.ok ? '' : ': MISS'}`);
+  }
+  { const changed: string[] = [];
+    for (const o of obs) { const v = vals('critical_depth', o.inputs), w = crownWord(fullPipeSearch(o.inputs.diameter!, v.discharge!)); for (const s of [1 + 1e-4, 1 - 1e-4]) { const w2 = crownWord(fullPipeSearch(o.inputs.diameter!, v.discharge!, s)); if (w2 !== w) changed.push(`${o.name} ×${s}: ${w2}`); } }
+    row(`with A·√(g·A/T) and the number × (1 ± 1e-4): ${changed.length ? `changes ${changed.join(', ')}` : 'no ending changes'}`);
+    const nf = obs.filter((o) => fullPipeSearch(o.inputs.diameter!, vals('critical_depth', o.inputs).discharge!).outcome === 'no_end');
+    row(`observations on which the full-pipe rule never finishes: ${nf.map((o) => o.name).join(', ') || 'none'}`); }
+
+  h('2.9: every circle Critical Depth golden (behaviour cases are not graded), today (solve()) and under the full-pipe rule');
+  const qs = new Set<string>((JSON.parse(readFileSync(join(ROOT, 'oracle', 'quickset.json'), 'utf-8')).cases as string[]));
+  const gs = ALL.filter((g) => g.shape === 'circle' && g.mode === 'critical_depth' && !g.id.startsWith('obs-'));
+  const rows: { id: string; today: string; after: string }[] = [], held: string[] = [];
+  for (const g of gs) {
+    const r = solve({ mode: 'critical_depth', shape: 'circle', inputs: g.inputs });
+    if (r.held) { held.push(g.id); continue; }
+    const v = vals('critical_depth', g.inputs), o = fullPipeSearch(g.inputs.diameter!, v.discharge!);
+    const grade = (outcome: string, p: Record<string, string> | null) => { if (outcome !== g.outcome) return `miss (${outcome})`; if (outcome !== 'result') return 'match'; const d = misses(g, p!); return d.length ? `miss (${d.join('; ')})` : 'match'; };
+    const after = grade(o.outcome === 'no_end' || o.outcome === 'menu' ? 'error' : o.outcome, o.outcome === 'result' ? show('critical_depth', v, cdFields(v, crownGeo(true), m2, o.y!, CD_RULE.offset, 'q/A', f(f(val(g.inputs.diameter!)) / 12))) : null);
+    rows.push({ id: g.id, today: grade(r.outcome, r.printed), after });
+  }
+  const n = (w: 'today' | 'after', set = rows) => set.filter((x) => x[w] === 'match').length;
+  row(`${gs.length} goldens: ${held.length} held at a prompt (${held.join(', ')}); of the other ${rows.length}, today ${n('today')} match, after ${n('after')}`);
+  const fixed = rows.filter((x) => x.today !== 'match' && x.after === 'match'), broken = rows.filter((x) => x.today === 'match' && x.after !== 'match');
+  row(`start to match: ${fixed.length}; stop matching: ${broken.length}${broken.map((x) => ` ${x.id} ${x.after}`).join(';')}; miss after: ${rows.filter((x) => x.after !== 'match').map((x) => `${x.id} ${x.after}`).join(', ') || 'none'}`);
+  const a018 = rows.filter((x) => A018_NEW(x.id));
+  row(`A-018's goldens: ${a018.map((x) => `${x.id} today ${x.today}, after ${x.after}`).join('; ')}`);
+  const inQs = rows.filter((x) => qs.has(x.id));
+  row(`in the quick set: ${inQs.length} circle Critical Depth goldens; today ${n('today', inQs)} match, after ${n('after', inQs)}; A-018's goldens in it: ${a018.filter((x) => qs.has(x.id)).length}; starting to match there: ${inQs.filter((x) => x.today !== 'match' && x.after === 'match').map((x) => x.id).join(', ')}`);
+
+  h('Property 10 under the full-pipe rule: Diameter 2.4 to 180 in (half of them multiples of 2.4), q log-uniform from 0.01 cfs to twice A·√(g·A/T) at 0.99·D');
+  let seed = 20261126 >>> 0;
+  const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
+  const count = new Map<string, number>(); let geoMax = 0, atD = 0;
+  for (let i = 0; i < 20000; i++) {
+    const d = i % 2 ? String((24 + Math.floor(rnd() * 1777)) / 10) : String((24 * (1 + Math.floor(rnd() * 75))) / 10), D = f(f(val(d)) / 12);
+    const top2 = 2 * f(circleCriticalDischarge(D)(f(0.99 * D))), q = f(0.01 * Math.pow(top2 / 0.01, rnd()));
+    const o = fullPipeSearch(d, q, 1, (y) => { geoMax = Math.max(geoMax, y / D); });
+    if (o.trace.some((s) => s.includes('on D (trial'))) atD++;
+    const w = crownWord(o); count.set(w, (count.get(w) ?? 0) + 1);
+  }
+  row(`20000 drawn: ${[...count].map(([k, c]) => `${c} ${k}`).join(', ')}; ${atD} reach a stepped trial on D; the largest depth given to the circle formula, as a share of D: ${geoMax.toPrecision(10)}${geoMax < 1 ? ' (below D)' : ' (NOT below D)'}`);
+  void tol;
+}
+
 const which = process.argv[2];
-if (which === 'grade-a017') gradeA017();
+if (which === 'grade-a018') gradeA018();
+else if (which === 'full-pipe-rule') fullPipeRule();
+else if (which === 'grade-a017') gradeA017();
 else if (which === 'a018') a018();
 else if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
 else if (which === 'a017') a017();
@@ -2899,4 +3189,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017|grade-a017|a018'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017|grade-a017|a018|grade-a018|full-pipe-rule'); process.exit(2); }
