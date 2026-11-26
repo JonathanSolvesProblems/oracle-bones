@@ -175,5 +175,24 @@ TOOLS = {
 }
 
 
+# Tools that only an installed power lists (resurrection-power Requirements 6.4, 7.1, 2.1). In
+# this repository the workspace is the repository, so the server lists only the nine above.
+POWER_TOOLS = {
+    "set_workspace": {
+        "description": "Set the folder the oracle works in: your project folder, as an existing absolute path. "
+                       "Profiles, downloaded programs, runs, goldens and the ledger all go under it. Call this "
+                       "first when another tool says no workspace is set.",
+        "input": {"type": "object", "additionalProperties": False, "required": ["path"],
+                  "properties": {"path": {"type": "string", "minLength": 1}}},
+        "output": _ok({"workspace": {"type": "string"}, "from": {"enum": ["roots", "set_workspace"]}},
+                      ["workspace", "from"]),
+    },
+}
+
+
+def tool_def(name):
+    return TOOLS.get(name) or POWER_TOOLS[name]
+
+
 def output_schema(name):
-    return {"anyOf": [TOOLS[name]["output"], ERROR]}
+    return {"anyOf": [tool_def(name)["output"], ERROR]}
