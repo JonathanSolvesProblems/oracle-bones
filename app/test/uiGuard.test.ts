@@ -20,7 +20,7 @@ const AXIS = 'app/src/ui/drawing/axis.ts';
 const ALLOWED: Readonly<Record<string, readonly string[] | '*'>> = {
   'index.ts': ['solve', 'isBuilt', 'NOT_BUILT'],
   'forms.ts': ['regularPrompts', 'ND_IRREGULAR_PROMPTS', 'FIXED_FIELDS'],
-  'groundPoints.ts': ['enter', 'sectionKeys', 'splitStationError'],
+  'groundPoints.ts': ['enter', 'sectionKeys', 'splitStationError', 'stationErrorText'],
   'constants.ts': '*',
   'parse.ts': ['readSingle'],
 };

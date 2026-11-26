@@ -20,7 +20,7 @@ export interface CalculatorState {
 export interface CalculatePageParts {
   /** Above the rows of the ground points (the paste control). */
   aboveRows?: Child | null;
-  rowNotes?: Readonly<Record<number, string>>;
+  rowNotes?: Readonly<Record<number, Child>>;
   belowRows?: Child | null;
   /** Shown in place of the form for a pair that is not built. */
   notBuilt?: Child | null;

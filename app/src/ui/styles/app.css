@@ -147,6 +147,8 @@ input.figures { font-family: var(--font-figures); }
 .grid td + td { border-left: var(--margin-rule); padding-left: var(--space-2); }
 .grid tr.not-taken input { text-decoration: line-through; text-decoration-color: var(--pencil); }
 .grid tr.row-note td { color: var(--pencil); font: var(--text-sm) var(--font-body); }
+.grid tr.row-note .message-label { font-weight: 600; }
+.grid tr.row-note .figures { font-family: var(--font-figures); white-space: pre-wrap; }
 .row-controls { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0; }
 
 /* Screen states on the right-hand page. */

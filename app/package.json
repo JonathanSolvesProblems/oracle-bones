@@ -12,12 +12,15 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run",
+    "e2e": "playwright test",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.ui.json && tsc -p tsconfig.sw.json",
     "oracle": "node src/oracle/entry.ts",
     "snapshot:search": "node test/searchSnapshot.ts write",
     "snapshot:circle": "node test/circleSnapshot.ts record"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.1",
+    "@playwright/test": "1.65.1",
     "@types/node": "24.19.2",
     "fast-check": "4.11.0",
     "typescript": "6.0.3",

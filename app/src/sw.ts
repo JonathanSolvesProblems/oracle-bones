@@ -25,7 +25,9 @@ worker.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== worker.location.origin) return;
   event.respondWith(caches.open(CACHE).then(async (c) => {
-    const hit = await c.match(request, { ignoreSearch: request.mode === 'navigate' });
+    // ignoreVary: a module script's request carries an Origin header the precache request did
+    // not, and a server's `Vary: Origin` would otherwise make the cached copy miss offline.
+    const hit = await c.match(request, { ignoreSearch: request.mode === 'navigate', ignoreVary: true });
     if (hit) return hit;
     // A page load of the site's folder is the one page, index.html.
     if (request.mode === 'navigate') {

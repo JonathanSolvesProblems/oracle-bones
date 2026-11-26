@@ -195,15 +195,15 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     registration in `main.ts`.
     - _Requirements: 1.3, 1.12_
 
-- [ ] 12. The Playwright run
-  - [ ] 12.1 Add `@playwright/test` and `@axe-core/playwright` (pinned), `playwright.config.ts`
+- [x] 12. The Playwright run
+  - [x] 12.1 Add `@playwright/test` and `@axe-core/playwright` (pinned), `playwright.config.ts`
     with the `desktop` and `phone` projects against `vite preview` of the build, and
     `npm run e2e`.
     - _Requirements: 1.3, 1.11_
-  - [ ] 12.2 Write the specs of the design's Testing Strategy, items 1 to 9, and run them at both
+  - [x] 12.2 Write the specs of the design's Testing Strategy, items 1 to 9, and run them at both
     widths. Show the report. A failure is fixed in the code, not in the spec's expectation.
     - _Requirements: 1.2, 1.3, 1.7, 1.8, 1.11, 1.12, 2.1 to 2.3, 2.7, 4.1, 4.4, 5.1 to 5.3, 6.1 to 6.10, 7.2, 7.3, 8.1 to 8.9_
-  - [ ] 12.3 The identity test over `dist/`: no USWDS prefix or federal banner, the FEMA sentence
+  - [x] 12.3 The identity test over `dist/`: no USWDS prefix or federal banner, the FEMA sentence
     list, nothing from `art/` and no Kotsu, no `.EXE`, `.COM` or `.DLL` and no file hashed like
     one in `oracle/vendor/`. Show it failing on a throwaway file of each kind, then delete it.
     - _Requirements: 9.1, 9.2, 9.3, 9.5_

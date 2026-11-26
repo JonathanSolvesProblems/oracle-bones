@@ -7,7 +7,8 @@
 // - a station not greater than the one before it is refused (solver 10.3, 10.4).
 // The editor reads each value in turn, so after one of these the values of later rows go to
 // other fields; such rows are flagged with that reason.
-import { enter, sectionKeys } from '../solver/groundPoints.ts';
+import { enter, sectionKeys, stationErrorText } from '../solver/groundPoints.ts';
+import { readSingle } from '../solver/parse.ts';
 import { rowKeys } from './job.ts';
 
 export interface GridPoint { stationText: string; elevationText: string; }
@@ -21,6 +22,11 @@ export interface GridRow {
   taken: boolean;
   /** The rules that applied to this row's values, in Quickened's words. */
   notes: string[];
+  /**
+   * QUICK-2's own error text, up to its "!", for a station the editor refused on this row
+   * (solver 10.3, 10.4), from the solver's stationErrorText; null for any other row.
+   */
+  quick2: string | null;
 }
 
 export interface GridModel {
@@ -33,7 +39,7 @@ export interface GridModel {
 
 export const ZERO_RULE = "QUICK-2's editor shows an elevation of 0 but does not take it: the next value typed becomes this point's elevation.";
 export const NEGATIVE_RULE = "QUICK-2's editor blanks a negative elevation and goes back to the same point's station.";
-export const STATION_RULE = "QUICK-2's editor refuses a station that is not greater than the one before it, and shows ERROR ... NOT INCREASING.";
+export const STATION_RULE = "QUICK-2's editor does not take a station that is not greater than the one before it, and goes on taking keys; Quickened computes from the rows QUICK-2 took.";
 export const SHIFT_RULE = "Not taken as typed: QUICK-2's editor reads each value in turn, so after a value above was refused or not taken, this row's values went to other fields.";
 
 type Cell = 'station' | 'elevation';
@@ -58,6 +64,7 @@ export function gridOf(inputs: Readonly<Record<string, string>>): GridModel {
 
   // Replay the keys one at a time to see which rule each value met.
   const notes: string[][] = rows.map(() => []);
+  const quick2: (string | null)[] = rows.map(() => null);
   let refusedRow: number | null = null;
   let before = enter([]);
   for (let k = 0; k < keys.length; k++) {
@@ -70,6 +77,8 @@ export function gridOf(inputs: Readonly<Record<string, string>>): GridModel {
       const where = `${COLUMN[cell]} ${key.text}${role !== cell && role !== 'done' ? `, read as ${role === 'station' ? 'a station' : 'an elevation'}` : ''}: `;
       if (after.error !== null) {
         notes[row]!.push(where + STATION_RULE);
+        const last = before.points[before.points.length - 1]!;
+        quick2[row] ??= stationErrorText(last.station, readSingle(key.text));
         if (refusedRow === null) refusedRow = row + 1;
       } else if (role === 'elevation' && after.shownElevation !== null) {
         notes[row]!.push(where + ZERO_RULE);
@@ -92,6 +101,7 @@ export function gridOf(inputs: Readonly<Record<string, string>>): GridModel {
     rows: rows.map((r, i) => ({
       index: i + 1, station: r.station, elevation: r.elevation, taken: claimed[i]!,
       notes: !claimed[i] && notes[i]!.length === 0 ? [SHIFT_RULE] : notes[i]!,
+      quick2: quick2[i]!,
     })),
   };
 }

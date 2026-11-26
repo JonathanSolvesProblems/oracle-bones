@@ -3,8 +3,12 @@
 // their typed text, and a row is flagged exactly when it is not among them as typed.
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
-import { enter, sectionKeys } from '../src/solver/groundPoints.ts';
-import { gridOf } from '../src/ui/grid.ts';
+import { enter, sectionKeys, splitStationError, stationErrorText } from '../src/solver/groundPoints.ts';
+import { solve } from '../src/solver/index.ts';
+import { gridOf, STATION_RULE } from '../src/ui/grid.ts';
+import { gridParts } from '../src/ui/views/grid.ts';
+import { QUICK2_MESSAGE } from '../src/ui/views/states.ts';
+import { findAll, textOf } from '../src/ui/vnode.ts';
 import { rowKeys, type Row } from '../src/ui/job.ts';
 import { golden } from './golden.ts';
 
@@ -78,5 +82,37 @@ describe('Property 4: the grid shows what QUICK-2\'s editor kept', () => {
     expect(grid.rows[1]!.taken).toBe(false);
     expect(grid.rows[1]!.notes.join(' ')).toMatch(/not greater than the one before/);
     expect(grid.refusedRow).toBe(2);
+  });
+});
+
+// The station error is the not-taken row's note (person, 2026-11-26; criteria 1.10, 6.10): QUICK-2's
+// own text up to its "!", from the solver's stationErrorText, labelled as QUICK-2's, then
+// Quickened's sentence that QUICK-2 does not take the row and goes on. solve() returns no station
+// error, so the job computes from the rows QUICK-2 took.
+describe('the station error on its row', () => {
+  for (const [id, row, previous, station] of [['obs-irrelev-000001', 5, 35, 35], ['obs-irrstation-000001', 2, -50, -60]] as const) {
+    it(`${id}: row ${row} carries QUICK-2's text for ${station} after ${previous}, and no other row does`, () => {
+      const rows = rowsFromKeys(id);
+      const grid = gridOf(inputsOf(rows));
+      expect(grid.rows.map((r) => r.quick2)).toEqual(grid.rows.map((r) => (r.index === row ? stationErrorText(previous, station) : null)));
+      // The table shows notes once every cell is a plain decimal; a case that ends on a lone
+      // station gets an elevation typed after it, which the editor reads as the next station.
+      const view = gridParts(rows.map((r) => ({ ...r, elevation: r.elevation === '' ? '1' : r.elevation }))).rowNotes[row - 1]!;
+      const text = textOf(view);
+      const figures = findAll(view, (n) => String(n.attrs.class ?? '').split(' ').includes('figures')).map((n) => n.children.join(''));
+      expect(figures).toEqual([`“${stationErrorText(previous, station).trim()}”`]);
+      expect(text.indexOf(QUICK2_MESSAGE)).toBeGreaterThanOrEqual(0);
+      expect(text.indexOf(QUICK2_MESSAGE)).toBeLessThan(text.indexOf('ERROR'));
+      expect(text.indexOf(STATION_RULE)).toBeGreaterThan(text.indexOf('!'));
+      expect(STATION_RULE).toMatch(/does not take/);
+      expect(STATION_RULE).toMatch(/goes on/);
+    });
+  }
+  it('the job is computed from the rows QUICK-2 took, with no station error in the result', () => {
+    const rows = rowsFromKeys('obs-irrelev-000001');
+    const inputs = { ...inputsOf(rows), bank_left: '0', bank_right: '35', n_left: '.04', n_channel: '.04', n_right: '.04', discharge: '10', slope: '.001' };
+    const r = solve({ mode: 'normal_depth', shape: 'irregular', inputs });
+    expect(r.outcome).toBe('result');
+    expect(splitStationError(r.message ?? '')).toBeNull();
   });
 });

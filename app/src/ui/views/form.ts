@@ -15,7 +15,7 @@ export interface FormViewModel {
   /** Extra content for the ground points, above the table (the paste control). */
   aboveRows?: Child | null;
   /** Per-row notes, by row index from 0 (the grid's not-taken rows). */
-  rowNotes?: Readonly<Record<number, string>>;
+  rowNotes?: Readonly<Record<number, Child>>;
   /** Under the table: the points the editor keeps, when a row was not taken as typed. */
   belowRows?: Child | null;
 }

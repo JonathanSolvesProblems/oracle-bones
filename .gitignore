@@ -2,6 +2,8 @@
 # submission for it.
 node_modules/
 dist/
+playwright-report/
+test-results/
 __pycache__/
 *.pyc
 .venv/

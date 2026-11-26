@@ -164,7 +164,8 @@ paths together:
   equal the entry's printed text, trimmed.
 - A guard test over `app/src/ui/` fails on an import from `../solver/` other than `index.ts`
   (`solve`, `isBuilt`, `NOT_BUILT`, types), `forms.ts` (prompt order, fixed fields),
-  `groundPoints.ts` (`enter`, `sectionKeys`, `splitStationError`), `geometry/*` (for the drawing), `constants.ts`
+  `groundPoints.ts` (`enter`, `sectionKeys`, `splitStationError`, and `stationErrorText` for the
+  refused row's note, added 2026-11-26), `geometry/*` (for the drawing), `constants.ts`
   (for the method list) and `parse.ts` (`readSingle`, for the drawing's bank stations). It also
   fails on `toFixed`, `toPrecision`, `toLocaleString` or `Intl.NumberFormat` anywhere in `ui/`
   except `drawing/axis.ts`, so the app cannot print a QUICK-2 value its own way.
@@ -242,9 +243,13 @@ The rows are entered the way QUICK-2's editor takes keys: `sectionKeys(inputs)` 
 sequence and `enter()` the points it keeps. `grid.ts` compares the kept points with the typed
 rows. Where they differ, because an elevation of 0 was shown and replaced by the next value or
 a negative elevation sent entry back to the station (solver 10.6, 10.7), the grid names the row
-and the rule. A station that does not increase is the solver's `rejected` with the station
-error (solver 10.3, 10.4), shown as Screen states says, and the grid marks the row whose
-station was refused.
+and the rule. A station that does not increase is refused by the editor, which prints the
+station error and goes on taking keys (solver 10.3, 10.4). The refused row's note shows
+QUICK-2's text up to its "!", from `stationErrorText`, labelled as QUICK-2's message, then
+Quickened's sentence that QUICK-2 does not take the row and goes on; the job computes from the
+rows QUICK-2 took. Amended 2026-11-26 (person): the first draft made this the solver's
+`rejected`, but `solve()` returns no station error, so the station-error state of Screen states
+(criterion 6.10) cannot be reached from the form. It stays built and tested.
 
 ## The results screen
 
@@ -702,7 +707,9 @@ from such a Result keeps `result.message` unchanged.
 - **Playwright** (`app/e2e/`), run against `vite preview` of the production build, so the
   service worker, the base path and the Content Security Policy are the shipped ones. Two
   projects: `desktop`, Chromium at 1280 × 800, and `phone`, Chromium at 375 × 812 with touch
-  and the mobile viewport. Each spec runs in both:
+  and the mobile viewport. The Chromium is the Microsoft Edge installed on the machine
+  (`channel: 'msedge'` in `playwright.config.ts`); no browser is downloaded (person,
+  2026-11-26). Each spec runs in both:
   1. the main example in one click, its printed fields equal to nd-irr-000006's golden, no
      exact value, the drawing, its sources and its 1-percent discharge sentence; then the
      cut-off example in one click, its printed fields equal to nd-irr-000010's golden, the
@@ -710,8 +717,11 @@ from such a Result keeps `result.message` unchanged.
      then one edit, after which the exact values are gone;
   2. one job for each state, from recorded cases: a result (cd-vdit-000001), a held prompt
      (Diameter 0, nd-circ-000008), QUICK-2's message (bank 230.8, nd-irr-000009), a station
-     error (35 after 35, from obs-irrelev-000001's keys) shown up to its "!" with the key-line
-     sentence, an error with a flag (Discharge -1, obs-negreturn-000001), and Step-Backwater not
+     error (35 after 35, from obs-irrelev-000001's keys) shown in the refused row's note as
+     QUICK-2's text up to its "!" followed by Quickened's sentence that QUICK-2 does not take the
+     row and goes on, with the job computed from the rows QUICK-2 took (amended 2026-11-26,
+     person: `solve()` returns no station error, so the rejected state of criterion 6.10 cannot
+     be reached from the form), an error with a flag (Discharge -1, obs-negreturn-000001), and Step-Backwater not
      built;
   3. a paste of `realdata/huntington-section-01.tsv`, and a paste of 41 rows that loads
      nothing;
