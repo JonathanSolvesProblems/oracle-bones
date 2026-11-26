@@ -2,6 +2,7 @@
 // module is built at each build from the files in results/ and the goldens they name, so a change
 // to a file shows at the next build with no edit to the app (criterion 5.4). Vite and Vitest both
 // load it. A file that cannot be read fails the build with the file and the reason.
+import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +29,17 @@ export interface QuickenedData {
   /** The worked examples' goldens (criteria 8.2, 8.4). */
   examples: { main: CaseData; cutoff: CaseData };
   sources: Sources;
+  /** package.json's version and the build's short commit, for the print header (criterion 4.1). */
+  build: { version: string; commit: string };
+}
+
+/** The short commit the build is made from; the build fails outside a git checkout. */
+function shortCommit(root: string): string {
+  try {
+    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: root, encoding: 'utf-8' }).trim();
+  } catch (e) {
+    throw new Error(`cannot read the build's commit with git rev-parse: ${(e as Error).message}`);
+  }
 }
 
 /** The worked examples' cases (design: The worked examples). */
@@ -58,7 +70,12 @@ export function buildData(root: string = ROOT): QuickenedData {
   const main = caseData(root, EXAMPLE_CASES.main);
   const cutoff = caseData(root, EXAMPLE_CASES.cutoff);
   const n = { left: main.inputs.n_left ?? '', channel: main.inputs.n_channel ?? '', right: main.inputs.n_right ?? '' };
-  return { hauntings: file.hauntings, limits: file.limits, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? '') };
+  return { hauntings: file.hauntings, limits: file.limits, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
+    build: {
+      version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
+      commit: shortCommit(root),
+    },
+  };
 }
 
 export function quickenedData(root: string = ROOT): Plugin {

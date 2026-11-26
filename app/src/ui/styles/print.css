@@ -1,0 +1,27 @@
+/* The print view (quickened-app design: The print view; criteria 4.1, 4.4, 4.6). Black ink on
+   white: tokens.css sets the print colours and the US Letter page. The print hides the top line
+   and every control; the print view itself holds none. */
+@media print {
+  .top-line, button, nav, .examples, .paste, .row-controls { display: none; }
+  .page { max-width: none; padding: 0; }
+  body { font: var(--text-sm) var(--font-body); }
+  .print-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: var(--margin-rule); margin-bottom: var(--space-2); }
+  .print-header p { margin: 0; }
+  .print-name { font: var(--text-lg) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); }
+  .print-view .main-figure { margin: 0 0 var(--space-2); }
+  .print-view .main-figure .main-value { font: var(--text-xl) var(--font-figures); }
+  .print-view table.printed { margin-bottom: var(--space-2); }
+  .print-view table.printed th, .print-view table.printed td { height: auto; font: var(--text-xs) var(--font-figures); }
+  .print-view table.printed .exact-label { display: none; }
+  .print-view table.printed td.row-extra { font: var(--text-xs) var(--font-body); }
+  .ground-print { border-collapse: collapse; width: 100%; margin-bottom: var(--space-2); }
+  .ground-print caption { text-align: left; font: var(--text-xs) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); }
+  .ground-print th, .ground-print td { font: var(--text-xs) var(--font-figures); text-align: right; padding: 0 var(--space-1); border-bottom: var(--hairline); }
+  .print-view .flags { margin: var(--space-2) 0; font: var(--text-xs) var(--font-body); }
+  .print-view .drawing { margin: 0 0 var(--space-2); break-inside: avoid; }
+  .print-view .section-drawing { height: auto; }
+  .print-sources { font: var(--text-xs) var(--font-body); }
+  .print-sources h2 { font: var(--text-sm) var(--font-body); font-weight: 600; margin: var(--space-2) 0 var(--space-1); }
+  .print-sources dd { margin: 0 0 var(--space-1); }
+  .print-view .notice { margin-top: var(--space-2); font: var(--text-xs) var(--font-body); }
+}

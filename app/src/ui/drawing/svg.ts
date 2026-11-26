@@ -21,7 +21,8 @@ export function wsMark(): VNode {
   return h('svg', { class: 'ws-mark', viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' }, h('use', { href: '#ws-mark' }));
 }
 
-export function drawingView(m: DrawingModel): VNode {
+/** The drawing; `links: false` names a haunting as text, for the print. */
+export function drawingView(m: DrawingModel, opts: { links: boolean } = { links: true }): VNode {
   const f = frameFor(m);
   const pts = (list: readonly Pt[]) => list.map((p) => `${coord(f.px(p.x))},${coord(f.py(p.y))}`).join(' ');
   const text = (cls: string, x: number, y: number, s: string, anchor = 'middle') =>
@@ -72,6 +73,6 @@ export function drawingView(m: DrawingModel): VNode {
       text('scale', BOX.left, BOX.height - 8, f.scaleLabel, 'start')),
     m.words.some((w) => !w.at)
       ? h('figcaption', {}, m.words.filter((w) => !w.at).map((w) => h('p', { class: 'note' }, w.text,
-        w.haunting ? [' ', h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`), '.'] : null)))
+        w.haunting ? [' ', opts.links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)))
       : null);
 }

@@ -31,6 +31,9 @@ export interface PrintedRow {
   exact: string | null;
 }
 
+/** The action of the Print control. */
+export const PRINT_ACTION = 'print';
+
 /** The Exact column's head (design: The results screen, item 5). */
 export const EXACT_HEADER = 'Exact';
 
@@ -137,5 +140,7 @@ export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
     hauntingLinksView(m.links),
     parts.afterFlags ?? null,
     noticeView(),
+    // Offered only here, for a result, as QUICK-2 adds "Print <F5>" only after one (4.3).
+    h('button', { type: 'button', class: 'print', on: { click: { type: PRINT_ACTION } } }, 'Print'),
   );
 }

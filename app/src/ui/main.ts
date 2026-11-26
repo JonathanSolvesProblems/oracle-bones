@@ -5,6 +5,7 @@ import { render, type Dispatch } from './dom.ts';
 import { formFor } from './forms.ts';
 import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from './job.ts';
 import { exampleBlock, exampleForm, exampleJob, examplesView, type ExampleOrigin } from './views/example.ts';
+import { PRINT_ACTION, printModel, printView } from './views/print.ts';
 import { readPaste } from './paste.ts';
 import { calculate, type ScreenState } from './state.ts';
 import { calculatePage, type CalculatorState } from './views/calculate.ts';
@@ -22,6 +23,8 @@ const paste: PasteState = { open: false, text: '', message: null };
 /** The worked example loaded into the form, if any, and whether the job is still that example (8.6). */
 let loaded: ExampleOrigin | null = null;
 let origin: Origin = 'typed';
+/** While the browser prints: the local date of printing, set on beforeprint (design: The print view). */
+let printing: Date | null = null;
 /** The last calculation, until an input or the pair changes. */
 let last: { job: AppJob; screen: ScreenState } | null = null;
 
@@ -30,6 +33,7 @@ function page(route: Route): Child {
     case 'limits': return placeholder('Limits', 'The limits page is not built yet.');
     case 'proof': return placeholder('Proof', 'The proof page is not built yet.');
     default: {
+      if (printing && last && last.screen.kind === 'result') return printView(printModel(last.job, last.screen, printing));
       const grid = gridParts(state.rows);
       const view = last ? screenView(last.job, last.screen) : null;
       state.marked = new Set(view?.marked ?? []);
@@ -112,6 +116,9 @@ function update(action: Action, value: string | null): void {
       }
       break;
     }
+    case PRINT_ACTION:
+      if (last?.screen.kind === 'result') window.print();
+      break;
     case 'paste-close':
       Object.assign(paste, { open: false, message: null });
       focusAfterDraw = 'paste-open';
@@ -150,4 +157,6 @@ function draw(): void {
 }
 
 window.addEventListener('hashchange', draw);
+window.addEventListener('beforeprint', () => { printing = new Date(); draw(); });
+window.addEventListener('afterprint', () => { printing = null; draw(); });
 draw();

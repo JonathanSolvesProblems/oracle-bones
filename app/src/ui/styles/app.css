@@ -1,6 +1,7 @@
 /* Quickened's page styles. Every colour, size and space comes from tokens.css. */
 @import './tokens.css';
 @import './fonts.css';
+@import './print.css';
 
 *, *::before, *::after { box-sizing: border-box; }
 

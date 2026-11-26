@@ -150,8 +150,8 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     citation, and the cut-off example the test-discharge sentence of 8.9. Then the block.
     - _Requirements: 8.7, 8.8, 8.9_
 
-- [ ] 8. The print view
-  - [ ] 8.1 Test: the print view model holds the echoed inputs, the outputs, every flag
+- [x] 8. The print view
+  - [x] 8.1 Test: the print view model holds the echoed inputs, the outputs, every flag
     sentence, the drawing, the date as yyyy-mm-dd, the version and commit, the notice, the
     exact values where the results screen shows them, the sources and discharge sentence for
     either worked example, ground points four pairs to a row, and no control; Print is offered

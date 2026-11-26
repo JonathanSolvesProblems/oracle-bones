@@ -48,6 +48,19 @@
   --sketch-lines: 12;      /* ruled lines of the empty sketch page on a desktop */
 }
 
+/* Print (design: The print view): US Letter portrait with 0.5 in margins, black ink on white,
+   the water fill kept as a light tint and the pencil-red rule as a heavy black rule. */
+@page { size: letter portrait; margin: 0.5in; }
+@media print {
+  :root {
+    --paper: #FFFFFF;
+    --ink: #000000;
+    --ink-muted: #000000;
+    --pencil: #000000;
+    --margin-rule: 3px solid #000000;
+  }
+}
+
 /* The main figure is 32px / 40px under 480px. */
 @media (max-width: 479.98px) {
   :root { --text-figure: 32px / 40px; }
