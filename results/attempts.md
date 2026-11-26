@@ -2486,3 +2486,136 @@ the menu, so both miss there, and no observation is inside a band.
 **Not part of this.** The solver is not changed. circle-short-chord's bugfix.md and design.md
 are revised in the next commit, and A-018 follows them. Normal Depth's search (N2, Q-026) is not
 tested by any case here.
+
+## A-018: the result band at the trial on D, 50.4 in, and just above the floor (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**The last held-out round before the build (circle-short-chord 2.12). Thirteen cases, n .013 and
+slope .005. Eleven put a discharge inside or just outside 0.5% of the full-pipe number at the
+trial on D in the 9.6, 12 and 4.8 in pipes, where the rule to build prints the message and the
+person's full-pipe reading, in the model, prints a result at the trial on D for five of them.
+One steps to the trial on D at 50.4 in, a pipe with no observation yet. One is just above the
+floor in a 768 in pipe, where the rule to build now ends on the shape menu, which the model
+before A-017 graded never finished.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a018` (about 3 s)
+at e4d1e18, the commit before this section. It runs the rule to build (T1·D1·X2 with a run-time
+error read as the menu, variant E of A-017 graded; circle-short-chord 2.4 and 2.7), the reading
+in the model (T1·D1·X1 F), and the 203 variants tied at 75 of 82 in A-017 graded, multiplies
+A·√(g·A/T) by 1 ± 1e-4, and checks that no stored case has these inputs. It never runs the
+program. A result at the trial on D is printed from the full pipe, A = 3.1416·D²/4, P =
+3.1416·D, T = D; P is an assumption, since the reading names only A and T.
+
+**Predictions.**
+- **Rule to build**: circle-short-chord 2.4 with K1 and 2.7.
+- **Candidate 1 with the full-pipe number**: the person's reading read as candidate 1 of A-016
+  graded, with the number 3.9497·D^2.5: the menu for q more than 0.5% under it, the message for
+  q more than 0.5% over it, a result at the trial on D inside 0.5%. It describes every
+  observation in a pipe with a trial on D except E3 (A-017 graded) and has no mechanism for the
+  menu.
+- **T1·D1·X1 F**: the reading inside the model. Under the number the search takes a chord below
+  D, which here comes up short, and K1 resumes past D: the message.
+
+### The cases
+
+"Message" and "shape menu" are as in A-016. The full-pipe numbers are 2.2609 cfs at 9.6 in
+(result band 2.2497 to 2.2723), 3.9497 at 12 in (3.9301 to 3.9695), 0.39968 at 4.8 in (0.39769
+to 0.40169) and 142.79 at 50.4 in. Every case except F1 steps to the trial on D.
+
+| Case | Diameter | Discharge | Rule to build | Candidate 1, full-pipe number | T1·D1·X1 F | The 203 tied | How far from a knife edge |
+|---|---|---|---|---|---|---|---|
+| M1 | 9.6 | 2.24 | message | shape menu | message | 203 message | 0.43% under the band; 27.1% over the least q that steps to D (1.7619) |
+| M2 | 9.6 | 2.25 | message | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message | **0.014% inside the bottom of the band**; 27.7% over 1.7619 |
+| M3 | 9.6 | 2.26 | message | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message | 0.46% and 0.54% inside the band's ends |
+| M4 | 9.6 | 2.27 | message | result, Depth `0.79` | result, Depth `0.79` | 44 result, 159 message | 0.10% inside the top of the band |
+| M5 | 9.6 | 2.28 | message | message | message | 203 message | 0.34% over the band |
+| M6 | 12 | 3.91 | message | shape menu | message | 193 message, 10 shape menu | 0.51% under the band; 10.9% over 3.5248 |
+| M7 | 12 | 3.95 | message | result, Depth `0.99` | result, Depth `0.99` | 44 result, 149 message, 10 shape menu | 0.51% and 0.49% inside the band's ends |
+| M8 | 12 | 3.99 | message | message | message | 193 message, 10 shape menu | 0.52% over the band; 0.25% under cd-circ-000045's 4 cfs |
+| M9 | 4.8 | .395 | message | shape menu | message | 203 message | 0.68% under the band |
+| M10 | 4.8 | .4 | message | result, Depth `0.39` | result, Depth `0.39` | 50 result, 153 message | 0.58% and 0.42% inside the band's ends |
+| M11 | 4.8 | .405 | message | message | message | 203 message | 0.82% over the band |
+| L1 | 50.4 | 216 | message | message | message | 203 message | 0.85% over the least q that steps to D (214.18; trial 20, 4.0000005 ft, gives 213.11); 51% over the number |
+| F1 | 768 | .0023 | shape menu | - | shape menu | 203 shape menu | 1.11 times the floor (0.002078 cfs); the rule gives a result from 1.254 times (0.002605 cfs), 13% above q |
+
+Multiplied by 1 ± 1e-4, A·√(g·A/T) changes no ending under the rule to build or under T1·D1·X1 F
+in any case. M2 sits 0.014% inside the band, so a number 0.014% higher makes it the message
+under the reading; it is there because it is next to the band's edge, and a miss there says less
+than a miss at M3. No stored case has these inputs.
+
+In M1, M6 and M9, under T1·D1·X1 F the chord below D is over q and the next one is short (13.8%,
+5.8% and 39.0%), and K1 resumes past D. In F1, under the rule to build, the chords on [0, 0.2]
+fall until chord 1.093492e-15 ft, where x = (r − y)/r rounds to 1 and x/√(1−x²) divides by zero:
+the menu, by the path that ends W1 and W2. x is computed in double, as the rebuild computes it;
+in single precision it would round to 1 at a larger chord on the same path.
+
+The printed fields where a prediction is a result, every field the comparator compares, under the
+full-pipe reading (candidate 1 and T1·D1·X1 F print the same):
+
+| Case | Diameter | n | Discharge | Depth | Slope | Critical Slope | Area | Wet Per | Velocity | Hyd R | Top Width | Froude # | Max Discharge | Flow Type |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M2 | 9.6 | 0.0130 | 2 | 0.79 | 0.0050 | 0.0131 | 0.5 | 2.5 | 4.5 | 0.2 | 0.8 | 1.0 | 2 | CRITICAL |
+| M3 | 9.6 | 0.0130 | 2 | 0.79 | 0.0050 | 0.0132 | 0.5 | 2.5 | 4.5 | 0.2 | 0.8 | 1.0 | 2 | CRITICAL |
+| M4 | 9.6 | 0.0130 | 2 | 0.79 | 0.0050 | 0.0134 | 0.5 | 2.5 | 4.5 | 0.2 | 0.8 | 1.0 | 2 | CRITICAL |
+| M7 | 12.0 | 0.0130 | 4 | 0.99 | 0.0050 | 0.0123 | 0.8 | 3.1 | 5.0 | 0.3 | 1.0 | 1.0 | 4 | CRITICAL |
+| M10 | 4.8 | 0.0130 | 0 | 0.39 | 0.0050 | 0.0167 | 0.1 | 1.3 | 3.2 | 0.1 | 0.4 | 1.0 | 0 | CRITICAL |
+
+Knife edges in the fields: M3's Critical Slope, 0.0132419, is 0.061% under 0.01325, and M4's,
+0.0133593, 0.070% over 0.01335. M7's Hyd R is A/P = 0.25 exactly, on the rounding boundary,
+because of the assumed P = 3.1416·D: it prints `0.3` here, and a P from QUICK-2's own formula, or
+an A from it, could print `0.2`, so a miss on M7's Hyd R alone says how QUICK-2 forms P or A at
+D, not that the reading is wrong. M10's Discharge `0` and Max Discharge `0` are the `######`
+mask on 0.4 and on 0.49 cfs; no golden has shown a discharge under 0.5 through the mask.
+
+### What separates what
+
+- M2 to M4, M7 and M10 separate the rule to build (and the 159 tied variants that print the
+  message there) from the full-pipe reading (and the 44 or 50 tied variants that print a
+  result). No observation is inside a band yet.
+- M1, M6 and M9 separate candidate 1 with the full-pipe number (the menu) from every model
+  (the message). They are where the trial-on-D difference would widen if QUICK-2 keeps the
+  pattern A-017 found.
+- M5, M8 and M11 are where every prediction agrees on the message; they bound the band from
+  above.
+- M6 to M8 separate 10 of the tied variants (the shape menu) from the other 193.
+- L1 separates nothing written here; it asks whether a pipe whose last trial inside gives more
+  than the full-pipe number (213.11 against 142.79 cfs) ends on the menu just over the reach of
+  its trial on D, as 9.6, 12 and 4.8 in did (B1 to E2).
+- F1 separates the rule to build, and every model with a run-time error read as the menu, from
+  A-015's model, which never finished there, and tests 2.7's floor rule above the floor.
+- Among the 56 combinations that tie with the rule to build on all 82 observations, no case here
+  separates any two; none was found in A-016 or A-017 either.
+
+### What each answer would mean
+
+- **M2 to M4, M7 or M10 a result** with the fields above: the person's number is what QUICK-2
+  compares q with at the trial on D, and the rule to build is wrong there. The rule that fits
+  best then has the full-pipe number at the trial on D; the requirements say which before the
+  build (2.12). A result with a field other than the table's is a wrong printed number and blocks
+  the build.
+- **M2 to M4, M7 or M10 the message**: no result band at the full-pipe number. The reading's
+  number would have to be wrong, while its split of the 22 observations stands.
+- **Any of M1 to M11 on the shape menu**: another trial-on-D ending; it joins the known
+  difference of 2.6 with its case id. M1, M6 and M9 on the menu are what candidate 1 with the
+  full-pipe number predicts; M5, M8 or M11 on the menu would put the menu over the number, which
+  that candidate does not allow.
+- **L1 on the shape menu**: candidate 1's number at 50.4 in is above 217 cfs, not 142.79, so the
+  full-pipe number is not the one in every pipe. It joins 2.6 as a known difference. A result at
+  L1 is a miss of every prediction.
+- **F1 a result**: just above the floor, QUICK-2 does not meet the run-time error the model
+  meets, so 2.7's outcome would hold only under the floor; the ending is recorded as a known
+  difference (2.12) and the floor rule is revisited. **F1 the message**: a miss of every
+  prediction here. F1 on the menu: what 2.7 predicts.
+- **A hold at a prompt** (768 in or .0023 cfs, or .395 cfs, not taken by the form): a miss of the
+  case's premise, not of the search. No stored case has a discharge typed with more than two
+  decimals; .395 has three and .0023 four.
+
+**How to run.** Each case once, with record true, in any order. A case that ends on the shape
+menu stores no golden; add a behaviour case with the same keys (`hold_ms` 3000, as
+obs-cdmenu-000005 has) and record it in the next recording call. A shape-menu run waits 10 s for
+a result or a rejection before it ends.
+
+**Not part of this.** The solver, circle-short-chord's bugfix.md and design.md, and the ledger
+are unchanged. Normal Depth's search (N2, Q-026) is not tested by any case here.
