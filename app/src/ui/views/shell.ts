@@ -30,7 +30,16 @@ export function proofCaseAnchor(hash: string): string | null {
   return m ? `case-${m[1]}` : null;
 }
 
-export function shell(route: Route, main: Child): VNode {
+export const UPDATE_LINE = 'A newer build of Quickened has taken over since this page opened.';
+export const RELOAD_ACTION = 'reload';
+
+/** The one line of criterion 1.13: a newer build's worker has taken over; reloading is the reader's choice. */
+export function updateLine(): VNode {
+  return h('p', { id: 'update-line', class: 'update-line', role: 'status' },
+    UPDATE_LINE, ' ', h('button', { type: 'button', on: { click: { type: RELOAD_ACTION } } }, 'Reload'));
+}
+
+export function shell(route: Route, main: Child, opts: { newerBuild?: boolean } = {}): VNode {
   return h('div', { class: 'page' },
     h('header', { class: 'top-line' },
       h('a', { class: 'name', href: '#/' }, 'Quickened'),
@@ -38,6 +47,7 @@ export function shell(route: Route, main: Child): VNode {
         h('ul', {}, ROUTES.map((r) => h('li', {},
           h('a', { href: r.hash, 'aria-current': r.route === route ? 'page' : undefined }, r.label))))),
     ),
+    opts.newerBuild ? updateLine() : null,
     h('main', { id: 'main' }, main),
   );
 }

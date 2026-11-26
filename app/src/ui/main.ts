@@ -16,7 +16,7 @@ import { calculatePage, type CalculatorState } from './views/calculate.ts';
 import { gridParts } from './views/grid.ts';
 import { pasteControl, type PasteState } from './views/paste.ts';
 import { shapeChoice, STEP_BACKWATER_SHAPE } from './views/picker.ts';
-import { proofCaseAnchor, routeOf, shell, type Route } from './views/shell.ts';
+import { proofCaseAnchor, RELOAD_ACTION, routeOf, shell, type Route } from './views/shell.ts';
 import { screenView } from './views/screen.ts';
 import type { Action, Child } from './vnode.ts';
 
@@ -121,6 +121,9 @@ function update(action: Action, value: string | null): void {
       }
       break;
     }
+    case RELOAD_ACTION:
+      location.reload();
+      break;
     case PRINT_ACTION:
       if (last?.screen.kind === 'result') window.print();
       break;
@@ -152,9 +155,12 @@ const dispatch: Dispatch = (action, value) => {
 /** An element to move focus to once the page is drawn, when an action opens or closes a part. */
 let focusAfterDraw: string | null = null;
 
+/** Whether a newer build's worker has taken over this page since it opened (criterion 1.13). */
+let newerBuild = false;
+
 function draw(): void {
   const route = routeOf(location.hash);
-  render(root!, shell(route, page(route)), dispatch);
+  render(root!, shell(route, page(route), { newerBuild }), dispatch);
   if (focusAfterDraw) {
     document.getElementById(focusAfterDraw)?.focus();
     focusAfterDraw = null;
@@ -175,6 +181,18 @@ window.addEventListener('beforeprint', () => { printing = new Date(); draw(); })
 window.addEventListener('afterprint', () => { printing = null; draw(); });
 draw();
 // The service worker exists only in a build (build/serviceWorker.ts); the dev server has none.
+// The worker serves the cache first and takes over open pages when a newer build installs, so a
+// page open at a deploy is the previous build's. The first worker to control a page is not a
+// newer build; any later one is, and the page says so in one line. It never reloads by itself:
+// the Reload control is the reader's, so typed values are never lost (criterion 1.13).
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  let controlled = navigator.serviceWorker.controller !== null;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (controlled && !newerBuild) {
+      newerBuild = true;
+      draw();
+    }
+    controlled = true;
+  });
   void navigator.serviceWorker.register('./sw.js').catch(() => undefined);
 }

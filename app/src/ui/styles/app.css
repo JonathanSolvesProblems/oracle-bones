@@ -290,6 +290,9 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .example-sources dd { margin: 0 0 var(--space-2); }
 .example-sources .no-longer { color: var(--pencil); }
 
+/* A newer build has taken over the open page (1.13): one line under the top line, never a reload by itself. */
+.update-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: 0; padding: var(--space-2) 0; border-bottom: var(--hairline); }
+
 .kept-points { margin-top: var(--space-3); font: var(--text-sm) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 

@@ -265,7 +265,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
   - [x] 16.6 Test: at 375 px the results tables' captions take the table's width and at most two
     lines. Then the phone stylesheet.
     - _Requirements: 2.9_
-  - [ ] 16.7 Test, with two builds in Playwright: when a newer build's worker takes over an open
+  - [x] 16.7 Test, with two builds in Playwright: when a newer build's worker takes over an open
     page, the page says so in one line with a reload control, keeps typed values and does not
     reload by itself; the control loads the newer build. Then `main.ts` and `views/shell.ts`.
     - _Requirements: 1.13_
