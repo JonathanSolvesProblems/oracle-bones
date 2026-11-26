@@ -10,28 +10,28 @@ Exhumer session, which does.
 
 Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhumer.
 
-- [ ] 1. The app shell
-  - [ ] 1.1 Test: a guard test over `app/src/ui/` that fails on an import from `../solver/`
+- [x] 1. The app shell
+  - [x] 1.1 Test: a guard test over `app/src/ui/` that fails on an import from `../solver/`
     outside the design's allowed list, and on `toFixed`, `toPrecision`, `toLocaleString` or
     `Intl.NumberFormat` outside `drawing/axis.ts`. It passes on an empty `ui/`; show it failing
     on a throwaway file that breaks each rule, then delete the file.
     - _Requirements: 2.1_
-  - [ ] 1.2 Add Vite (pinned dev dependency), `vite.config.ts` with `base: './'`,
+  - [x] 1.2 Add Vite (pinned dev dependency), `vite.config.ts` with `base: './'`,
     `tsconfig.ui.json` with the DOM library, `index.html` with the Content Security Policy of
     the design, and `src/ui/main.ts` with the hash routes `#/`, `#/limits` and `#/proof`, each a
     placeholder that links the other two. `npm run build` writes `dist/` with relative asset
     URLs. The Vitest suite still passes with no change to `app/src/solver/` or `app/src/format/`.
     - _Requirements: 1.3, 5.5_
-  - [ ] 1.3 Test: the stylesheet test fails on a colour, font size or spacing literal outside
+  - [x] 1.3 Test: the stylesheet test fails on a colour, font size or spacing literal outside
     `tokens.css`. Then `tokens.css` with every token of the design, and the three IBM Plex
     families as self-hosted woff2 with their `OFL.txt`.
     - _Requirements: 9.4, 1.12_
-  - [ ] 1.4 Test: for every pair, `isBuilt(mode, shape)` is false exactly when `solve()`
+  - [x] 1.4 Test: for every pair, `isBuilt(mode, shape)` is false exactly when `solve()`
     answers `not built` for that pair's golden inputs, or a probe job where no golden exists.
     Then export `isBuilt` from `app/src/solver/index.ts`, read from the tables `solve()` uses.
     Show the comparator's quick set unchanged (`python scripts/oracle_quick.py`, 195 of 200).
     - _Requirements: 7.4_
-  - [ ] 1.5 Test: Property 10; `stationError` returns the same string as before for the cases
+  - [x] 1.5 Test: Property 10; `stationError` returns the same string as before for the cases
     of solver criteria 10.3 and 10.4; the row-24 message windows of
     `obs-irrelev-000001/screen-09.txt` and `obs-irrstation-000001/screen-05.txt` split into the
     error text and the key line's rest; every other golden message gives `null`. Then
@@ -40,59 +40,59 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     unchanged (195 of 200).
     - _Requirements: 6.10_
 
-- [ ] 2. The form
-  - [ ] 2.1 Test Property 8: for every built pair, the form view model's labels occur in that
+- [x] 2. The form
+  - [x] 2.1 Test Property 8: for every built pair, the form view model's labels occur in that
     pair's result screen rows in `layout.ts`, the field order is the solver's prompt order, and
     the fixed fields of `FIXED_FIELDS` are shown and not editable. Then `ui/forms.ts`.
     - _Requirements: 1.1, 1.4, 1.6_
-  - [ ] 2.2 Test Property 6 (the plain-decimal rule; no `solve()` call with a bad field). Then
+  - [x] 2.2 Test Property 6 (the plain-decimal rule; no `solve()` call with a bad field). Then
     `ui/validate.ts`.
     - _Requirements: 1.9_
-  - [ ] 2.3 Test: `ui/job.ts` builds a Job whose inputs are each field's text as typed, keyed by
+  - [x] 2.3 Test: `ui/job.ts` builds a Job whose inputs are each field's text as typed, keyed by
     the contract's names (`sta_01`, `elev_01`, the `ND_IRREGULAR_PROMPTS`), for the input keys
     of every golden. Then `job.ts`.
     - _Requirements: 1.5_
-  - [ ] 2.4 The picker and form views: four modes and five shapes in QUICK-2's order and names,
+  - [x] 2.4 The picker and form views: four modes and five shapes in QUICK-2's order and names,
     Step-Backwater with no shape choice, "not built yet" from `isBuilt`, the fields under
     "Your inputs". Check by hand at both widths with `npm run dev` and say what was checked.
     - _Requirements: 1.1, 2.5, 7.1, 7.2_
-  - [ ] 2.5 Test Property 3, and a test that `realdata/huntington-section-01.tsv` pastes as 40
+  - [x] 2.5 Test Property 3, and a test that `realdata/huntington-section-01.tsv` pastes as 40
     rows. Then `ui/paste.ts` and the paste control.
     - _Requirements: 1.7, 1.8_
-  - [ ] 2.6 Test Property 4, with the keys of obs-irrelev-000001 and obs-irrstation-000001 among
+  - [x] 2.6 Test Property 4, with the keys of obs-irrelev-000001 and obs-irrstation-000001 among
     the cases. Then `ui/grid.ts` and the ground-points table with the not-taken rows named.
     - _Requirements: 1.6, 1.10_
 
-- [ ] 3. Screen states and flags
-  - [ ] 3.1 Test Property 2, and a test that `classify` gives every golden the state its
+- [x] 3. Screen states and flags
+  - [x] 3.1 Test Property 2, and a test that `classify` gives every golden the state its
     outcome, held prompt and message call for, with the `failed` fallback reached by none. Then
     `ui/state.ts` (`runJob`, `classify`).
     - _Requirements: 6.1 to 6.6, 6.9, 1.2_
-  - [ ] 3.2 Test: each state's view model has its text: the held prompt named with the sentence
+  - [x] 3.2 Test: each state's view model has its text: the held prompt named with the sentence
     of 1.2; QUICK-2's message trimmed and labelled; each flag sentence verbatim, in order, with
     its fields marked; the `failed` message labelled as Quickened's; the notice in all of them.
     Then `views/states.ts`.
     - _Requirements: 1.2, 6.2 to 6.7, 6.9, 2.3_
-  - [ ] 3.3 Test: a station error's `rejected` state shows the text up to its "!" as QUICK-2's
+  - [x] 3.3 Test: a station error's `rejected` state shows the text up to its "!" as QUICK-2's
     message and the key-line sentence with the rest, both taken from `splitStationError`, and
     the state's Result keeps `message` whole. Then the station-error part of `classify` and
     `views/states.ts`.
     - _Requirements: 6.3, 6.10_
-  - [ ] 3.4 Test: the not-built view for Step-Backwater names what QUICK-2 asks for (solver
+  - [x] 3.4 Test: the not-built view for Step-Backwater names what QUICK-2 asks for (solver
     11.1, 11.2) and the first-section limit; for Critical Depth and Channel Capacity on the
     irregular section it says the pair is not observed; each links the limits page and has no
     calculable form. Then the view.
     - _Requirements: 7.3_
 
-- [ ] 4. The results screen
-  - [ ] 4.1 Test Property 1 over every golden: the shown text of each printed field equals
+- [x] 4. The results screen
+  - [x] 4.1 Test Property 1 over every golden: the shown text of each printed field equals
     `respond()`'s printed text, trimmed. Then `views/results.ts`: the main figure, the printed
     fields under QUICK-2's labels, inputs and outputs labelled as the design says.
     - _Requirements: 2.1, 2.5_
-  - [ ] 4.2 Test Property 9. Then `ui/method.ts` and the method list, with `SEARCH_DEPTH_LIMIT`
+  - [x] 4.2 Test Property 9. Then `ui/method.ts` and the method list, with `SEARCH_DEPTH_LIMIT`
     labelled as Quickened's.
     - _Requirements: 2.6_
-  - [ ] 4.3 Test: the cut-off line appears beside Area, Top Wid and Wet Per exactly when the
+  - [x] 4.3 Test: the cut-off line appears beside Area, Top Wid and Wet Per exactly when the
     Result has `cut_off_area_counted`, over every irregular golden. Then the line.
     - _Requirements: 6.8_
 

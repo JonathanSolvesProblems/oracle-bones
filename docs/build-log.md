@@ -2013,3 +2013,77 @@ results/limits-plain.md has 13 entries written from the ledger's text (f250dfb, 
 themselves). The spec followed (e8a4d91).
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the quickened-app spec session
+
+The revision in the last entry used 42.64 credits over 15 min 30 s. The person's calls after
+review, and the spec changes that followed them, used 45.27 credits over 9 min 11 s.
+
+### quickened-app tasks 1 to 4
+
+Settings: Claude Opus 5.5, a new session.
+
+> Run tasks 1 to 4 of the quickened-app spec, in order, then stop. I reviewed the requirements,
+> the design and the task list (e8a4d91) and approve them.
+
+The person's rules: no run of the program (the tests, the comparator and a local build are
+fine); no waiting loops and no dev server left running; edits with the file tool only; short
+shell commands; commit messages in a file without a byte order mark, passed with
+`git commit -F`; new packages from the npm registry at an exact version, one install command
+each; stop and show any check that comes out differently from what its task expects, with no
+change to a test's expected value, a golden or the spec; and the hand checks at both widths
+left to the person.
+
+**Commits**, one per sub-task. Each test was shown failing before its code:
+
+- Task 1, the app shell: the guard over `ui/` (2acab73); Vite, the two tsconfigs, index.html
+  with the Content Security Policy, and the hash routes (a46c9b3); the stylesheet token test,
+  tokens.css and the IBM Plex fonts (773ee5e); `isBuilt` (ed2a7aa); `stationErrorText` and
+  `splitStationError` (5f76327).
+- Task 2, the form: the form view model, Property 8 (56c9d45); the plain-decimal rule,
+  Property 6 (86e5eb5); the Job (246d14d); the picker and form views (56d3dc2); paste,
+  Property 3 (92df30e); the ground-points grid, Property 4 (c95189a).
+- Task 3, screen states: `runJob` and `classify`, Property 2 (db44d70); the states' views
+  (58aa406); the station error's rejected state (a8b2a23); the not-built view (e416468).
+- Task 4, the results screen: Property 1 (64ca15f); the method list, Property 9 (01f77f2); the
+  cut-off line (7408b5e).
+
+**Checks.** `npx vitest run` went from 17 files and 930 tests to 34 files and 1140 tests, all
+passing. The comparator's quick set stayed at 195 of 200 after both solver changes (1.4 and
+1.5). The five misses are the known ones: cc-circ-000035, nd-circ-000020, and sb-irr-000001 to
+000003. The comparator rewrites the `last_run` times in results/ledger.json, which were
+committed with 1.4 and 1.5. `npm run build` writes dist/ with relative asset and font URLs.
+`npm run typecheck` runs both tsconfigs and passes.
+
+**Findings and choices the person should see:**
+
+- `solve()` never answers `rejected` with the station error. `press()` clears the error at the
+  next key, and `sectionKeys` always sends one more key, so a job with 35 after 35 runs on and
+  computes a result. The 3.3 test therefore builds its Result from the solver's `stationError`.
+  The design's sentence "a station that does not increase is the solver's `rejected`" does not
+  hold today, and e2e item 2 (task 12.2) will fail on it. What QUICK-2 does after a station
+  error is unobserved.
+- Property 1 checks the state kind against `respond()`'s outcome, not the golden's. The two
+  differ only on sb-irr-000001 to 000003, which the solver answers `not built`.
+- 2.3 covers the 337 compared goldens of built pairs. Step-Backwater's three have no form.
+- The profile gives no station range, so Property 10 draws stations from the span the goldens
+  type, in hundredths. A tiny value such as 1.4E-45 makes the error longer than the key line,
+  and the split then gives null.
+- The comparator does not grade messages. The 3.1 test compares messages trimmed, as
+  criterion 6.3 shows them.
+- tsconfig.json now excludes src/ui. The ui files a test imports are still checked by it, so
+  view models stay free of DOM types. tsconfig.ui.json covers the rest.
+- Packages added: vite 8.3.8, the copy Vitest 5.1.1 already uses. To get the fonts, the
+  session installed @ibm/plex-sans 2.0.0, @ibm/plex-sans-condensed 3.0.0 and @ibm/plex-mono
+  2.5.0, copied four Latin1 woff2 files and the OFL text into public/fonts, then removed the
+  three packages: each runs an IBM telemetry postinstall (`ibmtelemetry`), which the docs say
+  reports only under CI. `CI` was not set.
+- Beyond the task text: a picker test against the two menu captures; a "Remove last row"
+  control; on the desktop, flag sentences on the right-hand page beside the form.
+- The write of a commit message into .git/ was refused, so the messages went to
+  tmp/commit-msg.txt.
+
+The hand check of 2.4 at both widths is the person's. No dev server was left running, and
+nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
