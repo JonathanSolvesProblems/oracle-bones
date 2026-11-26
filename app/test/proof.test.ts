@@ -5,7 +5,9 @@
 import { describe, expect, it } from 'vitest';
 import { data } from 'virtual:quickened/data';
 import { runJob } from '../src/ui/state.ts';
-import { NO_HEADLINE, proofModel, proofView } from '../src/ui/views/proof.ts';
+import { NO_HEADLINE, NOT_COUNTED, proofModel, proofView } from '../src/ui/views/proof.ts';
+import { screenLabel, screenRowHeading } from '../src/ui/forms.ts';
+import type { Mode, Shape } from '../src/solver/index.ts';
 import { findAll, textOf } from '../src/ui/vnode.ts';
 import type { AppJob } from '../src/ui/job.ts';
 import { readFileSync } from 'node:fs';
@@ -36,11 +38,11 @@ describe('the proof view model', () => {
       const g = golden(c.id);
       const r = runJob(jobOf(g));
       const fields = c.rows.filter((x) => x.kind === 'printed');
-      expect(fields.map((x) => x.field), c.id).toEqual(Object.keys(g.printed));
+      expect(fields.filter((x) => x.quick2 !== null).map((x) => x.field), c.id).toEqual(Object.keys(g.printed));
       for (const x of fields) {
-        expect(x.quick2, `${c.id} ${x.field}`).toBe(g.printed[x.field]);
+        expect(x.quick2, `${c.id} ${x.field}`).toBe(g.printed[x.field] ?? null);
         expect(x.quickened, `${c.id} ${x.field}`).toBe(r.printed[x.field] ?? null);
-        expect(x.same, `${c.id} ${x.field}`).toBe(x.quick2 === x.quickened);
+        expect(x.same, `${c.id} ${x.field}`).toBe(x.quick2 !== null && x.quickened !== null && x.quick2.trim() === x.quickened.trim());
       }
       const outcome = c.rows.find((x) => x.kind === 'outcome')!;
       expect([outcome.quick2, outcome.quickened]).toEqual([g.outcome, r.outcome]);
@@ -50,17 +52,54 @@ describe('the proof view model', () => {
         const held = c.rows.find((x) => x.kind === 'held')!;
         expect([held.quick2, held.quickened]).toEqual([g.held_prompt ?? null, r.held]);
       }
-      expect(c.same, c.id).toBe(c.rows.every((x) => x.same));
+      expect(c.same, c.id).toBe(c.rows.filter((x) => x.counted).every((x) => x.same));
     }
   });
-  // The comparator compares the outcome and the printed fields, not the message or the held
-  // prompt; the page marks those rows too, so a case can be different by its message alone.
-  it('marks every known miss (results/known-misses.json) different, and no other case on its outcome or printed fields', () => {
-    expect(model.cases.some((c) => isKnownMiss(c.id))).toBe(true);
+  // Criterion 5.10 (2026-11-26): the page marked four circle rejections different because QUICK-2's
+  // message ends in blanks and Quickened's does not. The comparator (oracle.compare.compare_one)
+  // compares the outcome and then each printed field trimmed; the message and the held prompt are
+  // shown, compared trimmed, and do not mark the case.
+  it("marks a case by the comparator's rule: the outcome, then every printed field trimmed", () => {
     for (const c of model.cases) {
-      if (isKnownMiss(c.id)) expect(c.same, c.id).toBe(false);
-      else expect(c.rows.filter((x) => x.kind === 'outcome' || x.kind === 'printed').every((x) => x.same), c.id).toBe(true);
+      const g = golden(c.id);
+      const r = runJob(jobOf(g));
+      const keys = new Set([...Object.keys(g.printed), ...Object.keys(r.printed)]);
+      const rule = g.outcome === r.outcome && [...keys].every((k) => g.printed[k] !== undefined && r.printed[k] !== undefined && g.printed[k]!.trim() === r.printed[k]!.trim());
+      expect(c.same, c.id).toBe(rule);
+      expect(c.rows.filter((x) => x.counted).map((x) => x.kind).every((k) => k === 'outcome' || k === 'printed'), c.id).toBe(true);
+      for (const x of c.rows.filter((y) => y.kind === 'message' || y.kind === 'held')) {
+        expect(x.counted, `${c.id} ${x.kind}`).toBe(false);
+        expect(x.same, `${c.id} ${x.kind}`).toBe((x.quick2 ?? '').trim() === (x.quickened ?? '').trim() && (x.quick2 === null) === (x.quickened === null));
+      }
     }
+  });
+  it('marks different exactly the cases on the page that results/known-misses.json holds', () => {
+    expect(model.cases.some((c) => isKnownMiss(c.id))).toBe(true);
+    expect(model.different).toEqual(model.cases.filter((c) => isKnownMiss(c.id)).map((c) => c.id));
+  });
+  it('shows a rejection whose message differs only in its blanks as same, with both messages trimmed', () => {
+    const rejected = model.cases.filter((c) => c.rows[0]!.quick2 === 'rejected' && !isKnownMiss(c.id));
+    expect(rejected.length).toBeGreaterThan(0);
+    const v = proofView(model);
+    for (const c of rejected) {
+      expect(c.same, c.id).toBe(true);
+      const msg = c.rows.find((x) => x.kind === 'message')!;
+      const cells = findAll(findAll(v, (n) => n.attrs.id === `case-${c.id}`)[0]!, (n) => n.tag === 'tr' && n.attrs['data-kind'] === 'message')[0]!;
+      const tds = findAll(cells, (n) => n.tag === 'td').map((n) => n.children.join(''));
+      expect(tds.slice(0, 2), c.id).toEqual([msg.quick2, msg.quickened].map((s) => (s === null ? '(none)' : s.trim())));
+    }
+  });
+  it("labels each printed row with QUICK-2's label for the field, as the results screen does", () => {
+    for (const c of model.cases) {
+      const g = golden(c.id);
+      for (const x of c.rows.filter((y) => y.kind === 'printed')) {
+        const label = screenLabel(g.mode as Mode, g.shape as Shape, x.field) ?? x.field;
+        const heading = screenRowHeading(g.mode as Mode, g.shape as Shape, x.field);
+        expect(x.label, `${c.id} ${x.field}`).toBe(heading ? `${heading} ${label}` : label);
+      }
+    }
+    const irr = model.cases.find((c) => c.rows.some((x) => x.field === 'ws_elev'));
+    expect(irr?.rows.find((x) => x.field === 'ws_elev')?.label).toBe(screenLabel('normal_depth', 'irregular', 'ws_elev'));
   });
   it('states the count and date of results/headline.md', () => {
     const file = parseHeadline(readFileSync(join(ROOT, 'results', 'headline.md'), 'utf-8'));
@@ -106,7 +145,7 @@ describe('the proof view model', () => {
       expect(pre.children.join(''), c.id).toBe(c.capture);
       expect(textOf(block)).toContain(c.captureLabel);
       const marks = findAll(block, (n) => n.attrs.class === 'mark').map(textOf);
-      expect(marks, c.id).toEqual(c.rows.map((x) => (x.same ? 'same' : 'different')));
+      expect(marks, c.id).toEqual(c.rows.map((x) => `${x.same ? 'same' : 'different'}${x.counted ? '' : `, ${NOT_COUNTED}`}`));
     }
   });
 });

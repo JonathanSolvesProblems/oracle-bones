@@ -254,7 +254,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     no-answer entries, each with the headline run's cases it holds, summing to the run's misses.
     Then the data module's `knownMisses` and the limits view.
     - _Requirements: 5.9_
-  - [ ] 16.4 Test: the proof page marks a case by the comparator's rule (outcome and printed
+  - [x] 16.4 Test: the proof page marks a case by the comparator's rule (outcome and printed
     fields, trimmed); the message and held prompt are shown trimmed and not counted; the cases
     marked different are exactly the page's known misses; each row carries QUICK-2's label. Then
     `views/proof.ts`.
