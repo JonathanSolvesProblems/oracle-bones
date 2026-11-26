@@ -12,7 +12,7 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.ui.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.ui.json && tsc -p tsconfig.sw.json",
     "oracle": "node src/oracle/entry.ts",
     "snapshot:search": "node test/searchSnapshot.ts write",
     "snapshot:circle": "node test/circleSnapshot.ts record"

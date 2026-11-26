@@ -163,3 +163,7 @@ window.addEventListener('hashchange', draw);
 window.addEventListener('beforeprint', () => { printing = new Date(); draw(); });
 window.addEventListener('afterprint', () => { printing = null; draw(); });
 draw();
+// The service worker exists only in a build (build/serviceWorker.ts); the dev server has none.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('./sw.js').catch(() => undefined);
+}

@@ -189,8 +189,8 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     different. Then `views/proof.ts`.
     - _Requirements: 5.1, 5.2_
 
-- [ ] 11. Offline
-  - [ ] 11.1 Test: the service-worker plugin's precache list equals the files of a build, and
+- [x] 11. Offline
+  - [x] 11.1 Test: the service-worker plugin's precache list equals the files of a build, and
     `sw.js` carries the build's version hash. Then `build/serviceWorker.ts`, `src/sw.ts` and the
     registration in `main.ts`.
     - _Requirements: 1.3, 1.12_
