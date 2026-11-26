@@ -2592,12 +2592,12 @@
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-25T19:35:32Z"
+      "last_run": "2026-11-26T11:40:45Z"
     },
     "outcome": {
       "status": "untriaged",
-      "count": 17,
-      "last_run": "2026-11-25T19:35:32Z"
+      "count": 3,
+      "last_run": "2026-11-26T11:40:45Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2606,8 +2606,8 @@
     },
     "velocity": {
       "status": "untriaged",
-      "count": 3,
-      "last_run": "2026-11-25T19:35:32Z"
+      "count": 1,
+      "last_run": "2026-11-26T11:40:45Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2637,8 +2637,8 @@
     },
     "critical_slope": {
       "status": "accepted",
-      "count": 3,
-      "last_run": "2026-11-25T19:35:32Z",
+      "count": 0,
+      "last_run": "2026-11-26T11:24:06Z",
       "classification": "spec_error",
       "why": "results/attempts.md A-008, cd-circ-000033. Skeptic review 2026-11-25: holds. Four exploratory runs at 11.9 in, q 3 (all result): n .013 S .005 printed Critical Slope 0.0090 as the golden (20261125-100502-72ee8b); n .13 S .005 printed 0.8955 (20261125-100502-2c83a6); n .3 S .005 printed 4.7692 (20261125-100602-583c5a); n .13 S .05 printed 0.8955 (20261125-100602-af58ea). Critical Slope scales with n squared and ignores the entered slope; the printed values put QUICK-2's depth about 0.00062 ft below the rebuild's chord at 0.74322, inside the claimed band, and the chord's own value (0.0089379) cannot print 0.0090 by rounding or truncation, so not a display rule. Skeptic's limits: with R^.6667 instead of .667 the depth would be about 0.00038 ft below the chord, just outside the band, and these cases do not separate the exponents; Area, Velocity, Froude and Max Discharge print too coarsely to confirm the same shifted depth. The runs are exploratory, not citations. Correction, 2026-11-25 (the text above is left as written): the limit on R^.6667 is wrong. With R^.6667 the depth at which Critical Slope prints 0.8955 at n .13 is 0.74236 to 0.74240 (0.74238), 0.00084 ft below the rebuild's chord, inside the claimed band (0.00043 to 0.00119 ft below the chord, A-008), not about 0.00038 ft and outside it. With R^.667 it is 0.74259 to 0.74263, 0.00059 to 0.00063 ft below. Both exponents fall inside the band, so these runs still do not separate them. Numbers from node scripts/circle_outputs.mts grade-a009 (1d035a7).",
       "evidence": [
@@ -2651,8 +2651,8 @@
     },
     "depth": {
       "status": "accepted",
-      "count": 2,
-      "last_run": "2026-11-25T19:35:32Z",
+      "count": 0,
+      "last_run": "2026-11-26T11:24:06Z",
       "classification": "spec_error",
       "why": "results/attempts.md A-003. Skeptic second review 2026-11-24: holds. CD: with QUICK-2's own Channel Capacity circle geometry (D 36, n .013, S .005), every depth up to 2.0549 prints Wet Per 5.8, yet cd-circ-000001 prints Depth 2.05 with Wet Per 5.9, so its outputs do not come from one depth (runs 20261124-105235-02c7bf, -c64753, 20261124-105250-b1a90a). ND: nd-circ-000007's pipe at Q 39168 printed 49.10 (20261124-105255-39224c), which neither a stop on the 49.0 trial nor a 49.0 to 49.5 interpolation gives. Spec error in the design's circle search; rule to be measured for the bugfix spec.",
       "evidence": [
@@ -2671,8 +2671,8 @@
     },
     "max_discharge": {
       "status": "untriaged",
-      "count": 2,
-      "last_run": "2026-11-25T19:35:32Z"
+      "count": 1,
+      "last_run": "2026-11-26T11:40:45Z"
     }
   },
   "unobserved": [
