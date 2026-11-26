@@ -79,6 +79,66 @@ describe('search options: tol and afterShortChord (circle-outputs 2.5 to 2.7)', 
   });
 });
 
+describe('search options: rejectAtCeiling and ceilingValue (circle-short-chord 2.4, 2.6)', () => {
+  /** An increasing F, with every depth it is given recorded. */
+  const recorded = (f: (y: number) => number) => {
+    const ys: number[] = [];
+    return { ys, F: (y: number) => { ys.push(y); return f(y); } };
+  };
+  // y² on 1 ft steps from 1 ft, ceiling 3, q 10: trials 1 (1) and 2 (4) are under q, and the
+  // third stepped trial is the ceiling, where y² is 9, 10% short.
+  const onCeiling = { bottom: 0, first: 1, step: 1, ceiling: 3, tol: 0.005 };
+  const square = (y: number) => y * y;
+
+  it('the default gives F the stepped trial on the ceiling; rejectAtCeiling returns past_ceiling without it', () => {
+    const a = recorded(square);
+    expect(search(a.F, 10, onCeiling)).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(a.ys).toEqual([1, 2, 3]);
+    const b = recorded(square);
+    expect(search(b.F, 10, { ...onCeiling, rejectAtCeiling: true })).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(b.ys).toEqual([1, 2]);
+  });
+
+  // y⁴ on 1 ft steps from 1 ft, q 10: the chord at 1.6 is short, and the trial resumed from it
+  // is 2.6, which is made the ceiling.
+  const resumed = Math.fround(Math.fround(1.6) + 1);
+  const resumeSpec = { bottom: 0, first: 1, step: 1, ceiling: resumed, tol: 0.005 };
+  const quartic = (y: number) => y ** 4;
+
+  it('a trial resumed from a short chord on the ceiling: the default gives it F; rejectAtCeiling rejects it, with or without ceilingValue', () => {
+    const a = recorded(quartic);
+    search(a.F, 10, resumeSpec);
+    expect(a.ys.slice(0, 4)).toEqual([1, 2, Math.fround(1.6), resumed]);
+    const b = recorded(quartic);
+    expect(search(b.F, 10, { ...resumeSpec, rejectAtCeiling: true })).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(b.ys).toEqual([1, 2, Math.fround(1.6)]);
+    const c = recorded(quartic);
+    expect(search(c.F, 10, { ...resumeSpec, rejectAtCeiling: true, ceilingValue: 10 })).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(c.ys).toEqual([1, 2, Math.fround(1.6)]);
+  });
+
+  it('ceilingValue within tol of q: found at the ceiling, the trial counted, F not called there', () => {
+    const t = recorded(square);
+    expect(search(t.F, 10, { ...onCeiling, rejectAtCeiling: true, ceilingValue: 10.02 })).toEqual({ ok: true, y: 3, value: 10.02, trials: 3 });
+    expect(t.ys).toEqual([1, 2]);
+  });
+  it('ceilingValue more than tol under q (q over it): past_ceiling, F not called there', () => {
+    const t = recorded(square);
+    expect(search(t.F, 10, { ...onCeiling, rejectAtCeiling: true, ceilingValue: 9 })).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(t.ys).toEqual([1, 2]);
+  });
+  it('ceilingValue more than tol over q (q under it), after a stepped trial below the ceiling: under_ceiling_value', () => {
+    const t = recorded(square);
+    expect(search(t.F, 10, { ...onCeiling, rejectAtCeiling: true, ceilingValue: 12 })).toEqual({ ok: false, reason: 'under_ceiling_value' });
+    expect(t.ys).toEqual([1, 2]);
+  });
+  it('ceilingValue over q with the ceiling as the first trial: past_ceiling, F never called', () => {
+    const t = recorded(square);
+    expect(search(t.F, 10, { ...onCeiling, first: 3, rejectAtCeiling: true, ceilingValue: 12 })).toEqual({ ok: false, reason: 'past_ceiling' });
+    expect(t.ys).toEqual([]);
+  });
+});
+
 describe('preservation: the prismatic and irregular searches return what they returned before circle-outputs (3.6)', () => {
   const { _note: note, ...snapshot } = JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf-8')) as Record<string, SnapshotEntry> & { _note: string };
   it('the snapshot says where it came from', () => {

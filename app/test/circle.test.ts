@@ -2,10 +2,17 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { solve } from '../src/solver/index.ts';
+import * as circleMode from '../src/solver/modes/circle.ts';
 import { DEPTH_ABOVE_DIAMETER, circleCriticalDischarge, circleNormalDischarge } from '../src/solver/modes/circle.ts';
 import { diameterFeet, wetCircleStored } from '../src/solver/geometry/circle.ts';
 import { readRegularForm } from '../src/solver/forms.ts';
-import { golden, goldens } from './golden.ts';
+import { readSingle } from '../src/solver/parse.ts';
+import { search, type SearchSpec } from '../src/solver/search.ts';
+import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../src/solver/constants.ts';
+import { store } from '../src/solver/single.ts';
+import { FLAG_TEXT } from '../src/solver/flags.ts';
+import type { Result } from '../src/solver/types.ts';
+import { golden, goldens, type Golden } from './golden.ts';
 
 const decimal = (lo: number, hi: number, d: number) => fc.integer({ min: lo, max: hi }).map((x) => (x / 10 ** d).toFixed(d));
 const pipeArb = fc.record({
@@ -155,4 +162,159 @@ describe('circle-outputs: every circle result golden', () => {
       }
     });
   }
+});
+
+// ---- circle-short-chord (.kiro/specs/circle-short-chord) -----------------------------------
+
+/**
+ * What the comparator reports for one golden (oracle/compare.py, compare_one): the outcome, and
+ * when the outcomes agree every printed field, trimmed, with missing and extra fields.
+ */
+function comparatorMisses(g: Golden, r: Result): string[] {
+  if (r.outcome !== g.outcome) return [`outcome ${g.outcome}/${r.outcome}${r.flags.length ? ` (${r.flags.map((f) => f.code).join(', ')})` : ''}`];
+  const out: string[] = [];
+  for (const k of Object.keys(g.printed).sort()) {
+    if (!(k in r.printed)) out.push(`${k} missing`);
+    else if (g.printed[k]!.trim() !== r.printed[k]!.trim()) out.push(`${k} ${g.printed[k]!.trim()}/${r.printed[k]!.trim()}`);
+  }
+  for (const k of Object.keys(r.printed).filter((x) => !(x in g.printed)).sort()) out.push(`${k} extra`);
+  return out;
+}
+
+const solveCd = (inputs: Record<string, string>) => solve({ mode: 'critical_depth', shape: 'circle', inputs });
+
+/** The 40 goldens of the design's table (Expected result) that change. */
+const CSC_CHANGES = [
+  'cd-circ-000033', 'cd-circ-000035', 'cd-circ-000036', 'cd-circ-000038',
+  'cd-circ-000040', 'cd-circ-000043', 'cd-circ-000044',
+  'cd-circ-000049', 'cd-circ-000050', 'cd-circ-000051', 'cd-circ-000052',
+  'cd-circ-000057', 'cd-circ-000058', 'cd-circ-000064', 'cd-circ-000067', 'cd-circ-000070',
+  'cd-circ-000045', 'cd-circ-000056', 'cd-circ-000060', 'cd-circ-000061', 'cd-circ-000062',
+  'cd-circ-000071', 'cd-circ-000072', 'cd-circ-000073', 'cd-circ-000074', 'cd-circ-000075',
+  'cd-circ-000076', 'cd-circ-000077', 'cd-circ-000078', 'cd-circ-000079',
+  'cd-circ-000080',
+  'cd-circ-000081', 'cd-circ-000082', 'cd-circ-000083', 'cd-circ-000085', 'cd-circ-000087',
+  'cd-circ-000084', 'cd-circ-000086', 'cd-circ-000088', 'cd-circ-000089',
+];
+
+const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => `cd-circ-${String(from + i).padStart(6, '0')}`);
+
+/** The 43 rejection goldens that reach the search (bugfix.md 1.5, 2.4). */
+const CSC_REJECTIONS = [
+  ...range(39, 64), 'cd-circ-000066', 'cd-circ-000067', 'cd-circ-000069', ...range(71, 80),
+  'cd-circ-000084', 'cd-circ-000086', 'cd-circ-000088', 'cd-circ-000089',
+];
+
+describe('circle-short-chord', () => {
+  for (const id of CSC_CHANGES) {
+    it(`${id} ends and prints as QUICK-2 did`, () => {
+      const g = golden(id);
+      expect(g.mode).toBe('critical_depth');
+      expect(comparatorMisses(g, solveCd(g.inputs))).toEqual([]);
+    });
+  }
+});
+
+describe('circle-short-chord: the 43 rejection goldens', () => {
+  for (const id of CSC_REJECTIONS) {
+    it(`${id} is rejected with "${DEPTH_ABOVE_DIAMETER}" and no printed field`, () => {
+      const g = golden(id);
+      expect([g.mode, g.outcome, g.message?.trim(), g.printed]).toEqual(['critical_depth', 'rejected', DEPTH_ABOVE_DIAMETER, {}]);
+      const r = solveCd(g.inputs);
+      expect([r.outcome, r.message?.trim(), r.printed]).toEqual([g.outcome, g.message!.trim(), g.printed]);
+    });
+  }
+});
+
+/** The typed Diameter, n, Discharge and Slope of a behaviour case, from its transcript. */
+function typedCdInputs(g: Golden): Record<string, string> {
+  const typed = g.transcript.filter((s) => s.expect === 'cd_form').map((s) => s.keys.replace(/\{Enter\}$/, ''));
+  if (typed.length !== 5 || typed[4] !== '') throw new Error(`${g.id}: the transcript does not type the four cd_form values`);
+  return { diameter: typed[0]!, n: typed[1]!, discharge: typed[2]!, slope: typed[3]! };
+}
+
+describe('circle-short-chord: the behaviour cases that ended on the shape menu (2.6 (c), 2.7)', () => {
+  const cases: [string, string][] = [
+    ...['000001', '000002', '000005', '000006', '000007', '000008', '000009', '000010', '000011', '000012'].map((n): [string, string] => [`obs-cdmenu-${n}`, '2.6 (c)']),
+    ...['000003', '000004', '000013'].map((n): [string, string] => [`obs-cdmenu-${n}`, 'the floor, 2.7']),
+  ];
+  for (const [id, why] of cases) {
+    it(`${id} (${why}): no result, returns_to_menu, never never_finishes`, () => {
+      const g = golden(id);
+      expect([g.outcome, g.expected_screen, g.mode, g.shape]).toEqual(['observed', 'shape_menu', 'critical_depth', 'circle']);
+      const r = solveCd(typedCdInputs(g));
+      const codes = r.flags.map((f) => f.code);
+      expect(codes, id).not.toContain('never_finishes');
+      expect([r.outcome, r.printed, codes.includes('returns_to_menu')], id).toEqual(['error', {}, true]);
+    });
+  }
+});
+
+describe('circle-short-chord: the flag text (2.7)', () => {
+  it('returns_to_menu says what QUICK-2 was seen to do', () => {
+    expect(FLAG_TEXT.returns_to_menu).toBe('QUICK-2 returns to its shape menu with no result for this input.');
+  });
+});
+
+/**
+ * The spec circle Critical Depth searches with. Before circle-short-chord task 3.2 the mode has
+ * no circleSearchSpec, and this is the spec searchCircle passes it today; task 3.2 removes it.
+ */
+function cdSpec(D: number): SearchSpec {
+  const own = (circleMode as Record<string, unknown>).circleSearchSpec as ((D: number, mode: string) => SearchSpec) | undefined;
+  if (own) return own(D, 'critical_depth');
+  return { bottom: 0, first: CIRCLE_CD_STEP, step: CIRCLE_CD_STEP, ceiling: D, tol: CIRCLE_TOL, afterShortChord: 'narrow' };
+}
+
+/**
+ * Diameters 2.4 to 180 in, half of them multiples of 2.4 in, where stepped trials land on D
+ * (A-011); discharges log-uniform from 0.01 cfs to twice A·√(g·A/T) at 0.99·D (design:
+ * Property 10).
+ */
+const property10Arb = fc.record({
+  diameter: fc.oneof(
+    fc.integer({ min: 1, max: 75 }).map((k) => String((24 * k) / 10)),
+    fc.integer({ min: 24, max: 1800 }).map((i) => String(i / 10)),
+  ),
+  u: fc.double({ min: 0, max: 1, noNaN: true }),
+}).map(({ diameter, u }) => {
+  const D = diameterFeet(readSingle(diameter));
+  const top2 = 2 * store(circleCriticalDischarge(D)(store(0.99 * D)));
+  return { diameter, D, q: store(0.01 * Math.pow(top2 / 0.01, u)) };
+});
+
+/**
+ * Whether stepping from the first trial reaches a trial equal to D before any trial passes q or
+ * comes within 0.5% of it: a stepped trial on D, with no short chord before it.
+ */
+function reachesSteppedTrialOnD(D: number, q: number): boolean {
+  const F = circleCriticalDischarge(D);
+  for (let y = store(CIRCLE_CD_STEP); y <= D; y = store(y + CIRCLE_CD_STEP)) {
+    if (y === D) return true;
+    const fy = store(F(y));
+    if (Math.abs(fy - q) <= CIRCLE_TOL * q || fy > q) return false;
+  }
+  return false;
+}
+
+describe('Property 10: no depth at or past the diameter reaches the circle Critical Depth formula', () => {
+  it('every depth given to A·√(g·A/T) is below D', () => {
+    let draws = 0;
+    let onD = 0;
+    try {
+      fc.assert(fc.property(property10Arb, ({ D, q }) => {
+        draws += 1;
+        if (reachesSteppedTrialOnD(D, q)) onD += 1;
+        const F = circleCriticalDischarge(D);
+        const atOrPast: number[] = [];
+        search((y) => {
+          if (y >= D) atOrPast.push(y);
+          return F(y);
+        }, q, cdSpec(D));
+        expect(atOrPast, `D ${D} ft, q ${q} cfs`).toEqual([]);
+      }), { numRuns: 200, endOnFailure: true });
+    } finally {
+      console.log(`Property 10: ${onD} of ${draws} draws reach a stepped trial on D`);
+    }
+  }, 60000);
 });
