@@ -13,6 +13,7 @@ import { join } from 'node:path';
 import { parseHeadline } from '../build/headline.ts';
 import { finalCapture, golden, ROOT } from './golden.ts';
 import { isKnownMiss } from './knownMisses.ts';
+import { proofCaseAnchor, routeOf } from '../src/ui/views/shell.ts';
 
 const model = proofModel(data.proof, data.headline);
 const jobOf = (g: { mode: string; shape: string; inputs: Readonly<Record<string, string>> }): AppJob =>
@@ -66,6 +67,26 @@ describe('the proof view model', () => {
     expect(data.headline).toEqual(file);
     expect(model.headline).toMatch(new RegExp(`${file.matched} of ${file.total}.*${file.run}`));
     expect(textOf(proofView(model))).not.toContain(NO_HEADLINE);
+  });
+  it('counts the cases marked same and different at the top, with a link to each case', () => {
+    expect(model.same).toEqual(model.cases.filter((c) => c.same).map((c) => c.id));
+    expect(model.different).toEqual(model.cases.filter((c) => !c.same).map((c) => c.id));
+    expect(model.same.length + model.different.length).toBe(model.cases.length);
+    const v = proofView(model);
+    const summary = findAll(v, (n) => n.attrs.id === 'proof-summary')[0]!;
+    expect(textOf(summary)).toContain(`Of the ${model.cases.length} cases on this page, ${model.same.length} are marked same and ${model.different.length} different.`);
+    const links = findAll(summary, (n) => n.tag === 'a');
+    expect(links.map((a) => a.attrs.href)).toEqual([...model.same, ...model.different].map((id) => `#/proof/${id}`));
+    expect(links.map(textOf)).toEqual([...model.same, ...model.different]);
+    for (const a of links) {
+      expect(routeOf(String(a.attrs.href))).toBe('proof');
+      const anchor = proofCaseAnchor(String(a.attrs.href))!;
+      expect(findAll(v, (n) => n.attrs.id === anchor).length, anchor).toBe(1);
+    }
+    // At the top: after the headline, before the first case.
+    const text = textOf(v);
+    expect(text.indexOf(model.headline!)).toBeLessThan(text.indexOf('Of the '));
+    expect(text.indexOf('Of the ')).toBeLessThan(text.indexOf(model.cases[0]!.captureLabel));
   });
   it('says no headline run has been recorded, with no count, when there is none', () => {
     const m = proofModel(data.proof, null);

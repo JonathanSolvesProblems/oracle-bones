@@ -36,3 +36,21 @@ test('the proof page: each listed case, the known differences as different, the 
   expect(listed.length).toBeGreaterThan(0);
   for (const c of listed) await expect(page.locator(`#case-${c.id} h2`)).toContainText('different');
 });
+
+test('the proof page: the headline of results/headline.md, and the count at the top links to each case', async ({ page }) => {
+  const file = readFileSync(join(ROOT, 'results', 'headline.md'), 'utf-8');
+  const cases = /^Cases:\s*(\d+)\s+of\s+(\d+)\s*$/m.exec(file)!;
+  const run = /^Run:\s*(\d{4}-\d{2}-\d{2})\s*$/m.exec(file)!;
+  await open(page, '#/proof');
+  await expect(page.locator('.proof-page')).toContainText(`${cases[1]} of ${cases[2]} cases matched in the headline run of ${run[1]}.`);
+  const summary = page.locator('#proof-summary');
+  await expect(summary).toContainText(`Of the ${DATA.proof.length} cases on this page`);
+  const links = summary.locator('a');
+  await expect(links).toHaveCount(DATA.proof.length);
+  const last = DATA.proof[DATA.proof.length - 1]!.id;
+  const link = summary.locator(`a[href="#/proof/${last}"]`);
+  await expect(link).toHaveCount(1);
+  await link.click();
+  await expect(page).toHaveURL(new RegExp(`#/proof/${last}$`));
+  await expect(page.locator(`#case-${last}`)).toBeInViewport();
+});

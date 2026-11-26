@@ -15,7 +15,7 @@ import { calculatePage, type CalculatorState } from './views/calculate.ts';
 import { gridParts } from './views/grid.ts';
 import { pasteControl, type PasteState } from './views/paste.ts';
 import { shapeChoice, STEP_BACKWATER_SHAPE } from './views/picker.ts';
-import { routeOf, shell, type Route } from './views/shell.ts';
+import { proofCaseAnchor, routeOf, shell, type Route } from './views/shell.ts';
 import { screenView } from './views/screen.ts';
 import type { Action, Child } from './vnode.ts';
 
@@ -157,7 +157,16 @@ function draw(): void {
     document.getElementById(focusAfterDraw)?.focus();
     focusAfterDraw = null;
   }
+  // A link from the proof page's count to one case (#/proof/<case id>) scrolls to that case,
+  // once for each time the hash names it.
+  const anchor = proofCaseAnchor(location.hash);
+  if (anchor !== scrolledTo) {
+    if (anchor) document.getElementById(anchor)?.scrollIntoView();
+    scrolledTo = anchor;
+  }
 }
+
+let scrolledTo: string | null = null;
 
 window.addEventListener('hashchange', draw);
 window.addEventListener('beforeprint', () => { printing = new Date(); draw(); });

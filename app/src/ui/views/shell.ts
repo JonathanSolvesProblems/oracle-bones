@@ -10,9 +10,24 @@ export const ROUTES: readonly { route: Route; hash: string; label: string }[] = 
   { route: 'proof', hash: '#/proof', label: 'Proof' },
 ];
 
-/** The route a location hash names; anything unknown is the calculator. */
+const PROOF_CASE = /^#\/proof\/([a-z]+-[a-z]+-\d{6})$/;
+
+/** The route a location hash names; `#/proof/<case id>` is the proof page at that case; anything
+ * unknown is the calculator. */
 export function routeOf(hash: string): Route {
+  if (PROOF_CASE.test(hash)) return 'proof';
   return ROUTES.find((r) => r.hash === hash)?.route ?? 'calculate';
+}
+
+/** The hash of the proof page at one case. */
+export function proofCaseHash(id: string): string {
+  return `#/proof/${id}`;
+}
+
+/** The id of the proof page's element for the case a `#/proof/<case id>` hash names, or null. */
+export function proofCaseAnchor(hash: string): string | null {
+  const m = PROOF_CASE.exec(hash);
+  return m ? `case-${m[1]}` : null;
 }
 
 export function shell(route: Route, main: Child): VNode {
