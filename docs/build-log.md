@@ -2257,7 +2257,75 @@ spec was left as the design words it.
   keys hold a lone 5 after the 0 elevation at station 20, which pairs cannot type.
 - Packages added: @playwright/test 1.65.1 and @axe-core/playwright 4.14.1, exact versions.
 
-Task 13, the deploy check, was not reached. No server of this project was left running, and
-nothing was run on the oracle.
+Task 13, the deploy check, was not reached in that turn. No server of this project was left
+running, and nothing was run on the oracle.
+
+The first turn of this session used 98.74 credits over 37 min 5 s.
+
+#### The second turn: the person's call, then tasks 12 and 13
+
+> Good stop, and you are right: my call on the station error assumed a state the form cannot
+> reach. QUICK-2 prints the error and goes on taking keys, the solver models that, and the app
+> must not end a job as rejected where QUICK-2 is not recorded to end it. So item 2's station
+> error is the grid's not-taken note.
+
+The person's call, as built:
+
+- When a station is not greater than the one before it, the row's note shows QUICK-2's own
+  text up to its "!", from the solver's `stationErrorText` and labelled "QUICK-2's message:",
+  then Quickened's sentence that QUICK-2's editor does not take the station and goes on taking
+  keys, and that Quickened computes from the rows QUICK-2 took. The job computes as before.
+  `stationErrorText` joins the guard's allowed list and the design's. The Vitest tests use
+  obs-irrelev-000001's and obs-irrstation-000001's keys.
+- Criterion 6.10 stays as built and tested, with a dated note that `solve()` returns no station
+  error, so its state cannot be reached from the form. Criterion 1.10, the design's Ground
+  points paragraph and the Testing Strategy's item 2 are amended, dated 2026-11-26.
+- The Playwright spec for item 2 pastes obs-irrelev-000001's keys two to a row, as the grid test
+  reads them (five rows), checks the note on row 5 at both widths, and calculates: a result, no
+  refusal.
+
+**Commits:**
+
+- Task 12, the Playwright run (9c4256f): the station-error note and its amendments, the
+  config, `e2e/`, the two packages, the service-worker fix, and 12.3's identity test. The
+  identity test builds the site into a temporary folder and checks it for the USWDS prefix,
+  the federal banner, FEMA sentences off the allowed list (the notice and the data sources),
+  art/ content and file names, Kotsu, .EXE, .COM and .DLL files, and oracle/vendor/ content. It
+  failed on a throwaway file of each kind: a `usa-` class, the banner sentence, "FEMA endorses
+  this throwaway.", "Kotsu", a .exe, a .com and a .dll, a copy of a file put in a throwaway
+  art/ folder, and a copy of oracle/vendor's AH2.BAT. All of them were then deleted. The FEMA
+  sentences of the built site are three: the notice's, and two caveats of the realdata file
+  (the WV FEMA R3 lidar, and the FEMA zone from the NFHL copies).
+- Task 13, the deploy check (ccf4bfd): `deploy/deploy.config.ts` and `deploy.check.ts`. They
+  run the design's Deploy steps on the build under `vite preview`, in a fresh Edge context
+  (no profile, no account), at 1280 and 375 px. Screenshots and the PDF went to tmp/, not
+  committed.
+
+**Checks.** `npx vitest run`: 52 files, 1268 tests, all passing. `npm run typecheck` passed.
+The Playwright run: 37 passed, 1 skipped (the phone-width check, in the phone project only).
+The comparator's quick set is 195 of 200, unchanged; its `last_run` times in
+results/ledger.json are committed with this entry.
+
+**What the deploy check saw**, the same at both widths: the site loads with the two example
+controls and the ruled sketch page. The main example gives WS ELEV 594.37 with 16 printed
+fields, no exact value and the drawing. The cut-off example gives WS ELEV 596.37, 4 exact
+values and the cut-off line. The main example prints to 2 pages, the job and then its sources,
+under the header "Quickened · Printed 2026-11-26 · Version 0.1.0, build 9c4256f". Offline, a
+reload runs the main example again with the same 16 fields. Every request went to the
+preview's own origin, and the page is no wider than the window. Nothing was published.
+
+**Findings and choices the person should see:**
+
+- Vitest's timeout is now 30 s for every test, in `vitest.config.ts`. A second property test
+  ran past 5 s once the suite held two real builds.
+- On the phone screenshot the results table's caption "Computed by QUICK-2's method" wraps a
+  word to a line, as the print's heads did. The print is fixed; the screen's caption at 375 px
+  is not, since task 13 reports and stops.
+- On the desktop screenshot of the cut-off example the labels no longer overlap. The
+  elevation sits past the right end of the water line, over the hatched ground.
+- The throwaway art/ file was deleted, but art/ itself is left as an empty folder: removing
+  the folder was blocked. git does not track it.
+
+No server of this project was left running, and nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.

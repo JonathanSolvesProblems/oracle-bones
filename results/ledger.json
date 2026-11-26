@@ -2592,12 +2592,12 @@
     "froude": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-26T14:47:33Z"
+      "last_run": "2026-11-26T15:06:58Z"
     },
     "outcome": {
       "status": "untriaged",
       "count": 3,
-      "last_run": "2026-11-26T14:47:33Z"
+      "last_run": "2026-11-26T15:06:58Z"
     },
     "top_width": {
       "status": "untriaged",
@@ -2607,7 +2607,7 @@
     "velocity": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-26T14:47:33Z"
+      "last_run": "2026-11-26T15:06:58Z"
     },
     "wet_perimeter": {
       "status": "untriaged",
@@ -2672,7 +2672,7 @@
     "max_discharge": {
       "status": "untriaged",
       "count": 1,
-      "last_run": "2026-11-26T14:47:33Z"
+      "last_run": "2026-11-26T15:06:58Z"
     }
   },
   "unobserved": [
