@@ -41,7 +41,8 @@
   --tap: 44px;             /* least height and width of anything that can be pressed */
   --focus: 2px solid var(--water);
   --focus-offset: 2px;
-  --hairline: 1px solid var(--paper-rule); /* table rules and the binding between the pages */
+  --hairline-width: 1px;
+  --hairline: var(--hairline-width) solid var(--paper-rule); /* table rules and the binding between the pages */
   --page-max: 1200px;      /* the desktop spread */
 }
 

@@ -13,13 +13,13 @@ export interface VNode {
 }
 export type Child = VNode | string;
 
-type Attrs = Record<string, string | boolean | undefined | null> & { on?: Record<string, Action> };
+type Attrs = { on?: Record<string, Action>; [k: string]: string | boolean | undefined | null | Record<string, Action> };
 
 /** Build a node. Attributes that are `undefined`, `null` or `false` are left out. */
 export function h(tag: string, attrs: Attrs = {}, ...children: (Child | null | undefined | false | readonly Child[])[]): VNode {
   const { on = {}, ...rest } = attrs;
   const clean: Record<string, string | boolean> = {};
-  for (const [k, v] of Object.entries(rest)) if (v !== undefined && v !== null && v !== false) clean[k] = v;
+  for (const [k, v] of Object.entries(rest)) if (typeof v === 'string' || v === true) clean[k] = v;
   const flat: Child[] = [];
   for (const c of children) {
     if (c === null || c === undefined || c === false) continue;
