@@ -14,8 +14,9 @@ The app does three things around the solver:
 2. It draws the entered cross section with the water surface, from the same numbers the result
    prints.
 3. It feeds three pages from committed records: the limits page from `results/hauntings.md`
-   and `results/ledger.json`, the proof page from the goldens and their captures, and the worked
-   example from the golden nd-irr-000010 and `realdata/huntington-section-01.json`.
+   and `results/ledger.json` with `results/limits-plain.md`, the proof page from the goldens and
+   their captures, and the two worked examples from the goldens nd-irr-000006 and nd-irr-000010
+   and `realdata/huntington-section-01.json`.
 
 ### What changed since the first draft
 
@@ -26,7 +27,9 @@ The first draft was written before the solver existed. Since then:
   plain sentences (`app/src/solver/flags.ts`). The app now has a screen state for each.
 - Step-Backwater, and Critical Depth and Channel Capacity on the irregular section, are not
   built. The app shows them as not built instead of leaving them out.
-- `results/hauntings.md` has nine hauntings and a Limits section written for this app.
+- `results/hauntings.md` has nine hauntings, each with Exact by field lines, and a Limits
+  section written for this app. `results/limits-plain.md` gives each open question of the
+  ledger in plain words.
 - `.XSC` and `HEC2.DAT` are still unobserved, so their work moves to the end.
 
 ## Components
@@ -37,13 +40,14 @@ app/
   vite.config.ts             base './', the data plugin, the service-worker plugin
   build/
     data.ts                  Vite plugin: the virtual module `virtual:quickened/data`
-    hauntings.ts             reads results/hauntings.md (hauntings and Limits entries)
+    hauntings.ts             reads results/hauntings.md: hauntings, Exact by field lines, Limits
     ledger.ts                reads the open questions of results/ledger.json
+    plain.ts                 reads results/limits-plain.md
     headline.ts              reads results/headline.md, or reports it missing
     goldens.ts               reads the goldens and captures the pages need, read-only
     serviceWorker.ts         Vite plugin: writes sw.js with the precache list of the build
   src/
-    solver/                  from quick2-solver; one addition, isBuilt (below)
+    solver/                  from quick2-solver; two additions, isBuilt and splitStationError (below)
     format/                  from quick2-solver
     oracle/entry.ts          the comparator's entry, unchanged
     ui/
@@ -84,13 +88,38 @@ model. The view models are pure functions, tested in Vitest under Node without a
 is tested by the Playwright run. This keeps the shipped code to the solver, the views and the
 service worker, with nothing to update for security.
 
-### The one solver addition
+### The two solver additions
+
+Neither changes a Result, so neither changes what the comparator grades.
 
 `app/src/solver/index.ts` exports `isBuilt(mode, shape): boolean`, read from the same
-`METHODS` and `REGULAR_METHODS` tables `solve()` dispatches on. It changes no Result. The app
-uses it to mark pairs as not built (criterion 7.4). A test checks, for every pair, that
-`isBuilt` is false exactly when `solve()` answers `not built` for that pair's golden inputs, or
-for a probe job where no golden exists.
+`METHODS` and `REGULAR_METHODS` tables `solve()` dispatches on. The app uses it to mark pairs
+as not built (criterion 7.4). A test checks, for every pair, that `isBuilt` is false exactly
+when `solve()` answers `not built` for that pair's golden inputs, or for a probe job where no
+golden exists.
+
+`app/src/solver/groundPoints.ts` exports `splitStationError(message)`, which returns
+`{ text, keyLineRest }` for a station error and `null` for any other message (criterion 6.10).
+The solver already builds the station error as the error text written over the editor's key
+line: `stationError` returns the text, then `EDITOR_KEY_LINE` from the text's length on. The
+change names those two parts: a new `stationErrorText(previous, station)` returns the text up
+to and including its "!", `stationError` returns `stationErrorText(...)` followed by the rest of
+the key line, exactly as today, and `splitStationError` takes a message as long as
+`EDITOR_KEY_LINE`, finds the longest end of it that equals the same end of `EDITOR_KEY_LINE`,
+and returns `null` unless that end is not empty and what comes before it ends with "!". The
+split therefore uses the key line the solver writes, and the app holds no pattern of its own.
+Tests:
+
+- `stationError` returns the same string as before for the cases of criteria 10.3 and 10.4, so
+  the Result's `message`, which the comparator reads, does not change.
+- For those cases, `splitStationError` gives a `text` that ends with "!" and equals
+  `stationErrorText`, and `text + keyLineRest` equals the message.
+- The message window cut from row 24 of
+  `oracle/goldens/captures/obs-irrelev-000001/screen-09.txt` and of
+  `obs-irrstation-000001/screen-05.txt` splits into the error text and the key line's rest
+  (`F1 }HELP` and its spaces).
+- `splitStationError` returns `null` for every other message a golden holds (the bank errors,
+  "DEPTH is Greater than the DIAMETER").
 
 ## The Job model
 
@@ -102,7 +131,7 @@ interface AppJob {
   mode: Mode;
   shape: Shape;                       // 'irregular' for Step-Backwater, as the solver keys it
   inputs: Record<string, string>;     // typed text, keyed by the contract's input names
-  origin: 'typed' | 'example';        // 'example' until any input is edited (8.6)
+  origin: 'typed' | 'main_example' | 'cutoff_example';  // an example until any input is edited (8.6)
 }
 ```
 
@@ -135,7 +164,7 @@ paths together:
   equal the entry's printed text, trimmed.
 - A guard test over `app/src/ui/` fails on an import from `../solver/` other than `index.ts`
   (`solve`, `isBuilt`, `NOT_BUILT`, types), `forms.ts` (prompt order, fixed fields),
-  `groundPoints.ts` (`enter`, `sectionKeys`), `geometry/*` (for the drawing), `constants.ts`
+  `groundPoints.ts` (`enter`, `sectionKeys`, `splitStationError`), `geometry/*` (for the drawing), `constants.ts`
   (for the method list) and `parse.ts` (`readSingle`, for the drawing's bank stations). It also
   fails on `toFixed`, `toPrecision`, `toLocaleString` or `Intl.NumberFormat` anywhere in `ui/`
   except `drawing/axis.ts`, so the app cannot print a QUICK-2 value its own way.
@@ -146,9 +175,10 @@ paths together:
 type ScreenState =
   | { kind: 'idle' }
   | { kind: 'invalid'; fields: string[] }                    // 1.9: solve() not called
-  | { kind: 'result'; result: Result; exact: ExactAnswer | null; links: HauntingLink[] }
+  | { kind: 'result'; result: Result; exact: ExactByField | null; links: HauntingLink[] }
+  // ExactByField: { haunting, assumption, values: Record<field, text> }, from the case's line
   | { kind: 'held'; prompt: string }                         // 1.2, 6.2
-  | { kind: 'rejected'; message: string }                    // 6.3, QUICK-2's text
+  | { kind: 'rejected'; message: string; keyLineRest: string | null }  // 6.3, 6.10
   | { kind: 'stopped'; flags: Flag[] }                       // 6.4
   | { kind: 'not_built'; mode: Mode; shape: Shape }          // 6.5, Requirement 7
   | { kind: 'failed'; message: string };                     // 6.6, Quickened's text
@@ -162,7 +192,11 @@ nor a message) gives `failed` with a sentence that says so, and a test makes tha
 unreachable for every golden. A held prompt that also carries a message shows both.
 
 Messages are shown trimmed and otherwise as the solver returns them, in the figures font, in
-quotation marks and labelled "QUICK-2's message". Flag sentences are shown verbatim, in the
+quotation marks and labelled "QUICK-2's message". For a `rejected` Result, `classify` calls
+`splitStationError(result.message)`. When it returns the two parts, `message` is the text up to
+the "!" and `keyLineRest` is the rest, and the view adds, in Quickened's words: "QUICK-2 writes
+this message over its key line and leaves the rest of that line on the screen:" followed by
+the rest, trimmed, in the figures font. `result.message` itself is never changed. Flag sentences are shown verbatim, in the
 solver's order, under the form, with the fields each names marked by the pencil-red rule
 (Visual design).
 
@@ -208,8 +242,9 @@ The rows are entered the way QUICK-2's editor takes keys: `sectionKeys(inputs)` 
 sequence and `enter()` the points it keeps. `grid.ts` compares the kept points with the typed
 rows. Where they differ, because an elevation of 0 was shown and replaced by the next value or
 a negative elevation sent entry back to the station (solver 10.6, 10.7), the grid names the row
-and the rule. A station that does not increase is the solver's `rejected` with QUICK-2's
-message (solver 10.3, 10.4).
+and the rule. A station that does not increase is the solver's `rejected` with the station
+error (solver 10.3, 10.4), shown as Screen states says, and the grid marks the row whose
+station was refused.
 
 ## The results screen
 
@@ -226,10 +261,14 @@ In order, top to bottom on a phone and on the right-hand page on a desktop:
 4. **Flags**, numbered, verbatim. The `cut_off_area_counted` flag also puts a short line beside
    Area, Top Wid and Wet Per: "Includes low ground cut off from the channel, which QUICK-2
    counts as flowing."
-5. **Exact answer**, only for a haunting's recorded case (criterion 2.2): the entry's
-   "Exact answer" line verbatim, labelled with the entry's assumption, beside the printed
-   fields, and a link to the entry. Otherwise, links to the hauntings that describe this kind
-   of result (criterion 2.4), with no value.
+5. **Exact values**, only for a haunting's recorded case (criterion 2.2): in the printed fields
+   table, each field the case's Exact by field line names gets a third column, "Exact", with
+   the line's value as written, and the table's caption gives the entry's assumption (the
+   label of its **Exact answer** bullet, such as "with the pocket treated as ineffective") and
+   links the entry. The printed value stays in the second column and is the one read first,
+   by eye and by a screen reader. A case whose line is `none` gets the link only. For every
+   other result, links to the hauntings that describe this kind of result (criterion 2.4),
+   with no value.
 6. **QUICK-2's method for this pair** (criterion 2.6): a short list read from `method.ts`. Each
    item names the value and its role and imports the value from `constants.ts`, for example
    "Manning constant 1.486" from `MANNING_K` and "g 32.2 ft/s²" from `G`. The list ends with
@@ -247,15 +286,38 @@ H-003, circle Critical Depth to H-004 and H-007, and a circle Critical Depth rej
 A test fails if a haunting in `hauntings.md` is in no mapping, or a mapping names one that is
 not in the file.
 
-### Exact answers
+### Exact values by field
 
-`build/hauntings.ts` reads each entry's case ids from its **Case:** or **Cases:** line, and its
-**Exact answer** line as text. `build/goldens.ts` gives each case's inputs. A job is a
-haunting's recorded case when its inputs equal the golden's, key for key and text for text.
-The exact answer is shown as the entry's text, not split into fields: the entries are prose,
-and parsing numbers out of them would put a second author between the file and the page. If
-the person wants the exact value placed beside each field, the entries need a line in a fixed
-form, which is a change to `results/hauntings.md`, not to the app.
+Each haunting of `results/hauntings.md` has one Exact by field line for each case it names
+(f250dfb):
+
+```
+- **Exact by field (nd-irr-000010):** ws_elev 596.42; area 586; top_width 152; wet_perimeter 153
+- **Exact by field (cc-trap-000015):** none
+```
+
+`build/hauntings.ts` reads, for each `## H-NNN` entry, the case ids of its **Case:** or
+**Cases:** line (full case ids only), the label of its **Exact answer** bullet, and its Exact
+by field lines, each matched against
+
+```
+^- \*\*Exact by field \((?<id>(nd|cd|cc|sb)-[a-z]+-\d{6})\):\*\* (?<body>.+)$
+```
+
+with a body of `none` or of `field value` pairs separated by `; `, where a field is
+`[a-z_]+` and a value is `-?\d+(\.\d+)?(E[+-]\d+)?`. The build fails, naming the haunting and
+the line, when (criterion 5.6):
+
+- a case of the Case or Cases line has no line, or more than one;
+- a line names a case the Case or Cases line does not;
+- a line does not match, or a field is not a key of the case golden's `printed`, or a field
+  appears twice.
+
+Values stay text: the page shows `1.5575E+11` and `4.9030` as the file writes them, and no
+number from the file is parsed into a float. `build/goldens.ts` gives each case's inputs. A
+job is a haunting's recorded case when its inputs equal the golden's, key for key and text for
+text. The entries' sentences stay in the file and are shown on the limits page; only the lines
+feed the results screen.
 
 ## The cross-section drawing
 
@@ -296,14 +358,49 @@ solver geometry as the result, so a disagreement is a drawing bug, found by the 
 The drawing is an SVG with a text alternative: one sentence naming the shape, the water
 surface and each wet span, so that it is readable without sight (criterion 1.11).
 
+## The worked examples
+
+Two controls sit above the picker on the first screen (criterion 8.1), side by side on a
+desktop and stacked on a phone:
+
+| Control | Golden | Label | Origin |
+|---|---|---|---|
+| Main example, first | nd-irr-000006 | "Grapevine Branch, WV: the 1-percent flood, 1,200 cfs" | `main_example` |
+| Cut-off example | nd-irr-000010 | "Same section at a test discharge of 3,000 cfs: how QUICK-2 counts cut-off low ground" | `cutoff_example` |
+
+Each loads its golden's inputs, text for text, from `build/goldens.ts`, sets the pair to
+Normal Depth, Irregular Channel, and calculates. The two goldens differ only in `discharge`
+(1200 and 3000); a test checks that, so the section shown is the same in both. The main example
+has no haunting case and shows no exact value. The cut-off example is H-001's case, so it shows
+the cut-off line and H-001's Exact by field values beside their fields.
+
+`views/example.ts` writes the sources block under the form for either example (criterion
+8.7), read from `realdata/huntington-section-01.json` where the file holds the item: the
+stream, the county and state, the flood zone and FIRM panel, the NHD flowline, the 3DEP project
+and the Elevation Point Query Service, the bank-station and slope notes, and the caveats. The
+Manning's n source (Chow 1959, HEC-RAS Table 3-1, normal column) comes from solver Requirement
+9's introduction, which the file does not hold; the module cites it there. The discharge
+sentence differs:
+
+- main example: 1,200 cfs is the USGS StreamStats 1-percent AEP estimate (regression region
+  GC2081, drainage area 2.70 mi², 90% prediction interval 624 to 2,310 cfs), a regional
+  regression estimate, with the file's citation (criterion 8.8);
+- cut-off example: 3,000 cfs is a test value chosen to put the water surface between 595.75 and
+  596.42 ft, not a flood estimate, and above that interval (criterion 8.9).
+
+Any edit to an input sets `origin` to `typed`. The view then says the job is no longer the
+recorded case, and the exact values go, because the inputs no longer equal H-001's case
+(criterion 8.6, Property 7).
+
 ## The print view
 
 Print is the browser's print of the results route with `print.css`. It hides the picker, the
 navigation and every control, and adds a header with "Quickened", the date of printing as
 yyyy-mm-dd (set on `beforeprint` from the local date), and the version: `package.json`'s
 version and the build's short commit, injected at build. The page holds the engineer's inputs
-as QUICK-2 echoed them, the outputs, every flag sentence, the exact answer where one is shown,
-the drawing, the worked example's sources when the job is the example, and the notice. Ground
+as QUICK-2 echoed them, the outputs, every flag sentence, the exact values where they are
+shown, the drawing, the sources and discharge sentence when the job is either worked example,
+and the notice. Ground
 points print four station and elevation pairs to a row, as QUICK-2's editor shows them
 (solver 3.1). The page is set for US Letter portrait with 0.5 in margins, and the Playwright run
 checks that it prints to one page for a 40-point section and for a regular shape.
@@ -323,9 +420,17 @@ Built from `virtual:quickened/data` at build time (Requirement 5.3, 5.4):
    **Limits page:** paragraph only, verbatim, as the file asks.
 3. **Not built yet**: every pair for which `isBuilt` is false, with the sentence of
    criterion 7.3.
-4. **Not observed yet**: every open question of `results/ledger.json` (`open_questions` with
-   status `open`), id and question text verbatim, under the heading "Behaviours not observed
-   yet".
+4. **Not observed yet**, under the heading "Behaviours not observed yet": for every open
+   question of `results/ledger.json` (`open_questions` with status `open`), its plain
+   sentences from `results/limits-plain.md` first, in `--font-body`, then the ledger's id and
+   question text verbatim under them, smaller and in `--ink-muted`, headed "The ledger's
+   wording".
+
+`build/plain.ts` reads `results/limits-plain.md`: each `## Q-NNN` heading and the paragraph
+under it, up to the next heading. The test of criterion 5.7 compares its ids with the ledger's
+open ids both ways and fails, naming the question, on an open question with no entry or an
+entry for a question that is not open (answered, or not in the ledger). The test also fails on
+an entry with no text. The file's opening paragraphs, before the first `##`, are not shown.
 
 The parsers are pure functions in `app/build/`, tested on the real files and on small
 fixtures. A test fails when an `## H-` heading or a Limits entry of the real file is missing
@@ -334,8 +439,9 @@ from the page data, so a new haunting cannot be left off.
 ## The proof page
 
 `src/ui/proof/cases.json` is the committed list, each case with a one-line reason. It starts
-with: one result golden per built pair; the case of every haunting; the worked example; one
-golden for each rejection kind (a held prompt, a bank message, the circle message); and the two
+with: one result golden per built pair; the case of every haunting; both worked examples
+(nd-irr-000006 and nd-irr-000010); one golden for each rejection kind (a held prompt, a bank
+message, the circle message); and the two
 known differences, cc-circ-000035 and nd-circ-000020. A test checks each rule of that list
 against the goldens.
 
@@ -448,10 +554,11 @@ A field-book spread, at most 1200px wide and centred on `--paper`:
 - **Left page, 5 of 12 columns: field notes.** The picker (modes as a row of text tabs,
   shapes as a row of radio buttons with "not built yet" where it applies), then the form as a
   ruled table: QUICK-2's label left of the red centre rule, the typed value right of it, one
-  `--rule` per row. The worked-example control sits above the picker. Ground points are a
-  ruled table of rows with the paste control above it.
+  `--rule` per row. The two worked-example controls sit above the picker, the main example
+  first. Ground points are a ruled table of rows with the paste control above it.
 - **Right page, 7 of 12 columns: sketch and results.** The main figure, the drawing (full
-  width of the page, 2:1), the printed fields, flags, exact answer or links, method list,
+  width of the page, 2:1), the printed fields (with the Exact column where criterion 2.2 gives
+  one), flags, links, method list,
   notice and Print.
 - The two pages are separated by a `--space-8` gutter and a 1px `--paper-rule` line, as the
   binding of the book.
@@ -461,12 +568,13 @@ A field-book spread, at most 1200px wide and centred on `--paper`:
 One column with `--space-4` margins, so content is 343px wide:
 
 - Top line: "Quickened" and the three links in one row at `--text-sm`.
-- The worked-example control, the picker (modes as a two-by-two grid of tabs, shapes as a
-  wrapped row), the form (label above value, the red rule on the left edge of each value), and
-  a full-width Calculate button.
+- The two worked-example controls, stacked, the main example first; the picker (modes as a
+  two-by-two grid of tabs, shapes as a wrapped row); the form (label above value, the red rule
+  on the left edge of each value); and a full-width Calculate button.
 - After a calculation the page scrolls to the results: the main figure at 32px, the drawing at
-  343 × 200px, the printed fields as label and value rows, flags, exact answer or links,
-  method list, notice, Print.
+  343 × 200px, the printed fields as label and value rows (an exact value, where there is one,
+  on its own line under the printed value, labelled "Exact"), flags, links, method list,
+  notice, Print.
 - Ground points: a two-column table (station, elevation) with row numbers; the paste text area
   is full width.
 - Nothing is wider than the screen: the Playwright run checks that the page's scroll width is
@@ -477,16 +585,18 @@ One column with `--space-4` margins, so content is 343px wide:
 - Every solver outcome has a state (Screen states); an unexpected Result shape is shown as
   `failed`, never as a blank page.
 - A paste that cannot be read loads nothing and says which line failed (criterion 1.8).
-- A build that cannot read `results/hauntings.md`, `results/ledger.json`, a golden on the proof
-  list or nd-irr-000010 fails the build with the file and the reason, so a broken record cannot
-  ship as an empty page. A missing `results/headline.md` is not an error (criterion 5.2).
+- A build that cannot read `results/hauntings.md`, `results/limits-plain.md`,
+  `results/ledger.json`, a golden on the proof list, nd-irr-000006 or nd-irr-000010 fails with
+  the file and the reason, so a broken record cannot ship as an empty page. So does a missing
+  or malformed Exact by field line (criterion 5.6), naming the haunting and the line. A missing
+  `results/headline.md` is not an error (criterion 5.2).
 - The app never guesses at a value it was not given: no default discharge, no default n.
 
 ## Correctness Properties
 
 Property tests use fast-check, as the solver's do, with generated inputs drawn from the
-profile's practical ranges, as the solver's property tests draw them. Properties over the goldens run on every
-golden, not a sample.
+profile's practical ranges, as the solver's property tests draw them. Properties over the
+goldens run on every golden, not a sample.
 
 ### Property 1: Same code, same answer
 
@@ -529,12 +639,13 @@ For any string, `validate` accepts it exactly when it matches the plain-decimal 
 any job with a rejected field `solve()` is not called.
 **Validates: Requirements 1.9**
 
-### Property 7: Exact answers only for recorded cases
+### Property 7: Exact values only for recorded cases, beside their fields
 
 For any job whose inputs differ from every haunting case's inputs in at least one key or text,
-the result state has no exact answer; for each haunting case's golden, it has that entry's
-exact-answer text.
-**Validates: Requirements 2.2, 2.4, 8.6**
+the result state has no exact value. For each haunting case's golden, the fields with an exact
+value are exactly the fields of its Exact by field line, each value is the line's text, and
+each sits on the row of its printed field; a `none` line gives no exact value.
+**Validates: Requirements 2.2, 2.4, 8.3, 8.5, 8.6**
 
 ### Property 8: Labels are QUICK-2's
 
@@ -548,30 +659,49 @@ For every built pair, every value in the method list is the export of `constants
 compared by identity, and no numeric literal appears in `method.ts`.
 **Validates: Requirements 2.6**
 
+### Property 10: The station error splits at its "!", and the message stays whole
+
+For any previous station in the profile's station range and any station not greater than it,
+`splitStationError` of
+`stationError(previous, station)` gives `stationErrorText(previous, station)` and the rest of
+the key line, which joined are the message; and for any string that does not end with a
+non-empty end of `EDITOR_KEY_LINE` after a "!", it gives `null`. The `rejected` state built
+from such a Result keeps `result.message` unchanged.
+**Validates: Requirements 6.3, 6.10**
+
 ## Testing Strategy
 
-- **Vitest** (`app/test/` for the view models and parsers, under Node): Properties 1 to 9; the
-  `isBuilt` test; the guard test over `ui/`; the parsers of `app/build/` on the real files and
-  on fixtures; the proof list rules; the haunting mappings; the stylesheet token test. Vitest
+- **Vitest** (`app/test/` for the view models and parsers, under Node): Properties 1 to 10;
+  the `isBuilt` and `splitStationError` tests; the guard test over `ui/`; the parsers of
+  `app/build/` on the real files and on fixtures, with a fixture for each way an Exact by field
+  line can be missing or malformed (criterion 5.6); the open-question coverage test of
+  `limits-plain.md` (criterion 5.7); the worked examples' goldens differing only in
+  `discharge`; the proof list rules; the haunting mappings; the stylesheet token test. Vitest
   does not re-grade the solver: the comparator stays the one grader of printed fields, and
   Property 1 only checks that the UI shows what the solver returned.
 - **Playwright** (`app/e2e/`), run against `vite preview` of the production build, so the
   service worker, the base path and the Content Security Policy are the shipped ones. Two
   projects: `desktop`, Chromium at 1280 × 800, and `phone`, Chromium at 375 × 812 with touch
   and the mobile viewport. Each spec runs in both:
-  1. the worked example in one click, its printed fields equal to nd-irr-000010's golden, the
-     cut-off line, H-001's exact answer, the drawing, and its sources;
+  1. the main example in one click, its printed fields equal to nd-irr-000006's golden, no
+     exact value, the drawing, its sources and its 1-percent discharge sentence; then the
+     cut-off example in one click, its printed fields equal to nd-irr-000010's golden, the
+     cut-off line, H-001's exact values each on its field's row, its test-discharge sentence;
+     then one edit, after which the exact values are gone;
   2. one job for each state, from recorded cases: a result (cd-vdit-000001), a held prompt
-     (Diameter 0, nd-circ-000008), QUICK-2's message (bank 230.8, nd-irr-000009), an error with
-     a flag (Discharge -1, obs-negreturn-000001), and Step-Backwater not built;
+     (Diameter 0, nd-circ-000008), QUICK-2's message (bank 230.8, nd-irr-000009), a station
+     error (35 after 35, from obs-irrelev-000001's keys) shown up to its "!" with the key-line
+     sentence, an error with a flag (Discharge -1, obs-negreturn-000001), and Step-Backwater not
+     built;
   3. a paste of `realdata/huntington-section-01.tsv`, and a paste of 41 rows that loads
      nothing;
   4. the print view (`emulateMedia({ media: 'print' })` and `page.pdf()` in Chromium): one US
      Letter page, the date, the version, the notice, no controls;
-  5. the limits page (every haunting id of the file, every Limits paragraph) and the proof page
-     (each listed case, the known differences shown as different, the headline sentence);
+  5. the limits page (every haunting id of the file, every Limits paragraph, and for each open
+     question its plain sentences above the ledger's wording) and the proof page (each listed
+     case, the known differences shown as different, the headline sentence);
   6. offline: load, wait for the service worker, set the context offline, reload, run the
-     worked example again;
+     main example again;
   7. no request to another origin on any page;
   8. axe (`@axe-core/playwright`) on every page and state with WCAG 2.2 A and AA rules;
   9. at the phone width, no horizontal scroll and every control at least 44px.
@@ -598,16 +728,18 @@ first draft:
 ## Deploy
 
 `npm run build` writes `app/dist/`. The deploy check serves it with `vite preview`, opens it in
-a private window with no account signed in, runs the worked example, prints it, goes offline
-and reloads. It stops there. Publishing needs a host, which the person picks; nothing in the
+a private window with no account signed in, runs both worked examples, prints the main one,
+goes offline and reloads. It stops there. Publishing needs a host, which the person picks; nothing in the
 build depends on which.
 
 ## Open points
 
 - The `results/headline.md` format (exhume-loop task 5.1), which the proof page's reader
   assumes.
-- Whether the station error's key-line remainder is shown (requirements, Open points).
-- Plain-words summaries for the ledger's open questions on the limits page.
-- Placing exact values beside each field needs a fixed-form line in `results/hauntings.md`.
-- WebKit is not in the Playwright run. Adding a WebKit phone project is cheap except for the
-  offline spec, which depends on Playwright's service-worker support in WebKit.
+- Who writes the `results/limits-plain.md` entry when the Exhumer opens a question; the test
+  of criterion 5.7 fails until someone does.
+
+Decided by the person on 2026-11-26: the main example is nd-irr-000006 and the cut-off example
+nd-irr-000010; the station error is split at its "!" by a solver export; open questions get
+plain sentences in `results/limits-plain.md`; hauntings carry Exact by field lines; the
+no-other-origin rule and the axe check stay; the Playwright run is Chromium only.

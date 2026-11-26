@@ -31,6 +31,14 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     Then export `isBuilt` from `app/src/solver/index.ts`, read from the tables `solve()` uses.
     Show the comparator's quick set unchanged (`python scripts/oracle_quick.py`, 195 of 200).
     - _Requirements: 7.4_
+  - [ ] 1.5 Test: Property 10; `stationError` returns the same string as before for the cases
+    of solver criteria 10.3 and 10.4; the row-24 message windows of
+    `obs-irrelev-000001/screen-09.txt` and `obs-irrstation-000001/screen-05.txt` split into the
+    error text and the key line's rest; every other golden message gives `null`. Then
+    `stationErrorText` and `splitStationError` in `app/src/solver/groundPoints.ts`, with
+    `stationError` built from them as the design says. Show the comparator's quick set
+    unchanged (195 of 200).
+    - _Requirements: 6.10_
 
 - [ ] 2. The form
   - [ ] 2.1 Test Property 8: for every built pair, the form view model's labels occur in that
@@ -65,7 +73,12 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     its fields marked; the `failed` message labelled as Quickened's; the notice in all of them.
     Then `views/states.ts`.
     - _Requirements: 1.2, 6.2 to 6.7, 6.9, 2.3_
-  - [ ] 3.3 Test: the not-built view for Step-Backwater names what QUICK-2 asks for (solver
+  - [ ] 3.3 Test: a station error's `rejected` state shows the text up to its "!" as QUICK-2's
+    message and the key-line sentence with the rest, both taken from `splitStationError`, and
+    the state's Result keeps `message` whole. Then the station-error part of `classify` and
+    `views/states.ts`.
+    - _Requirements: 6.3, 6.10_
+  - [ ] 3.4 Test: the not-built view for Step-Backwater names what QUICK-2 asks for (solver
     11.1, 11.2) and the first-section limit; for Critical Depth and Channel Capacity on the
     irregular section it says the pair is not observed; each links the limits page and has no
     calculable form. Then the view.
@@ -99,48 +112,72 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
 
 - [ ] 6. Hauntings on the results screen
   - [ ] 6.1 Test: `build/hauntings.ts` reads every `## H-NNN` entry of the real
-    `results/hauntings.md` (title, case ids, printed, exact answer, difference, flag), H-005 to
-    H-009 included, and every Limits entry's **Limits page:** paragraph; and fixtures with a
-    missing field fail with the entry and the field. Then the reader.
+    `results/hauntings.md` (title, case ids, printed, the Exact answer label, difference, flag),
+    H-005 to H-009 included, and every Limits entry's **Limits page:** paragraph; and fixtures
+    with a missing field fail with the entry and the field. Then the reader.
     - _Requirements: 5.3, 5.4_
-  - [ ] 6.2 Test: `build/goldens.ts` gives each haunting case's inputs, read-only, and fails the
-    build on a missing golden. Then the reader and the `virtual:quickened/data` plugin, used by
-    Vite and Vitest.
-    - _Requirements: 2.2_
-  - [ ] 6.3 Test Property 7, and that every haunting is in `hauntingLinks.ts` and every mapping
-    names a haunting in the file. Then the exact-answer block and the links.
+  - [ ] 6.2 Test: the reader gives the real file's 15 Exact by field lines, values as text; and
+    the build fails, naming the haunting and the line, on a fixture for each case of criterion
+    5.6: no line for a named case, two lines for one case, a line for a case not named, a line
+    that does not match the form, a field not in the case golden's `printed`, a field twice, a
+    value that is not a number. Then the Exact by field part of the reader.
+    - _Requirements: 5.6, 2.2_
+  - [ ] 6.3 Test: `build/goldens.ts` gives each haunting case's inputs and printed keys,
+    read-only, and fails the build on a missing golden. Then the reader and the
+    `virtual:quickened/data` plugin, used by Vite and Vitest.
+    - _Requirements: 2.2, 5.6_
+  - [ ] 6.4 Test Property 7, and that every haunting is in `hauntingLinks.ts` and every mapping
+    names a haunting in the file. Then the Exact column of the printed fields, its caption and
+    the links.
     - _Requirements: 2.2, 2.4_
 
-- [ ] 7. The worked example
-  - [ ] 7.1 Test: the example's inputs equal nd-irr-000010's, key for key and text for text;
-    calculated, it shows the golden's printed fields, the cut-off line and H-001's exact answer;
-    after one edit it is no longer the recorded case and shows no exact answer. Then
-    `views/example.ts` and the one-click control on the first screen.
-    - _Requirements: 8.1, 8.2, 8.3, 8.6_
-  - [ ] 7.2 Test: the sources block names every source of 8.4, read from
-    `realdata/huntington-section-01.json` where the file has it, and the discharge sentence of
-    8.5 with the file's 1-percent AEP estimate and prediction interval. Then the block.
-    - _Requirements: 8.4, 8.5_
+- [ ] 7. The worked examples
+  - [ ] 7.1 Test: the main example's inputs equal nd-irr-000006's, key for key and text for
+    text; calculated, it shows the golden's printed fields and no exact value. Then
+    `views/example.ts` and the first of the two controls on the first screen.
+    - _Requirements: 8.1, 8.2, 8.3_
+  - [ ] 7.2 Test: the cut-off example's inputs equal nd-irr-000010's, which differ from
+    nd-irr-000006's only in `discharge`; calculated, it shows the golden's printed fields, the
+    cut-off line and H-001's Exact by field values on their fields' rows. Then the second
+    control, beside the first, with its label.
+    - _Requirements: 8.1, 8.4, 8.5_
+  - [ ] 7.3 Test: after one edit to either example, the job is said to be no longer the recorded
+    case and no exact value is shown. Then the origin change in `job.ts` and the sentence.
+    - _Requirements: 8.6_
+  - [ ] 7.4 Test: the sources block names every source of 8.7, read from
+    `realdata/huntington-section-01.json` where the file has it, for both examples; the main
+    example has the 1-percent discharge sentence of 8.8 with the file's estimate, interval and
+    citation, and the cut-off example the test-discharge sentence of 8.9. Then the block.
+    - _Requirements: 8.7, 8.8, 8.9_
 
 - [ ] 8. The print view
   - [ ] 8.1 Test: the print view model holds the echoed inputs, the outputs, every flag
     sentence, the drawing, the date as yyyy-mm-dd, the version and commit, the notice, the
-    example's sources for the example, ground points four pairs to a row, and no control; Print
-    is offered only for outcome `result`. Then `views/print.ts` and `print.css`.
+    exact values where the results screen shows them, the sources and discharge sentence for
+    either worked example, ground points four pairs to a row, and no control; Print is offered
+    only for outcome `result`. Then `views/print.ts` and `print.css`.
     - _Requirements: 4.1, 4.3, 4.4, 4.5, 4.6, 2.3_
 
 - [ ] 9. The limits page
   - [ ] 9.1 Test: `build/ledger.ts` reads every `open_questions` entry with status `open` from
     the real `results/ledger.json`, id and text verbatim. Then the reader.
     - _Requirements: 5.3_
-  - [ ] 9.2 Test: the limits page data has every haunting, every Limits paragraph verbatim,
-    every pair `isBuilt` calls not built, and every open question; and a test fails when an
-    entry of the real files is missing from it. Then `views/limits.ts`.
+  - [ ] 9.2 Test: `build/plain.ts` reads each `## Q-NNN` entry of the real
+    `results/limits-plain.md` with its text; the coverage test fails, naming the question, on a
+    fixture with an open question that has no entry, on one with an entry for an answered
+    question, on one with an entry for an id not in the ledger, and on an empty entry; and it
+    passes on the real files (13 open questions, 13 entries). Then the reader.
+    - _Requirements: 5.3, 5.7_
+  - [ ] 9.3 Test: the limits page data has every haunting, every Limits paragraph verbatim,
+    every pair `isBuilt` calls not built, and every open question with its plain sentences
+    before the ledger's wording; and a test fails when an entry of the real files is missing
+    from it. Then `views/limits.ts`.
     - _Requirements: 5.3, 5.4, 7.3_
 
 - [ ] 10. The proof page
   - [ ] 10.1 Test: `proof/cases.json` has at least one result golden per built pair, every
-    haunting case, nd-irr-000010, a held prompt, a bank message, the circle message, and
+    haunting case, nd-irr-000006 and nd-irr-000010, a held prompt, a bank message, the circle
+    message, and
     cc-circ-000035 and nd-circ-000020, each with a reason; each id's golden and final capture
     exist. Then the list.
     - _Requirements: 5.1_
@@ -165,7 +202,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     - _Requirements: 1.3, 1.11_
   - [ ] 12.2 Write the specs of the design's Testing Strategy, items 1 to 9, and run them at both
     widths. Show the report. A failure is fixed in the code, not in the spec's expectation.
-    - _Requirements: 1.2, 1.3, 1.7, 1.8, 1.11, 1.12, 2.1 to 2.3, 2.7, 4.1, 4.4, 5.1 to 5.3, 6.1 to 6.9, 7.2, 7.3, 8.1 to 8.5_
+    - _Requirements: 1.2, 1.3, 1.7, 1.8, 1.11, 1.12, 2.1 to 2.3, 2.7, 4.1, 4.4, 5.1 to 5.3, 6.1 to 6.10, 7.2, 7.3, 8.1 to 8.9_
   - [ ] 12.3 The identity test over `dist/`: no USWDS prefix or federal banner, the FEMA sentence
     list, nothing from `art/` and no Kotsu, no `.EXE`, `.COM` or `.DLL` and no file hashed like
     one in `oracle/vendor/`. Show it failing on a throwaway file of each kind, then delete it.
@@ -173,8 +210,9 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
 
 - [ ] 13. Deploy check, stopping before publishing
   - [ ] 13.1 `npm run build`, then `vite preview`. In a private window with no account signed
-    in: load, run the worked example, print it, go offline, reload, run it again. Report what
-    was seen at both widths. Stop: the person picks the host, and nothing is published.
+    in: load, run both worked examples, print the main one, go offline, reload, run the main
+    example again. Report what was seen at both widths. Stop: the person picks the host, and
+    nothing is published.
     - _Requirements: 1.3, 4.1, 8.1_
 
 - [ ] 14. `.XSC` files (waits for the Exhumer)

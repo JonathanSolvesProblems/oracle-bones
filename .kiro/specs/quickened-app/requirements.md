@@ -9,7 +9,9 @@ bugfix specs (`circle-outputs`, `circle-short-chord`). This spec covers everythi
 which screen state each answer gets, where each value on the page comes from, and what the
 product says about its own limits. It restates no value the solver computes.
 
-Revised on 2026-11-26, after the solver was built. Today `solve()` computes the three regular
+Revised on 2026-11-26, after the solver was built, and again that day with the person's
+decisions on the two worked examples, the station error, the plain-words limits and the exact
+values by field. Today `solve()` computes the three regular
 modes (Critical Depth, Channel Capacity, Normal Depth) on the four regular shapes, and Normal
 Depth on the irregular section. It answers `not built` for Step-Backwater and for Critical Depth
 and Channel Capacity on the irregular section.
@@ -53,7 +55,15 @@ terminal, and it must not look like a federal site.
 - **Plain decimal**: an optional `-`, then digits with at most one `.`, with at least one digit
   (`12`, `.035`, `-1`, `0.00`). It is the only kind of value any recorded case has typed
   _(solver design: Parsing and holds)_.
-- **The worked example**: the inputs of the recorded case nd-irr-000010 (Requirement 8).
+- **The worked examples** (Requirement 8): the **main example**, the inputs of the recorded case
+  nd-irr-000006, the Grapevine section at the 1-percent flood estimate of 1,200 cfs; and the
+  **cut-off example**, the inputs of nd-irr-000010, the same section at a test discharge of
+  3,000 cfs. The two differ only in the discharge.
+- **Exact by field line**: the fixed-form line `- **Exact by field (case-id):** field value;
+  field value` (or `none`) that each haunting in `results/hauntings.md` has for each case it
+  names.
+- **Station error**: the ground-points editor's message for a station that does not increase,
+  which QUICK-2 writes over its key line on row 24 _(solver 10.3, 10.4)_.
 
 ## Requirements
 
@@ -85,7 +95,7 @@ have got from QUICK-2.
 #### Acceptance Criteria
 
 1. WHEN `solve()` returns outcome `result` THE SYSTEM SHALL show each field of `printed` under QUICK-2's label for it, as the field's window text with leading and trailing spaces removed and nothing else changed (a leading `%` included), and SHALL show no output field's value from any other source. _(solver 8.1; solver design: Printing)_
-2. WHEN a job's inputs are, key for key and text for text, the inputs of a case named in an entry of `results/hauntings.md` THE SYSTEM SHALL show that entry's exact answer beside the printed values, verbatim from the entry and labelled as the exact answer under the assumption the entry states, keep the printed values as the default, and link the entry on the limits page. _(oracle law, rule 5; results/hauntings.md)_
+2. WHEN a job's inputs are, key for key and text for text, the inputs of a case named in a haunting of `results/hauntings.md` THE SYSTEM SHALL put each value of that case's Exact by field line beside the printed field it names, as the line writes it and labelled as exact under the assumption the entry states; keep the printed value as the default and the first one read; and link the entry on the limits page. A case whose line reads `none` gets the link and no exact value. _(oracle law, rule 5; results/hauntings.md)_
 3. THE SYSTEM SHALL show the notice "Quickened is an independent rebuild of QUICK-2 v1.0. It is not a FEMA product and is not accepted by FEMA: FEMA's list of accepted models names QUICK-2, not Quickened. Use it as a cross-check." on every results screen, whatever the outcome, and on the print view. _(product)_
 4. WHEN a result is of a kind a haunting describes, by its flag or by its pair, and its inputs are not those of a case the haunting names THE SYSTEM SHALL link that haunting and show no exact value, since Quickened computes none. _(results/hauntings.md; this spec)_
 5. THE SYSTEM SHALL label the engineer's inputs as the engineer's on the form, the results screen and the print view, and label every output field as computed by QUICK-2's method. _(person, 2026-11-26)_
@@ -119,7 +129,7 @@ the work does not stop at this page.
 2. WHEN a user exports THE SYSTEM SHALL write the HEC-2 file that the original writes to `HEC2.DAT`, with matching contents proved by the harness. No recorded case has written `HEC2.DAT` yet, so this criterion holds once the Exhumer has recorded one; its tasks come last.
 3. THE SYSTEM SHALL offer Print only when the outcome is `result`, as QUICK-2 adds "Print <F5>" only after a result. _(solver 4.6)_
 4. WHEN a print is made THE SYSTEM SHALL fit it on one US Letter page in portrait, for a regular shape and for an irregular section of 40 ground points, with the ground points four station and elevation pairs to a row, as QUICK-2's editor shows them. _(solver 3.1; this spec)_
-5. WHEN the printed job is the worked example THE SYSTEM SHALL print its data sources (criterion 8.4) with it.
+5. WHEN the printed job is either worked example THE SYSTEM SHALL print its data sources (criterion 8.7) and its discharge sentence (8.8 or 8.9) with it.
 6. THE SYSTEM SHALL print no navigation, no buttons and no image other than the cross-section drawing and the water-surface mark (design: Visual design).
 
 ### Requirement 5: Show the proof
@@ -131,9 +141,11 @@ side-by-side view, so that I can see the original and the rebuild agree, and whe
 
 1. THE SYSTEM SHALL show a proof page with, for each case of a committed list, the recorded oracle screen (the capture of the last step of the golden's transcript, as text) beside the rebuild's answer, computed in the browser by `solve()` from the golden's inputs, with each printed field marked as the same or different. The list SHALL hold at least one result for each built pair and every case the solver design names as a known difference (cc-circ-000035, nd-circ-000020). _(solver design: Circle)_
 2. THE SYSTEM SHALL state the case count and the date of the run, read from `results/headline.md`. WHEN that file does not exist THE SYSTEM SHALL say that no headline run has been recorded yet and show no count. _(exhume-loop task 5.1, not yet done)_
-3. THE SYSTEM SHALL state limits inside the product, including behaviours not exercised, on a limits page built from `results/hauntings.md` and `results/ledger.json`: every haunting (H-NNN) with its title, cases, what QUICK-2 printed, the exact answer and the difference, as the file words them; every entry of the file's Limits section by its **Limits page:** paragraph, verbatim; every pair not built yet; and every open question of the ledger, by id and text, under a heading that says these behaviours have not been observed.
-4. WHEN `results/hauntings.md`, `results/ledger.json` or `results/headline.md` changes THE SYSTEM SHALL show the change at the next build with no edit to the app's source: the pages are fed from the files, not copied from them.
+3. THE SYSTEM SHALL state limits inside the product, including behaviours not exercised, on a limits page built from `results/hauntings.md` and `results/ledger.json`: every haunting (H-NNN) with its title, cases, what QUICK-2 printed, the exact answer and the difference, as the file words them; every entry of the file's Limits section by its **Limits page:** paragraph, verbatim; every pair not built yet; and every open question of the ledger under a heading that says these behaviours have not been observed, each with its plain sentences from `results/limits-plain.md` first and the ledger's id and text, verbatim, under them.
+4. WHEN `results/hauntings.md`, `results/limits-plain.md`, `results/ledger.json` or `results/headline.md` changes THE SYSTEM SHALL show the change at the next build with no edit to the app's source: the pages are fed from the files, not copied from them.
 5. THE SYSTEM SHALL link the limits page and the proof page from every page.
+6. WHEN a haunting has no Exact by field line for a case its Case or Cases line names, more than one for a case, a line for a case it does not name, or a line that is malformed (a field that is not in the case golden's `printed`, a value that is not a decimal number with an optional exponent such as `1.5575E+11`, or text that is neither field-value pairs nor `none`) THE SYSTEM's build SHALL fail, naming the haunting and the line.
+7. WHEN an open question of `results/ledger.json` has no entry in `results/limits-plain.md`, or an entry names a question that is not open, THE SYSTEM's tests SHALL fail, naming the question.
 
 ### Requirement 6: Every outcome has a screen state
 
@@ -144,13 +156,14 @@ refused the input, or gave nothing, so that I never mistake a refusal for a resu
 
 1. WHEN `solve()` returns outcome `result` THE SYSTEM SHALL show the results state of Requirement 2, with every flag sentence under the form.
 2. WHEN `solve()` returns outcome `rejected` with a held prompt THE SYSTEM SHALL show the held state of criterion 1.2.
-3. WHEN `solve()` returns outcome `rejected` with a message THE SYSTEM SHALL show the message as QUICK-2's text, with leading and trailing spaces removed and nothing else changed, labelled as QUICK-2's own message, and show no result. _(solver 3.4, 3.5, 9.6, 10.3, 10.4; circle-short-chord 2.4)_
+3. WHEN `solve()` returns outcome `rejected` with a message THE SYSTEM SHALL show the message as QUICK-2's text, with leading and trailing spaces removed and nothing else changed (a station error is shown as criterion 6.10 says), labelled as QUICK-2's own message, and show no result. _(solver 3.4, 3.5, 9.6, 10.3, 10.4; circle-short-chord 2.4)_
 4. WHEN `solve()` returns outcome `error` with one or more flags THE SYSTEM SHALL show no result and show each flag sentence. _(solver 2.8 to 2.10; circle-short-chord 2.6 (c), 2.7)_
 5. WHEN `solve()` returns outcome `error` with message `not built` THE SYSTEM SHALL show the not-built state of Requirement 7.
 6. WHEN `solve()` returns outcome `error` with any other message and no flag THE SYSTEM SHALL show the message labelled as Quickened's, and say that there is no result.
 7. WHEN a Result carries flags THE SYSTEM SHALL show each flag's sentence under the form, verbatim as the solver gives it and in the solver's order, and mark the fields the flag names. _(solver design: Odd behaviours and their flags)_
 8. WHEN a result carries the `cut_off_area_counted` flag THE SYSTEM SHALL say beside Area, Top Wid and Wet Per that QUICK-2 counts the low ground cut off from the channel as flowing, and draw the cut-off water so that it can be told apart from the water connected to the channel. _(solver 9.7; haunting H-001)_
 9. THE SYSTEM SHALL show exactly one of the states of criteria 1.2, 1.9 and 6.1 to 6.6 at a time, and the notice in each of them.
+10. WHEN the message is a station error THE SYSTEM SHALL show as QUICK-2's message the error text up to and including its "!", and say in Quickened's text that QUICK-2 writes this message over its key line and leaves the rest of that line on the screen. The split SHALL come from a function the solver exports, not from a pattern written in the app, and the Result's `message` SHALL stay whole, as the comparator reads it. _(solver 10.3, 10.4; observed: oracle/goldens/captures/obs-irrelev-000001/screen-09.txt, row 24)_
 
 ### Requirement 7: Modes not built yet
 
@@ -164,19 +177,23 @@ not in Quickened yet, so that I do not think it was left out or hidden.
 3. WHEN a user picks a pair that is not built THE SYSTEM SHALL say, inside the product, that Quickened does not compute it yet; say what QUICK-2 asks for in that mode where it has been observed (for Step-Backwater: a starting slope or elevation, the ground points, the bank stations, the three n values and the discharge, first cross section only); say that it has not been observed where it has not (Critical Depth and Channel Capacity on the irregular section); link the limits page; and show no form that could be calculated. _(solver 11.1, 11.2)_
 4. THE SYSTEM SHALL decide which pairs are built from the solver, not from a list kept in the app, so that a pair the solver builds later shows as built with no change to the app.
 
-### Requirement 8: The worked example
+### Requirement 8: The worked examples
 
 **User Story:** As a visitor, I want to load a real case in one click, so that I can see what
-Quickened does without typing 40 ground points.
+Quickened does without typing 40 ground points; and as a reviewer, I want that case to be the
+one I would really run.
 
 #### Acceptance Criteria
 
-1. THE SYSTEM SHALL offer, on the first screen, one control that loads the worked example into the Normal Depth, Irregular Channel form with one activation.
-2. WHEN the worked example is loaded THE SYSTEM SHALL fill the form with the inputs of the golden nd-irr-000010, key for key and text for text: the 40 ground points of the Grapevine section, bank stations 179.49 and 230.77, n .06, .04 and .06, discharge 3000 and slope .0035. _(observed: nd-irr-000010)_
-3. WHEN the worked example is calculated THE SYSTEM SHALL show the printed fields of nd-irr-000010, the cut-off statement of criterion 6.8, and the exact answer of haunting H-001 by criterion 2.2. _(solver 9.7; haunting H-001)_
-4. WHEN the worked example is loaded THE SYSTEM SHALL name its data sources on the page, read from `realdata/huntington-section-01.json` where the file holds them: Grapevine Branch, Cabell County, West Virginia, a Zone A stream on FIRM panel 54011C; NHD flowline 58000967; the ground points from the USGS 3DEP 1 m lidar DEM (project WV_FEMAR3_Southcentral_2018_D19) through the USGS Elevation Point Query Service; the bank stations as suggested from the lidar profile, not a field determination; the slope as an estimate from the 3DEP thalweg profile, not a survey; Manning's n from Chow (1959) as reproduced in the HEC-RAS Hydraulic Reference Manual, Table 3-1, normal column, an assumption made without seeing the site; and the file's caveats. _(solver 9, introduction)_
-5. THE SYSTEM SHALL say that the discharge of 3000 cfs is a test value, chosen when the case was recorded to put the water surface between 595.75 and 596.42 ft, where the cut-off low ground fills, and not a flood estimate; and give the USGS StreamStats 1-percent AEP estimate for the site, 1,200 cfs (90% prediction interval 624 to 2,310 cfs), for comparison. _(ledger: the case entry of nd-irr-000010; realdata/huntington-section-01.json)_
-6. WHEN any input of the loaded example is edited THE SYSTEM SHALL say that the job is no longer the recorded case, and stop showing H-001's exact answer.
+1. THE SYSTEM SHALL offer, on the first screen, two controls, each loading one worked example into the Normal Depth, Irregular Channel form with one activation: first the main example, labelled as the Grapevine section at the 1-percent flood estimate of 1,200 cfs; and beside it the cut-off example, labelled as the same section at a test discharge of 3,000 cfs, there to show how QUICK-2 counts cut-off low ground. _(person, 2026-11-26)_
+2. WHEN the main example is loaded THE SYSTEM SHALL fill the form with the inputs of the golden nd-irr-000006, key for key and text for text: the 40 ground points of the Grapevine section, bank stations 179.49 and 230.77, n .06, .04 and .06, discharge 1200 and slope .0035. _(observed: nd-irr-000006)_
+3. WHEN the main example is calculated THE SYSTEM SHALL show the printed fields of nd-irr-000006, and no exact value, since no haunting names that case. _(solver 9.4)_
+4. WHEN the cut-off example is loaded THE SYSTEM SHALL fill the form with the inputs of the golden nd-irr-000010, key for key and text for text, which are the main example's with discharge 3000. _(observed: nd-irr-000010)_
+5. WHEN the cut-off example is calculated THE SYSTEM SHALL show the printed fields of nd-irr-000010, the cut-off statement of criterion 6.8, and the exact values of H-001's Exact by field line beside their fields by criterion 2.2. _(solver 9.7; haunting H-001)_
+6. WHEN any input of a loaded example is edited THE SYSTEM SHALL say that the job is no longer the recorded case, and stop showing any exact value that criterion 2.2 gave it.
+7. WHEN either example is loaded THE SYSTEM SHALL name its data sources on the page, read from `realdata/huntington-section-01.json` where the file holds them: Grapevine Branch, Cabell County, West Virginia, a Zone A stream on FIRM panel 54011C; NHD flowline 58000967; the ground points from the USGS 3DEP 1 m lidar DEM (project WV_FEMAR3_Southcentral_2018_D19) through the USGS Elevation Point Query Service; the bank stations as suggested from the lidar profile, not a field determination; the slope as an estimate from the 3DEP thalweg profile, not a survey; Manning's n from Chow (1959) as reproduced in the HEC-RAS Hydraulic Reference Manual, Table 3-1, normal column, an assumption made without seeing the site; and the file's caveats. _(solver 9, introduction)_
+8. WHEN the main example is loaded THE SYSTEM SHALL say that its discharge, 1,200 cfs, is the USGS StreamStats 1-percent AEP flood estimate for the site (regression region GC2081, drainage area 2.70 mi², 90% prediction interval 624 to 2,310 cfs), a regional regression estimate, with the citation the file gives for it. _(solver 9, introduction; realdata/huntington-section-01.json)_
+9. WHEN the cut-off example is loaded THE SYSTEM SHALL say that its discharge, 3,000 cfs, is a test value, chosen when the case was recorded to put the water surface between 595.75 and 596.42 ft, where the cut-off low ground fills; that it is not a flood estimate; and that it is above the 1-percent estimate's 90% prediction interval (624 to 2,310 cfs). _(ledger: the case entry of nd-irr-000010; realdata/huntington-section-01.json)_
 
 ### Requirement 9: Identity and marks
 
@@ -198,13 +215,9 @@ printout in a permit file says only what is true.
   changes if task 5.1 writes something else.
 - The `.XSC` and `HEC2.DAT` formats are not observed, and the ledger has no question for them
   (Requirements 3 and 4.2).
-- The station error carries the rest of the editor's key line after the error text
-  (`stationError` in `groundPoints.ts`, as on QUICK-2's row 24). Criterion 6.3 shows the
-  message as `solve()` returns it. Whether the app should cut the key-line remainder is the
-  person's call.
-- The ledger's open questions are written for the Exhumer, not for a reviewer. Criterion 5.3
-  shows them verbatim. Whether someone writes plain-words summaries into `results/`, and who,
-  is open.
+- `results/limits-plain.md` has to follow the ledger: when the Exhumer answers or opens a
+  question, criterion 5.7 fails until the file's entry is removed or written. Who writes new
+  entries is not settled.
 - Exact values for inputs other than a haunting's recorded cases (criterion 2.4) would need the
   solver to compute an exact answer, which no spec asks of it.
 - Step-Backwater beyond the first section is not observed (solver Requirement 11), so
