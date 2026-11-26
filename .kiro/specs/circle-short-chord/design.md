@@ -70,6 +70,10 @@ after (`full-pipe-rule`). The 40 that change:
 
 cd-circ-000038, -000057 and -000058 are the three in the quick set.
 
+(2026-11-26: that was the quick set of c865f11. In the rebuilt quick set of 3cc4821 the four
+are cd-circ-000050, -000062, -000082 and -000086, and the counts are 191 of 200 before and
+195 after; bugfix.md 2.9 has the note.)
+
 ## Fault condition and root cause
 
 | Requirement | Fault | Root cause, with evidence |

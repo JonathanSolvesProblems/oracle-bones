@@ -10,6 +10,12 @@ expected end state is in requirement 2.9: 82 of the 82 circle Critical Depth gol
 the search, 195 of 200 on the quick set and 335 of 340 on the full set. No task runs the
 program.
 
+**Note (2026-11-26): the quick set was rebuilt** (3cc4821) after tasks 2.2 to 4.2 ran. 192 and
+195 of 200 were right for the quick set of c865f11, and the comparator confirmed both. On the
+rebuilt quick set the counts are 191 of 200 before the fix (derived from 2.2's full-set report)
+and 195 of 200 after it (the comparator), with the same five misses; bugfix.md 2.9 has the
+details. The full-set counts do not change.
+
 - [ ] 1. Tests first, on the unchanged solver
   - [ ] 1.1 Add the block "circle-short-chord" to `app/test/circle.test.ts`. It runs the 40
     goldens of the design's table (Expected result) through `solve()` and compares each with its
@@ -60,7 +66,8 @@ program.
   - [ ] 2.2 Run the comparator on the unchanged solver: `python scripts/oracle_quick.py` and
     `python scripts/oracle_quick.py --full`. Keep both reports. Expect 192 of 200 and 295 of 340,
     with the misses 2.9 lists. If either count or any miss differs from 2.9, stop and report it
-    before task 3.
+    before task 3. (2026-11-26: 192 is for the quick set of c865f11; the rebuilt quick set of
+    3cc4821 gives 191, derived, as 2.9's note says.)
     - _Requirements: 2.9_
 
 - [ ] 3. The solver change
@@ -89,7 +96,9 @@ program.
 - [ ] 4. The comparator after the fix
   - [ ] 4.1 Run `python scripts/oracle_quick.py` and show the report: 195 of 200, the misses
     cc-circ-000035, nd-circ-000020 and sb-irr-000001 to -000003, with the same fields as before.
-    Every golden that matched in 2.2 still matches.
+    Every golden that matched in 2.2 still matches. (2026-11-26: the same count and misses on the
+    rebuilt quick set of 3cc4821, where cd-circ-000050, -000062, -000082 and -000086 start to
+    match.)
     - _Requirements: 2.9, 3.1, 3.4_
   - [ ] 4.2 Run `python scripts/oracle_quick.py --full` and show the report: 335 of 340, the same
     five misses. Every golden recorded from A-011 to A-018 matches.

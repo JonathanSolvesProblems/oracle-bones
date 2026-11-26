@@ -422,7 +422,18 @@ adds them by derivation, not by a comparator run:
 Quick set: 192 of 200 today; its misses are cc-circ-000035, cd-circ-000038, cd-circ-000057,
 cd-circ-000058, nd-circ-000020 and sb-irr-000001 to -000003. None of cd-circ-000061 to -000089
 is in it (`oracle/quickset.json`; `full-pipe-rule`). After the fix, 195 of 200, since
-cd-circ-000038, -000057 and -000058 match. The after-the-fix counts are derived: 2.4 and 2.6
+cd-circ-000038, -000057 and -000058 match.
+
+**Note (2026-11-26): the quick set was rebuilt.** The counts above were right for the quick set
+of c865f11, built before cd-circ-000064 to -000089 were stored; the comparator confirmed 192
+before the fix and 195 after on it. `python -m oracle.record --build-quickset` (seed 1) rebuilt
+it from the stored goldens in 3cc4821: 21 cases left, cd-circ-000038, -000057 and -000058 among
+them, and 21 joined, cd-circ-000050, -000062, -000082 and -000086 among them. On the rebuilt quick
+set: 191 of 200 before the fix, derived golden by golden from the comparator's full-set report on
+the unchanged solver, with misses cc-circ-000035, cd-circ-000050, -000062, -000082, -000086,
+nd-circ-000020 and sb-irr-000001 to -000003; and 195 of 200 after it, the comparator's run on the
+fixed solver, with misses cc-circ-000035, nd-circ-000020 and sb-irr-000001 to -000003, the same
+fields as on the full set. The after-the-fix counts are derived: 2.4 and 2.6
 with K1 and 2.7 match all 82 circle Critical Depth goldens that reach the search, and no golden
 that matches today stops matching (`node scripts/circle_outputs.mts full-pipe-rule`: 42 match
 today, 82 after), which removes the 40 circle Critical Depth misses above. The comparator SHALL
