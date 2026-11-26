@@ -4,11 +4,9 @@ import { solve, NOT_BUILT, type Flag, type Mode, type Result, type Shape } from 
 import { splitStationError } from '../solver/groundPoints.ts';
 import type { AppJob } from './job.ts';
 import { whenValid } from './validate.ts';
+import { linksFor, recordedCase, type ExactByField, type HauntingLink } from './hauntingLinks.ts';
 
-/** A haunting's Exact by field values for a recorded case (criterion 2.2). Filled in by task 6. */
-export interface ExactByField { haunting: string; assumption: string; values: Record<string, string>; }
-/** A haunting a result links to (criterion 2.4). Filled in by task 6. */
-export interface HauntingLink { haunting: string; }
+export type { ExactByField, HauntingLink };
 
 export type ScreenState =
   | { kind: 'idle' }
@@ -35,7 +33,7 @@ export type ShownState = Exclude<ScreenState, { kind: 'idle' }>;
 /** One state for every Result, in the design's order. */
 export function classify(job: AppJob, result: Result): ShownState {
   const r = result;
-  if (r.outcome === 'result') return { kind: 'result', result: r, exact: null, links: [] };
+  if (r.outcome === 'result') return { kind: 'result', result: r, exact: recordedCase(job), links: linksFor(job, r) };
   if (r.outcome === 'rejected' && r.held !== null) return { kind: 'held', result: r, prompt: r.held, message: r.message };
   if (r.outcome === 'rejected' && r.message !== null) {
     // A station error is QUICK-2's text up to its "!", written over the editor's key line; the

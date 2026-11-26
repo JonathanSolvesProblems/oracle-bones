@@ -110,23 +110,23 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     drawing on the results screen.
     - _Requirements: 2.7, 1.11_
 
-- [ ] 6. Hauntings on the results screen
-  - [ ] 6.1 Test: `build/hauntings.ts` reads every `## H-NNN` entry of the real
+- [x] 6. Hauntings on the results screen
+  - [x] 6.1 Test: `build/hauntings.ts` reads every `## H-NNN` entry of the real
     `results/hauntings.md` (title, case ids, printed, the Exact answer label, difference, flag),
     H-005 to H-009 included, and every Limits entry's **Limits page:** paragraph; and fixtures
     with a missing field fail with the entry and the field. Then the reader.
     - _Requirements: 5.3, 5.4_
-  - [ ] 6.2 Test: the reader gives the real file's 15 Exact by field lines, values as text; and
+  - [x] 6.2 Test: the reader gives the real file's 13 Exact by field lines, values as text; and
     the build fails, naming the haunting and the line, on a fixture for each case of criterion
     5.6: no line for a named case, two lines for one case, a line for a case not named, a line
     that does not match the form, a field not in the case golden's `printed`, a field twice, a
     value that is not a number. Then the Exact by field part of the reader.
     - _Requirements: 5.6, 2.2_
-  - [ ] 6.3 Test: `build/goldens.ts` gives each haunting case's inputs and printed keys,
+  - [x] 6.3 Test: `build/goldens.ts` gives each haunting case's inputs and printed keys,
     read-only, and fails the build on a missing golden. Then the reader and the
     `virtual:quickened/data` plugin, used by Vite and Vitest.
     - _Requirements: 2.2, 5.6_
-  - [ ] 6.4 Test Property 7, and that every haunting is in `hauntingLinks.ts` and every mapping
+  - [x] 6.4 Test Property 7, and that every haunting is in `hauntingLinks.ts` and every mapping
     names a haunting in the file. Then the Exact column of the printed fields, its caption and
     the links.
     - _Requirements: 2.2, 2.4_

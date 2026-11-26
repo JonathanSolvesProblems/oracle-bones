@@ -9,6 +9,8 @@ import type { ScreenState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { notBuiltModel } from './notBuilt.ts';
 import { NOTICE, noticeView } from './notice.ts';
+import { linksFor, type HauntingLink } from '../hauntingLinks.ts';
+import { hauntingLinksView } from './hauntings.ts';
 
 export const QUICK2_MESSAGE = "QUICK-2's message:";
 export const QUICKENED_MESSAGE = "Quickened's message:";
@@ -36,6 +38,8 @@ export interface StateModel {
   notice: string;
   /** The Result, for the states that have one. */
   result: Result | null;
+  /** The hauntings that describe a refusal or a stop of this kind (criterion 2.4). */
+  links: HauntingLink[];
 }
 
 function labelOf(job: AppJob, field: string): string {
@@ -51,6 +55,7 @@ function base(kind: StateModel['kind'], heading: string, job: AppJob, result: Re
   return {
     kind, heading, sentences: [], quick2Message: null, keyLineRest: null, quickenedMessage: null, flags,
     marked: result ? [...new Set(result.flags.flatMap((f) => f.fields))] : [], notice: NOTICE, result,
+    links: result && kind !== 'result' ? linksFor(job, result) : [],
   };
 }
 
@@ -119,6 +124,7 @@ export function stateView(m: StateModel, body: Child | null = null): VNode {
       h('span', { class: 'message-label' }, QUICKENED_MESSAGE), ' ', m.quickenedMessage) : null,
     body,
     flagList(m.flags),
+    hauntingLinksView(m.links),
     noticeView(),
   );
 }

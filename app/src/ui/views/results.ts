@@ -5,10 +5,11 @@
 import type { Mode, Shape } from '../../solver/index.ts';
 import { screenLabel, screenOf, screenRowHeading } from '../forms.ts';
 import type { AppJob } from '../job.ts';
-import type { ShownState } from '../state.ts';
+import type { HauntingLink, ShownState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { noticeView } from './notice.ts';
 import { wsMark, wsMarkSymbol } from '../drawing/svg.ts';
+import { hauntingHref, hauntingLinksView } from './hauntings.ts';
 import { flagList, type FlagLine } from './states.ts';
 
 export const ECHOED_HEADING = 'Your inputs, as QUICK-2 read them';
@@ -26,7 +27,12 @@ export interface PrintedRow {
   flagNumbers: number[];
   /** Quickened's lines beside the field (the cut-off line). */
   notes: string[];
+  /** The haunting's exact value for this field, as the file writes it, on a recorded case only (2.2). */
+  exact: string | null;
 }
+
+/** The Exact column's head (design: The results screen, item 5). */
+export const EXACT_HEADER = 'Exact';
 
 /** Beside the fields the cut_off_area_counted flag names: Area, Top Wid and Wet Per (6.8). */
 export const CUT_OFF_LINE = 'Includes low ground cut off from the channel, which QUICK-2 counts as flowing.';
@@ -37,6 +43,10 @@ export interface ResultsModel {
   inputs: PrintedRow[];
   outputs: PrintedRow[];
   flags: FlagLine[];
+  /** The recorded case's haunting, when its line gives exact values. */
+  exact: { haunting: string; title: string; assumption: string } | null;
+  /** The hauntings linked, the recorded case's first. */
+  links: HauntingLink[];
 }
 
 /** The field the results screen leads with (design: The results screen, item 1). */
@@ -60,24 +70,41 @@ export function resultsModel(job: AppJob, state: Extract<ShownState, { kind: 're
     text: r.printed[field]!.trim(),
     flagNumbers: r.flags.flatMap((f, i) => (f.fields.includes(field) ? [i + 1] : [])),
     notes: r.flags.some((f) => f.code === 'cut_off_area_counted' && f.fields.includes(field)) ? [CUT_OFF_LINE] : [],
+    exact: state.exact?.values[field] ?? null,
   });
   const rows = [...order, ...rest].map(row);
   const main = mainFigureField(job.mode, job.shape);
+  const e = state.exact;
+  const recorded = e ? [{ haunting: e.haunting, title: e.title }] : [];
   return {
     heading: 'Result',
     mainFigure: { field: main, label: screenLabel(job.mode, job.shape, main) ?? main, text: (r.printed[main] ?? '').trim() },
     inputs: rows.filter((x) => x.field.startsWith('in_')),
     outputs: rows.filter((x) => !x.field.startsWith('in_')),
     flags,
+    exact: e && Object.keys(e.values).length ? { haunting: e.haunting, title: e.title, assumption: e.assumption } : null,
+    links: [...recorded, ...state.links.filter((l) => l.haunting !== e?.haunting)],
   };
 }
 
-function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row: PrintedRow) => Child | null): VNode {
-  return h('table', { class: 'printed' },
-    h('caption', {}, caption),
+/** The Exact column's caption: the entry's assumption, and the entry linked (criterion 2.2). */
+function exactCaption(e: NonNullable<ResultsModel['exact']>): Child[] {
+  return [`${EXACT_HEADER}: the exact answer ${e.assumption}, from `, h('a', { href: hauntingHref(e.haunting) }, `haunting ${e.haunting}`),
+    '. The printed value is QUICK-2\'s and comes first.'];
+}
+
+function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row: PrintedRow) => Child | null, exact: ResultsModel['exact']): VNode {
+  const withExact = exact !== null && rows.some((x) => x.exact !== null);
+  return h('table', { class: withExact ? 'printed with-exact' : 'printed' },
+    h('caption', {}, caption, withExact ? h('span', { class: 'exact-caption' }, exactCaption(exact!)) : null),
+    withExact ? h('thead', {}, h('tr', {},
+      h('th', { scope: 'col' }, "QUICK-2's label"), h('th', { scope: 'col' }, 'Printed'),
+      h('th', { scope: 'col' }, EXACT_HEADER), h('th', { scope: 'col' }, 'Notes'))) : null,
     h('tbody', {}, rows.map((x) => h('tr', { class: x.flagNumbers.length ? 'marked' : undefined },
       h('th', { scope: 'row', class: 'quick2' }, x.rowHeading ? h('span', { class: 'row-heading' }, `${x.rowHeading} `) : null, x.label),
       h('td', { class: 'figures', 'data-field': x.field }, x.text),
+      withExact ? h('td', x.exact !== null ? { class: 'exact figures', 'data-exact': x.field } : { class: 'exact' },
+        x.exact !== null ? [h('span', { class: 'exact-label' }, EXACT_HEADER), ' ', x.exact] : null) : null,
       h('td', { class: 'row-extra' },
         x.flagNumbers.length ? h('span', { class: 'flag-ref' }, `Flag ${x.flagNumbers.join(', ')}`) : null,
         x.notes.map((n) => h('span', { class: 'field-note' }, n)),
@@ -104,9 +131,10 @@ export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
       ' ',
       h('span', { class: 'main-value figures' }, m.mainFigure.text)),
     parts.drawing ?? null,
-    printedTable(ECHOED_HEADING, m.inputs, extra),
-    printedTable(COMPUTED_HEADING, m.outputs, extra),
+    printedTable(ECHOED_HEADING, m.inputs, extra, m.exact),
+    printedTable(COMPUTED_HEADING, m.outputs, extra, m.exact),
     flagList(m.flags),
+    hauntingLinksView(m.links),
     parts.afterFlags ?? null,
     noticeView(),
   );
