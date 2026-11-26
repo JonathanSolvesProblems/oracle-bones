@@ -385,8 +385,9 @@ sentence differs:
 - main example: 1,200 cfs is the USGS StreamStats 1-percent AEP estimate (regression region
   GC2081, drainage area 2.70 mi², 90% prediction interval 624 to 2,310 cfs), a regional
   regression estimate, with the file's citation (criterion 8.8);
-- cut-off example: 3,000 cfs is a test value chosen to put the water surface between 595.75 and
-  596.42 ft, not a flood estimate, and above that interval (criterion 8.9).
+- cut-off example: 3,000 cfs is a test value chosen to fill the cut-off low ground, not a flood
+  estimate, and above that interval (criterion 8.9, amended 2026-11-26: the range it named is not
+  in the ledger or the realdata file).
 
 Any edit to an input sets `origin` to `typed`. The view then says the job is no longer the
 recorded case, and the exact values go, because the inputs no longer equal H-001's case

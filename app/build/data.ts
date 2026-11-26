@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import { readGolden } from './goldens.ts';
 import { readHauntings, type Haunting, type LimitEntry } from './hauntings.ts';
+import { readSources, type Sources } from './sources.ts';
 
 export const DATA_ID = 'virtual:quickened/data';
 export const DATA_PLUGIN = 'quickened-data';
@@ -24,11 +25,17 @@ export interface QuickenedData {
   limits: LimitEntry[];
   /** Every case a haunting names, by id. */
   cases: Record<string, CaseData>;
+  /** The worked examples' goldens (criteria 8.2, 8.4). */
+  examples: { main: CaseData; cutoff: CaseData };
+  sources: Sources;
 }
+
+/** The worked examples' cases (design: The worked examples). */
+export const EXAMPLE_CASES = { main: 'nd-irr-000006', cutoff: 'nd-irr-000010' } as const;
 
 /** The files the module is built from. */
 export function sourceFiles(root: string): string[] {
-  return [join(root, 'results', 'hauntings.md')];
+  return [join(root, 'results', 'hauntings.md'), join(root, 'realdata', 'huntington-section-01.json')];
 }
 
 function readText(path: string): string {
@@ -48,7 +55,10 @@ export function buildData(root: string = ROOT): QuickenedData {
   const file = readHauntings(readText(join(root, 'results', 'hauntings.md')), (id) => readGolden(root, id).printedKeys);
   const cases: Record<string, CaseData> = {};
   for (const id of file.hauntings.flatMap((h) => h.cases)) cases[id] ??= caseData(root, id);
-  return { hauntings: file.hauntings, limits: file.limits, cases };
+  const main = caseData(root, EXAMPLE_CASES.main);
+  const cutoff = caseData(root, EXAMPLE_CASES.cutoff);
+  const n = { left: main.inputs.n_left ?? '', channel: main.inputs.n_channel ?? '', right: main.inputs.n_right ?? '' };
+  return { hauntings: file.hauntings, limits: file.limits, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? '') };
 }
 
 export function quickenedData(root: string = ROOT): Plugin {

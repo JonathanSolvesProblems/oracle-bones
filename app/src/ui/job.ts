@@ -19,6 +19,16 @@ export interface AppJob {
 
 export interface Row { station: string; elevation: string; }
 
+/** Any edit makes the job typed: a loaded example is no longer the recorded case (criterion 8.6). */
+export function originAfterEdit(_origin: Origin): Origin {
+  return 'typed';
+}
+
+/** The job with one input changed to `text`. */
+export function edited(job: AppJob, key: string, text: string): AppJob {
+  return { ...job, inputs: { ...job.inputs, [key]: text }, origin: originAfterEdit(job.origin) };
+}
+
 /** The contract keys of ground point `index` (from 1). */
 export function rowKeys(index: number): { station: string; elevation: string } {
   const n = String(index).padStart(2, '0');

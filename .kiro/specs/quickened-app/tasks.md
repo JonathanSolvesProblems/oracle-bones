@@ -131,20 +131,20 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     the links.
     - _Requirements: 2.2, 2.4_
 
-- [ ] 7. The worked examples
-  - [ ] 7.1 Test: the main example's inputs equal nd-irr-000006's, key for key and text for
+- [x] 7. The worked examples
+  - [x] 7.1 Test: the main example's inputs equal nd-irr-000006's, key for key and text for
     text; calculated, it shows the golden's printed fields and no exact value. Then
     `views/example.ts` and the first of the two controls on the first screen.
     - _Requirements: 8.1, 8.2, 8.3_
-  - [ ] 7.2 Test: the cut-off example's inputs equal nd-irr-000010's, which differ from
+  - [x] 7.2 Test: the cut-off example's inputs equal nd-irr-000010's, which differ from
     nd-irr-000006's only in `discharge`; calculated, it shows the golden's printed fields, the
     cut-off line and H-001's Exact by field values on their fields' rows. Then the second
     control, beside the first, with its label.
     - _Requirements: 8.1, 8.4, 8.5_
-  - [ ] 7.3 Test: after one edit to either example, the job is said to be no longer the recorded
+  - [x] 7.3 Test: after one edit to either example, the job is said to be no longer the recorded
     case and no exact value is shown. Then the origin change in `job.ts` and the sentence.
     - _Requirements: 8.6_
-  - [ ] 7.4 Test: the sources block names every source of 8.7, read from
+  - [x] 7.4 Test: the sources block names every source of 8.7, read from
     `realdata/huntington-section-01.json` where the file has it, for both examples; the main
     example has the 1-percent discharge sentence of 8.8 with the file's estimate, interval and
     citation, and the cut-off example the test-discharge sentence of 8.9. Then the block.
