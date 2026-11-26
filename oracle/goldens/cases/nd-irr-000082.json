@@ -1,0 +1,399 @@
+{
+  "id": "nd-irr-000082",
+  "control": false,
+  "expected_screen": null,
+  "mode": "normal_depth",
+  "shape": "irregular",
+  "inputs": {
+    "sta_01": "-75.45",
+    "elev_01": "37.53",
+    "sta_02": "-11.68",
+    "elev_02": "35.79",
+    "sta_03": "77.6",
+    "elev_03": "34.78",
+    "sta_04": "90.35",
+    "elev_04": "34.6",
+    "sta_05": "141.37",
+    "elev_05": "30.3",
+    "sta_06": "179.63",
+    "elev_06": "27.91",
+    "sta_07": "205.14",
+    "elev_07": "28.74",
+    "sta_08": "243.41",
+    "elev_08": "33.5",
+    "sta_09": "281.67",
+    "elev_09": "34.69",
+    "sta_10": "307.18",
+    "elev_10": "34.97",
+    "sta_11": "319.93",
+    "elev_11": "35.15",
+    "sta_12": "370.95",
+    "elev_12": "35.98",
+    "sta_13": "383.71",
+    "elev_13": "36.34",
+    "sta_14": "409.22",
+    "elev_14": "37.35",
+    "bank_left": "-11.68",
+    "bank_right": "319.93",
+    "n_left": ".382",
+    "n_channel": ".113",
+    "n_right": ".288",
+    "discharge": "16234",
+    "slope": ".0022"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_bank_left": "  -11.7  ",
+    "in_bank_right": "  319.9  ",
+    "in_n_left": " 0.3820  ",
+    "in_n_channel": " 0.1130  ",
+    "in_n_right": " 0.2880  ",
+    "in_irr_discharge": "  16234  ",
+    "in_irr_slope": "   0.0022 ",
+    "depth": "   18.1  ",
+    "ws_elev": "     46.01          ",
+    "area": "   5831  ",
+    "top_width": "    485  ",
+    "hyd_radius": "   12.0  ",
+    "flow_type": " SUBCRITICAL   ",
+    "chan_velocity": "    3.4  ",
+    "wet_perimeter": "    485  ",
+    "froude": "   0.17  "
+  },
+  "message": null,
+  "held_prompt": null,
+  "stuck_screen": null,
+  "seed": 201,
+  "generator_version": "2",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "11d7c1e71c032ae702595e4bc3f28083a6541126f87ddfa6ad6c9cab317240b9",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "3{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "I{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b"
+    },
+    {
+      "step": 4,
+      "expect": "irr_editor",
+      "keys": "-75.45{Enter}",
+      "screen_hash_before": "bad90fe25c4944fbc7e8a652d3c621b45e608ef591943cae705f447fbae1ba4b",
+      "resend": false,
+      "screen_hash_after": "472ce945578450bb84f3bb5bbcf5933003ea9e8a412aca31f5745bc00bc7f735"
+    },
+    {
+      "step": 5,
+      "expect": "irr_editor",
+      "keys": "37.53{Enter}",
+      "screen_hash_before": "472ce945578450bb84f3bb5bbcf5933003ea9e8a412aca31f5745bc00bc7f735",
+      "resend": false,
+      "screen_hash_after": "f1505aeff8a361ba8bf84eb04112ee69e151f71f1fe9bd7fcb3aba374c7bf686"
+    },
+    {
+      "step": 6,
+      "expect": "irr_editor",
+      "keys": "-11.68{Enter}",
+      "screen_hash_before": "f1505aeff8a361ba8bf84eb04112ee69e151f71f1fe9bd7fcb3aba374c7bf686",
+      "resend": false,
+      "screen_hash_after": "286789a44550dca78eca92457b7db663407e547a9bd15389c6dca31ebac787ae"
+    },
+    {
+      "step": 7,
+      "expect": "irr_editor",
+      "keys": "35.79{Enter}",
+      "screen_hash_before": "286789a44550dca78eca92457b7db663407e547a9bd15389c6dca31ebac787ae",
+      "resend": false,
+      "screen_hash_after": "ac02940ee8e6fb9c86d7496a108c1eff9c443dcb671c1bc1b8134160df7c2766"
+    },
+    {
+      "step": 8,
+      "expect": "irr_editor",
+      "keys": "77.6{Enter}",
+      "screen_hash_before": "ac02940ee8e6fb9c86d7496a108c1eff9c443dcb671c1bc1b8134160df7c2766",
+      "resend": false,
+      "screen_hash_after": "edaa04a787f3f6df53dff296a156f2cb23f8ad5e233a637186f98dedd694e182"
+    },
+    {
+      "step": 9,
+      "expect": "irr_editor",
+      "keys": "34.78{Enter}",
+      "screen_hash_before": "edaa04a787f3f6df53dff296a156f2cb23f8ad5e233a637186f98dedd694e182",
+      "resend": false,
+      "screen_hash_after": "73792dfe99af8be15ef8dce8341791a97469debb37cf1acce6b5125f7a2b8f04"
+    },
+    {
+      "step": 10,
+      "expect": "irr_editor",
+      "keys": "90.35{Enter}",
+      "screen_hash_before": "73792dfe99af8be15ef8dce8341791a97469debb37cf1acce6b5125f7a2b8f04",
+      "resend": false,
+      "screen_hash_after": "bb3acf5a12b4a4be06b6ed30f6b85bc7c76aba1fb9662a73e3b08c1d7dbdbb9d"
+    },
+    {
+      "step": 11,
+      "expect": "irr_editor",
+      "keys": "34.6{Enter}",
+      "screen_hash_before": "bb3acf5a12b4a4be06b6ed30f6b85bc7c76aba1fb9662a73e3b08c1d7dbdbb9d",
+      "resend": false,
+      "screen_hash_after": "c4bdd6f68e69dde826551f8208007dce4f9540f864ff9a7ec8f1227b6fb9f448"
+    },
+    {
+      "step": 12,
+      "expect": "irr_editor",
+      "keys": "141.37{Enter}",
+      "screen_hash_before": "c4bdd6f68e69dde826551f8208007dce4f9540f864ff9a7ec8f1227b6fb9f448",
+      "resend": false,
+      "screen_hash_after": "a2fb599128457d71b7f0aa1651950d1764b8f11aa5cae74d04dee4595985f7d2"
+    },
+    {
+      "step": 13,
+      "expect": "irr_editor",
+      "keys": "30.3{Enter}",
+      "screen_hash_before": "a2fb599128457d71b7f0aa1651950d1764b8f11aa5cae74d04dee4595985f7d2",
+      "resend": false,
+      "screen_hash_after": "5c704f953767c87669283eb6dcb199e236cc83b21f48a50b26ec9f340fcfa954"
+    },
+    {
+      "step": 14,
+      "expect": "irr_editor",
+      "keys": "179.63{Enter}",
+      "screen_hash_before": "5c704f953767c87669283eb6dcb199e236cc83b21f48a50b26ec9f340fcfa954",
+      "resend": false,
+      "screen_hash_after": "58bc4a57b9f5617090a98fdf504931f0707e34c6ac71e6dcc50585abd6b9a248"
+    },
+    {
+      "step": 15,
+      "expect": "irr_editor",
+      "keys": "27.91{Enter}",
+      "screen_hash_before": "58bc4a57b9f5617090a98fdf504931f0707e34c6ac71e6dcc50585abd6b9a248",
+      "resend": false,
+      "screen_hash_after": "a49e073d7365465d3a0601db553050828b46704c1aaf48c8f77722d1ca310d60"
+    },
+    {
+      "step": 16,
+      "expect": "irr_editor",
+      "keys": "205.14{Enter}",
+      "screen_hash_before": "a49e073d7365465d3a0601db553050828b46704c1aaf48c8f77722d1ca310d60",
+      "resend": false,
+      "screen_hash_after": "a5d91a2a14bb3fdac4c54505f4b652609733ba69550e3f585f2bb7c55327c173"
+    },
+    {
+      "step": 17,
+      "expect": "irr_editor",
+      "keys": "28.74{Enter}",
+      "screen_hash_before": "a5d91a2a14bb3fdac4c54505f4b652609733ba69550e3f585f2bb7c55327c173",
+      "resend": false,
+      "screen_hash_after": "70df7b68cc4cc956019314a33db51338a9b960da307ca994b55cc77254850851"
+    },
+    {
+      "step": 18,
+      "expect": "irr_editor",
+      "keys": "243.41{Enter}",
+      "screen_hash_before": "70df7b68cc4cc956019314a33db51338a9b960da307ca994b55cc77254850851",
+      "resend": false,
+      "screen_hash_after": "a7f73569e12cc1a0d056fd3a627612fe9c03315ab981a65834e519f0ad0b0389"
+    },
+    {
+      "step": 19,
+      "expect": "irr_editor",
+      "keys": "33.5{Enter}",
+      "screen_hash_before": "a7f73569e12cc1a0d056fd3a627612fe9c03315ab981a65834e519f0ad0b0389",
+      "resend": false,
+      "screen_hash_after": "61d9e3872d2096d5aa26d5bf7c6aab0852805f64c20258f9da85cc11cba62ee1"
+    },
+    {
+      "step": 20,
+      "expect": "irr_editor",
+      "keys": "281.67{Enter}",
+      "screen_hash_before": "61d9e3872d2096d5aa26d5bf7c6aab0852805f64c20258f9da85cc11cba62ee1",
+      "resend": false,
+      "screen_hash_after": "8996a759bd60548ffedf743a2d33ea2c41352ab020120578a886786d1eb1fb6a"
+    },
+    {
+      "step": 21,
+      "expect": "irr_editor",
+      "keys": "34.69{Enter}",
+      "screen_hash_before": "8996a759bd60548ffedf743a2d33ea2c41352ab020120578a886786d1eb1fb6a",
+      "resend": false,
+      "screen_hash_after": "cff75c58bc2f7ec0d8d3468c496599d5c0185623e4fe39afc05812448c3c961e"
+    },
+    {
+      "step": 22,
+      "expect": "irr_editor",
+      "keys": "307.18{Enter}",
+      "screen_hash_before": "cff75c58bc2f7ec0d8d3468c496599d5c0185623e4fe39afc05812448c3c961e",
+      "resend": false,
+      "screen_hash_after": "981b33e0875b6471252648db3bd91cbe13649e590dbf1aa5c893f242a0187bf0"
+    },
+    {
+      "step": 23,
+      "expect": "irr_editor",
+      "keys": "34.97{Enter}",
+      "screen_hash_before": "981b33e0875b6471252648db3bd91cbe13649e590dbf1aa5c893f242a0187bf0",
+      "resend": false,
+      "screen_hash_after": "66aea8deb3b46d2d751e4fa52f6ee9d022c57b607f26a6637338cb5072f96f63"
+    },
+    {
+      "step": 24,
+      "expect": "irr_editor",
+      "keys": "319.93{Enter}",
+      "screen_hash_before": "66aea8deb3b46d2d751e4fa52f6ee9d022c57b607f26a6637338cb5072f96f63",
+      "resend": false,
+      "screen_hash_after": "a0c874267f36deea0ea556263dfaa0c9349381f73eb56960b96811afa3637631"
+    },
+    {
+      "step": 25,
+      "expect": "irr_editor",
+      "keys": "35.15{Enter}",
+      "screen_hash_before": "a0c874267f36deea0ea556263dfaa0c9349381f73eb56960b96811afa3637631",
+      "resend": false,
+      "screen_hash_after": "dd334eda4e992c330dc46989ae8de12b561ca0933ce098564aa5306d5cf9bdeb"
+    },
+    {
+      "step": 26,
+      "expect": "irr_editor",
+      "keys": "370.95{Enter}",
+      "screen_hash_before": "dd334eda4e992c330dc46989ae8de12b561ca0933ce098564aa5306d5cf9bdeb",
+      "resend": false,
+      "screen_hash_after": "b4f28c12b94ab1f5fceae862bba2deba2c9875bca6a953da69cc7a332478ac22"
+    },
+    {
+      "step": 27,
+      "expect": "irr_editor",
+      "keys": "35.98{Enter}",
+      "screen_hash_before": "b4f28c12b94ab1f5fceae862bba2deba2c9875bca6a953da69cc7a332478ac22",
+      "resend": false,
+      "screen_hash_after": "a2ca4ff1cc8f866f232039d7aeb8ddab327c5938835a1dcca8613c9c8e2001f9"
+    },
+    {
+      "step": 28,
+      "expect": "irr_editor",
+      "keys": "383.71{Enter}",
+      "screen_hash_before": "a2ca4ff1cc8f866f232039d7aeb8ddab327c5938835a1dcca8613c9c8e2001f9",
+      "resend": false,
+      "screen_hash_after": "b29f476110e7777b5ccc5da421d1d55089945b1de639b6909b5db3ad9aa99d59"
+    },
+    {
+      "step": 29,
+      "expect": "irr_editor",
+      "keys": "36.34{Enter}",
+      "screen_hash_before": "b29f476110e7777b5ccc5da421d1d55089945b1de639b6909b5db3ad9aa99d59",
+      "resend": false,
+      "screen_hash_after": "b12a083e10bc7d6659c201eb442f9547bf36ebab0fb222210e3c86897f252807"
+    },
+    {
+      "step": 30,
+      "expect": "irr_editor",
+      "keys": "409.22{Enter}",
+      "screen_hash_before": "b12a083e10bc7d6659c201eb442f9547bf36ebab0fb222210e3c86897f252807",
+      "resend": false,
+      "screen_hash_after": "53d17eeda310924c6f82d9cc911f880179940f9a634aa6a770d0b029cab7c73d"
+    },
+    {
+      "step": 31,
+      "expect": "irr_editor",
+      "keys": "37.35{Enter}",
+      "screen_hash_before": "53d17eeda310924c6f82d9cc911f880179940f9a634aa6a770d0b029cab7c73d",
+      "resend": false,
+      "screen_hash_after": "39d8e9aff7718967d971cb261ae6f24f8fd9f5d8c185130baeadbe271b48bb41"
+    },
+    {
+      "step": 32,
+      "expect": "irr_editor",
+      "keys": "{F10}",
+      "screen_hash_before": "39d8e9aff7718967d971cb261ae6f24f8fd9f5d8c185130baeadbe271b48bb41",
+      "resend": false,
+      "screen_hash_after": "9622e035a0c26b42c6e1b81302ef62400a18e7fe13adab308f1e8f60e0edf95b"
+    },
+    {
+      "step": 33,
+      "expect": "irr_editor",
+      "keys": "-11.68{Enter}",
+      "screen_hash_before": "9622e035a0c26b42c6e1b81302ef62400a18e7fe13adab308f1e8f60e0edf95b",
+      "resend": false,
+      "screen_hash_after": "d9cb8b6a4446e6ce0d9c6a021dc3130af82e3b33fee20ac359034b98c3bf2304"
+    },
+    {
+      "step": 34,
+      "expect": "irr_editor",
+      "keys": "319.93{Enter}",
+      "screen_hash_before": "d9cb8b6a4446e6ce0d9c6a021dc3130af82e3b33fee20ac359034b98c3bf2304",
+      "resend": false,
+      "screen_hash_after": "375d8c9bf9f0d7fda10b39ba1ad1e3d43412bbcacdfc89754dbe94456818bc00"
+    },
+    {
+      "step": 35,
+      "expect": "irr_editor",
+      "keys": ".382{Enter}",
+      "screen_hash_before": "375d8c9bf9f0d7fda10b39ba1ad1e3d43412bbcacdfc89754dbe94456818bc00",
+      "resend": false,
+      "screen_hash_after": "1d29a6002a87c06ea94a8ee19117eb52332f70cdf8fab4de1ed970d02c5f9aa4"
+    },
+    {
+      "step": 36,
+      "expect": "irr_editor",
+      "keys": ".113{Enter}",
+      "screen_hash_before": "1d29a6002a87c06ea94a8ee19117eb52332f70cdf8fab4de1ed970d02c5f9aa4",
+      "resend": false,
+      "screen_hash_after": "5670242bc74cfdc4b0c6ced0a774e6dceeeeaed26ab4c29656381a9a0c19cac8"
+    },
+    {
+      "step": 37,
+      "expect": "irr_editor",
+      "keys": ".288{Enter}",
+      "screen_hash_before": "5670242bc74cfdc4b0c6ced0a774e6dceeeeaed26ab4c29656381a9a0c19cac8",
+      "resend": false,
+      "screen_hash_after": "cb4606076a10916a751444336358807d78c6ba987c4109e73acb106469f70a39"
+    },
+    {
+      "step": 38,
+      "expect": "irr_editor",
+      "keys": "16234{Enter}",
+      "screen_hash_before": "cb4606076a10916a751444336358807d78c6ba987c4109e73acb106469f70a39",
+      "resend": false,
+      "screen_hash_after": "78163393dedbd5035418e03f2e5a380bf27fa5668bb8fe7cedad479e12c4d7b3"
+    },
+    {
+      "step": 39,
+      "expect": "irr_editor",
+      "keys": ".0022{Enter}",
+      "screen_hash_before": "78163393dedbd5035418e03f2e5a380bf27fa5668bb8fe7cedad479e12c4d7b3",
+      "resend": false,
+      "screen_hash_after": "5232cbf21834cc086bc4588bba425b34f2e320ec8d29314a007825c074a9b676"
+    },
+    {
+      "step": 40,
+      "expect": "irr_editor",
+      "keys": "{Enter}",
+      "screen_hash_before": "5232cbf21834cc086bc4588bba425b34f2e320ec8d29314a007825c074a9b676",
+      "resend": false,
+      "screen_hash_after": "4a532238ae89ef5f65b5d696929ddcc8ce259387445ca3927461fa42a3c64dee"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/nd-irr-000082/",
+  "files": [],
+  "recorded_at": "2026-11-26T15:22:49Z"
+}

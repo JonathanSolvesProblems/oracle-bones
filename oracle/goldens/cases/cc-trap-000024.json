@@ -1,0 +1,128 @@
+{
+  "id": "cc-trap-000024",
+  "control": false,
+  "expected_screen": null,
+  "mode": "channel_capacity",
+  "shape": "trapezoid",
+  "inputs": {
+    "left_slope": "43",
+    "right_slope": "11.9",
+    "bottom_width": "9616",
+    "n": ".3197",
+    "depth": "96.21",
+    "slope": "9.5358"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "43.0",
+    "in_right_slope": "11.9",
+    "in_bottom_width": " 9616.0",
+    "in_n": "       0.3197",
+    "discharge": "   %31242",
+    "in_depth": "         96.21",
+    "in_slope": "     9.5358",
+    "area": "      %11792",
+    "wet_perimeter": "%14903",
+    "velocity": "    264.9",
+    "hyd_radius": "     79.1",
+    "top_width": "    %14897",
+    "froude": "             5.2",
+    "flow_type": "  SUPERCRITICAL "
+  },
+  "message": null,
+  "held_prompt": null,
+  "stuck_screen": null,
+  "seed": 201,
+  "generator_version": "2",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "11d7c1e71c032ae702595e4bc3f28083a6541126f87ddfa6ad6c9cab317240b9",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "2{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "T{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "b41c634ba70159d4f2c669a1db56dd4e1bf5ff1aa29768813c2cb9aa64c478b3"
+    },
+    {
+      "step": 4,
+      "expect": "cc_form",
+      "keys": "43{Enter}",
+      "screen_hash_before": "b41c634ba70159d4f2c669a1db56dd4e1bf5ff1aa29768813c2cb9aa64c478b3",
+      "resend": false,
+      "screen_hash_after": "02763260ad8c7ea3636f996226eaea741bdba3179e0a1460b4a60f6fc18f8c3a"
+    },
+    {
+      "step": 5,
+      "expect": "cc_form",
+      "keys": "11.9{Enter}",
+      "screen_hash_before": "02763260ad8c7ea3636f996226eaea741bdba3179e0a1460b4a60f6fc18f8c3a",
+      "resend": false,
+      "screen_hash_after": "45fa6b4769bcf7964e8b0a169fd354e980208bac5dcda42b908d82cb4f541f95"
+    },
+    {
+      "step": 6,
+      "expect": "cc_form",
+      "keys": "9616{Enter}",
+      "screen_hash_before": "45fa6b4769bcf7964e8b0a169fd354e980208bac5dcda42b908d82cb4f541f95",
+      "resend": false,
+      "screen_hash_after": "f4bb25defeb050881e4bea9ed14f672933fbb8317abdc0a82c324206e567eae5"
+    },
+    {
+      "step": 7,
+      "expect": "cc_form",
+      "keys": ".3197{Enter}",
+      "screen_hash_before": "f4bb25defeb050881e4bea9ed14f672933fbb8317abdc0a82c324206e567eae5",
+      "resend": false,
+      "screen_hash_after": "7a07b9c7f74f204716a1ab56086b7b5843e281bb6af1ba6dd5b308cff6cc49a2"
+    },
+    {
+      "step": 8,
+      "expect": "cc_form",
+      "keys": "96.21{Enter}",
+      "screen_hash_before": "7a07b9c7f74f204716a1ab56086b7b5843e281bb6af1ba6dd5b308cff6cc49a2",
+      "resend": false,
+      "screen_hash_after": "321debc7834d374531eadee79a8deb423479d650375cb6b4eaade21f06ed475d"
+    },
+    {
+      "step": 9,
+      "expect": "cc_form",
+      "keys": "9.5358{Enter}",
+      "screen_hash_before": "321debc7834d374531eadee79a8deb423479d650375cb6b4eaade21f06ed475d",
+      "resend": false,
+      "screen_hash_after": "29e172091fbada152feee96cd71778ea2cfbe43c15052c88a740016ec8634268"
+    },
+    {
+      "step": 10,
+      "expect": "cc_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "29e172091fbada152feee96cd71778ea2cfbe43c15052c88a740016ec8634268",
+      "resend": false,
+      "screen_hash_after": "f35a770c3265a446d7c219579a20feabf0f027e15b518ecfc446572d667616cc"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cc-trap-000024/",
+  "files": [],
+  "recorded_at": "2026-11-26T15:10:50Z"
+}

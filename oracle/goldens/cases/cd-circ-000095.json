@@ -1,0 +1,110 @@
+{
+  "id": "cd-circ-000095",
+  "control": false,
+  "expected_screen": null,
+  "mode": "critical_depth",
+  "shape": "circle",
+  "inputs": {
+    "diameter": "77.4",
+    "n": ".0115",
+    "discharge": "490",
+    "slope": "1.6743"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_diameter": "   77.4",
+    "in_n": "       0.0115",
+    "in_discharge": "      490",
+    "depth": "          5.76",
+    "in_slope": "     1.6743",
+    "critical_slope": "    0.0063",
+    "area": "        30.9",
+    "wet_perimeter": "  16.0",
+    "velocity": "     15.9",
+    "hyd_radius": "      1.9",
+    "top_width": "       3.9",
+    "froude": "             1.0",
+    "max_discharge": "   496",
+    "flow_type": "  CRITICAL      "
+  },
+  "message": null,
+  "held_prompt": null,
+  "stuck_screen": null,
+  "seed": 201,
+  "generator_version": "2",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "11d7c1e71c032ae702595e4bc3f28083a6541126f87ddfa6ad6c9cab317240b9",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "1{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "C{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "6a74fa04f4dde11a3d52dc56d38bc6cf844125155dceb5829d64431a816a51c7"
+    },
+    {
+      "step": 4,
+      "expect": "cd_form",
+      "keys": "77.4{Enter}",
+      "screen_hash_before": "6a74fa04f4dde11a3d52dc56d38bc6cf844125155dceb5829d64431a816a51c7",
+      "resend": false,
+      "screen_hash_after": "e9e3e7e5bb2b5eac22ef35bd3469d301e5b7c177f17307bc17e6d30bb4c44bd3"
+    },
+    {
+      "step": 5,
+      "expect": "cd_form",
+      "keys": ".0115{Enter}",
+      "screen_hash_before": "e9e3e7e5bb2b5eac22ef35bd3469d301e5b7c177f17307bc17e6d30bb4c44bd3",
+      "resend": false,
+      "screen_hash_after": "c1181cacff1599cc7661c8d728e8a01913f70fc91a9984d9f57c71c1c9a21b3f"
+    },
+    {
+      "step": 6,
+      "expect": "cd_form",
+      "keys": "490{Enter}",
+      "screen_hash_before": "c1181cacff1599cc7661c8d728e8a01913f70fc91a9984d9f57c71c1c9a21b3f",
+      "resend": false,
+      "screen_hash_after": "e69905ba6d1b4e53fb6235286fd4af986072a6e90ff3a51ff39dca37b50bfbc0"
+    },
+    {
+      "step": 7,
+      "expect": "cd_form",
+      "keys": "1.6743{Enter}",
+      "screen_hash_before": "e69905ba6d1b4e53fb6235286fd4af986072a6e90ff3a51ff39dca37b50bfbc0",
+      "resend": false,
+      "screen_hash_after": "8a246b071db94aa2890bf241fbe0c48e7c4666314915f50a8eae33247671cfa0"
+    },
+    {
+      "step": 8,
+      "expect": "cd_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "8a246b071db94aa2890bf241fbe0c48e7c4666314915f50a8eae33247671cfa0",
+      "resend": false,
+      "screen_hash_after": "4dcb97abc655fe4fa620e5cd917421724486b4a736a5ba7393b2b14af7293b70"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cd-circ-000095/",
+  "files": [],
+  "recorded_at": "2026-11-26T15:11:25Z"
+}

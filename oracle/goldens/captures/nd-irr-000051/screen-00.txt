@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+  XSEC ID:     0             >> NORMAL   DEPTH <<             GROUND  POINTS    
+  STAT      ELEV      STAT      ELEV      STAT      ELEV      STAT      ELEV    
+  -48.91    759.08    11.57     734.88    31.73     723.38    132.54    690.91  
+  152.7     685.3     193.02    678.65    233.34    675.31    273.66    678.87  
+  455.1     684.71    515.59    683.79    535.75    683.28    676.87    707.07  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   ╔════════════════════════════════════════════════════════════════════════╗   
+   ║ CHANNEL BANK STATIONS:      Left  -48.9                  Right  676.9  ║   
+   ║ MANNING'S  N   VALUES:      Left 0.1010  Channel 0.0440  Right 0.2860  ║   
+   ║ CHANNEL     VARIABLES: Discharge   4795  Slope   0.0033  Depth    8.7  ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║ WS ELEV    684.04           Area   1083  Top Wid    315  Hyd R    3.4  ║   
+   ║ Flow Type SUBCRITICAL   Chan Vel    4.4  Wet Per    316  Frd #   0.42  ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║ F2}<─ Back Tab F5}PRINT F6}SAVE F7}Main Menu F8}New XSEC F10}Ed/Ex GrPt║   
+   ║                                 DIVIDED FLOW                           ║   

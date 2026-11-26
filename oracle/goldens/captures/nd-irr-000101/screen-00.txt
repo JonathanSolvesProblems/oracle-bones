@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+  XSEC ID:     0             >> NORMAL   DEPTH <<             GROUND  POINTS    
+  STAT      ELEV      STAT      ELEV      STAT      ELEV      STAT      ELEV    
+  -65.08    199.28    -19.11    198.82    11.53     198.48    42.18     198.03  
+  57.5      197.69    149.43    189.71    210.72    194.61                      
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   ╔════════════════════════════════════════════════════════════════════════╗   
+   ║ CHANNEL BANK STATIONS:      Left  149.4                  Right  210.7  ║   
+   ║ MANNING'S  N   VALUES:      Left 0.4750  Channel 0.3560  Right 0.2230  ║   
+   ║ CHANNEL     VARIABLES: Discharge   5552  Slope   0.0023  Depth   23.6  ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║ WS ELEV    213.31           Area   4902  Top Wid    276  Hyd R   17.7  ║   
+   ║ Flow Type SUBCRITICAL   Chan Vel    1.5  Wet Per    276  Frd #   0.05  ║   
+   ╟────────────────────────────────────────────────────────────────────────╢   
+   ║ F2}<─ Back Tab F5}PRINT F6}SAVE F7}Main Menu F8}New XSEC F10}Ed/Ex GrPt║   
+   ║                                                  EXTENDED CROSS SECTION║   

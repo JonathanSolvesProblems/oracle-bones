@@ -1,0 +1,25 @@
+                                                                                
+                                                                                
+           ╔═════════════════════════════════════════════════════╗              
+           ║                  CHANNEL  CAPACITY                  ║██            
+           ║                  CIRCULAR  CHANNEL                  ║██            
+           ║                                                     ║██            
+           ║                   INPUT VARIABLES                   ║██            
+           ║                                                     ║██            
+           ║                                                     ║██            
+           ║ Diameter (in)      160.8   Manning's n       0.0282 ║██            
+           ║ Discharge (cfs)    633.0   Depth (ft)          1.10 ║██            
+           ║ Slope (ft/ft)     7.6296                            ║██            
+           ╟─────────────────────────────────────────────────────╢██            
+           ║                  OUTPUT VARIABLES                   ║██            
+           ║                                                     ║██            
+           ║ Area (sq ft)         5.5   Wet Perimeter (ft)   7.8 ║██            
+           ║ Velocity (ft/s)    115.3   Hyd Radius (ft)      0.7 ║██            
+           ║ Top Width (ft)       7.4   Froude #            23.5 ║██            
+           ║ Max Discharge(cfs) 49438   Flow Type  SUPERCRITICAL ║██            
+           ╟─────────────────────────────────────────────────────╢██            
+           ║ Begin Calculations  <Enter>                         ║██            
+           ║ Print               <F5>           New Shape  <F9>  ║██            
+           ║ <- Back Tab         <F2>           Main Menu  <F7>  ║██            
+           ╚═════════════════════════════════════════════════════╝██            
+            ████████████████████████████████████████████████████████            

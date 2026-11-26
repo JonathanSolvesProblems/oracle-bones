@@ -1,0 +1,119 @@
+{
+  "id": "cc-vdit-000027",
+  "control": false,
+  "expected_screen": null,
+  "mode": "channel_capacity",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "71",
+    "right_slope": "15.1",
+    "n": ".2107",
+    "depth": "40.08",
+    "slope": "7.4705"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "71.0",
+    "in_right_slope": "15.1",
+    "in_bottom_width": "    0.0",
+    "in_n": "       0.2107",
+    "discharge": "   %98421",
+    "in_depth": "         40.08",
+    "in_slope": "     7.4705",
+    "area": "      %69155",
+    "wet_perimeter": "3452.5",
+    "velocity": "    142.3",
+    "hyd_radius": "     20.0",
+    "top_width": "    3450.9",
+    "froude": "             5.6",
+    "flow_type": "  SUPERCRITICAL "
+  },
+  "message": null,
+  "held_prompt": null,
+  "stuck_screen": null,
+  "seed": 201,
+  "generator_version": "2",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "11d7c1e71c032ae702595e4bc3f28083a6541126f87ddfa6ad6c9cab317240b9",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "2{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387"
+    },
+    {
+      "step": 4,
+      "expect": "cc_form",
+      "keys": "71{Enter}",
+      "screen_hash_before": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387",
+      "resend": false,
+      "screen_hash_after": "ea64c8dd2a9c2b5db64dc6963876019c7167f8425af0991d5eec2ce5668798b7"
+    },
+    {
+      "step": 5,
+      "expect": "cc_form",
+      "keys": "15.1{Enter}",
+      "screen_hash_before": "ea64c8dd2a9c2b5db64dc6963876019c7167f8425af0991d5eec2ce5668798b7",
+      "resend": false,
+      "screen_hash_after": "7284364e001fab32dacfb2e1a6daf27c4ba311515e0900d0a64c90b339312368"
+    },
+    {
+      "step": 6,
+      "expect": "cc_form",
+      "keys": ".2107{Enter}",
+      "screen_hash_before": "7284364e001fab32dacfb2e1a6daf27c4ba311515e0900d0a64c90b339312368",
+      "resend": false,
+      "screen_hash_after": "bca126117c47173130ef478149345f04ab7ae6a22ef45360b1d3987946ecd923"
+    },
+    {
+      "step": 7,
+      "expect": "cc_form",
+      "keys": "40.08{Enter}",
+      "screen_hash_before": "bca126117c47173130ef478149345f04ab7ae6a22ef45360b1d3987946ecd923",
+      "resend": false,
+      "screen_hash_after": "be83c852c4189c6c19d8074a86048e2a174fe18feffcb89fae51e54620705c5a"
+    },
+    {
+      "step": 8,
+      "expect": "cc_form",
+      "keys": "7.4705{Enter}",
+      "screen_hash_before": "be83c852c4189c6c19d8074a86048e2a174fe18feffcb89fae51e54620705c5a",
+      "resend": false,
+      "screen_hash_after": "ccd749a744089f410ba7d536712ea53967e5d51839d3ee2989934edf0ddd9866"
+    },
+    {
+      "step": 9,
+      "expect": "cc_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "ccd749a744089f410ba7d536712ea53967e5d51839d3ee2989934edf0ddd9866",
+      "resend": false,
+      "screen_hash_after": "9efc90888c062f7b33ea2f1399175f1af7c6fe0ff7b7c71e4ec16ded0889877d"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cc-vdit-000027/",
+  "files": [],
+  "recorded_at": "2026-11-26T15:12:34Z"
+}

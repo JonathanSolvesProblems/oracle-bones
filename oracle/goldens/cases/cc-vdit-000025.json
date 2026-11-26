@@ -1,0 +1,119 @@
+{
+  "id": "cc-vdit-000025",
+  "control": false,
+  "expected_screen": null,
+  "mode": "channel_capacity",
+  "shape": "v_ditch",
+  "inputs": {
+    "left_slope": "35.9",
+    "right_slope": "93.9",
+    "n": ".414",
+    "depth": "504.36",
+    "slope": "7.9536"
+  },
+  "outcome": "result",
+  "printed": {
+    "in_left_slope": "35.9",
+    "in_right_slope": "93.9",
+    "in_bottom_width": "    0.0",
+    "in_n": "       0.4140",
+    "discharge": "   %66822",
+    "in_depth": "        504.36",
+    "in_slope": "     7.9536",
+    "area": "      %16509",
+    "wet_perimeter": "%65475",
+    "velocity": "    404.8",
+    "hyd_radius": "    252.1",
+    "top_width": "    %65465",
+    "froude": "             4.5",
+    "flow_type": "  SUPERCRITICAL "
+  },
+  "message": null,
+  "held_prompt": null,
+  "stuck_screen": null,
+  "seed": 201,
+  "generator_version": "2",
+  "range_set": "practical",
+  "emu2_commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819",
+  "profile_version": "2",
+  "profile_sha256": "11d7c1e71c032ae702595e4bc3f28083a6541126f87ddfa6ad6c9cab317240b9",
+  "archive_sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+  "transcript": [
+    {
+      "step": 1,
+      "expect": "title",
+      "keys": "{Enter}",
+      "screen_hash_before": "3f10ffbb390a61d0051bb522a9ebce57052ddda12a1a3e9961f7cc07b0bba3b8",
+      "resend": false,
+      "screen_hash_after": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396"
+    },
+    {
+      "step": 2,
+      "expect": "main_menu",
+      "keys": "2{Enter}",
+      "screen_hash_before": "69ba4be4f0d7fbc74c997dda4c437172901d64ad7e3e35604c3bd6defe8e3396",
+      "resend": false,
+      "screen_hash_after": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8"
+    },
+    {
+      "step": 3,
+      "expect": "shape_menu",
+      "keys": "V{Enter}",
+      "screen_hash_before": "0f3f15b35719c1aa8fe7fc8d18b74353790c0e85d58600400f36b6dc61262bf8",
+      "resend": false,
+      "screen_hash_after": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387"
+    },
+    {
+      "step": 4,
+      "expect": "cc_form",
+      "keys": "35.9{Enter}",
+      "screen_hash_before": "eeb0039c25a8f1aa93961d1c2d3e90b7291ed522be575a727af538b26d0fa387",
+      "resend": false,
+      "screen_hash_after": "5159b812b52dee49d99b72f5efdcea689feb015ed2846381ffd5605305dca4fa"
+    },
+    {
+      "step": 5,
+      "expect": "cc_form",
+      "keys": "93.9{Enter}",
+      "screen_hash_before": "5159b812b52dee49d99b72f5efdcea689feb015ed2846381ffd5605305dca4fa",
+      "resend": false,
+      "screen_hash_after": "1799e957b14fb40171c50fc10a689d8f9fe0d88be8b653d0a7821dce25f0b47b"
+    },
+    {
+      "step": 6,
+      "expect": "cc_form",
+      "keys": ".414{Enter}",
+      "screen_hash_before": "1799e957b14fb40171c50fc10a689d8f9fe0d88be8b653d0a7821dce25f0b47b",
+      "resend": false,
+      "screen_hash_after": "a23a50ea842378b1757dff737ccca4fb7de017309827d0b2e7e7c796ddd217a7"
+    },
+    {
+      "step": 7,
+      "expect": "cc_form",
+      "keys": "504.36{Enter}",
+      "screen_hash_before": "a23a50ea842378b1757dff737ccca4fb7de017309827d0b2e7e7c796ddd217a7",
+      "resend": false,
+      "screen_hash_after": "745423a89e5a7926bda50a63810ac6d960e5705a63a9fd00eb1a82670638a9aa"
+    },
+    {
+      "step": 8,
+      "expect": "cc_form",
+      "keys": "7.9536{Enter}",
+      "screen_hash_before": "745423a89e5a7926bda50a63810ac6d960e5705a63a9fd00eb1a82670638a9aa",
+      "resend": false,
+      "screen_hash_after": "f64a6c0b9bb326c79b2e0262109e3f8b0280dafc7369228a1ef09ba40b7c563e"
+    },
+    {
+      "step": 9,
+      "expect": "cc_form",
+      "keys": "{Enter}",
+      "screen_hash_before": "f64a6c0b9bb326c79b2e0262109e3f8b0280dafc7369228a1ef09ba40b7c563e",
+      "resend": false,
+      "screen_hash_after": "eb8f69dd17e1656031f931f395bbb3ffe709eb2f232afabcf14db6a966fdfda7"
+    }
+  ],
+  "screens": "final",
+  "capture_path": "oracle/goldens/captures/cc-vdit-000025/",
+  "files": [],
+  "recorded_at": "2026-11-26T15:12:19Z"
+}

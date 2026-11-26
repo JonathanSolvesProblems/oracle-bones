@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 708,
+      "visits": 1755,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 710,
+      "visits": 1757,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 764,
+      "visits": 1811,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -23,7 +23,7 @@
       ]
     },
     "nd_trap_form": {
-      "visits": 103,
+      "visits": 187,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -31,13 +31,13 @@
       ]
     },
     "nd_trap_result": {
-      "visits": 48,
+      "visits": 132,
       "keys_tried": [
         "{F7}"
       ]
     },
     "irr_editor": {
-      "visits": 176,
+      "visits": 259,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -58,7 +58,7 @@
       "keys_tried": []
     },
     "nd_irr_result": {
-      "visits": 73,
+      "visits": 156,
       "keys_tried": [
         "{F6}"
       ]
@@ -70,14 +70,14 @@
       ]
     },
     "cd_form": {
-      "visits": 285,
+      "visits": 598,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "cd_result": {
-      "visits": 63,
+      "visits": 290,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 52,
+      "visits": 137,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -94,7 +94,7 @@
       ]
     },
     "cc_form": {
-      "visits": 136,
+      "visits": 450,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -102,7 +102,7 @@
       ]
     },
     "cc_result": {
-      "visits": 50,
+      "visits": 284,
       "keys_tried": [
         "{F7}"
       ],
@@ -113,14 +113,14 @@
       ]
     },
     "nd_reg_form": {
-      "visits": 98,
+      "visits": 351,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "nd_circ_result": {
-      "visits": 24,
+      "visits": 103,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -129,7 +129,7 @@
       ]
     },
     "cc_circ_result": {
-      "visits": 41,
+      "visits": 121,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -138,7 +138,7 @@
       ]
     },
     "nd_reg_result": {
-      "visits": 43,
+      "visits": 216,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -181,7 +181,7 @@
       ]
     },
     "cd_circ_rejected": {
-      "visits": 63,
+      "visits": 64,
       "keys_tried": [
         "{Enter}",
         "{F2}",
@@ -194,88 +194,88 @@
   },
   "fields": {
     "in_left_slope": {
-      "cases": 148
+      "cases": 834
     },
     "in_right_slope": {
-      "cases": 148
+      "cases": 834
     },
     "in_bottom_width": {
-      "cases": 148
+      "cases": 834
     },
     "in_n": {
-      "cases": 221
+      "cases": 1140
     },
     "in_discharge": {
-      "cases": 162
+      "cases": 782
     },
     "depth": {
-      "cases": 189
+      "cases": 888
     },
     "in_slope": {
-      "cases": 221
+      "cases": 1140
     },
     "area": {
-      "cases": 245
+      "cases": 1243
     },
     "wet_perimeter": {
-      "cases": 245
+      "cases": 1243
     },
     "velocity": {
-      "cases": 221
+      "cases": 1140
     },
     "hyd_radius": {
-      "cases": 245
+      "cases": 1243
     },
     "top_width": {
-      "cases": 248
+      "cases": 1246
     },
     "froude": {
-      "cases": 248
+      "cases": 1246
     },
     "flow_type": {
-      "cases": 245
+      "cases": 1243
     },
     "in_bank_left": {
-      "cases": 27
+      "cases": 106
     },
     "in_bank_right": {
-      "cases": 27
+      "cases": 106
     },
     "in_n_left": {
-      "cases": 27
+      "cases": 106
     },
     "in_n_channel": {
-      "cases": 27
+      "cases": 106
     },
     "in_n_right": {
-      "cases": 27
+      "cases": 106
     },
     "in_irr_discharge": {
-      "cases": 24
+      "cases": 103
     },
     "in_irr_slope": {
-      "cases": 24
+      "cases": 103
     },
     "ws_elev": {
-      "cases": 27
+      "cases": 106
     },
     "chan_velocity": {
-      "cases": 27
+      "cases": 106
     },
     "critical_slope": {
-      "cases": 95
+      "cases": 394
     },
     "in_diameter": {
-      "cases": 73
+      "cases": 306
     },
     "max_discharge": {
-      "cases": 73
+      "cases": 306
     },
     "discharge": {
-      "cases": 59
+      "cases": 358
     },
     "in_depth": {
-      "cases": 59
+      "cases": 358
     },
     "in_len_left": {
       "cases": 3
@@ -307,79 +307,79 @@
   },
   "cases": {
     "cc-circ": {
-      "result": 20,
+      "result": 96,
       "rejected": 14,
       "error": 0,
       "observed": 0
     },
     "cc-rect": {
-      "result": 12,
+      "result": 87,
       "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "cc-trap": {
-      "result": 17,
+      "result": 81,
       "rejected": 5,
       "error": 0,
       "observed": 0
     },
     "cc-vdit": {
-      "result": 10,
+      "result": 94,
       "rejected": 2,
       "error": 0,
       "observed": 0
     },
     "cd-circ": {
-      "result": 39,
-      "rejected": 46,
+      "result": 120,
+      "rejected": 47,
       "error": 0,
       "observed": 0
     },
     "cd-rect": {
-      "result": 19,
+      "result": 92,
       "rejected": 1,
       "error": 0,
       "observed": 0
     },
     "cd-trap": {
-      "result": 19,
+      "result": 89,
       "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "cd-vdit": {
-      "result": 18,
+      "result": 93,
       "rejected": 5,
       "error": 0,
       "observed": 0
     },
     "nd-circ": {
-      "result": 14,
+      "result": 90,
       "rejected": 3,
       "error": 0,
       "observed": 0
     },
     "nd-irr": {
-      "result": 24,
+      "result": 103,
       "rejected": 1,
       "error": 1,
       "observed": 0
     },
     "nd-rect": {
-      "result": 21,
+      "result": 105,
       "rejected": 4,
       "error": 0,
       "observed": 0
     },
     "nd-trap": {
-      "result": 18,
+      "result": 98,
       "rejected": 1,
       "error": 0,
       "observed": 0
     },
     "nd-vdit": {
-      "result": 14,
+      "result": 95,
       "rejected": 3,
       "error": 0,
       "observed": 0
@@ -2312,6 +2312,23 @@
       "waited_for": "shape_menu",
       "capture": "oracle/out/runs/20261126-104249-0cb6f5/final.txt",
       "at": "2026-11-26T10:42:49Z"
+    },
+    {
+      "run_id": "20261126-151351-7f218b",
+      "case": {
+        "mode": "normal_depth",
+        "shape": "circle",
+        "inputs": {
+          "diameter": "38.3",
+          "n": ".0241",
+          "discharge": "13",
+          "slope": "4.9766"
+        }
+      },
+      "reason": "waited 10.0s for ['nd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "nd_reg_form",
+      "capture": "oracle/out/runs/20261126-151351-7f218b/final.txt",
+      "at": "2026-11-26T15:13:51Z"
     }
   ],
   "unknown_screens": [
