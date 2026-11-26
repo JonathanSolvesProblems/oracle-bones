@@ -123,6 +123,25 @@ function irregularForm(mode: Mode): FormModel {
   };
 }
 
+/** The result screen of a built pair, or null. */
+export function screenOf(mode: Mode, shape: Shape): ResultScreen | null {
+  if (!isBuilt(mode, shape)) return null;
+  if (shape === 'irregular') return mode === 'normal_depth' ? ND_IRR_RESULT : null;
+  if (mode === 'step_backwater') return null;
+  return REGULAR_RESULT[mode][shape];
+}
+
+/**
+ * QUICK-2's label for a field of a pair: a printed field by its own window, an input by its
+ * echo window. Null when the pair's result screen has no such field.
+ */
+export function screenLabel(mode: Mode, shape: Shape, field: string): string | null {
+  const layout = screenOf(mode, shape);
+  if (!layout) return null;
+  for (const w of [field, `in_${field}`, `in_irr_${field}`]) if (w in layout.windows) return labelFor(layout, w);
+  return null;
+}
+
 /** The form of a built pair; null for a pair the solver does not compute. */
 export function formFor(mode: Mode, shape: Shape): FormModel | null {
   if (!isBuilt(mode, shape)) return null;

@@ -148,6 +148,23 @@ input.figures { font-family: var(--font-figures); }
 .grid tr.row-note td { color: var(--pencil); font: var(--text-sm) var(--font-body); }
 .row-controls { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0; }
 
+/* Screen states on the right-hand page. */
+.sketch:focus { outline: none; }
+.state h2 { margin-top: 0; }
+.message .message-label { font-weight: 600; }
+.message .figures { white-space: pre-wrap; }
+.flags { padding-left: var(--space-6); margin: var(--space-4) 0; }
+.flags li { color: var(--ink); margin-bottom: var(--space-2); }
+.flags li::marker { color: var(--pencil); font-family: var(--font-figures); }
+.flag-fields { color: var(--pencil); }
+.notice {
+  border-top: var(--margin-rule);
+  padding-top: var(--space-3);
+  margin-top: var(--space-6);
+  font: var(--text-sm) var(--font-body);
+  color: var(--ink);
+}
+
 .kept-points { margin-top: var(--space-3); font: var(--text-sm) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 

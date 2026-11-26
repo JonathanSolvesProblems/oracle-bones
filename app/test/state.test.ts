@@ -31,7 +31,7 @@ const flagArb: fc.Arbitrary<Flag> = fc.record({
 }).map(({ code, fields }) => ({ code, text: FLAG_TEXT[code], fields }));
 const resultArb: fc.Arbitrary<Result> = fc.record({
   outcome: fc.constantFrom('result' as const, 'rejected' as const, 'error' as const),
-  printed: fc.constantFrom({}, { depth: '    1.25 ' }),
+  printed: fc.constantFrom<Record<string, string>>({}, { depth: '    1.25 ' }),
   message: fc.constantFrom(null, NOT_BUILT, 'DEPTH is Greater than the DIAMETER  ', stationError(35, 35), 'ground-point entry did not end'),
   held: fc.constantFrom(null, 'n', 'diameter'),
   flags: fc.array(flagArb, { maxLength: 3 }),
@@ -43,7 +43,7 @@ describe('Property 2: every Result has exactly one state', () => {
     fc.assert(fc.property(resultArb, (r) => {
       const s = classify(job(), r);
       expect(s.kind).toBe(expectedKind(r));
-      if (s.kind !== 'idle' && s.kind !== 'invalid') expect(s.result).toBe(r);
+      if (s.kind !== 'invalid') expect(s.result).toBe(r);
       if (s.kind === 'held') { expect(s.prompt).toBe(r.held); expect(s.message).toBe(r.message); }
       if (s.kind === 'stopped') expect(s.flags).toEqual(r.flags);
       if (s.kind === 'failed') expect(s.message.length).toBeGreaterThan(0);

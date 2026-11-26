@@ -46,6 +46,6 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
       h('h1', { class: 'visually-hidden' }, 'Calculate'),
       picker(pickerModel(s.mode, s.shape)),
       left),
-    h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results' }, parts.results ?? null),
+    h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? null),
   );
 }

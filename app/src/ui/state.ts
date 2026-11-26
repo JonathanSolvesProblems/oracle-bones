@@ -28,8 +28,11 @@ export function runJob(job: AppJob): Result {
   return solve({ mode: job.mode, shape: job.shape, inputs: job.inputs });
 }
 
+/** Every state but `idle`: what a calculation shows. */
+export type ShownState = Exclude<ScreenState, { kind: 'idle' }>;
+
 /** One state for every Result, in the design's order. */
-export function classify(job: AppJob, result: Result): ScreenState {
+export function classify(job: AppJob, result: Result): ShownState {
   const r = result;
   if (r.outcome === 'result') return { kind: 'result', result: r, exact: null, links: [] };
   if (r.outcome === 'rejected' && r.held !== null) return { kind: 'held', result: r, prompt: r.held, message: r.message };
@@ -41,6 +44,6 @@ export function classify(job: AppJob, result: Result): ScreenState {
 }
 
 /** Validate, then run and classify. A field that is not a plain decimal never reaches solve(). */
-export function calculate(job: AppJob): ScreenState {
+export function calculate(job: AppJob): ShownState {
   return whenValid(job, () => classify(job, runJob(job)));
 }
