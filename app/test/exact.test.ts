@@ -76,7 +76,8 @@ describe('Property 7: exact values only for recorded cases, beside their fields'
       if (state.kind === 'result') expect(state.exact).toBeNull();
       expect(recordedCase(job)).toBeNull();
     }), { numRuns: 200 });
-  });
+    // 200 solves of 40-point sections take about 4 s alone; the full suite in parallel passed 5 s.
+  }, 30_000);
 });
 
 describe('the haunting links (criterion 2.4)', () => {

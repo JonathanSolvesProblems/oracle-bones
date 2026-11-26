@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import { readGolden } from './goldens.ts';
 import { readHauntings, type Haunting, type LimitEntry } from './hauntings.ts';
+import { readOpenQuestions } from './ledger.ts';
+import { readPlain } from './plain.ts';
 import { readSources, type Sources } from './sources.ts';
 
 export const DATA_ID = 'virtual:quickened/data';
@@ -24,6 +26,11 @@ export interface CaseData { id: string; mode: string; shape: string; inputs: Rea
 export interface QuickenedData {
   hauntings: Haunting[];
   limits: LimitEntry[];
+  /**
+   * Every open question of results/ledger.json, id and text verbatim, with its plain sentences
+   * from results/limits-plain.md, or null where the file has no entry (criterion 5.7's test fails).
+   */
+  openQuestions: { id: string; question: string; plain: string | null }[];
   /** Every case a haunting names, by id. */
   cases: Record<string, CaseData>;
   /** The worked examples' goldens (criteria 8.2, 8.4). */
@@ -47,7 +54,8 @@ export const EXAMPLE_CASES = { main: 'nd-irr-000006', cutoff: 'nd-irr-000010' } 
 
 /** The files the module is built from. */
 export function sourceFiles(root: string): string[] {
-  return [join(root, 'results', 'hauntings.md'), join(root, 'realdata', 'huntington-section-01.json')];
+  return [join(root, 'results', 'hauntings.md'), join(root, 'results', 'ledger.json'), join(root, 'results', 'limits-plain.md'),
+    join(root, 'realdata', 'huntington-section-01.json')];
 }
 
 function readText(path: string): string {
@@ -70,7 +78,10 @@ export function buildData(root: string = ROOT): QuickenedData {
   const main = caseData(root, EXAMPLE_CASES.main);
   const cutoff = caseData(root, EXAMPLE_CASES.cutoff);
   const n = { left: main.inputs.n_left ?? '', channel: main.inputs.n_channel ?? '', right: main.inputs.n_right ?? '' };
-  return { hauntings: file.hauntings, limits: file.limits, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
+  const plain = readPlain(readText(join(root, 'results', 'limits-plain.md')));
+  const openQuestions = readOpenQuestions(readText(join(root, 'results', 'ledger.json')))
+    .map((q) => ({ ...q, plain: plain.find((p) => p.id === q.id)?.text ?? null }));
+  return { hauntings: file.hauntings, limits: file.limits, openQuestions, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
     build: {
       version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
       commit: shortCommit(root),

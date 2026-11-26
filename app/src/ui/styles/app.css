@@ -170,6 +170,13 @@ input.figures { font-family: var(--font-figures); }
 .main-figure { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-3); margin: 0 0 var(--space-6); }
 .main-figure .main-label { font: var(--text-md) var(--font-figures); color: var(--ink-muted); }
 .main-figure .main-value { font: var(--text-figure) var(--font-figures); }
+.limits-page .limit-entry { border-top: var(--hairline); padding: var(--space-3) 0; }
+.limits-page .limit-terms dt { font-weight: 600; margin-top: var(--space-2); }
+.limits-page .limit-terms dd { margin: 0; }
+.limits-page .limit-entry > p { font-family: var(--font-body); }
+.limits-page .ledger-wording { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
+.limits-page .ledger-wording h3 { font: inherit; font-weight: 600; margin: var(--space-2) 0 0; }
+.limits-page .ledger-wording p { margin: 0; overflow-wrap: anywhere; }
 table.printed { border-collapse: collapse; width: 100%; margin-bottom: var(--space-6); }
 table.printed caption {
   text-align: left;

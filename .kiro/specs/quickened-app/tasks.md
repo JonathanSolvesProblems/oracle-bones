@@ -158,17 +158,17 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     only for outcome `result`. Then `views/print.ts` and `print.css`.
     - _Requirements: 4.1, 4.3, 4.4, 4.5, 4.6, 2.3_
 
-- [ ] 9. The limits page
-  - [ ] 9.1 Test: `build/ledger.ts` reads every `open_questions` entry with status `open` from
+- [x] 9. The limits page
+  - [x] 9.1 Test: `build/ledger.ts` reads every `open_questions` entry with status `open` from
     the real `results/ledger.json`, id and text verbatim. Then the reader.
     - _Requirements: 5.3_
-  - [ ] 9.2 Test: `build/plain.ts` reads each `## Q-NNN` entry of the real
+  - [x] 9.2 Test: `build/plain.ts` reads each `## Q-NNN` entry of the real
     `results/limits-plain.md` with its text; the coverage test fails, naming the question, on a
     fixture with an open question that has no entry, on one with an entry for an answered
     question, on one with an entry for an id not in the ledger, and on an empty entry; and it
     passes on the real files (13 open questions, 13 entries). Then the reader.
     - _Requirements: 5.3, 5.7_
-  - [ ] 9.3 Test: the limits page data has every haunting, every Limits paragraph verbatim,
+  - [x] 9.3 Test: the limits page data has every haunting, every Limits paragraph verbatim,
     every pair `isBuilt` calls not built, and every open question with its plain sentences
     before the ledger's wording; and a test fails when an entry of the real files is missing
     from it. Then `views/limits.ts`.

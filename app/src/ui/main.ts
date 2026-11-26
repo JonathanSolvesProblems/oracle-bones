@@ -1,6 +1,8 @@
 // Starts the app and routes on the location hash: #/ (calculate), #/limits and #/proof. Holds
 // the calculator's state in memory only; nothing is stored in the browser (criterion 1.12).
+import { data } from 'virtual:quickened/data';
 import type { Mode, Shape } from '../solver/index.ts';
+import { limitsModel, limitsView } from './views/limits.ts';
 import { render, type Dispatch } from './dom.ts';
 import { formFor } from './forms.ts';
 import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from './job.ts';
@@ -30,7 +32,7 @@ let last: { job: AppJob; screen: ScreenState } | null = null;
 
 function page(route: Route): Child {
   switch (route) {
-    case 'limits': return placeholder('Limits', 'The limits page is not built yet.');
+    case 'limits': return limitsView(limitsModel(data));
     case 'proof': return placeholder('Proof', 'The proof page is not built yet.');
     default: {
       if (printing && last && last.screen.kind === 'result') return printView(printModel(last.job, last.screen, printing));
