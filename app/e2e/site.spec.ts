@@ -59,6 +59,42 @@ test('axe finds no WCAG 2.2 A or AA violation on any page or state', async ({ pa
   for await (const what of visits(page)) await axe(page, what);
 });
 
+// Criterion 8.10 (2026-11-26): the opening sits above the examples and, on a phone, leaves both
+// example controls inside the first screen.
+test('the first screen opens above the examples, and both examples stay inside the first screen', async ({ page }) => {
+  await open(page, '#/');
+  const intro = page.locator('section.intro');
+  await expect(intro).toBeVisible();
+  await expect(intro).toContainText(DATA.headline ? `${DATA.headline.matched} of ${DATA.headline.total} cases` : 'No headline run has been recorded yet.');
+  const height = page.viewportSize()!.height;
+  const introBox = (await intro.boundingBox())!;
+  for (const b of await page.locator('button.example').all()) {
+    const box = (await b.boundingBox())!;
+    expect(box.y, 'an example below the opening').toBeGreaterThan(introBox.y);
+    expect(box.y + box.height, `an example below the first screen (${height}px)`).toBeLessThanOrEqual(height);
+  }
+});
+
+// Criterion 2.9 (2026-11-26): at 375 px "Computed by QUICK-2's method" broke one word to a line.
+test("at the phone width the results tables' headings take the table's width and at most two lines", async ({ page }, info) => {
+  test.skip(info.project.name !== 'phone', 'the phone width only');
+  await open(page, '#/');
+  await page.locator('button.example').first().click();
+  const captions = page.locator('#results table.printed caption');
+  await expect(captions.first()).toBeVisible();
+  for (const c of await captions.all()) {
+    const m = await c.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { width: el.getBoundingClientRect().width, table: el.closest('table')!.getBoundingClientRect().width,
+        line: parseFloat(s.lineHeight), height: (el.firstChild as Node).nodeType === 3
+          ? (() => { const r = document.createRange(); r.selectNodeContents(el.firstChild!); return r.getBoundingClientRect().height; })()
+          : el.getBoundingClientRect().height, text: el.firstChild!.textContent };
+    });
+    expect(m.width, m.text!).toBeGreaterThanOrEqual(m.table - 1);
+    expect(m.height, m.text!).toBeLessThanOrEqual(2 * m.line + 1);
+  }
+});
+
 test('at the phone width: no horizontal scroll, every control at least 44px', async ({ page }, info) => {
   test.skip(info.project.name !== 'phone', 'the phone width only');
   for await (const what of visits(page)) {

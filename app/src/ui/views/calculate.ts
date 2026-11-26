@@ -26,6 +26,8 @@ export interface CalculatePageParts {
   notBuilt?: Child | null;
   /** The right-hand page: the screen state. */
   results?: Child | null;
+  /** Above the examples: the opening of the first screen (criterion 8.10). */
+  intro?: Child | null;
   /** Above the picker: the worked-example controls (criterion 8.1). */
   examples?: Child | null;
   /** Under the form: the loaded example's sources block (criterion 8.7). */
@@ -55,6 +57,7 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
   return h('div', { class: 'spread' },
     h('section', { class: 'field-notes', 'aria-label': 'Field notes' },
       h('h1', { class: 'visually-hidden' }, 'Calculate'),
+      parts.intro ?? null,
       parts.examples ?? null,
       picker(pickerModel(s.mode, s.shape)),
       left,

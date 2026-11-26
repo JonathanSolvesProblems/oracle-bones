@@ -47,6 +47,8 @@ export interface QuickenedData {
   /** The worked examples' goldens (criteria 8.2, 8.4). */
   examples: { main: CaseData; cutoff: CaseData };
   sources: Sources;
+  /** QUICK-2's year, from the `purpose` of realdata/huntington-section-01.json, for the opening (criterion 8.10). */
+  program: { year: string };
   /** package.json's version and the build's short commit, for the print header (criterion 4.1). */
   build: { version: string; commit: string };
 }
@@ -74,6 +76,14 @@ export function readKnownMisses(root: string, source: string, limits: readonly L
     const inHeadline = headline?.seed === undefined ? null : cases.filter((id) => seedOf(id) === headline.seed).length;
     return { id: c.id, title: c.limits!, cases, inHeadline };
   });
+}
+
+/** QUICK-2's year as the realdata file's purpose writes it, "QUICK-2 (yyyy)"; the build fails without it. */
+export function readProgramYear(source: string): string {
+  const purpose = String((JSON.parse(source) as { purpose?: unknown }).purpose ?? '');
+  const m = /QUICK-2 \((\d{4})\)/.exec(purpose);
+  if (!m) throw new Error('realdata/huntington-section-01.json: its purpose does not name "QUICK-2 (yyyy)"');
+  return m[1]!;
 }
 
 /** The worked examples' cases (design: The worked examples). */
@@ -114,6 +124,7 @@ export function buildData(root: string = ROOT): QuickenedData {
   const headline = readHeadline(root);
   const knownMisses = readKnownMisses(root, readText(join(root, 'results', 'known-misses.json')), file.limits, headline);
   return { hauntings: file.hauntings, limits: file.limits, openQuestions, proof, headline, knownMisses, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
+    program: { year: readProgramYear(readText(join(root, 'realdata', 'huntington-section-01.json'))) },
     build: {
       version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
       commit: shortCommit(root),

@@ -242,7 +242,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     - _Requirements: 4.2_
 
 - [ ] 16. What a stranger meets (person, 2026-11-26: every screen read at 1280 px and 375 px)
-  - [ ] 16.1 Test: the first screen opens, above the examples, with what the page does and for
+  - [x] 16.1 Test: the first screen opens, above the examples, with what the page does and for
     whom, how it was rebuilt, the headline count from `results/headline.md` linked to the proof
     page, a link to the limits page and the notice; no number typed; on a phone both example
     controls are inside the first screen. Then `views/intro.ts`.
@@ -262,7 +262,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
   - [x] 16.5 Test: each label of the drawing has a ground of the paper colour under it, drawn over
     the lines, on the main example, a circle and a trapezoid. Then `drawing/svg.ts`.
     - _Requirements: 2.7_
-  - [ ] 16.6 Test: at 375 px the results tables' captions take the table's width and at most two
+  - [x] 16.6 Test: at 375 px the results tables' captions take the table's width and at most two
     lines. Then the phone stylesheet.
     - _Requirements: 2.9_
   - [ ] 16.7 Test, with two builds in Playwright: when a newer build's worker takes over an open

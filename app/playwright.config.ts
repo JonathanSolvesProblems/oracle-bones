@@ -6,7 +6,8 @@
 // Playwright, so no server is left running.
 import { defineConfig } from '@playwright/test';
 
-const PORT = 4173;
+/** QUICKENED_E2E_PORT moves the run off 4173 when a preview of one's own already holds it. */
+const PORT = Number(process.env.QUICKENED_E2E_PORT ?? 4173);
 
 export default defineConfig({
   testDir: './e2e',

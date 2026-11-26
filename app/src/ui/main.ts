@@ -8,6 +8,7 @@ import { render, type Dispatch } from './dom.ts';
 import { formFor } from './forms.ts';
 import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from './job.ts';
 import { exampleBlock, exampleForm, exampleJob, examplesView, type ExampleOrigin } from './views/example.ts';
+import { introView } from './views/intro.ts';
 import { PRINT_ACTION, printModel, printView } from './views/print.ts';
 import { readPaste } from './paste.ts';
 import { calculate, type ScreenState } from './state.ts';
@@ -43,6 +44,7 @@ function page(route: Route): Child {
       return calculatePage(state, {
         aboveRows: pasteControl(paste), rowNotes: grid.rowNotes, belowRows: grid.summary,
         results: view?.node ?? null,
+        intro: introView(data.headline, data.program),
         examples: examplesView(),
         afterForm: loaded ? exampleBlock(loaded, origin) : null,
       });
