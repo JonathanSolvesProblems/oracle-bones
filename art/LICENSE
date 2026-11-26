@@ -1,0 +1,15 @@
+Kotsu, the mascot of the Oracle Bones power
+
+The pictures in this folder were made for this project from the brief in docs/mascot.md.
+To the extent there are rights in them, they are licensed under the Creative Commons
+Attribution 4.0 International licence (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+Credit: "Kotsu, Oracle Bones mascot, by Jonathan Andrei".
+
+How they were made: generated on the author's own computer with an open image model
+(FLUX.2 klein, Apache 2.0), one picture chosen as the reference and the other poses generated
+from it, then cut out of their backgrounds by a script. No prompt names an anime, a studio, a
+character or an artist. The prompts and seeds are in art/provenance.json.
+
+The code of this repository is under the MIT licence (LICENSE at the root), not this one.

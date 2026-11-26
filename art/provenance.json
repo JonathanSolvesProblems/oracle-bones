@@ -1,0 +1,69 @@
+{
+ "note": "Every picture was generated locally with ComfyUI. reference names the picture another pose was generated from.",
+ "pictures": {
+  "kotsu-asking.png": {
+   "model": "flux-2-klein-4b-fp8.safetensors",
+   "text_encoder": "qwen_3_4b_fp8_mixed.safetensors",
+   "vae": "flux2-vae.safetensors",
+   "seed": 12,
+   "steps": 4,
+   "cfg": 1.0,
+   "size": [
+    832,
+    1216
+   ],
+   "prompt": "An illustration of a chibi anime-style mascot, two and a half heads tall: a small friendly spirit child with short messy off-white hair, a tiny pair of rounded deer-antler nubs, and large round eyes that glow phosphor green. The child has visible arms, hands, legs and feet in simple sandals, and is not a ghost. It wears an oversized dark charcoal haori over a short kimono; along the hem and the sleeve edges runs a pale phosphor-green trim made of straight double lines with square corners, like the border of an old text-mode computer screen. It stands facing the viewer and holds a flat, roughly triangular ivory deer shoulder-blade bone tablet, with thin branching cracks across it that glow phosphor green up in both hands like a clipboard, with a curious, cheerful look. Clean bold line art, flat cel shading with one shadow tone, limited palette of charcoal, ivory, off-white and phosphor green only, simple readable shapes, like a sticker. Full body, centered with a wide margin, plain flat solid mid-grey background, no ground shadow, no text, no letters, no watermark, no frame.",
+   "reference": null
+  },
+  "kotsu-reading.png": {
+   "model": "flux-2-klein-4b-fp8.safetensors",
+   "text_encoder": "qwen_3_4b_fp8_mixed.safetensors",
+   "vae": "flux2-vae.safetensors",
+   "seed": 21,
+   "steps": 4,
+   "cfg": 1.0,
+   "size": [
+    832,
+    1216
+   ],
+   "prompt": "The same character as in the reference image, with the same face, hair, antler nubs, haori and colours. An illustration of a chibi anime-style mascot, two and a half heads tall: a small friendly spirit child with short messy off-white hair, a tiny pair of rounded deer-antler nubs, and large round eyes that glow phosphor green. The child has visible arms, hands, legs and feet in simple sandals, and is not a ghost. It wears an oversized dark charcoal haori over a short kimono; along the hem and the sleeve edges runs a pale phosphor-green trim made of straight double lines with square corners, like the border of an old text-mode computer screen. It leans in close over a flat, roughly triangular ivory deer shoulder-blade bone tablet, with thin branching cracks across it that glow phosphor green, held in both hands, one finger tracing a glowing crack, eyes wide and focused. Clean bold line art, flat cel shading with one shadow tone, limited palette of charcoal, ivory, off-white and phosphor green only, simple readable shapes, like a sticker. Full body, centered with a wide margin, plain flat solid mid-grey background, no ground shadow, no text, no letters, no watermark, no frame.",
+   "reference": "asking_12.png"
+  },
+  "kotsu-refusing.png": {
+   "model": "flux-2-klein-4b-fp8.safetensors",
+   "text_encoder": "qwen_3_4b_fp8_mixed.safetensors",
+   "vae": "flux2-vae.safetensors",
+   "seed": 22,
+   "steps": 4,
+   "cfg": 1.0,
+   "size": [
+    832,
+    1216
+   ],
+   "prompt": "The same character as in the reference image, with the same face, hair, antler nubs, haori and colours. An illustration of a chibi anime-style mascot, two and a half heads tall: a small friendly spirit child with short messy off-white hair, a tiny pair of rounded deer-antler nubs, and large round eyes that glow phosphor green. The child has visible arms, hands, legs and feet in simple sandals, and is not a ghost. It wears an oversized dark charcoal haori over a short kimono; along the hem and the sleeve edges runs a pale phosphor-green trim made of straight double lines with square corners, like the border of an old text-mode computer screen. It stands firm with both arms crossed in an X in front of its chest, head tilted, a stern but cute frown, a flat, roughly triangular ivory deer shoulder-blade bone tablet, with thin branching cracks across it that glow phosphor green tucked under one arm. Clean bold line art, flat cel shading with one shadow tone, limited palette of charcoal, ivory, off-white and phosphor green only, simple readable shapes, like a sticker. Full body, centered with a wide margin, plain flat solid mid-grey background, no ground shadow, no text, no letters, no watermark, no frame.",
+   "reference": "asking_12.png"
+  },
+  "kotsu-asleep.png": {
+   "model": "flux-2-klein-4b-fp8.safetensors",
+   "text_encoder": "qwen_3_4b_fp8_mixed.safetensors",
+   "vae": "flux2-vae.safetensors",
+   "seed": 21,
+   "steps": 4,
+   "cfg": 1.0,
+   "size": [
+    1216,
+    832
+   ],
+   "prompt": "The same character as in the reference image, with the same face, hair, antler nubs, haori and colours. An illustration of a chibi anime-style mascot, two and a half heads tall: a small friendly spirit child with short messy off-white hair, a tiny pair of rounded deer-antler nubs, and large round eyes that glow phosphor green. The child has visible arms, hands, legs and feet in simple sandals, and is not a ghost. It wears an oversized dark charcoal haori over a short kimono; along the hem and the sleeve edges runs a pale phosphor-green trim made of straight double lines with square corners, like the border of an old text-mode computer screen. It is curled up asleep on top of a large square 3.5-inch floppy disk, eyes closed, a small smile, hugging a flat, roughly triangular ivory deer shoulder-blade bone tablet, with thin branching cracks across it that glow phosphor green like a pillow. Clean bold line art, flat cel shading with one shadow tone, limited palette of charcoal, ivory, off-white and phosphor green only, simple readable shapes, like a sticker. Full body, centered with a wide margin, plain flat solid mid-grey background, no ground shadow, no text, no letters, no watermark, no frame.",
+   "reference": "asking_12.png"
+  },
+  "kotsu-icon-512.png": {
+   "made_from": "kotsu-asking.png",
+   "how": "the head and shoulders, cropped and scaled"
+  },
+  "kotsu-header.png": {
+   "made_from": "kotsu-asking.png",
+   "how": "composed by a script with the wordmark and the recorded screen of case nd-irr-000006"
+  }
+ }
+}

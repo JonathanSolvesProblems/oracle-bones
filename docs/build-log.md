@@ -2661,3 +2661,21 @@ off.
 `devpost/gallery/build.mjs` renders the submission page's pictures from the results files and
 from captures of the running app, and stops when a number cannot be found. `devpost/sources.md`
 lists each outside source. Both were written outside Kiro and are not committed.
+
+### Later the same day, outside Kiro: Kotsu's art, and the gallery script committed
+
+- `art/` holds Kotsu, the power's mascot from `docs/mascot.md`: four poses as transparent PNGs,
+  a 512 px icon, the README header, `art/LICENSE` (CC BY 4.0) and `art/provenance.json`. The
+  pictures were generated on the person's own computer with an open image model (FLUX.2 klein,
+  through ComfyUI); one picture was chosen as the reference and the other poses were generated
+  from it, then a script cut each out of its background. `art/provenance.json` has every prompt
+  and seed. No prompt names an anime, a studio, a character or an artist. The header puts the
+  asking pose in front of the recorded screen of case nd-irr-000006.
+- The README now opens with the header and credits the art under Licences. Kotsu is not in the
+  app: `oracle/tests/test_identity.py` still passes. No icon field is added to plugin.json,
+  because the documentation defines none. Tasks 6.2 and 7.2 of `resurrection-power` are ticked
+  under task 9.4.
+- `devpost/gallery/build.mjs`, `devpost/gallery/frames/refusal-clean.png` and
+  `devpost/sources.md` are committed. The script renders the submission page's pictures from the
+  results files and from captures of the running app, and stops when a number cannot be found;
+  the frame is a capture of the Kiro window during the clean install, cropped and not edited.

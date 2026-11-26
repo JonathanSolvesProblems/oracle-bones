@@ -1,5 +1,7 @@
 # Oracle Bones and Quickened
 
+![Kotsu, the Oracle Bones mascot, holding a cracked bone tablet in front of QUICK-2's recorded screen](art/kotsu-header.png)
+
 QUICK-2 is a flood program FEMA wrote in 1995. It works out the flood elevation at one cross
 section, FEMA's list of accepted models still names it, and it needs DOS. This repository holds
 two things made from it without its source code:
@@ -166,3 +168,8 @@ The code is under the MIT licence ([LICENSE](LICENSE)). The fonts are IBM Plex, 
 Font License (`app/public/fonts/OFL.txt`). The emulator, emu2, is under GPL-2.0: it is fetched at a
 pinned commit when the runner image is built, runs as its own program, and is not in this
 repository or in the power. QUICK-2 was written at FEMA; no file of it is here.
+
+Kotsu, the mascot in the picture at the top, is in `art/` under CC BY 4.0 (`art/LICENSE`). The
+pictures were generated with an open image model on the author's own computer, from the brief in
+`docs/mascot.md`; `art/provenance.json` has each prompt and seed. Kotsu belongs to the power and
+does not appear in the app or on its printed sheet.

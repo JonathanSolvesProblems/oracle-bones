@@ -35,13 +35,13 @@ Each task writes its tests first. "Live" means it boots the program; the rest ru
 - [ ] 6. The clean install (the person)
   - [x] 6.1 In an empty folder in a new Kiro window, install the power and reproduce the control case; paste back what happened, and record it in the build log. Live.
     - _Requirements: 3.1_
-  - [ ] 6.2 Write the README's "How to run it" from that record only. Offline.
+  - [x] 6.2 Write the README's "How to run it" from that record only. Offline.
     - _Requirements: 3.2_
 
 - [ ] 7. Identity
   - [x] 7.1 Test that `app/` names neither Kotsu nor any file in `art/`. Offline; does not wait for the art.
     - _Requirements: 4.2_
-  - [ ] 7.2 When `art/` holds the art: the README header, the credit and the licence. Offline; blocks nothing.
+  - [x] 7.2 When `art/` holds the art: the README header, the credit and the licence. Offline; blocks nothing.
     - _Requirements: 4.1, 4.3, 4.4_
 
 - [ ]* 8. Second target (optional)
@@ -55,3 +55,5 @@ Each task writes its tests first. "Live" means it boots the program; the rest ru
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
   - [x] 9.3 Drive the server from a copy of the package outside this repository through `set_workspace`, `init_workspace` and the control case. Live.
     - _Requirements: 6.1, 3.1_
+  - [x] 9.4 The README (6.2) and the art (7.2): `README.md` with its numbers test, and `art/` with Kotsu's four poses, the icon, the header, `art/LICENSE` and `art/provenance.json`. From the command line, outside Kiro; the pictures were generated with an image model, as the README and `art/LICENSE` say. No icon field is added to plugin.json, since the documentation defines none (4.1).
+    - _Requirements: 3.2, 4.1, 4.3_
