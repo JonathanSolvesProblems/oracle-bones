@@ -20,6 +20,7 @@ export interface CalculatePageParts {
   /** Above the rows of the ground points (the paste control). */
   aboveRows?: Child | null;
   rowNotes?: Readonly<Record<number, string>>;
+  belowRows?: Child | null;
   /** Shown in place of the form for a pair that is not built. */
   notBuilt?: Child | null;
   /** The right-hand page: the screen state. */
@@ -34,7 +35,12 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
   let left: Child;
   if (!picked) left = h('p', { class: 'prompt' }, PICK_PROMPT);
   else if (!form) left = parts.notBuilt ?? h('p', {}, 'Quickened does not compute this pair yet.');
-  else left = formView({ form, values: s.values, rows: s.rows, marked: s.marked, aboveRows: parts.aboveRows, rowNotes: parts.rowNotes });
+  else {
+    left = formView({
+      form, values: s.values, rows: s.rows, marked: s.marked,
+      aboveRows: parts.aboveRows, rowNotes: parts.rowNotes, belowRows: parts.belowRows,
+    });
+  }
   return h('div', { class: 'spread' },
     h('section', { class: 'field-notes', 'aria-label': 'Field notes' },
       h('h1', { class: 'visually-hidden' }, 'Calculate'),

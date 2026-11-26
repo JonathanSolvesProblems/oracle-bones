@@ -16,6 +16,8 @@ export interface FormViewModel {
   aboveRows?: Child | null;
   /** Per-row notes, by row index from 0 (the grid's not-taken rows). */
   rowNotes?: Readonly<Record<number, string>>;
+  /** Under the table: the points the editor keeps, when a row was not taken as typed. */
+  belowRows?: Child | null;
 }
 
 export const FIXED_NOTE = 'QUICK-2 prints this value without asking for it.';
@@ -72,6 +74,7 @@ function groundPoints(m: FormViewModel): VNode {
           note ? h('tr', { class: 'row-note' }, h('td', { colspan: '3' }, note)) : null,
         ].filter((x): x is VNode => x !== null);
       }).flat())),
+    m.belowRows ?? null,
     h('div', { class: 'row-controls' },
       m.rows.length < gp.max
         ? h('button', { type: 'button', on: { click: { type: 'add-row' } } }, 'Add row')

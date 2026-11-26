@@ -5,6 +5,7 @@ import { render, type Dispatch } from './dom.ts';
 import type { Row } from './job.ts';
 import { readPaste } from './paste.ts';
 import { calculatePage, type CalculatorState } from './views/calculate.ts';
+import { gridParts } from './views/grid.ts';
 import { pasteControl, type PasteState } from './views/paste.ts';
 import { shapeChoice, STEP_BACKWATER_SHAPE } from './views/picker.ts';
 import { placeholder, routeOf, shell, type Route } from './views/shell.ts';
@@ -19,7 +20,10 @@ function page(route: Route): Child {
   switch (route) {
     case 'limits': return placeholder('Limits', 'The limits page is not built yet.');
     case 'proof': return placeholder('Proof', 'The proof page is not built yet.');
-    default: return calculatePage(state, { aboveRows: pasteControl(paste) });
+    default: {
+      const grid = gridParts(state.rows);
+      return calculatePage(state, { aboveRows: pasteControl(paste), rowNotes: grid.rowNotes, belowRows: grid.summary });
+    }
   }
 }
 
