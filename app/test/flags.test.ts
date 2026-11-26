@@ -11,7 +11,10 @@ import { irregularFlags } from '../src/solver/flags.ts';
 import { flowAt } from '../src/solver/geometry/irregular.ts';
 import { irregularNormalWs, readIrregular } from '../src/solver/modes/normalDepthIrregular.ts';
 import { readSingle } from '../src/solver/parse.ts';
-import { finalCapture, goldens, type Golden } from './golden.ts';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { readHauntings } from '../build/hauntings.ts';
+import { finalCapture, golden, goldens, ROOT, type Golden } from './golden.ts';
 import { HEADLINE_SEED, knownMissFields } from './knownMisses.ts';
 
 const SB_PROMPTS = ['bank_left', 'bank_right', 'n_left', 'n_channel', 'n_right', 'discharge'];
@@ -59,6 +62,17 @@ describe('irregular flags', () => {
   it('cut_off_area_counted is raised for nd-irr-000010, nd-irr-000014 and sb-irr-000003 only, of the goldens before the headline batch', () => {
     const raised = earlier.filter((g) => flagCodes(g).includes('cut_off_area_counted')).map((g) => g.id);
     expect(raised).toEqual(['nd-irr-000010', 'nd-irr-000014', 'sb-irr-000003']);
+  });
+  // Task 16.8, criterion 5.11 (2026-11-26): H-001's Flag line named the cases that raise the flag
+  // before the headline batch only. It must name every golden that raises it now, read here from
+  // the goldens with the same flagCodes, the haunting's own case apart.
+  it("H-001's Flag line names every golden that raises cut_off_area_counted, and no other", () => {
+    const h1 = readHauntings(readFileSync(join(ROOT, 'results', 'hauntings.md'), 'utf-8'), (id) => Object.keys(golden(id).printed)).hauntings.find((x) => x.id === 'H-001')!;
+    const raised = irregular.filter((g) => flagCodes(g).includes('cut_off_area_counted')).map((g) => g.id).filter((id) => !h1.cases.includes(id));
+    const named = [...new Set(h1.flag!.match(/\b(?:nd|cd|cc|sb)-[a-z]+-\d{6}\b/g) ?? [])];
+    expect(named.sort()).toEqual(raised.sort());
+    const inBatch = raised.filter((id) => batch.some((g) => g.id === id)).length;
+    expect(h1.flag).toContain(`${inBatch} of the headline batch's ${batch.length} irregular results`);
   });
   // In the headline batch nobody has looked at each section, so the evidence is the one the
   // nd-irr-000014 note uses: where the flag is raised, QUICK-2's printed fields are the ones

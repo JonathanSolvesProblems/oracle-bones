@@ -26,8 +26,12 @@ line reads `none` when the entry gives no exact value for any printed field of t
 - **Exact by field (nd-irr-000010):** ws_elev 596.42; area 586; top_width 152; wet_perimeter 153
 - **Difference:** WS ELEV 0.05 ft lower in QUICK-2. Top Wid 67 ft wider (44%), Area 37 sq ft larger
   (6%), Wet Per 67 ft longer.
-- **Flag:** `cut_off_area_counted`. The rebuild also raises it for nd-irr-000014 (a second pool
-  inside the channel banks) and sb-irr-000003.
+- **Flag:** `cut_off_area_counted`. Of the goldens before the headline batch, the rebuild also
+  raises it for nd-irr-000014 (a second pool inside the channel banks) and sb-irr-000003; and
+  for 6 of the headline batch's 79 irregular results: nd-irr-000042, nd-irr-000046,
+  nd-irr-000051, nd-irr-000065, nd-irr-000071 and nd-irr-000103, where QUICK-2 printed what the
+  rebuild prints, field for field. `app/test/flags.test.ts` derives this list from the goldens
+  (2026-11-26; the line named the first two only).
 
 ## H-002: the ends of the section act as frictionless vertical walls
 

@@ -1752,6 +1752,10 @@ A bold cell is a wrong prediction. On all three goldens the message is on 0-base
 the Depth field shows `0.00`, and Critical Slope and every output field are blank. None ended
 on the shape menu, none printed a result, and the form took the 2.4 in diameter.
 
+*Count, 2026-11-26.* G3 is right on 1 of 3, H3, as the table above shows. The count is added
+for `results/held-out.md`, whose test reads each round's count from this file; nothing else in
+this section is changed.
+
 **What H1 and H2 say.** In both, trial·12 falls short of the typed diameter stored as a single
 (4.800000072 against 4.800000191 in, and 2.400000036 against 2.400000095 in), so the inches
 test lets the trial through, and in feet the trial is past VAL/12. G3 sends that trial to the

@@ -269,10 +269,10 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     page, the page says so in one line with a reload control, keeps typed values and does not
     reload by itself; the control loads the newer build. Then `main.ts` and `views/shell.ts`.
     - _Requirements: 1.13_
-  - [ ] 16.8 Test: H-001's Flag line names the cases that raise `cut_off_area_counted`, computed
+  - [x] 16.8 Test: H-001's Flag line names the cases that raise `cut_off_area_counted`, computed
     as the flags test computes them. Then the line.
     - _Requirements: 5.11_
-  - [ ] 16.9 Test: `results/held-out.md` has one row for each prediction round of
+  - [x] 16.9 Test: `results/held-out.md` has one row for each prediction round of
     `results/attempts.md`, in order, each count and commit found under a heading that names the
     round. Then the file.
     - _Requirements: 5.12_
