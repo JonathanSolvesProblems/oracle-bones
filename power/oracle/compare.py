@@ -31,8 +31,10 @@ from . import screen as screen_mod
 from .errors import OracleError
 from .recorder import Store
 
-QUICKSET = paths.ORACLE / "quickset.json"
-MISMATCHES = paths.OUT / "mismatches.json"
+# Workspace paths. In an installed power the workspace may be set after this import, so each
+# use falls back to the current workspace when these are None.
+QUICKSET = paths.ORACLE / "quickset.json" if paths.ORACLE else None
+MISMATCHES = paths.OUT / "mismatches.json" if paths.OUT else None
 FULL_TARGET = 10_000
 OUTCOMES = ("result", "rejected", "error")
 
@@ -55,7 +57,7 @@ def golden_check(root=None):
 # ---- which goldens ---------------------------------------------------------------------
 
 def load_quickset(path=None):
-    p = Path(path or QUICKSET)
+    p = Path(path or QUICKSET or paths.ORACLE / "quickset.json")
     if not p.exists():
         raise OracleError("invalid_arguments", "no quick set yet: run python -m oracle.record --build-quickset")
     return json.loads(p.read_text(encoding="utf-8"))
@@ -141,7 +143,7 @@ def build_quickset(profile, store, seed=1, size=QUICK_SIZE):
 
 
 def write_quickset(qs, path=None):
-    p = Path(path or QUICKSET)
+    p = Path(path or QUICKSET or paths.ORACLE / "quickset.json")
     tmp = p.with_name(p.name + ".tmp")
     tmp.write_text(json.dumps(qs, indent=2) + "\n", encoding="utf-8", newline="\n")
     os.replace(tmp, p)
@@ -281,7 +283,7 @@ def _write_mismatches(items, path):
 def run(which="quick", case_ids=None, cfg=None, profile=None, store=None, command=None,
         quickset_path=None, mismatches_path=None, write_ledger=True):
     """Compare and return the `compare` tool's output plus `problems`, `note` and `count`."""
-    mpath = Path(mismatches_path or MISMATCHES)
+    mpath = Path(mismatches_path or MISMATCHES or paths.OUT / "mismatches.json")
     store = store or Store()
 
     def cannot(note, problems=(), category="invalid_arguments"):

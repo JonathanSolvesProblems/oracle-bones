@@ -20,7 +20,7 @@ SKIP = ("tests", "out", "vendor", "goldens")
 
 def code_hashes(root=None):
     """sha256 of every .py file under oracle/, keyed by its path relative to root."""
-    root = paths.ORACLE if root is None else root
+    root = paths.CODE_ORACLE if root is None else root
     out = {}
     for p in sorted(root.rglob("*.py")):
         rel = p.relative_to(root)

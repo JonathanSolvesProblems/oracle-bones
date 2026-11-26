@@ -10,6 +10,7 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
+from . import paths
 from .schemas import TOOLS, output_schema
 
 PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]
@@ -69,7 +70,8 @@ class Server:
         if method == "initialize":
             asked = (msg.get("params") or {}).get("protocolVersion")
             version = asked if asked in PROTOCOL_VERSIONS else PROTOCOL_VERSIONS[0]
-            self.pool.submit(lambda: self.oracle)  # start the session manager: removes orphaned containers
+            if paths.ROOT is not None:
+                self.pool.submit(lambda: self.oracle)  # start the session manager: removes orphaned containers
             self.reply(mid, {"protocolVersion": version, "capabilities": {"tools": {"listChanged": False}},
                              "serverInfo": SERVER_INFO,
                              "instructions": "Questions a dead DOS program in a sandbox. Start with ledger_read, "

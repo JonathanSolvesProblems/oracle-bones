@@ -61,10 +61,11 @@ def ensure_image(cfg=None, log=print):
     if docker("image", "inspect", tag, check=False).returncode == 0:
         return tag
     log("building %s (emu2 %s)" % (tag, cfg["emu2"]["commit"]))
-    docker("build", "-f", str(paths.ORACLE / "Dockerfile"),
+    # Built from the code root: the repository's oracle/, or the installed power's copy of it.
+    docker("build", "-f", str(paths.CODE_ORACLE / "Dockerfile"),
            "--build-arg", "EMU2_REPO=" + cfg["emu2"]["repo"],
            "--build-arg", "EMU2_COMMIT=" + cfg["emu2"]["commit"],
-           "-t", tag, str(paths.ORACLE), timeout=1800)
+           "-t", tag, str(paths.CODE_ORACLE), timeout=1800)
     return tag
 
 

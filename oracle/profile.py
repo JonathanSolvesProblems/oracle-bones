@@ -12,7 +12,7 @@ from . import paths
 from .errors import OracleError
 from .jsonschema_lite import validate
 
-SCHEMA_PATH = paths.TARGETS / "profile.schema.json"
+SCHEMA_PATH = paths.PROFILE_SCHEMA  # code, not a user file: it ships with the harness
 
 
 def _schema():
