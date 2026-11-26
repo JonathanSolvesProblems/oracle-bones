@@ -1429,6 +1429,116 @@
       "source": "20261126-001813-0cfa74"
     },
     {
+      "id": "obs-cdmenu-000005",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2.1{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095222-e41350"
+    },
+    {
+      "id": "obs-cdmenu-000006",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2.2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095333-e9502a"
+    },
+    {
+      "id": "obs-cdmenu-000007",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "12{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "3.6{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095543-11fe0c"
+    },
+    {
+      "id": "obs-cdmenu-000008",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "4.8{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095623-fd7c2f"
+    },
+    {
+      "id": "obs-cdmenu-000009",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".02{Enter}"},
+        {"expect": "cd_form", "keys": "2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095717-b9ff1c"
+    },
+    {
       "id": "obs-negnstall-000001",
       "mode": "normal_depth",
       "shape": "trapezoid",
