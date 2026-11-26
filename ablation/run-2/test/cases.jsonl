@@ -1,0 +1,10 @@
+{"id":"t1","mode":"normal_depth","shape":"trapezoid","inputs":{"left_slope":"2","right_slope":"2","bottom_width":"8","n":".03","discharge":"150","slope":".002"}}
+{"id":"t2","mode":"critical_depth","shape":"rectangle","inputs":{"bottom_width":"10","n":".013","discharge":"100","slope":".001"}}
+{"id":"t3","mode":"channel_capacity","shape":"circle","inputs":{"diameter":"24","n":".013","depth":"1.5","slope":".005"}}
+{"id":"t4","mode":"normal_depth","shape":"circle","inputs":{"diameter":"24","n":".013","discharge":"25","slope":".005"}}
+{"id":"t5","mode":"critical_depth","shape":"v_ditch","inputs":{"left_slope":"3","right_slope":"4","n":".035","discharge":"20","slope":".01"}}
+{"id":"t6","mode":"channel_capacity","shape":"trapezoid","inputs":{"left_slope":"2","right_slope":"2","bottom_width":"8","n":".03","depth":"2","slope":".002"}}
+{"id":"t7","mode":"normal_depth","shape":"irregular","inputs":{"sta_01":"0","elev_01":"110","sta_02":"50","elev_02":"104","sta_03":"100","elev_03":"102","sta_04":"105","elev_04":"96","sta_05":"125","elev_05":"96","sta_06":"130","elev_06":"102","sta_07":"200","elev_07":"105","sta_08":"250","elev_08":"111","bank_left":"100","bank_right":"130","n_left":".06","n_channel":".035","n_right":".07","discharge":"3000","slope":".0015"}}
+{"id":"t8","mode":"normal_depth","shape":"rectangle","inputs":{"bottom_width":"abc","n":".013","discharge":"100","slope":".001"}}
+{"id":"t9","mode":"normal_depth","shape":"circle","inputs":{"diameter":"12","n":".013","discharge":"100","slope":".001"}}
+{"id":"t10","mode":"critical_depth","shape":"circle","inputs":{"diameter":"36","n":".013","discharge":"40","slope":".001"}}

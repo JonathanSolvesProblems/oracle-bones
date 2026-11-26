@@ -1,0 +1,7 @@
+Build a program that answers the way FEMA's QUICK-2 version 1.0 answers. QUICK-2 is a 1995 DOS program for hydraulic calculations in open channels: critical depth, channel capacity and normal depth on V-ditch, rectangular, trapezoidal and circular sections, and normal depth on an irregular cross section of up to 40 ground points with left overbank, channel and right overbank Manning's n values.
+
+You do not have the program, its source code or any of its outputs. Use what you know of open-channel hydraulics and of QUICK-2, and public method documentation such as the HEC-RAS Hydraulic Reference Manual.
+
+The interface is in CONTRACT.md in this folder. Follow it exactly: your program's answers will be compared with QUICK-2's own screens, field by field, as printed text, on about a thousand cases you will not see.
+
+Write it in JavaScript or TypeScript for Node 24, with no dependencies, with its entry point in this folder as the contract says. Test it yourself as you see fit. When it runs, stop, and list what you had to guess.
