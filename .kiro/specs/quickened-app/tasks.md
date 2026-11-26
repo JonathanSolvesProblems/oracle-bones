@@ -208,8 +208,8 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     one in `oracle/vendor/`. Show it failing on a throwaway file of each kind, then delete it.
     - _Requirements: 9.1, 9.2, 9.3, 9.5_
 
-- [ ] 13. Deploy check, stopping before publishing
-  - [ ] 13.1 `npm run build`, then `vite preview`. In a private window with no account signed
+- [x] 13. Deploy check, stopping before publishing
+  - [x] 13.1 `npm run build`, then `vite preview`. In a private window with no account signed
     in: load, run both worked examples, print the main one, go offline, reload, run the main
     example again. Report what was seen at both widths. Stop: the person picks the host, and
     nothing is published.
