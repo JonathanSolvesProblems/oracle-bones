@@ -2479,3 +2479,120 @@ for `art/`, which is empty.
 passed in 52 files. `scripts/check_traceability.py`: 74 criteria checked, 0 problems.
 
 Credits: not counted here; they go in the next entry.
+
+## 2026-11-26, session 16: the app's first screen and pages, ended by the usage limit
+
+**This entry was written by the person from the command line, not by Kiro.** The session ended
+on Kiro's monthly usage limit before Kiro could write it. Every figure in it is from Kiro's own
+session files, the git history, or a check run from the command line.
+
+### Credits: the power built
+
+That session used 81.0 credits over 32 min 56 s.
+
+### Task 6.1, outside Kiro: the clean install
+
+Run by the person between 18:46 and 19:07 UTC, in a new Kiro window opened on an empty folder
+outside this repository. Windows 11, Kiro agent extension 1.1.1122, Docker 29.6.2, Python 3.14
+on PATH as `python`. Kiro opened the folder in Restricted Mode and it was trusted before
+anything else.
+
+- **Install, from the local folder.** Kiro panel, POWERS, "Add Custom Power", "Import power
+  from a folder", with this repository's `power/`. Kiro's notice read `Power "power" installed
+  successfully.` The Installed list showed "oracle-bones" with plugin.json's description, and
+  MCP SERVERS showed `power-oracle  Connected (12 tools)`. Kiro copied the 51 files into its own
+  powers folder and registered the power under the name "power".
+- **One message, in a new session** (Default agent, Claude Opus 5.5, Supervised): "I just
+  installed the oracle-bones power. Set it up in this folder, then run QUICK-2's control case:
+  Normal Depth for a trapezoid with side slopes 3 and 2, bottom width 10, Manning's n .035,
+  discharge 300 cfs and slope .005. Tell me the depth QUICK-2 prints." Kiro loaded the
+  `resurrect` skill, called `set_workspace`, `init_workspace` (12 files copied) and `run_case`,
+  and asked for approval before each; all were allowed.
+- **The answer.** `run_case` downloaded `q2v1.zip`, checked its sha256 against the pin, and
+  replied outcome `result`, screen `nd_trap_result`, depth `3.27`. Kiro then checked the value by
+  hand, as the skill's step 4 says, and wrote: "My own calculation doesn't quite match... The
+  exact normal depth is 3.286 ft... QUICK-2's printed area doesn't fit its printed depth either.
+  An area of 59.6 sq ft means a depth of about 3.276 ft. So the program may work with about
+  3.276 internally and cut it to 3.27 on screen, or it may stop iterating before it reaches the
+  exact depth. One case can't tell these apart. The oracle's rules count a difference like this
+  as a 'haunting': QUICK-2 is treated as right, and the gap gets written down." 1.99 credits.
+- **The guard, in the same folder.** After the window was closed and opened again, a second
+  message asked Kiro to record the case and then change the recorded Depth to 3.29 with its file
+  edit tool. The case was recorded as `nd-trap-000003`. Kiro took the file's SHA-256, called
+  `str_replace`, and reported: "The guard hook installed during setup stopped the edit before it
+  ran... Afterwards, the file's hash was still C67B7A4B...4F857B20, and line 22 still reads
+  3.27. I didn't try to get around the hook with a shell command... The hook only covers my edit
+  tool, so a shell command could still change the file." 1.92 credits.
+- Nothing was written under the installed power's folder: 51 files before and after.
+- Outside Kiro, `docker build --no-cache` of `power/oracle/Dockerfile` at the pinned emu2
+  commit built from nothing on this PC, and `emu2` ran in the image.
+
+**What it found.** Six things a new user would meet, none fixed yet:
+
+1. Kiro names a custom power after its folder, not after plugin.json's `name`. Everything the
+   user sees says "power": the notice, `@power/oracle/run_case`, `power-oracle`.
+2. The four copied hooks showed as disabled, though each file says enabled, until the window was
+   closed and opened again. The window had opened in Restricted Mode and been trusted after.
+   Until then the guard does not run.
+3. In a new workspace the grading hooks have no rebuild of the user's to grade (the gap session
+   15 named).
+4. Kiro gives the server no workspace. After the window was reopened, `run_case` replied "No
+   workspace is set. Call set_workspace with the absolute path of your project folder, then try
+   again", and Kiro called `set_workspace` again by itself. It is needed once in every window.
+5. The guard's message names `python -m oracle.record --rerecord`, which does not work in a
+   workspace made by the power, where the package is in the power's folder.
+6. The first recording in a new workspace walked the whole profile first: 65 boots and about
+   three and a half minutes with only "Working" on screen, and 32 goldens the user had not
+   asked for.
+
+Not run: the install from the repository's address, because Kiro's dialog asks for a public
+address and the repository is private; and the Exhumer in a clean folder, so whether its
+`@oracle` tool source finds the power's server is not known.
+
+### quickened-app tasks 16.1 to 16.9
+
+Settings: Claude Opus 5.5, Default agent, a new session. The prompt listed nine things the
+person had seen in a browser at 1280 px and at 375 px. Kiro added task 16 with a criterion and
+a test for each, and committed seven of the nine:
+
+- a144edc (16.2, 16.3): the limits page shows a code span as its value with no marks, and the
+  five known-miss classes have their own heading, "Where Quickened's answer differs from
+  QUICK-2's", each with its count of the headline run's cases.
+- 30f7915 (16.4): the proof page marks a case by the comparator's rule and shows the messages
+  beside it, not counted. It now marks 23 of its 25 cases same and 2 different; before, four
+  rejections were marked different over trailing blanks in QUICK-2's message.
+- b223f6b (16.5): each label of the drawing sits on a ground of the paper colour.
+- c8773d9 (16.1, 16.6): the first screen opens with what the page is, for whom, the headline
+  count read from `results/headline.md`, links to the proof and limits pages, and the notice;
+  the results tables' captions no longer break one word to a line on a phone.
+- 4ba6cbc (16.7): when a newer build takes over an open page, the page says so in one line with
+  a Reload control and never reloads by itself, tested with two builds in Playwright.
+
+**The limit.** At 19:34 UTC, 24 min 7 s and 87.73 credits into the session, Kiro stopped with
+"You've reached your monthly usage limit. Please return next month to continue building."
+Tasks 16.8 and 16.9 were written and their tests passed in Kiro's last run, and nothing of
+them was committed.
+
+### After the limit, outside Kiro
+
+- ff3d8d4: tasks 16.8 and 16.9 committed from the command line exactly as the session left
+  them. H-001's Flag line now names every golden that raises `cut_off_area_counted`, with a
+  test that derives the list, and `results/held-out.md` holds the held-out record with its test.
+- 3709297: three rows of `results/held-out.md` corrected by the person. As Kiro wrote the
+  table, A-007 read 3 of 4, counting outcomes only, beside A-005's 15 of 17, which counts every
+  printed field; and A-013 read 7 of 7 for a group of rules picked by the same seven cases.
+  A-007 now reads 2 of 4 by A-005's rule, A-013 reads 1 of 14 groups, and A-017's row for
+  candidate 1a says that its one miss refutes it. A dated count note under A-008 and under A-014
+  in `results/attempts.md` states each count; no prediction or grade is changed.
+- `docs/prompts.md`: every prompt sent to Kiro in this workspace, copied word for word from
+  Kiro's own session files by `scripts/export_prompts.py`, with the credits Kiro recorded for
+  each turn: 50 sessions, 76 prompts, 3,815.81 credits. The script and the file were written
+  outside Kiro. The later entries of this log summarise their prompts; that file has them whole.
+
+**Checks, run from the command line after both commits.** Vitest: 2608 passed in 54 files. The
+typecheck and the build passed. Playwright: 43 passed, 3 skipped. pytest `-m "not live"`: 241 passed, 49 deselected. The comparator on
+a copy of the ledger: 1315 of 1339 on the full set and 195 of 200 on the quick set, as before. `scripts/check_goldens.py` passed and
+`scripts/check_traceability.py` reported 74 criteria, 0 problems.
+
+**Left open by the limit.** The six findings of the clean install, the README, and tasks 6.2
+and 7.2 of `resurrection-power`.
