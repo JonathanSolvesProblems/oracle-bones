@@ -2412,3 +2412,26 @@ deselected. It took 6 min 21 s in step 2 and 50 min 46 s in step 4, two compare 
 was stopped at 20 min with no result.
 
 Credits: not counted here; they go in the next entry.
+
+## 2026-11-26, session 14: the resurrection-power spec revised
+
+### Credits: the headline batch graded
+That session used 88.34 credits over 1 h 41 min 14 s.
+
+### The spec
+Settings: Claude Opus 5.5, a new session. Nothing was built and nothing was run on the oracle.
+- requirements.md, design.md and tasks.md of `resurrection-power` rewritten (1b00a95). The
+  draft's four requirements keep their numbers, 4.2 included; 5 to 9 are new: the harness copy,
+  the server and the workspace, the workspace files, Docker and the runner, the download.
+- The format was checked on 2026-11-26 against kiro.dev's powers pages, the Agent Plugins
+  Specification 1.0.0 and the Agent Skills specification. The design lists where they differ
+  from the person's reading of the loader: `displayName` is not a manifest field, no `1.x.y`
+  schema pattern is documented, the name rules are stricter, no icon field exists, Kiro's pages
+  do not say Kiro sets `PLUGIN_ROOT` and `PLUGIN_DATA`, and they do not say installing copies
+  the folder.
+- Open points in the design: `python` as a bare name on Windows, MCP roots in Kiro, the
+  agents' `@oracle` against Kiro's renamed server, and what MAINHLP.EXE does.
+
+**Checks.** `scripts/check_traceability.py`: 74 criteria checked, 0 problems.
+
+Credits: not counted here; they go in the next entry.
