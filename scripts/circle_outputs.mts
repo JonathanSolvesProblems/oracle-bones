@@ -27,6 +27,9 @@
 //                                              tests on q those pipes rule out (about 2 s)
 //   node scripts/circle_outputs.mts a017       A-017: each case under the rule to build and under a number c·D^2.5 at the trial
 //                                              on D, the 184, and the 1 ± ε check (about 1 s)
+//   node scripts/circle_outputs.mts grade-a017 A-017's thirteen answers against A-017 (d57eed5), the bounds on c now, and the
+//                                              184 with run-time errors read as the shape menu, with and without the full pipe
+//                                              (T = D) at a trial on D, on every circle Critical Depth outcome (about 3 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -47,7 +50,7 @@ import { echoes, readRegularForm } from '../app/src/solver/forms.ts';
 import { solve } from '../app/src/solver/index.ts';
 import { maxDischarge } from '../app/src/solver/modes/capacity.ts';
 import { circleCriticalDischarge, DEPTH_ABOVE_DIAMETER } from '../app/src/solver/modes/circle.ts';
-import { diameterFeet, wetCircle } from '../app/src/solver/geometry/circle.ts';
+import { diameterFeet, wetCircle, wetCircleStored } from '../app/src/solver/geometry/circle.ts';
 import { search as appSearch } from '../app/src/solver/search.ts';
 import { val } from '../app/src/solver/parse.ts';
 import { CIRCLE_CD_STEP, CIRCLE_TOL } from '../app/src/solver/constants.ts';
@@ -2549,8 +2552,260 @@ function a017() {
   console.log('|---|---|---|---|---|---|---|');
   for (const l of tableRows) console.log(l);
 }
+// ---- A-017 graded: QUICK-2's thirteen answers against A-017 as committed ------------------------
+const A017_COMMIT = 'd57eed5';
+/** The ledger decision that lists A-017's runs, goldens and behaviour cases (the Exhumer's, 2026-11-26). */
+const A017_DECISION = 104;
+const A017_COLS = ['2.4 with K1', '1', '1a (c·D^2.5)', '2', '3'] as const;
+type A017Col = (typeof A017_COLS)[number];
+type A017Case = { name: string; d: string; n: string; q: string; cells: Record<A017Col, string> };
+/** A-017's case table, its common slope and 1a's bounds on c, read from git. */
+function a017AsCommitted() {
+  const a = committedSection(A017_COMMIT, '## A-017: where the 9.6 in pipe');
+  const b = /\*\*1a\*\*:\s+candidate 1 with the number c·D\^2\.5,\s+c\s+above\s+([\d.]+)\s+\((\S+)\)\s+and\s+below\s+([\d.]+)\s+\((\S+)\)/.exec(a);
+  const s = /n \.013\s+and\s+slope\s+([\d.]+)\s+except\s+N1\./.exec(a);
+  if (!b || !s) throw new Error(`A-017 at ${A017_COMMIT}: 1a's bounds on c (${!!b}) or the slope (${!!s}) not read; ${a.length} ${JSON.stringify(a.slice(a.indexOf('**1a**'), a.indexOf('**1a**') + 60))}`);
+  const cases: A017Case[] = [];
+  let header: string[] = [];
+  for (const l of a.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^[BEN]\d$/.test(c[0]!) || header[1] !== 'Diameter' || header[2] !== 'n' || header[3] !== 'Discharge') continue;
+    const cells = {} as Record<A017Col, string>;
+    for (const col of A017_COLS) { const i = header.indexOf(col); if (i < 0) throw new Error(`no column "${col}"`); cells[col] = c[i]!; }
+    cases.push({ name: c[0]!, d: c[1]!, n: c[2]!, q: c[3]!, cells });
+  }
+  if (cases.length !== 13) throw new Error(`read ${cases.length} of A-017's thirteen cases`);
+  return { slope: s[1]!, cLo: Number(b[1]), loBy: b[2]!, cHi: Number(b[3]), hiBy: b[4]!, cases };
+}
+type A017Cell = { kind: 'word'; word: Word } | { kind: 'c'; menuAbove: number; msgBelow: number } | { kind: 'change' } | { kind: 'none' };
+function readA017Cell(s: string): A017Cell {
+  if (s === 'message' || s === 'shape menu' || s === 'result') return { kind: 'word', word: s };
+  const m = /^menu if c > ([\d.]+), message if c < ([\d.]+), result between$/.exec(s);
+  if (m) return { kind: 'c', menuAbove: Number(m[1]), msgBelow: Number(m[2]) };
+  if (/^one change/.test(s)) return { kind: 'change' };
+  if (s === 'none' || /^may differ from /.test(s)) return { kind: 'none' };
+  throw new Error(`unread prediction "${s}"`);
+}
+
+// ---- The full pipe at a trial on D (the person's reading), with run-time errors read as the menu --
+/** A·√(g·A/T) as QUICK-2's formula meets the depth y. A run-time error where x/√(1−x²) divides by
+ * zero (y = 0 or y = D) or takes the root of a negative number (y outside 0 to D), or where g·A/T
+ * divides by zero or is negative; each is read as the shape menu (quick2-solver design, Negative
+ * values and abandoned calculations, an inference). With `full`, a depth equal to D gives the full
+ * pipe with the top width taken as D: A = 3.1416·D²/4, T = D. */
+function crownEv(D: number, y: number, full: boolean, scale = 1): { v: number } | { err: string } {
+  if (full && y === D) { const A = f((PI_Q * D * D) / 4); return { v: f(A * Math.sqrt((G * A) / D) * scale) }; }
+  const r = D / 2, x = (r - y) / r, s = 1 - x * x;
+  if (s === 0) return { err: 'division by zero in x/√(1−x²)' };
+  if (s < 0) return { err: 'square root of a negative number in √(1−x²)' };
+  const w = wetCircleStored(D, y);
+  if (w.topWidth === 0) return { err: 'division by zero in g·A/T' };
+  if ((G * w.area) / w.topWidth < 0) return { err: 'square root of a negative number in √(g·A/T)' };
+  return { v: f(circleCriticalDischarge(D)(y) * scale) };
+}
+type CrownOut = { outcome: 'result' | 'rejected' | 'menu' | 'no_end'; y?: number; at?: number; kind?: 'stepped trial' | 'resumed trial' | 'chord'; why?: string; k?: number; trace: string[] };
+/** a013Search (K1 with one combination's trial, diameter and test) with the geometry of crownEv.
+ * `resumedTested` false: a trial stepped up from a chord is not tested against D. */
+function crownSearch(text: string, q: number, c: Combo, full: boolean, scale = 1, resumedTested = true): CrownOut {
+  const { t, ds, x } = c, D = ds.D(text), close = (v: number) => Math.abs(v - q) <= CIRCLE_TOL * q, trace: string[] = [];
+  const log = (s: string) => { trace.push(s); if (trace.length > 8) trace.shift(); };
+  let lo = 0, flo = 0, base = 0, k = 1, prev = 0;
+  for (let guard = 0; guard < 20000; guard++) {
+    const y = t.next(prev, k, base), pre = t.pre(prev, k, base), kind = base === 0 ? 'stepped trial' as const : 'resumed trial' as const;
+    if ((kind === 'stepped trial' || resumedTested) && x.past(y, pre, D, text)) { log(`${kind} ${y.toPrecision(7)} past D: message`); return { outcome: 'rejected', at: y, kind, k, trace }; }
+    const e = crownEv(D, t.geo(y), full, scale);
+    if ('err' in e) { log(`${kind} ${y.toPrecision(7)}: ${e.err}`); return { outcome: 'menu', at: y, kind, why: e.err, k, trace }; }
+    const fy = e.v;
+    log(`${kind} ${y.toPrecision(7)}${t.geo(y) === D ? ' (on D)' : ''} ${fy.toPrecision(5)} (${pct(fy, q)})`);
+    if (close(fy)) return { outcome: 'result', y: t.geo(y), kind, trace };
+    if (fy < q) { lo = y; flo = fy; prev = y; k++; continue; }
+    let hi = y, fhi = fy, resumed = false;
+    for (let n = 0; n < 1000 && !resumed; n++) {
+      const yc = t.keep(lo + ((q - flo) * (hi - lo)) / (fhi - flo)), ec = crownEv(D, t.geo(yc), full, scale);
+      if ('err' in ec) { log(`chord ${yc.toPrecision(7)}: ${ec.err}`); return { outcome: 'menu', at: yc, kind: 'chord', why: ec.err, trace }; }
+      const fc = ec.v;
+      log(`chord ${yc.toPrecision(7)} ${fc.toPrecision(5)} (${pct(fc, q)})`);
+      if (close(fc)) return { outcome: 'result', y: t.geo(yc), kind: 'chord', trace };
+      if (fc > q) { hi = yc; fhi = fc; continue; }
+      lo = yc; flo = fc; base = yc; prev = yc; k = 1; resumed = true;
+    }
+    if (!resumed) return { outcome: 'no_end', trace };
+  }
+  return { outcome: 'no_end', trace };
+}
+/** The section the printer is given at the search depth: at y = D with `full`, the full pipe
+ * (A = 3.1416·D²/4, P = 3.1416·D, T = D); otherwise C2. */
+const crownGeo = (full: boolean): Geo => (D, y) => (full && y === D ? { A: f((PI_Q * D * D) / 4), P: f(PI_Q * D), T: D } : GEO_C2(D, y));
+const crownWord = (o: CrownOut): Word => (o.outcome === 'rejected' ? 'message' : o.outcome === 'menu' ? 'shape menu' : o.outcome === 'no_end' ? 'never finishes' : 'result');
+function crownFits(o: A013Obs, c: Combo, full: boolean, m2: QmaxRule, resumedTested = true): { ok: boolean; got: string; r: CrownOut } {
+  const v = vals('critical_depth', o.inputs), r = crownSearch(o.inputs.diameter!, v.discharge!, c, full, 1, resumedTested);
+  if (r.outcome === 'result') {
+    if (o.seen !== 'result') return { ok: false, got: `result at ${r.y!.toFixed(5)}`, r };
+    const p = show('critical_depth', v, cdFields(v, crownGeo(full), m2, r.y!, CD_RULE.offset, 'q/A', c.ds.D(o.inputs.diameter!)));
+    const d = misses(o.golden!, p);
+    return { ok: !d.length, got: d.length ? `result, misses ${d.join('; ')}` : 'result, every field', r };
+  }
+  const seen = r.outcome === 'menu' ? 'shape_menu' : r.outcome;
+  return { ok: seen === o.seen, got: crownWord(r), r };
+}
+/** How a menu ending arises in the model: what reached the geometry and the error it met. */
+const menuHow = (r: CrownOut) => r.outcome !== 'menu' ? crownWord(r) : `${r.kind} ${r.at!.toPrecision(7)}${r.kind === 'stepped trial' ? ` (trial ${r.k})` : ''}: ${r.why}`;
+
+function gradeA017() {
+  const m2 = atShare(0.9382), all = all184(), K1X2 = A016_MODELS[0]!, tol = CIRCLE_TOL;
+  const A = a017AsCommitted();
+  const inputsOf = (c: { d: string; n: string; q: string }) => ({ diameter: c.d, n: c.n, discharge: c.q, slope: A.slope });
+  h(`A-017 read from ${A017_COMMIT}: ${A.cases.length} cases, slope ${A.slope}; 1a's c above ${A.cLo} (${A.loBy}) and below ${A.cHi} (${A.hiBy})`);
+  const pipes = onDiameterPipes();
+  { // 1a's bounds, recomputed from the observations A-017 names, as a017 computed them
+    const at = (id: string, s: number) => { const g = id.startsWith('obs-') ? typedInputs(rawCase(id))! : byId(id).inputs; return (f(val(g.discharge!)) * s) / f(f(val(g.diameter!)) / 12) ** 2.5; };
+    const lo = at(A.loBy, 1 + tol), hi = at(A.hiBy, 1 - tol);
+    if (lo.toFixed(4) !== A.cLo.toFixed(4) || hi.toFixed(4) !== A.cHi.toFixed(4)) throw new Error(`1a's bounds recomputed as ${lo} and ${hi}`);
+    A.cLo = lo; A.cHi = hi; }
+  { let same = 0, n = 0;
+    for (const c of A.cases) {
+      const v = vals('critical_depth', inputsOf(c)), q = v.discharge!, D = f(f(val(c.d)) / 12), p = pipes.find((x) => val(x.d) === val(c.d))!;
+      const rule = a016Word(a016Search(c.d, q, K1X2));
+      n++; if (rule === c.cells['2.4 with K1']) same++; else row(`differs: ${c.name} 2.4 with K1: committed ${c.cells['2.4 with K1']}, model ${rule}`);
+      const s25 = D ** 2.5, cMenu = (q * (1 + tol)) / s25, cMsg = (q * (1 - tol)) / s25;
+      const crown = !(q > p.reach) ? '-' : cMenu <= A.cLo ? 'shape menu' : cMsg > A.cHi ? 'message' : `menu if c > ${cMenu.toPrecision(4)}, message if c < ${cMsg.toPrecision(4)}, result between`;
+      n++; if (crown === c.cells['1a (c·D^2.5)']) same++; else row(`differs: ${c.name} 1a: committed ${c.cells['1a (c·D^2.5)']}, model ${crown}`);
+    }
+    row(`the model, rerun now, gives the committed cell on ${same} of ${n} (2.4 with K1 and 1a, each case)`); }
+
+  h(`What QUICK-2 did: every golden, behaviour case and run folder ledger decision ${A017_DECISION} lists for each case's inputs`);
+  const seen: Record<string, { word: Word | 'other' | 'DIFFERENT'; sources: string[] }> = {};
+  for (const c of A.cases) {
+    const s = seenEvery(inputsOf(c), A017_DECISION);
+    if (!s.length) throw new Error(`${c.name}: decision ${A017_DECISION} lists nothing with these inputs`);
+    const words = [...new Set(s.map((x) => x.word))];
+    seen[c.name] = { word: words.length === 1 ? words[0]! : 'DIFFERENT', sources: s.map((x) => x.source.replace(/^(golden|behaviour case) /, '')) };
+    row(`${c.name} ${inputText(inputsOf(c))}, n ${c.n}: ${s.map((x) => `${x.source}: ${x.word} (${x.screen})`).join('; ')}`);
+  }
+  row(`results among the thirteen: ${A.cases.filter((c) => seen[c.name]!.word === 'result').map((c) => c.name).join(', ') || 'none'}`);
+
+  // Each candidate's predictions graded. A cell "menu if c > a, message if c < b" is consistent with
+  // any of the three endings and bounds c; "one change" is one joint prediction over B1 to B9.
+  const B = A.cases.filter((c) => c.name.startsWith('B')), seq = B.map((c) => seen[c.name]!.word);
+  const oneChange = /^(shape menu,)*(result,)?(message,)*$/.test(seq.map((w) => `${w},`).join('')) && seq.includes('shape menu') && seq.includes('message');
+  const changeAt = B.findIndex((c) => seen[c.name]!.word !== 'shape menu');
+  row(`B1 to B9 in order: ${seq.join(', ')}; one change from the menu to the message: ${oneChange ? `yes, between ${B[changeAt - 1]?.q} and ${B[changeAt]?.q} cfs` : 'NO'}`);
+  const verdict: Record<string, Record<A017Col, { graded: boolean; ok: boolean; note: string }>> = {};
+  const summary: string[] = [];
+  for (const col of A017_COLS) {
+    let right = 0, graded = 0, cLo = A.cLo, cHi = A.cHi; const wrong: string[] = [], bounds: string[] = [];
+    let changeDone = false;
+    for (const c of A.cases) {
+      const cell = readA017Cell(c.cells[col]), w = seen[c.name]!.word;
+      let v = { graded: false, ok: true, note: '' };
+      if (cell.kind === 'word') v = { graded: true, ok: cell.word === w, note: '' };
+      else if (cell.kind === 'c') {
+        v = { graded: true, ok: w === 'shape menu' || w === 'message' || w === 'result', note: w === 'shape menu' ? `c > ${cell.menuAbove}` : w === 'message' ? `c < ${cell.msgBelow}` : `${cell.msgBelow} ≤ c ≤ ${cell.menuAbove}` };
+        if (w === 'shape menu') cLo = Math.max(cLo, cell.menuAbove); if (w === 'message') cHi = Math.min(cHi, cell.msgBelow);
+        bounds.push(`${c.name} ${v.note}`);
+      } else if (cell.kind === 'change') { v = { graded: !changeDone, ok: oneChange, note: 'one change along B1 to B9' }; changeDone = true; }
+      verdict[c.name] = { ...(verdict[c.name] ?? {}), [col]: v } as Record<A017Col, { graded: boolean; ok: boolean; note: string }>;
+      if (v.graded) { graded++; if (v.ok) right++; else wrong.push(c.name); }
+    }
+    summary.push(`${col}: right on ${right} of ${graded} graded${wrong.length ? `; misses ${wrong.join(', ')}` : ''}${bounds.length ? `; the conditional cells put c in (${cLo.toPrecision(4)}, ${cHi.toPrecision(4)}) from ${bounds.join(', ')}` : ''}`);
+  }
+  const mark = (c: A017Case, col: A017Col) => { const v = verdict[c.name]![col], t = c.cells[col]; return !v.graded && readA017Cell(t).kind === 'change' ? 'one change (joint)' : !v.graded ? t : v.ok ? (v.note && readA017Cell(t).kind === 'c' ? `${t}: ${v.note}` : t) : `**${t}**`; };
+  const anyMiss = (c: A017Case) => A017_COLS.some((col) => verdict[c.name]![col].graded && !verdict[c.name]![col].ok);
+  const ruleMiss = (c: A017Case) => !verdict[c.name]!['2.4 with K1'].ok;
+  const order = [...A.cases.filter(ruleMiss), ...A.cases.filter((c) => !ruleMiss(c) && anyMiss(c)), ...A.cases.filter((c) => !anyMiss(c))];
+  console.log(`\n| Case | Diameter | n | Discharge | QUICK-2 | Seen in | ${A017_COLS.join(' | ')} |`);
+  console.log(`|${'---|'.repeat(6 + A017_COLS.length)}`);
+  for (const c of order) console.log(`| ${c.name} | ${c.d} | ${c.n} | ${c.q} | ${seen[c.name]!.word} | ${seen[c.name]!.sources.join(', ')} | ${A017_COLS.map((col) => mark(c, col)).join(' | ')} |`);
+  for (const s of summary) row(s);
+
+  // The bounds on a number met at the trial on D, pipe by pipe (candidate 1) and as c·D^2.5 (1a).
+  const obs = a016Observations();
+  h(`Pipes with a trial on D: every observation that steps to it, and the number at the trial on D each pipe's endings allow (menu: q more than 0.5% under it; message: more than 0.5% over it)`);
+  const onD = obs.flatMap((o) => { const p = pipes.find((x) => val(x.d) === val(o.inputs.diameter!)), q = f(val(o.inputs.discharge!)); return p && q > p.reach ? [{ o, p, q }] : []; });
+  const word = (o: A013Obs) => (o.seen === 'shape_menu' ? 'shape menu' : o.seen === 'rejected' ? 'message' : o.seen);
+  let cLo = 0, cHi = Infinity, loBy = '', hiBy = '', cLoX = 0, cHiX = Infinity, hiByX = '';
+  for (const p of pipes) {
+    const here = onD.filter((x) => x.p === p).sort((a, b) => a.q - b.q); if (!here.length) { row(`${p.d} in: no observation steps to trial ${p.k}`); continue; }
+    let lo = 0, hi = Infinity;
+    for (const { o, q } of here) { if (o.seen === 'shape_menu') lo = Math.max(lo, q * (1 + tol)); if (o.seen === 'rejected') hi = Math.min(hi, q * (1 - tol)); }
+    const s = p.D ** 2.5;
+    row(`${p.d} in (trial ${p.k} on D ${p.D.toPrecision(10)}): ${here.map(({ o }) => `${o.inputs.discharge}${o.inputs.n !== '.013' ? ` (n ${o.inputs.n})` : ''} ${word(o)}`).join(', ')}; a number between ${lo ? lo.toPrecision(5) : '0'} and ${hi.toPrecision(5)} cfs${lo < hi ? '' : ' (NONE: a menu above a message)'}; as c, ${(lo / s).toPrecision(5)} to ${(hi / s).toPrecision(5)}`);
+    for (const { o, q } of here) {
+      if (o.seen === 'shape_menu' && (q * (1 + tol)) / s > cLo) { cLo = (q * (1 + tol)) / s; loBy = o.name; }
+      if (o.seen === 'rejected' && (q * (1 - tol)) / s < cHi) { cHi = (q * (1 - tol)) / s; hiBy = o.name; }
+      if (p.last) { if (o.seen === 'shape_menu') cLoX = Math.max(cLoX, (q * (1 + tol)) / s); if (o.seen === 'rejected' && (q * (1 - tol)) / s < cHiX) { cHiX = (q * (1 - tol)) / s; hiByX = o.name; } }
+    }
+  }
+  row(`c·D^2.5 (1a) on every observation: c above ${cLo.toPrecision(5)} (${loBy}) and below ${cHi.toPrecision(5)} (${hiBy})${cLo < cHi ? '' : ': no c fits'}`);
+  row(`leaving out the pipes with no stepped trial inside D (2.4 in): c above ${cLoX.toPrecision(5)} and below ${cHiX.toPrecision(5)} (${hiByX})`);
+
+  // The person's reading (step 3 of the prompt that wrote this section): the full pipe, T = D.
+  h('The full pipe at a trial on D with the top width taken as D: A·√(g·A/T), A = 3.1416·D²/4, T = D');
+  const cFull = Math.pow(PI_Q / 4, 1.5) * Math.sqrt(G);
+  row(`c = (3.1416/4)^1.5·√32.2 = ${cFull.toPrecision(5)}; inside (${cLoX.toPrecision(5)}, ${cHiX.toPrecision(5)}): ${cFull > cLoX && cFull < cHiX ? 'yes' : 'NO'}`);
+  for (const p of pipes) { const v = crownEv(p.D, p.D, true); if ('v' in v) row(`${p.d} in: D ${p.D.toPrecision(10)}, the number ${v.v.toPrecision(5)} cfs (c·D^2.5 in double ${(cFull * p.D ** 2.5).toPrecision(5)}); a result for q from ${(v.v / (1 + tol)).toPrecision(5)} to ${(v.v / (1 - tol)).toPrecision(5)}; the last trial inside gives ${p.last ? p.Flast.toPrecision(5) : 'none'}`); }
+  row('each observation that steps to a trial on D, against the number:');
+  for (const { o, p, q } of onD) {
+    const v = crownEv(p.D, p.D, true) as { v: number }, rel = q / v.v - 1;
+    const reads = Math.abs(rel) <= tol ? 'within 0.5%: a result at D' : rel > 0 ? 'over: steps past D' : 'under: a chord below D';
+    row(`    ${o.name} (${o.inputs.diameter} in, ${o.inputs.discharge} cfs): ${word(o)}; q ${(rel * 100).toFixed(2)}% from the number, ${reads}`);
+  }
+
+  h(`The ${all.length} combinations with run-time errors read as the shape menu, without (E) and with (F) the full pipe at a trial on D, on all ${obs.length} observations`);
+  const by = (s: string) => obs.filter((o) => o.seen === s);
+  row(`${by('result').length} results, ${by('rejected').length} rejections with the message, ${by('shape_menu').length} shape-menu endings (${by('shape_menu').map((o) => `${o.name} ${o.inputs.diameter}/${o.inputs.discharge}${o.inputs.n !== '.013' ? ` n ${o.inputs.n}` : ''}`).join(', ')})`);
+  // E: errors only; F: the full pipe at a trial on D. "u": a trial stepped up from a chord is not tested against D.
+  const variants = all.flatMap((c) => [false, true].flatMap((full) => [true, false].map((rt) => ({ c, full, rt, id: `${c.id} ${full ? 'F' : 'E'}${rt ? '' : 'u'}` }))));
+  const scores = variants.map((vr) => ({ vr, res: obs.map((o) => ({ o, ...crownFits(o, vr.c, vr.full, m2, vr.rt) })) })).map((s) => ({ ...s, bad: s.res.filter((r) => !r.ok) }));
+  for (const [full, rt] of [[false, true], [true, true], [false, false], [true, false]] as const) {
+    const ss = scores.filter((s) => s.vr.full === full && s.vr.rt === rt), hist = new Map<number, number>();
+    for (const s of ss) hist.set(obs.length - s.bad.length, (hist.get(obs.length - s.bad.length) ?? 0) + 1);
+    const best = Math.max(...ss.map((s) => obs.length - s.bad.length)), top = ss.filter((s) => obs.length - s.bad.length === best);
+    row(`${full ? 'F, the full pipe at a trial on D' : 'E, errors only'}${rt ? '' : ', resumed trials not tested against D (u)'}: ${ss.length} variants; scores ${[...hist].sort((a, b) => b[0] - a[0]).map(([k, n]) => `${n} fit ${k}`).join(', ')}; fit all ${obs.length}: ${ss.filter((s) => !s.bad.length).map((s) => s.vr.id).join(', ') || 'none'}`);
+    const missSets = new Map<string, string[]>(); for (const s of top) { const k = s.bad.map((r) => `${r.o.name} (${r.got})`).join(', '); if (!missSets.has(k)) missSets.set(k, []); missSets.get(k)!.push(s.vr.c.id); }
+    row(`    the best, ${best} of ${obs.length}, by ${top.length}:`);
+    for (const [k, ids] of missSets) row(`        ${ids.length} (${ids.slice(0, 6).join(', ')}${ids.length > 6 ? ', ...' : ''}) miss ${k}`);
+  }
+  { const best = Math.max(...scores.map((s) => obs.length - s.bad.length));
+    row(`all ${scores.length} variants: the best fits ${best} of ${obs.length}; fit all: ${scores.filter((s) => !s.bad.length).length}`);
+    // Which observations no variant gets right, and which no variant that fits every result and message gets right.
+    const rr = scores.filter((s) => s.bad.every((r) => r.o.seen === 'shape_menu'));
+    row(`variants that fit all ${obs.length - by('shape_menu').length} results and messages: ${rr.length}; the menu endings any of them gives: ${by('shape_menu').map((o) => `${o.name} ${rr.filter((s) => !s.bad.some((r) => r.o === o)).length}`).join(', ')}`);
+    row(`menu endings no variant gives at all: ${by('shape_menu').filter((o) => scores.every((s) => s.bad.some((r) => r.o === o))).map((o) => o.name).join(', ') || 'none'}`); }
+  // The person's reading in the rebuild's store: T1·D1·X1 lets the trial on D reach the geometry.
+  for (const id of ['T1·D1·X1', 'T1·D1·X2']) for (const [full, rt] of [[true, true], [true, false], [false, true]] as const) {
+    const s = scores.find((x) => x.vr.c.id === id && x.vr.full === full && x.vr.rt === rt)!;
+    row(`${s.vr.id}: ${obs.length - s.bad.length} of ${obs.length}; misses ${s.bad.map((r) => `${r.o.name} ${r.o.inputs.diameter}/${r.o.inputs.discharge} (${r.got}, seen ${word(r.o)})`).join('; ') || 'none'}`);
+  }
+  h('Each shape-menu ending: the variants that give the menu there, by what reaches the geometry and the error it meets');
+  for (const o of by('shape_menu')) {
+    const how = new Map<string, string[]>();
+    for (const s of scores) {
+      const r = s.res.find((x) => x.o === o)!.r; if (r.outcome !== 'menu') continue;
+      const D = s.vr.c.ds.D(o.inputs.diameter!), yg = s.vr.c.t.geo(r.at!);
+      const key = `${r.kind} ${yg === D ? 'on D' : yg > D ? 'past D' : yg <= 0 ? 'at 0' : yg < D / 2 ? 'just above 0, where x = (r − y)/r rounds to 1' : 'inside D'}: ${r.why}`;
+      if (!how.has(key)) how.set(key, []); how.get(key)!.push(s.vr.id);
+    }
+    const fitRR = (id: string) => scores.find((s) => s.vr.id === id)!.bad.every((r) => r.o.seen === 'shape_menu');
+    row(`${o.name} (${o.inputs.diameter} in, n ${o.inputs.n}, ${o.inputs.discharge} cfs): ${[...how].map(([k, ids]) => `${k}: ${ids.length} variants, ${ids.filter(fitRR).length} of them fit every result and message`).join('; ') || 'no variant gives the menu'}`);
+  }
+  h('The path of every observation that steps to a trial on D, under T1·D1·X1 F and T1·D1·X1 Fu (the last steps)');
+  const X1 = all.find((c) => c.id === 'T1·D1·X1')!;
+  for (const { o } of onD) for (const rt of [true, false]) {
+    const v = vals('critical_depth', o.inputs), r = crownSearch(o.inputs.diameter!, v.discharge!, X1, true, 1, rt);
+    if (!rt && r.trace.every((s) => !s.startsWith('resumed'))) continue;
+    row(`${o.name} (${o.inputs.diameter} in, ${o.inputs.discharge} cfs, seen ${word(o)}) ${rt ? 'F' : 'Fu'}: ${crownWord(r)}${r.y !== undefined ? ` at ${r.y.toPrecision(7)}` : ''}; ${r.trace.slice(-5).join(', ')}`);
+  }
+  { // How far the three results under F are from the 0.5% stop, and the 1 ± 1e-4 check on every ending under T1·D1·X1 F.
+    const changed: string[] = [];
+    for (const o of obs) { const v = vals('critical_depth', o.inputs), w = crownWord(crownSearch(o.inputs.diameter!, v.discharge!, X1, true)); for (const s of [1 + 1e-4, 1 - 1e-4]) { const w2 = crownWord(crownSearch(o.inputs.diameter!, v.discharge!, X1, true, s)); if (w2 !== w) changed.push(`${o.name} ×${s}: ${w2}`); } }
+    row(`T1·D1·X1 F with A·√(g·A/T) × (1 ± 1e-4): ${changed.length ? `changes ${changed.join(', ')}` : 'no ending changes'}`); }
+}
 const which = process.argv[2];
-if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
+if (which === 'grade-a017') gradeA017();
+else if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
 else if (which === 'a017') a017();
 else if (which === 'floor') floorReport();
 else if (which === 'a016') a016();
@@ -2567,4 +2822,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017|grade-a017'); process.exit(2); }

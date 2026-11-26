@@ -2292,3 +2292,197 @@ is its prediction. A shape-menu run waits 10 s for a result or a rejection befor
 
 **Not part of this.** The solver, circle-short-chord's bugfix.md and the ledger are unchanged.
 Normal Depth's search (N2, Q-026) is not tested by any case here.
+
+## A-017 graded: the change at 9.6 in is between 2.2 and 2.3 cfs, and the full-pipe reading
+
+**Written after A-017's thirteen cases ran (ledger decision 104; recorded in 811f3a5). The grade
+is against A-017 as committed (d57eed5). Nothing in this section is a prediction. The solver is
+not changed.**
+
+**B1 and B2 (9.6 in, 2.1 and 2.2 cfs) ended on the shape menu and B3 to B9 (2.3 to 2.9 cfs)
+printed the message, so the 9.6 in pipe changes from the menu to the message between 2.2 and
+2.3 cfs. E1 (12 in, 3.6 cfs) and E2 (4.8 in, .2 cfs) ended on the shape menu, E3 (2.4 in, .05
+cfs) printed the message, and N1 (9.6 in, 2 cfs, n .02) ended on the shape menu, as the same
+inputs did with n .013. No case gave a result. The rule to build is right on 8 of 13 and misses
+B1, B2, E1, E2 and N1. Candidates 1 and 2 are right on both predictions they make, the single
+change along B1 to B9 and N1. 1a is right on 12 of 13 and misses E3. This agrees with the
+person's account on every point. The misses trigger circle-short-chord 2.12 again.**
+
+**How graded.** `node scripts/circle_outputs.mts grade-a017` (about 3 s) reads A-017 from commit
+d57eed5 with `git show`: the case table, the common slope and 1a's bounds on c. For each case
+it lists every golden, behaviour case and run folder that ledger decision 104 names with the same
+typed inputs. As a check, the model rerun now gives A-017's committed cell on 26 of 26 (2.4 with
+K1 and 1a, each case). It never runs the program. Every number in this section is that
+command's output. Each case has a stored record: a golden for the eight messages and a behaviour
+case for the five menus, each agreeing with its run folder under `oracle/out` (not committed).
+
+A cell "menu if c > a, message if c < b" is right whatever the case ends on, and the ending
+bounds c. "One change" is one prediction over B1 to B9, graded once. "None" and 3's "may differ"
+predict nothing and are not graded.
+
+| Case | Diameter | n | Discharge | QUICK-2 | Seen in | 2.4 with K1 | 1 | 1a (c·D^2.5) | 2 | 3 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| B1 | 9.6 | .013 | 2.1 | shape menu | obs-cdmenu-000005, run 20261126-095222-e41350 | **message** | one change: right | c > 3.687 | one change: right | none |
+| B2 | 9.6 | .013 | 2.2 | shape menu | obs-cdmenu-000006, run 20261126-095333-e9502a | **message** | (joint) | c > 3.862 | (joint) | none |
+| E1 | 12 | .013 | 3.6 | shape menu | obs-cdmenu-000007, run 20261126-095543-11fe0c | **message** | none | c > 3.618 | none | none |
+| E2 | 4.8 | .013 | .2 | shape menu | obs-cdmenu-000008, run 20261126-095623-fd7c2f | **message** | none | shape menu | none | none |
+| N1 | 9.6 | .02 | 2 | shape menu | obs-cdmenu-000009, run 20261126-095717-b9ff1c | **message** | shape menu | shape menu | shape menu | may differ |
+| E3 | 2.4 | .013 | .05 | message | cd-circ-000080, run 20261126-095654-cdbd22 | message | none | **shape menu** | none | none |
+| B3 | 9.6 | .013 | 2.3 | message | cd-circ-000073, run 20261126-095413-04bf58 | message | (joint) | message | (joint) | none |
+| B4 | 9.6 | .013 | 2.4 | message | cd-circ-000074, run 20261126-095426-581b78 | message | (joint) | message | (joint) | none |
+| B5 | 9.6 | .013 | 2.5 | message | cd-circ-000075, run 20261126-095437-ad71b5 | message | (joint) | message | (joint) | none |
+| B6 | 9.6 | .013 | 2.6 | message | cd-circ-000076, run 20261126-095448-21f2e2 | message | (joint) | message | (joint) | none |
+| B7 | 9.6 | .013 | 2.7 | message | cd-circ-000077, run 20261126-095459-2177fb | message | (joint) | message | (joint) | none |
+| B8 | 9.6 | .013 | 2.8 | message | cd-circ-000078, run 20261126-095510-9cada8 | message | (joint) | message | (joint) | none |
+| B9 | 9.6 | .013 | 2.9 | message | cd-circ-000079, run 20261126-095522-711613 | message | (joint) | message | (joint) | none |
+
+A bold cell is a wrong prediction. Rows the rule to build misses come first, then E3, then the
+hits. Every source for a case agrees with the others: B1, B2, E1, E2 and N1 each ended on the
+menu twice, in the run and again when the behaviour case was recorded. Each of the eight
+messages is on 0-based row 20, with the Depth field `0.00` and Critical Slope and every output
+field blank.
+
+| Prediction | Graded | Right | Misses |
+|---|---|---|---|
+| 2.4 with K1 (the rule to build) | 13 | 8 | B1, B2, E1, E2, N1 |
+| 1 | 2 (the change, N1) | 2 | none |
+| 1a | 13 | 12 | E3 |
+| 2 | 2 (the change, N1) | 2 | none |
+| 3 | 0 | - | - |
+
+N1 ending as obs-cdmenu-000001 did does not refute 3, which allowed either ending. It shows that
+n .02 against .013 does not change the ending at 9.6 in and 2 cfs.
+
+### The number at the trial on D, pipe by pipe
+
+Under candidate 1, q more than 0.5% under the number ends on the menu and more than 0.5% over
+it prints the message. Every observation that steps to a trial on D (the same command; 2.4 in
+has no stepped trial inside D, so every discharge steps to trial 1):
+
+| Pipe | Trial on D | Endings seen (cfs) | The number lies between (cfs) | As c = number/D^2.5 |
+|---|---|---|---|---|
+| 2.4 in | 1, 0.2000000030 | .05 and 1 message | 0 and 0.04975 | under 2.7811 |
+| 4.8 in | 2, 0.4000000060 | .2 menu; 1 message | 0.20100 and 0.99500 | 1.9863 to 9.8327 |
+| 9.6 in | 4, 0.8000000119 | 1.8, 2, 2 (n .02), 2.1, 2.2 menu; 2.3 to 2.9, 3, 10 message | 2.2110 and 2.2885 | 3.8625 to 3.9978 |
+| 12 in | 5, 1.000000000 | 3.6 menu; 4 message | 3.6180 and 3.9800 | 3.6180 to 3.9800 |
+| 55.2 in | 23, 4.599999905 | 276 message | 0 and 274.62 | under 6.0511 |
+| 57.6 in | 24, 4.799999714 | 312 message | 0 and 310.44 | under 6.1500 |
+
+50.4 and 52.8 in have no observation that steps to their trial on D. Every pipe allows a number
+on its own. As one c·D^2.5 (1a), B2 (obs-cdmenu-000006) needs c above 3.8625 and E3
+(cd-circ-000080) below 2.7811, so no c fits, and 1a is refuted. Leaving out the 2.4 in pipe, B2
+and cd-circ-000045 put c between 3.8625 and 3.9800, as the person said.
+
+### The full-pipe reading (the person's, checked here)
+
+The reading: at a trial on D, QUICK-2 gets A·√(g·A/T) of the full pipe with the top width taken
+as D, A = 3.1416·D²/4 and T = D. That is c·D^2.5 with c = (3.1416/4)^1.5·√32.2 = 3.9497, inside
+(3.8625, 3.9800). Each number below is A and T stored as singles and A·√(g·A/T) stored, which
+agrees with 3.9497·D^2.5 in double to the digits shown.
+
+| Pipe | The number (cfs) | A result for q from (cfs) | Last trial inside gives (cfs) |
+|---|---|---|---|
+| 2.4 in | 0.070654 | 0.070303 to 0.071009 | none |
+| 4.8 in | 0.39968 | 0.39769 to 0.40169 | 0.14131 |
+| 9.6 in | 2.2609 | 2.2497 to 2.2723 | 1.7531 |
+| 12 in | 3.9497 | 3.9301 to 3.9695 | 3.5072 |
+| 50.4 in | 142.79 | 142.08 to 143.50 | 213.11 |
+| 52.8 in | 160.40 | 159.60 to 161.20 | 242.48 |
+| 55.2 in | 179.25 | 178.36 to 180.15 | 274.30 |
+| 57.6 in | 199.37 | 198.38 to 200.38 | 308.65 |
+
+The person's numbers (2.2609, 3.9497, 0.3997) are right. So is the split. Of the 22 observations
+that step to a trial on D, the 14 messages are all more than 0.5% over the number (the nearest,
+cd-circ-000045 at 12 in and 4 cfs, by 1.27%, and cd-circ-000073 by 1.73%), and the 8 under it are the 7 menu
+endings (by 2.70% for B2 to 49.96% for E2) and E3 (29.23% under). From 50.4 to 57.6 in the last
+trial inside gives more than the number, so any discharge that reaches the trial on D there is
+over it and the reading predicts the message.
+
+E3 also goes the way the person said. In the model the chord on [0, trial 1] lands at 0.1415340
+ft, 2.495% short, and K1 resumes at 0.3415340, past D, which the test rejects: the message.
+
+### 3a: the number added to the model, with run-time errors read as the menu
+
+Each of the 184 combinations is run four ways. **E**: a depth the geometry has no value for is a
+run-time error, read as the shape menu: x/√(1−x²) divides by zero (x = ±1, at y = 0, at y = D,
+or so near 0 that x = (r − y)/r rounds to 1) or takes the root of a negative number (y outside 0
+to D), or g·A/T divides by zero. **F**: E, and a depth equal to D gives the full-pipe number
+instead of the error. With either, a trial resumed from a short chord is tested against D as
+2.4 says, or (**u**) it is not tested, so one past D reaches the geometry and meets the error.
+That is 736 variants, on all 82 circle Critical Depth observations: 34 results on every printed
+field, 39 rejections with the message (cd-circ-000039 to -000064, -000066, -000067, -000069 and
+-000071 to -000080), and 9 shape-menu endings (obs-cdmenu-000001 to -000009, W1 and W2 among
+them). A result at y = D under F is printed from the full pipe (A = 3.1416·D²/4, P = 3.1416·D,
+T = D); no observation reaches that branch.
+
+**None of the 736 fits all 82.** The best fit 75, by 203 variants: 66 E and 137 F.
+
+| Variants | Best score | By | What the best miss |
+|---|---|---|---|
+| E (184) | 75 | 66 | 56, T1·D1·X2 among them, miss the 7 menu endings in pipes with a trial on D (each the message); 10 miss cd-circ-000045 and 6 of the 7 |
+| F (184) | 75 | 137 | the same 7, each the message or a result |
+| Eu (184) | 67 | 12 | 8 rejections (the menu) and the 7 |
+| Fu (184) | 70 | 13 | 9 rejections (the menu, E3 among them) and obs-cdmenu-000002, -000007, -000008 |
+
+193 variants fit all 73 results and rejections: 56 E and 137 F. Every one of them gives the menu
+at W1 and W2 and the message or a result at all 7 of the others.
+
+**How each menu ending arises.**
+- **W1 and W2 (obs-cdmenu-000003, -000004), under the floor.** In all 736 variants the chords on
+  [0, 0.2] fall until one lands so near 0 that x rounds to 1, and x/√(1−x²) divides by zero:
+  chord 1.864515e-15 ft at 9999 in, 1.658026e-16 ft at 7254 in. (A-016 graded's loop, which has
+  no error, evaluated those chords and went on to y = 0 at chords 17 and 18.) A-016's models never
+  finished W1 and W2; with the error read as the menu, every variant ends them there.
+- **The 7 in pipes with a trial on D** (obs-cdmenu-000001, -000002, -000005 to -000009). The
+  variants that give the menu there do it in one of three ways: the stepped trial on D reaches the
+  geometry, which divides by zero (108 to 120 variants, by pipe); a stepped trial past D reaches
+  it, the root of a negative number (80; none at 12 in); or a resumed trial past D reaches it
+  untested (124 to 178; none at 12 in). No variant that does any of the three fits every result
+  and rejection.
+
+**The reading itself, T1·D1·X1 F** (the rebuild's trial and store, trial > D so the trial on D
+reaches the geometry, the full pipe there), fits 75 of 82: all 73 results and rejections, W1 and
+W2. It misses the 7, and the path shows why:
+
+| Observation | QUICK-2 | Under T1·D1·X1 F |
+|---|---|---|
+| obs-cdmenu-000002 (9.6 in, 1.8 cfs) | menu | trial on D 2.2609 (+25.6%); chord 0.6184633 (+3.69%); chord 0.6076410, −0.043%: **a result** |
+| obs-cdmenu-000001, -000009 (9.6 in, 2 cfs) | menu | chord 0.6972311 (+22.9%); chord 0.6340317 (−1.63%); resumed 0.8340316, past D: **the message** |
+| obs-cdmenu-000005 (9.6 in, 2.1 cfs) | menu | chord 0.7366150 (+38.4%); chord 0.6410595 (−4.05%); resumed past D: **the message** |
+| obs-cdmenu-000006 (9.6 in, 2.2 cfs) | menu | chord 0.7759990 (+73.6%); chord 0.6380508 (−9.35%); resumed past D: **the message** |
+| obs-cdmenu-000007 (12 in, 3.6 cfs) | menu | chord 0.8419387 (+9.40%); chord 0.8090246, −0.152%: **a result** |
+| obs-cdmenu-000008 (4.8 in, .2 cfs) | menu | chord 0.2454314 (+4.50%); chord 0.2393910, −0.379%: **a result** |
+
+The chord below D does not end on the menu. Where the next chord is within 0.5%, the search stops
+there with a result; where it is short, K1 resumes past D and the test rejects it, which is E3's
+path too. With the resumed trial untested (T1·D1·X1 Fu), the four in the second and third rows
+end on the menu, but E3 and 11 other rejection goldens end on it as well (cd-circ-000040, -000043,
+-000044, -000049 to -000052, -000057, -000058, -000064, -000067), and the three results stay:
+67 of 82. Multiplying A·√(g·A/T) by 1 ± 1e-4 changes no ending under T1·D1·X1 F.
+
+**3b: what stands in the way.** Two groups of observations, and no variant tried gets past both:
+- obs-cdmenu-000002, -000007 and -000008 end on the menu where, once q is compared with any number
+  above it at the trial on D, the chord on [last trial inside, D] lands within 0.5% of q
+  (−0.043%, −0.152%, −0.379%). A menu there needs the search to stop before that chord or the
+  chord to meet an error, and no form written here does either while keeping the 73.
+- obs-cdmenu-000001, -000005, -000006 and -000009 end on the menu where the model's resumed trial
+  lands past D. cd-circ-000080 (E3) and 11 other rejection goldens take a resumed trial past D
+  and print the message. A test that rejects one and not the other would have to depend on
+  something the model does not track.
+What else was tried: run-time errors alone (E), the number with and without the test on resumed
+trials (F, Fu, Eu), and 1 ± 1e-4. A-016 graded's tests on q (a fixed share of D, the ratio to the
+last trial, a straight-line look-ahead, Manning at 0.9382·D) stay ruled out. Nothing is forced.
+
+**What the grade leaves.** The rule to build is still 2.4 with K1 (T1·D1·X2). Reading a run-time
+error as the menu adds W1 and W2 to what it reproduces: 75 of 82, against 73 of 82 for A-016's
+model, which never finished them. The 7 menu endings in pipes with a trial on D are what it gets
+wrong, all by printing the message. The full-pipe reading ties with it at 75. It differs from it
+on discharges that reach a trial on D and are not over the number: inside the result band it
+prints a result at the trial on D (Depth `0.79` at 9.6 in), and under it, where the chord on
+[last trial inside, D] lands within 0.5%, a result at the chord (1.8 cfs at 9.6 in, E1, E2). The
+rule to build prints the message for all of them. Every observation under the number ended on
+the menu, so both miss there, and no observation is inside a band.
+
+**Not part of this.** The solver is not changed. circle-short-chord's bugfix.md and design.md
+are revised in the next commit, and A-018 follows them. Normal Depth's search (N2, Q-026) is not
+tested by any case here.
