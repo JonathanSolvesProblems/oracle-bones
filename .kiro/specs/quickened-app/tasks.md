@@ -96,15 +96,15 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     Result has `cut_off_area_counted`, over every irregular golden. Then the line.
     - _Requirements: 6.8_
 
-- [ ] 5. The cross-section drawing
-  - [ ] 5.1 Test Property 5 over every result golden and generated jobs, prismatic and circle
+- [x] 5. The cross-section drawing
+  - [x] 5.1 Test Property 5 over every result golden and generated jobs, prismatic and circle
     shapes first, with circle Critical Depth drawn at `raw.search_depth`. Then
     `drawing/section.ts` for the regular shapes.
     - _Requirements: 2.7_
-  - [ ] 5.2 Extend the Property 5 test to the irregular section: water width, wet spans against
+  - [x] 5.2 Extend the Property 5 test to the irregular section: water width, wet spans against
     `cut_off_area_counted`, walls against `extended_section`. Then the irregular drawing model.
     - _Requirements: 2.7, 2.8, 6.8_
-  - [ ] 5.3 Test: `axis.ts` writes stations in survey stationing and the vertical exaggeration
+  - [x] 5.3 Test: `axis.ts` writes stations in survey stationing and the vertical exaggeration
     as "Vertical scale ×N"; every other text on the drawing model is a printed field's text;
     the model has a text alternative. Then `axis.ts`, `svg.ts`, the water-surface mark, and the
     drawing on the results screen.

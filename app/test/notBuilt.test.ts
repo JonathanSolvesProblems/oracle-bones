@@ -5,7 +5,7 @@
 import { describe, expect, it } from 'vitest';
 import { isBuilt, type Mode, type Shape } from '../src/solver/index.ts';
 import { notBuiltModel, notBuiltView } from '../src/ui/views/notBuilt.ts';
-import { calculatePage } from '../src/ui/views/calculate.ts';
+import { calculatePage, SKETCH_EMPTY } from '../src/ui/views/calculate.ts';
 import { MODES, SHAPES, shapeChoice, STEP_BACKWATER_SHAPE } from '../src/ui/views/picker.ts';
 import { findAll, textOf, type VNode } from '../src/ui/vnode.ts';
 import { captures } from './golden.ts';
@@ -45,6 +45,14 @@ describe('the not-built view', () => {
     for (const part of ['ground points', 'bank stations', 'n values', 'Discharge', 'no shape']) expect(text).toContain(part);
     expect(text).toMatch(/first \(downstream\) cross section/);
     expect(text).toMatch(/not been observed/);
+  });
+
+  it('before a calculation the right page is the ruled sketch page with its one line', () => {
+    const page = calculatePage({ mode: null, shape: null, values: {}, rows: [], marked: new Set() });
+    const sketch = findAll(page, (n) => n.attrs.id === 'results')[0]!;
+    const empty = findAll(sketch, (n) => n.attrs.class === 'sketch-empty');
+    expect(empty).toHaveLength(1);
+    expect(textOf(sketch)).toBe(SKETCH_EMPTY);
   });
 
   for (const mode of ['critical_depth', 'channel_capacity'] as const) {

@@ -29,6 +29,12 @@ export interface CalculatePageParts {
 }
 
 export const PICK_PROMPT = 'Pick a mode and the shape of the cross section.';
+/** The right-hand page before a calculation: the ruled sketch page and this one line. */
+export const SKETCH_EMPTY = 'The result and the drawing appear here.';
+
+function emptySketch(): VNode {
+  return h('div', { class: 'sketch-empty' }, h('p', {}, SKETCH_EMPTY));
+}
 
 export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}): VNode {
   const picked = s.mode !== null && (s.shape !== null || !shapeChoice(s.mode));
@@ -47,6 +53,6 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
       h('h1', { class: 'visually-hidden' }, 'Calculate'),
       picker(pickerModel(s.mode, s.shape)),
       left),
-    h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? null),
+    h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? emptySketch()),
   );
 }

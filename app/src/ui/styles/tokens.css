@@ -44,6 +44,8 @@
   --hairline-width: 1px;
   --hairline: var(--hairline-width) solid var(--paper-rule); /* table rules and the binding between the pages */
   --page-max: 1200px;      /* the desktop spread */
+  --drawing-phone-height: 200px; /* the drawing at 343 x 200 on a phone */
+  --sketch-lines: 12;      /* ruled lines of the empty sketch page on a desktop */
 }
 
 /* The main figure is 32px / 40px under 480px. */

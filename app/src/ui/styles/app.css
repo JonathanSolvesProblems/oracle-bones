@@ -208,6 +208,38 @@ table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pe
   table.printed td.row-extra:empty { display: none; }
 }
 
+/* The empty sketch page before a calculation: the field book's ruled page. */
+.sketch-empty {
+  background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - var(--hairline-width)), var(--paper-rule) calc(var(--rule) - var(--hairline-width)) var(--rule));
+  color: var(--ink-muted);
+}
+.sketch-empty p { margin: 0; line-height: var(--rule); }
+
+/* The water-surface mark: one symbol, beside the main figure and on the drawing. */
+.ws-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ws-mark { width: var(--space-4); height: var(--space-4); color: var(--water); align-self: center; }
+.ws-mark-on { color: var(--water); }
+
+/* The cross-section drawing on its gridded paper. */
+.drawing { margin: 0 0 var(--space-6); }
+.section-drawing { display: block; width: 100%; height: auto; }
+.section-drawing .paper { fill: url(#paper-grid); }
+.section-drawing .grid-line { stroke: var(--grid); fill: none; }
+.section-drawing .hatch-line { stroke: var(--ground); }
+.section-drawing .cutoff-ground { fill: var(--water-fill); }
+.section-drawing .cutoff-line { stroke: var(--water); }
+.section-drawing .ground-fill { fill: url(#ground-hatch); stroke: none; }
+.section-drawing .ground-line, .section-drawing .pipe { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.section-drawing .water { fill: var(--water-fill); stroke: none; }
+.section-drawing .water.cut-off { fill: url(#cutoff-hatch); }
+.section-drawing .ws-line { stroke: var(--water); stroke-width: 2; }
+.section-drawing .ws-line.assumed, .section-drawing .wall { stroke: var(--water); stroke-width: 2; stroke-dasharray: 6 4; }
+.section-drawing .bank, .section-drawing .tick { stroke: var(--ink); stroke-width: 1; }
+.section-drawing text { font: var(--text-xs) var(--font-figures); fill: var(--ink); }
+.section-drawing text.words { font: var(--text-xs) var(--font-body); }
+.section-drawing text.scale { fill: var(--ink-muted); }
+.drawing figcaption .note { margin: var(--space-2) 0 0; }
+
 .kept-points { margin-top: var(--space-3); font: var(--text-sm) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 
@@ -220,6 +252,7 @@ table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pe
   .top-line .name, .top-line li a { font: var(--text-sm) var(--font-label); }
   .top-line .name { letter-spacing: var(--label-tracking); }
   button.calculate { width: 100%; }
+  .section-drawing { height: var(--drawing-phone-height); }
 }
 
 @media (min-width: 960px) {
@@ -227,6 +260,7 @@ table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pe
   .spread { grid-template-columns: 5fr 7fr; gap: 0; }
   .field-notes { padding-right: var(--space-8); border-right: var(--hairline); }
   .sketch { padding-left: var(--space-8); }
+  .sketch-empty { min-height: calc(var(--rule) * var(--sketch-lines)); }
   .modes { display: flex; flex-wrap: wrap; }
   .field-row { grid-template-columns: 2fr 3fr; }
   .field-row .label { min-height: var(--tap); padding-right: var(--space-3); }

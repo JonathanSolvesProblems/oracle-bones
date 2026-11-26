@@ -8,6 +8,7 @@ import type { AppJob } from '../job.ts';
 import type { ShownState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { noticeView } from './notice.ts';
+import { wsMark, wsMarkSymbol } from '../drawing/svg.ts';
 import { flagList, type FlagLine } from './states.ts';
 
 export const ECHOED_HEADING = 'Your inputs, as QUICK-2 read them';
@@ -88,16 +89,21 @@ export interface ResultsParts {
   rowExtra?: (row: PrintedRow) => Child | null;
   /** After the flags (the method list). */
   afterFlags?: Child | null;
+  /** After the main figure (the cross-section drawing). */
+  drawing?: Child | null;
 }
 
 export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
   const extra = parts.rowExtra ?? (() => null);
   return h('section', { class: 'state state-result', 'aria-live': 'polite' },
+    wsMarkSymbol(),
     h('h2', {}, m.heading),
     h('p', { class: 'main-figure' },
+      wsMark(),
       h('span', { class: 'main-label quick2' }, m.mainFigure.label),
       ' ',
       h('span', { class: 'main-value figures' }, m.mainFigure.text)),
+    parts.drawing ?? null,
     printedTable(ECHOED_HEADING, m.inputs, extra),
     printedTable(COMPUTED_HEADING, m.outputs, extra),
     flagList(m.flags),

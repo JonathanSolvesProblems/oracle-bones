@@ -32,7 +32,7 @@ const manning = () => item('MANNING_K', 'Manning constant', null, "in Manning's 
 const gravity = (role: string) => item('G', 'g', 'ft/s²', role, 'constant');
 const exponent = (constant: 'EXP_A' | 'EXP_B', role: string) => item(constant, 'Exponent on the hydraulic radius', null, role, 'exponent');
 const limit = () => item('SEARCH_DEPTH_LIMIT', 'Search limit', 'ft',
-  "Quickened stops searching when the trial depth passes this, where QUICK-2 would keep searching. Quickened's choice, not QUICK-2's.", 'limit', 'Quickened');
+  "Quickened stops searching when the trial depth passes this, where QUICK-2 would keep searching. Quickened's choice, not QUICK-2's", 'limit', 'Quickened');
 
 function prismatic(mode: Mode): MethodItem[] {
   if (mode === 'channel_capacity') {

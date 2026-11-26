@@ -59,6 +59,8 @@ describe('Property 9: method values are the solver\'s', () => {
           if (item.value !== null) expect(text).toContain(String(item.value));
         }
         expect(text.includes("Quickened's choice, not QUICK-2's")).toBe(mode !== 'channel_capacity');
+        // Each item ends with one full stop, the search limit's included.
+        expect(text).not.toMatch(/\.\s*\./);
       });
     });
   }
