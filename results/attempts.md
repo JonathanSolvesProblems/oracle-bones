@@ -2014,3 +2014,166 @@ The cases can run in any order. W1 and W2 each take up to the 60 s case limit.
 
 **Not part of this.** The solver, circle-short-chord's bugfix.md and the ledger are unchanged.
 Normal Depth's search (N2, Q-026) is not tested by any case here.
+
+## A-016 graded: 9 of 12, and what the misses say
+
+**Written after A-016's twelve cases ran (ledger decision 102; recorded in 89c65a3). The grade
+is against A-016 as committed (414cad4). Nothing in this section is a prediction. The solver is
+not changed.**
+
+**A-016 is right on 9 of 12. U1 to U6, V1, V3 and V4 ended as predicted, and the three results,
+U2, U5 and V1, match on every printed field. The three misses all ended on the shape menu with
+no result and no message: V2 (9.6 in, 1.8 cfs), where A-016 predicted the message, and W1 (9999
+in, .5 cfs) and W2 (7254 in, .3 cfs), where it predicted that QUICK-2 never finishes. The misses
+trigger circle-short-chord 2.12: the requirements are revised again before the solver changes.**
+
+**How graded.** `node scripts/circle_outputs.mts grade-a016` (about 2 s) reads A-016 from commit
+414cad4 with `git show`: the table under "The cases", the common n (.013) and slope (.005), and
+the table of printed fields. For each case it lists every golden, behaviour case and run folder
+that ledger decision 102 names with the same typed inputs, and reads each one's outcome and last
+screen. A behaviour case's inputs are read from its transcript. As a check, the model rerun now
+gives A-016's committed outcome on 12 of 12 cases and its committed field on 42 of 42. It never
+runs the program. Every number in this section is that command's output. W2 is graded from its
+run folder, 20261126-001813-0cfa74, under `oracle/out`, which is not committed; its behaviour
+case, obs-cdmenu-000004, is in the profile and has no golden yet (Q-034).
+
+| Case | Diameter | Discharge | A-016 predicts | QUICK-2 | Seen in | Right |
+|---|---|---|---|---|---|---|
+| V2 | 9.6 | 1.8 | **message** | shape menu | obs-cdmenu-000002, run 20261126-001523-d4c7e8 | no |
+| W1 | 9999 | .5 | **never finishes** | shape menu | obs-cdmenu-000003, run 20261126-001714-439809 | no |
+| W2 | 7254 | .3 | **never finishes** | shape menu | run 20261126-001813-0cfa74 | no |
+| U1 | 8 | 1.6 | message | message | cd-circ-000064, run 20261126-001352-8d0e17 | yes |
+| U2 | 8 | 1.71 | result | result | cd-circ-000065, run 20261126-001406-f2f758 | yes |
+| U3 | 8 | 1.8 | message | message | cd-circ-000066, run 20261126-001418-489629 | yes |
+| U4 | 15 | 10.5 | message | message | cd-circ-000067, run 20261126-001428-fd8dd6 | yes |
+| U5 | 15 | 10.8 | result | result | cd-circ-000068, run 20261126-001438-2cb7f3 | yes |
+| U6 | 15 | 11 | message | message | cd-circ-000069, run 20261126-001451-7c4a5a | yes |
+| V1 | 9.6 | 1.5 | result | result | cd-circ-000070, run 20261126-001501-e6c9d8 | yes |
+| V3 | 9.6 | 3 | message | message | cd-circ-000071, run 20261126-001616-046275 | yes |
+| V4 | 9.6 | 10 | message | message | cd-circ-000072, run 20261126-001650-f37143 | yes |
+
+A bold cell is a wrong prediction. The misses are listed first. This agrees with the person's
+count, 9 of 12 with V2, W1 and W2 the misses. Every source for a case agrees with the others.
+V2 and W1 each ended on the shape menu twice, in the run and again when the behaviour case was
+recorded; W2 ran once. Each of the six messages is on 0-based row 20, with the Depth field
+`0.00` and Critical Slope and every output field blank. The three runs that ended on the menu
+were reported as a timeout after a 10 s wait for a result or a rejection, with the shape menu on
+screen; none reached the 60 s case limit.
+
+**The three results.** cd-circ-000065 (U2), -000068 (U5) and -000070 (V1) match A-016's rows on
+14 of 14 fields each. V1's Critical Slope is `0.0086`, K1's value, where N2, the rebuild today,
+prints `0.0085`. U1 and U4 printed the message where N2 gives a result. So the three A-016 cases
+that separate K1 from N2 all went K1's way. The form shows the typed discharge as a whole number:
+1.71 as `2`, 10.8 as `11` and 1.5 as `2`. These are the first result goldens with a fractional
+discharge, and they confirm the `######` mask that A-016 listed as unobserved.
+
+### What the misses say
+
+**The floor (W1, W2).** Under the least A·√(g·A/T) the pipe gives (circle-short-chord 2.7),
+at 0.393 of it in the 9999 in pipe and 0.527 in the 7254 in pipe, QUICK-2 went back to the shape
+menu with no message. It did not keep searching. In the model, the chords on [0, 0.2] fall to
+y = 0 at chord 17 (W1) and chord 18 (W2), where T = 0 and A·√(g·A/T) divides by zero. A-013
+read a QuickBASIC run-time error as a return to the shape menu (quick2-solver design, Negative
+values and abandoned calculations, an inference). This is the first observation that fits that
+reading: the model reaches a division by zero, and QUICK-2 returned to the menu. No capture
+shows an error, so it is not shown that a division by zero is what happened.
+
+**The 9.6 in pipe.** It has five discharges now: 1.5 cfs a result (cd-circ-000070), 1.8 and 2
+cfs the shape menu (obs-cdmenu-000002 and -000001), 3 and 10 cfs the message (cd-circ-000071 and
+-000072). Under the rebuild's trial and diameter store, D is 0.8000000119 ft and the stepped
+trials are 0.2000000030, 0.4000000060, 0.6000000238 and 0.8000000119, which equals D.
+A·√(g·A/T) at the first three is 0.21001, 0.79936 and 1.7531 cfs. Trial 3 is more than 0.5%
+short of q for q above 1.7619 cfs. So 1.8, 2, 3 and 10 cfs take the same three trials, each
+short of q, and reach trial 4, equal to D, with nothing else done; 1.5 cfs is over q at trial
+3 and takes a chord. This is the person's check (`tmp/v2_trace.mts`), confirmed by the committed
+command. A rule that looks only at the trial and the diameter gives the four the same outcome,
+and QUICK-2 gave them two.
+
+**All 184 combinations on all 69 observations.** A-013's 136 and the amendment's 48, scored as
+A-015 scored them, on 34 circle Critical Depth results on every printed field, 31 rejections
+with the message (cd-circ-000039 to -000063, -000064, -000066, -000067, -000069, -000071 and
+-000072), and 4 shape-menu endings: obs-cdmenu-000001 to -000003 and W2's run folder. cd-circ-000003, -000007
+and -000008 are held at a prompt and are left out, as before. None fits all 69, as the person
+expected. Scores: 56 fit 65, 19 fit 64, 11 fit 63, 13 fit 62, 15 fit 61, 25 fit 60, 19 fit 59,
+5 fit 58, 7 fit 57, 4 fit 56, 2 fit 55, 3 fit 54, 2 fit 53, 2 fit 52 and 1 fits 50. The 56 that
+fit 65 are A-015's 56, T1·D1·X2 among them, and all miss the same four: they print the message
+at 9.6 in for 1.8 and 2 cfs, and never finish W1 and W2. No combination gives the shape menu for
+1.8 and 2 cfs and the message for 3 and 10 cfs. All 184 never finish W1 and W2.
+
+**What could make the outcome depend on the discharge.** Up to trial 4, q enters the search only
+in the two comparisons made at each trial, within 0.5% of q and short of or over it, and for 1.8
+to 10 cfs both come out the same at trials 1 to 3. So the discharge has to change something at
+trial 4: in what is done with the trial on D, or in a test on q that the model does not have.
+These are the candidates. None is modelled to the end, and none is chosen.
+
+1. **q is compared with a number QUICK-2 gets at the trial on D.** If QUICK-2's test lets trial 4
+   through (trial > D, as the rebuild does today) and its geometry returns a number there instead
+   of an error, q is compared with that number as at any trial. q more than 0.5% above it steps
+   to trial 5, 1.0 ft, past D, and gets the message (3 and 10 cfs). q more than 0.5% below it
+   takes a chord on [trial 3, trial 4], and that branch would have to end on the menu (1.8 and 2
+   cfs), which no model written here does. The number belongs to the pipe, so n and the slope
+   cannot move it. This predicts one change from the menu to the message, somewhere between 2.01
+   and 2.985 cfs, and a result at the trial on D, with Depth `0.79`, for a discharge within 0.5%
+   of the number. **Told apart by** a 9.6 in result with Depth `0.79`, which no other candidate
+   gives.
+   - **1a: the number scales as D^2.5**, as A·√(g·A/T) at any fixed share of D does. Call it
+     c·D^2.5. obs-cdmenu-000001 needs c above 3.5113 and cd-circ-000045 (12 in, 4 cfs, the
+     message) needs it below 3.9800, so at 9.6 in the change is between 2.0100 and 2.2783 cfs.
+     In the 4.8 in and 2.4 in pipes, low discharges that step to D would then end on the menu.
+     **Told apart from 1 by** the 9.6 in change falling above 2.28 cfs, or a low discharge in the
+     4.8 in or 2.4 in pipe printing the message; either refutes 1a and leaves 1.
+2. **q acts through the chord after trial 4.** If the number at trial 4 is above every discharge
+   here (above 10.05 cfs, so T is near 0: the trial lies just inside QUICK-2's own diameter), all
+   four discharges take a chord on [trial 3, trial 4]. The chord sits higher for a larger q, and
+   K1 resumes 0.2 ft above it. That trial is past D for a large q (the message) and not past it
+   for a small one, where it lands at or next to the crown and would have to end on the menu.
+   This predicts one change between 2 and 3 cfs and no result on that range. **Told apart from 1
+   by** a result on that range, which refutes 2; with no result, A-017 cannot separate 1 from 2,
+   since a 0.1 cfs grid can step over 1's band, which is about 1% wide.
+3. **A test on q made before the search, from n or the slope.** QUICK-2 could refuse a discharge
+   above some capacity before it steps, and the trial on D would then end on the menu for the
+   discharges under it. The form written here, Manning's formula with the typed n and slope at
+   0.9382·D (where Max Discharge is taken), gives 1.495 cfs at 9.6 in, under the 1.8 cfs that
+   ended on the menu, and 8 result goldens have a discharge above it, so that form is refuted. No
+   other form is written. **Told apart from 1 and 2 by** 9.6 in at 2 cfs with another n ending
+   differently from obs-cdmenu-000001. Under 1 and 2, n cannot matter, since it does not enter
+   A·√(g·A/T).
+
+Ruled out already by the goldens (the same command):
+- **A cap at a fixed share s of D** (refuse q above A·√(g·A/T) at s·D): 3 cfs at 9.6 in printed
+  the message, which needs s under 0.9284, and U5 (15 in, 10.8 cfs) gave a result, which needs
+  s of at least 0.9592.
+- **The ratio of q to the last trial's A·√(g·A/T):** cd-circ-000045 (12 in, 4 cfs) printed the
+  message at 1.1405, and obs-cdmenu-000001 (9.6 in, 2 cfs) ended on the menu at 1.1408.
+- **A straight line through the last two trials, extended to D:** q is under it in both
+  cd-circ-000045 (5.0359 cfs) and obs-cdmenu-000001 (2.7069 cfs), and they ended differently.
+
+**Pipes whose stored diameter is a stepped trial.** The same command scans the typed diameters
+0.1 to 180.0 in by 0.1 under the rebuild's trial and diameter store. Eight pipes put a stepped
+trial exactly on D:
+
+| Diameter (in) | Trial on D | Last trial inside, A·√(g·A/T) | Steps to D for q above (cfs) | Observations that step to D |
+|---|---|---|---|---|
+| 2.4 | 1, 0.2000000030 | none | any | cd-circ-000062, 1 cfs, message |
+| 4.8 | 2, 0.4000000060 | 0.2000000030, 0.14131 | 0.14202 | cd-circ-000061, 1 cfs, message |
+| 9.6 | 4, 0.8000000119 | 0.6000000238, 1.7531 | 1.7619 | obs-cdmenu-000002, 1.8, menu; obs-cdmenu-000001, 2, menu; cd-circ-000071, 3, message; cd-circ-000072, 10, message |
+| 12 | 5, 1.000000000 | 0.8000000119, 3.5072 | 3.5248 | cd-circ-000045, 4 cfs, message |
+| 50.4 | 21, 4.200000286 | 4.000000477, 213.11 | 214.18 | none |
+| 52.8 | 22, 4.400000095 | 4.200000286, 242.48 | 243.70 | none |
+| 55.2 | 23, 4.599999905 | 4.400000095, 274.30 | 275.68 | cd-circ-000056, 276 cfs, message |
+| 57.6 | 24, 4.799999714 | 4.599999905, 308.65 | 310.20 | cd-circ-000060, 312 cfs, message |
+
+The 9.6 in pipe is the only one where a discharge that steps to D has ended on the menu, and the
+only one where more than one such discharge has run.
+
+**K1 and trial ≥ D still stand for results and rejections.** T1·D1·X2 with K1 fits all 65
+results and rejections with the message, and it predicted all nine A-016 cases that ended on a
+result or the message before they ran, the first predictions committed for it. It misses all
+four shape-menu endings. Candidates 1 and 2 both have QUICK-2 reach the geometry at a trial on
+D, which trial ≥ D never does, and both are fitted to give the message wherever a golden has it.
+So trial ≥ D is the rule that reproduces the results and the messages. It is not a finding about
+how QUICK-2 tests a trial against the diameter.
+
+**Not part of this.** The solver is not changed. circle-short-chord's bugfix.md is revised in
+the next commit, and A-017 follows it. Normal Depth's search (N2, Q-026) is not tested by any
+case here.

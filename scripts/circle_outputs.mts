@@ -22,6 +22,9 @@
 //   node scripts/circle_outputs.mts a016       A-016: predictions for K1 with T1·D1·X2, every model, the 1 ± ε check (about 3 s)
 //   node scripts/circle_outputs.mts design     circle-short-chord design: every circle Critical Depth golden today and under
 //                                              2.4 with K1, 20000 generated circles, H-009's exact critical depths (about 1 s)
+//   node scripts/circle_outputs.mts grade-a016 A-016's twelve answers against A-016 (414cad4), the 184 combinations on every
+//                                              circle Critical Depth outcome, the pipes whose diameter is a stepped trial, and the
+//                                              tests on q those pipes rule out (about 2 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -2276,8 +2279,247 @@ function a016SearchDepths(text: string, q: number): number[] {
     lo = y; flo = fy; y = f(y + CIRCLE_CD_STEP);
   }
 }
+// ---- A-016 graded: QUICK-2's twelve answers against A-016 as committed ------------------------
+const A016_COMMIT = '414cad4';
+/** The ledger decision that lists A-016's runs, goldens and behaviour cases (the Exhumer's, 2026-11-26). */
+const A016_DECISION = 102;
+type Word = 'result' | 'message' | 'shape menu' | 'never finishes';
+const rawCase = (id: string) => JSON.parse(readFileSync(join(CASES, `${id}.json`), 'utf-8'));
+/** A-016's case table and its table of printed fields, read from git. */
+function a016AsCommitted() {
+  const a = committedSection(A016_COMMIT, '## A-016: predictions');
+  const common = /Twelve cases, n ([\d.]+) and\s+slope ([\d.]+)\./.exec(a);
+  if (!common) throw new Error(`A-016 at ${A016_COMMIT}: no common n and slope`);
+  const cases: { name: string; d: string; q: string; predicts: Word }[] = [];
+  const fields: Record<string, Record<string, string>> = {};
+  let header: string[] = [];
+  for (const l of a.split('\n')) {
+    if (!l.startsWith('| ')) continue;
+    const c = tableCells(l);
+    if (c[0] === 'Case') { header = c; continue; }
+    if (!/^[UVW]\d$/.test(c[0]!)) continue;
+    if (header[3] === 'Predicted') {
+      const p = c[3]!, w = (['result', 'message', 'never finishes'] as Word[]).find((x) => x === p);
+      if (!w) throw new Error(`unread prediction "${p}"`);
+      cases.push({ name: c[0]!, d: c[1]!, q: c[2]!, predicts: w });
+    } else if (header[1] === 'Diameter' && header[4] === 'Depth') {
+      const rec: Record<string, string> = {};
+      header.slice(1).forEach((hd, i) => { const k = HEADER_KEYS[hd]; if (!k) throw new Error(`unknown column ${hd}`); rec[k] = c[i + 1]!; });
+      fields[c[0]!] = rec;
+    }
+  }
+  if (cases.length !== 12) throw new Error(`read ${cases.length} of A-016's twelve cases`);
+  return { n: common[1]!, slope: common[2]!, cases, fields };
+}
+/** The typed Diameter, n, Discharge and Slope of a behaviour case, from its transcript. */
+function typedInputs(raw: { transcript: { expect: string; keys: string }[] }): Record<string, string> | null {
+  const typed = raw.transcript.filter((s) => s.expect === 'cd_form').map((s) => s.keys.replace(/\{Enter\}$/, ''));
+  return typed.length === 5 && typed[4] === '' ? { diameter: typed[0]!, n: typed[1]!, discharge: typed[2]!, slope: typed[3]! } : null;
+}
+/** Every behaviour case that ended on the shape menu after the circle Critical Depth form. */
+function menuCases(): { id: string; inputs: Record<string, string> }[] {
+  return ALL.filter((g) => g.id.startsWith('obs-cdmenu-')).map((g) => {
+    const r = rawCase(g.id), inputs = typedInputs(r);
+    if (!inputs || r.outcome !== 'observed' || r.expected_screen !== 'shape_menu') throw new Error(`${g.id} is not an observed shape_menu ending of the cd form`);
+    if (lastCapture(g.id).some((l) => l.includes(DEPTH_ABOVE_DIAMETER))) throw new Error(`${g.id}'s last screen has the message`);
+    return { id: g.id, inputs };
+  });
+}
+/** Every record one ledger decision lists for these inputs: goldens, behaviour cases and run folders. */
+function seenEvery(inputs: Record<string, string>, decision: number): { word: Word | 'other'; source: string; screen: string }[] {
+  const ledger = JSON.parse(readFileSync(join(ROOT, 'results', 'ledger.json'), 'utf-8'));
+  const d = ledger.decisions.find((x: { n: number }) => x.n === decision);
+  if (!d) throw new Error(`ledger decision ${decision} not found`);
+  const listed = new Set<string>(d.evidence), out: { word: Word | 'other'; source: string; screen: string }[] = [];
+  const said = (s: string[]) => s.some((l) => l.includes(DEPTH_ABOVE_DIAMETER));
+  for (const g of ALL.filter((x) => listed.has(x.id) && x.mode === 'critical_depth' && x.shape === 'circle' && sameInputs(x.inputs, inputs))) {
+    const s = lastCapture(g.id);
+    out.push({ word: g.outcome === 'result' ? 'result' : g.outcome === 'rejected' && said(s) ? 'message' : 'other', source: `golden ${g.id}`, screen: g.outcome === 'result' ? 'result screen' : rejectionScreen(s) });
+  }
+  for (const m of menuCases().filter((x) => listed.has(x.id) && sameInputs(x.inputs, inputs))) out.push({ word: 'shape menu', source: `behaviour case ${m.id}`, screen: 'shape menu, no message' });
+  for (const id of listed) {
+    const r = runFolder(id);
+    if (!r || r.run.mode !== 'critical_depth' || r.run.shape !== 'circle' || !sameInputs(r.run.inputs, inputs)) continue;
+    const s = seenInRun(r);
+    out.push({ word: r.run.outcome === 'result' ? 'result' : s.outcome === 'rejected' ? 'message' : s.outcome === 'shape_menu' ? 'shape menu' : 'other', source: `run ${id}`, screen: `${r.run.outcome} on ${r.run.screen_id}` });
+  }
+  return out;
+}
+/** Every circle Critical Depth outcome there is: the goldens and obs-cdmenu-000001 as in A-014,
+ * the other shape-menu behaviour cases, and the runs decision 102 lists that no stored case has. */
+function a016Observations(): A013Obs[] {
+  const { obs } = a014Observations();
+  for (const m of menuCases()) if (m.id !== OBS_MENU) obs.push({ name: m.id, inputs: m.inputs, seen: 'shape_menu', source: `golden ${m.id}` });
+  const ledger = JSON.parse(readFileSync(join(ROOT, 'results', 'ledger.json'), 'utf-8'));
+  for (const id of ledger.decisions.find((x: { n: number }) => x.n === A016_DECISION).evidence as string[]) {
+    const r = runFolder(id); if (!r) continue;
+    if (obs.some((o) => sameInputs(o.inputs, r.run.inputs))) continue;
+    const s = seenInRun(r);
+    if (s.outcome !== 'shape_menu' && s.outcome !== 'rejected') throw new Error(`run ${id} reads as ${s.outcome}`);
+    obs.push({ name: `run ${id}`, inputs: r.run.inputs, seen: s.outcome, source: `run ${id}` });
+  }
+  return obs;
+}
+function gradeA016() {
+  const m2 = atShare(0.9382), all = all184(), K1X2 = A016_MODELS[0]!, rule = T1D1X2();
+  const A = a016AsCommitted();
+  const inputsOf = (d: string, q: string) => ({ diameter: d, n: A.n, discharge: q, slope: A.slope });
+  h(`A-016 read from ${A016_COMMIT}: ${A.cases.length} cases, n ${A.n}, slope ${A.slope}; printed fields for ${Object.keys(A.fields).join(', ')}`);
+  { let same = 0, fs = 0, fsame = 0;
+    for (const c of A.cases) {
+      const v = vals('critical_depth', inputsOf(c.d, c.q)), o = a016Search(c.d, v.discharge!, K1X2);
+      if (a016Word(o) === c.predicts) same++; else row(`differs: ${c.name}: committed ${c.predicts}, model ${a016Word(o)}`);
+      if (o.outcome !== 'result' || !A.fields[c.name]) continue;
+      const p = show('critical_depth', v, cdFields(v, GEO_C2, m2, o.y!, CD_RULE.offset, 'q/A', f(f(val(c.d)) / 12)));
+      for (const k of Object.keys(A.fields[c.name]!)) { fs++; if ((p[k] ?? '').trim() === A.fields[c.name]![k]) fsame++; else row(`differs: ${c.name} ${k}: committed ${A.fields[c.name]![k]}, model ${(p[k] ?? '').trim()}`); }
+    }
+    row(`the model, rerun now, gives the committed outcome on ${same} of ${A.cases.length} and the committed field on ${fsame} of ${fs}`); }
+
+  h(`What QUICK-2 did: every golden, behaviour case and run folder ledger decision ${A016_DECISION} lists for each case's inputs`);
+  const seen: Record<string, { word: Word | 'other' | 'DIFFERENT'; sources: string[]; golden?: Golden }> = {};
+  for (const c of A.cases) {
+    const s = seenEvery(inputsOf(c.d, c.q), A016_DECISION);
+    if (!s.length) throw new Error(`${c.name}: decision ${A016_DECISION} lists nothing with these inputs`);
+    const words = [...new Set(s.map((x) => x.word))];
+    const gid = s.find((x) => x.source.startsWith('golden '))?.source.slice(7);
+    seen[c.name] = { word: words.length === 1 ? words[0]! : 'DIFFERENT', sources: s.map((x) => x.source.replace(/^(golden|behaviour case) /, '')), golden: gid ? byId(gid) : undefined };
+    row(`${c.name} ${inputText(inputsOf(c.d, c.q))}: ${s.map((x) => `${x.source}: ${x.word} (${x.screen})`).join('; ')}`);
+  }
+  const graded = A.cases.map((c) => ({ c, ok: c.predicts === seen[c.name]!.word }));
+  console.log(`\n| Case | Diameter | Discharge | A-016 predicts | QUICK-2 | Seen in | Right |`);
+  console.log('|---|---|---|---|---|---|---|');
+  for (const { c, ok } of [...graded.filter((x) => !x.ok), ...graded.filter((x) => x.ok)])
+    console.log(`| ${c.name} | ${c.d} | ${c.q} | ${ok ? c.predicts : `**${c.predicts}**`} | ${seen[c.name]!.word} | ${seen[c.name]!.sources.join(', ')} | ${ok ? 'yes' : 'no'} |`);
+  row(`right on ${graded.filter((x) => x.ok).length} of ${A.cases.length}; missed: ${graded.filter((x) => !x.ok).map((x) => x.c.name).join(', ') || 'none'}`);
+
+  h('The three results: A-016\'s printed fields against the goldens, every field the comparator compares');
+  for (const c of A.cases.filter((x) => A.fields[x.name])) {
+    const g = seen[c.name]!.golden; if (!g || g.outcome !== 'result') { row(`${c.name}: no result golden`); continue; }
+    const d = Object.keys(g.printed).filter((k) => g.printed[k]!.trim() !== A.fields[c.name]![k]);
+    row(`${c.name} (${g.id}): ${Object.keys(g.printed).length - d.length} of ${Object.keys(g.printed).length} fields the same${d.length ? `; differ: ${d.map((k) => `${k} QUICK-2 ${g.printed[k]!.trim()}, A-016 ${A.fields[c.name]![k]}`).join(', ')}` : ''}; Discharge typed ${c.q}, shown \`${g.printed.in_discharge!.trim()}\`; Critical Slope \`${g.printed.critical_slope!.trim()}\``);
+  }
+
+  h('The 9.6 in pipe: the stepped trials under the rebuild\'s trial and diameter store, and what each discharge does before trial 4 is tested');
+  { const D = f(f(val('9.6')) / 12), F = circleCriticalDischarge(D), ys: number[] = [];
+    for (let y = f(CIRCLE_CD_STEP); ys.length < 4; y = f(y + CIRCLE_CD_STEP)) ys.push(y);
+    row(`D ${D.toPrecision(10)}; trials ${ys.map((y, i) => `${i + 1}: ${y.toPrecision(10)}${y === D ? ' (equals D)' : y > D ? ' (past D)' : `, A·√(g·A/T) ${f(F(y)).toPrecision(5)}`}`).join('; ')}`);
+    const paths: Record<string, string> = {};
+    for (const q of ['1.5', '1.8', '2', '3', '10']) {
+      const qq = f(val(q)), steps: string[] = [];
+      for (const y of ys) {
+        if (y >= D) { steps.push(`trial ${y.toPrecision(10)} reached, equal to D`); break; }
+        const fy = f(F(y)), rel = Math.abs(fy - qq) <= CIRCLE_TOL * qq ? 'within 0.5%' : fy < qq ? 'short' : 'over';
+        steps.push(`${y.toPrecision(3)} ${rel}`); if (rel !== 'short') break;
+      }
+      paths[q] = steps.join(', ');
+      const seenQ = q === '2' ? `QUICK-2 shape menu (${OBS_MENU})` : `QUICK-2 ${seen[A.cases.find((c) => c.d === '9.6' && c.q === q)!.name]!.word}`;
+      row(`${q} cfs (trial 3 is short of q by more than 0.5% for q above ${(f(F(ys[2]!)) / (1 - CIRCLE_TOL)).toFixed(4)} cfs): ${paths[q]}; ${seenQ}`);
+    }
+    row(`1.8, 2, 3 and 10 cfs take the same trials with the same comparisons before trial 4: ${['2', '3', '10'].every((q) => paths[q] === paths['1.8']) ? 'yes' : 'NO'}`); }
+
+  const obs = a016Observations();
+  h(`All ${all.length} combinations of A-013 and its amendment on every circle Critical Depth outcome: ${obs.length} observations`);
+  const by = (s: string) => obs.filter((o) => o.seen === s);
+  row(`${by('result').length} results, ${by('rejected').length} rejections with the message, ${by('shape_menu').length} shape-menu endings (${by('shape_menu').map((o) => o.name).join(', ')})`);
+  const scores = all.map((c) => ({ c, bad: obs.map((o) => ({ o, ...a013Fits(o, c.t, c.ds, c.x, m2) })).filter((r) => !r.ok) }));
+  const hist = new Map<number, number>(); for (const s of scores) hist.set(obs.length - s.bad.length, (hist.get(obs.length - s.bad.length) ?? 0) + 1);
+  row(`scores: ${[...hist].sort((a, b) => b[0] - a[0]).map(([k, n]) => `${n} fit ${k}`).join(', ')}`);
+  row(`fit all ${obs.length}: ${scores.filter((s) => !s.bad.length).map((s) => s.c.id).join(', ') || 'none'}`);
+  const best = Math.max(...scores.map((s) => obs.length - s.bad.length)), top = scores.filter((s) => obs.length - s.bad.length === best);
+  const missSets = new Map<string, string[]>(); for (const s of top) { const k = s.bad.map((r) => `${r.o.name} (${r.got.replace(/ at trial .*/, '')})`).join(', '); if (!missSets.has(k)) missSets.set(k, []); missSets.get(k)!.push(s.c.id); }
+  row(`the best fit, ${best} of ${obs.length}, by ${top.length}; what they miss:`);
+  for (const [k, ids] of missSets) row(`    ${ids.length} miss ${k}${ids.includes(rule.id) ? ` (${rule.id} among them)` : ''}`);
+  const menuObs = by('shape_menu');
+  row(`the shape-menu endings under the ${all.length}: ${menuObs.map((o) => { const v = vals('critical_depth', o.inputs), m = new Map<string, number>(); for (const c of all) { const a = answerOf(c, o.inputs.diameter!, v.discharge!).a; m.set(a, (m.get(a) ?? 0) + 1); } return `${o.name} (${o.inputs.diameter} in, ${o.inputs.discharge} cfs) ${[...m].map(([a, n]) => `${n} ${a}`).join(', ')}`; }).join('; ')}`);
+  { const pair = menuObs.filter((o) => o.inputs.diameter === '9.6'), msg = obs.filter((o) => o.seen === 'rejected' && o.inputs.diameter === '9.6');
+    const both = all.filter((c) => [...pair, ...msg].every((o) => a013Fits(o, c.t, c.ds, c.x, m2).ok));
+    row(`combinations that give the shape menu at 9.6 in for ${pair.map((o) => o.inputs.discharge).join(' and ')} cfs and the message for ${msg.map((o) => o.inputs.discharge).join(' and ')} cfs: ${both.length}`); }
+
+  h(`K1 with trial ≥ D (2.4, ${rule.id}) on the results and the rejections`);
+  { const s = scores.find((x) => x.c.id === rule.id)!, rr = obs.filter((o) => o.seen !== 'shape_menu');
+    const badRR = s.bad.filter((r) => r.o.seen !== 'shape_menu');
+    row(`${rr.length} results and rejections with the message: ${rr.length - badRR.length} fit${badRR.length ? `; misses ${badRR.map((r) => `${r.o.name} (${r.got})`).join(', ')}` : ''}; the ${obs.length - rr.length} shape-menu endings: ${s.bad.filter((r) => r.o.seen === 'shape_menu').map((r) => `${r.o.name} ${r.got.replace(/ at trial .*/, '')}`).join(', ')}`);
+    const nine = A.cases.filter((c) => seen[c.name]!.word === 'result' || seen[c.name]!.word === 'message');
+    row(`A-016's cases that ended on a result or the message: ${nine.map((c) => c.name).join(', ')} (${nine.length}); ${rule.id} predicted ${nine.filter((c) => c.predicts === seen[c.name]!.word).length} of them before they ran`); }
+
+  h('W1 and W2 under the floor: where the model\'s chords on [0, first trial] go (y, A·√(g·A/T))');
+  for (const c of A.cases.filter((x) => x.predicts === 'never finishes')) {
+    const D = f(f(val(c.d)) / 12), F = circleCriticalDischarge(D), q = f(val(c.q)), fl = cdFloor(D).q;
+    let lo = 0, flo = 0, hi = f(CIRCLE_CD_STEP), fhi = f(F(hi)), zeroAt = -1, n = 0;
+    const shown: string[] = [`trial ${hi.toPrecision(3)} ${fhi.toPrecision(4)}`];
+    for (; n < 1000 && zeroAt < 0; n++) {
+      const yc = f(lo + ((q - flo) * (hi - lo)) / (fhi - flo)), fc = f(F(yc));
+      if (n < 3) shown.push(`chord ${n + 1} ${yc.toPrecision(4)} ${fc.toPrecision(4)}`);
+      if (yc === 0) { zeroAt = n + 1; break; }
+      if (Math.abs(fc - q) <= CIRCLE_TOL * q) break;
+      if (fc > q) { hi = yc; fhi = fc; } else { lo = yc; flo = fc; }
+    }
+    row(`${c.name} (${c.d} in, ${c.q} cfs, ${(q / fl).toPrecision(3)} of the floor ${fl.toPrecision(4)} cfs): ${shown.join('; ')}; ${zeroAt > 0 ? `chord ${zeroAt} is 0, where T = 0` : 'no chord reaches 0 in 1000'}; QUICK-2: ${seen[c.name]!.word}`);
+  }
+}
+// ---- What A-016's misses say: pipes with a trial on D, tests made on q -----------------------
+/** Typed diameters 0.1 to 180.0 in by 0.1 whose stored D (store(store(VAL)/12)) equals a stepped
+ * trial (store(y + 0.2) from 0.2) exactly: the trial's number, the last trial inside and the least
+ * discharge that steps past it to D (more than 0.5% above its A·√(g·A/T)). */
+type OnD = { d: string; D: number; k: number; last: number; Flast: number; Fprev: number; reach: number };
+function onDiameterPipes(): OnD[] {
+  const out: OnD[] = [];
+  for (let i = 1; i <= 1800; i++) {
+    const d = String(i / 10), D = f(f(val(d)) / 12);
+    let y = f(CIRCLE_CD_STEP), k = 1, last = 0, prev = 0;
+    while (y < D) { prev = last; last = y; y = f(y + CIRCLE_CD_STEP); k++; }
+    if (y !== D) continue;
+    const F = circleCriticalDischarge(D), Flast = last ? f(F(last)) : 0, Fprev = prev ? f(F(prev)) : 0;
+    out.push({ d, D, k, last, Flast, Fprev, reach: Flast / (1 - CIRCLE_TOL) });
+  }
+  return out;
+}
+/** Printed by grade-a016 (what the misses say) and used by a017: every pipe whose stored diameter is
+ * a stepped trial, the observations that step to that trial, the tests on q written here, and the
+ * bounds on c for a number c·D^2.5 met at the trial on D. */
+function onDiameterReport(print: boolean) {
+  const tol = CIRCLE_TOL, pipes = onDiameterPipes(), obs = a016Observations();
+  const h = print ? (s: string) => console.log(`\n## ${s}`) : (_s: string) => {}, row = print ? (s: string) => console.log(`  ${s}`) : (_s: string) => {};
+  h(`Pipes typed 0.1 to 180.0 in by 0.1 whose stored diameter equals a stepped trial exactly: ${pipes.length}`);
+  for (const p of pipes) {
+    const here = obs.filter((o) => val(o.inputs.diameter!) === val(p.d));
+    const reached = here.filter((o) => val(o.inputs.discharge!) > p.reach);
+    row(`${p.d} in: D ${p.D.toPrecision(10)} is trial ${p.k}; last trial inside ${p.last ? `${p.last.toPrecision(10)}, A·√(g·A/T) ${p.Flast.toPrecision(5)}` : 'none'}; q above ${p.reach.toPrecision(5)} cfs steps to D; observations on this pipe that reach D: ${reached.map((o) => `${o.name} ${o.inputs.discharge} cfs ${o.seen === 'shape_menu' ? 'shape menu' : o.seen === 'rejected' ? 'message' : o.seen}`).join(', ') || 'none'}`);
+  }
+
+  // Every observation whose discharge steps to a trial on D: what a test made before that trial would see.
+  const onD = obs.flatMap((o) => { const p = pipes.find((x) => val(x.d) === val(o.inputs.diameter!)), q = f(val(o.inputs.discharge!)); return p && q > p.reach ? [{ o, p, q }] : []; });
+  h(`Observations whose discharge steps to a trial on D: ${onD.length}`);
+  for (const { o, p, q } of onD) {
+    const look = p.last ? p.Flast + ((p.D - p.last) * (p.Flast - p.Fprev)) / CIRCLE_CD_STEP : NaN;
+    const word = o.seen === 'shape_menu' ? 'shape menu' : o.seen === 'rejected' ? 'message' : o.seen;
+    row(`${o.name} (${o.inputs.diameter} in, n ${o.inputs.n}, ${o.inputs.discharge} cfs): ${word}; q over the last trial's A·√(g·A/T) ${p.last ? (q / p.Flast).toPrecision(5) : 'no trial inside'}; straight line through the last two trials at D ${Number.isNaN(look) ? 'none' : `${look.toPrecision(5)} cfs (q ${q < look ? 'below' : 'above'} it)`}; q/D^2.5 ${(q / p.D ** 2.5).toPrecision(5)}`);
+  }
+
+  h('Tests made on q before the trial on D, as forms written here, against the observations');
+  { // Manning's formula with the typed n and slope: the full pipe and 0.9382·D (Max Discharge's depth).
+    const over = obs.filter((o) => o.seen === 'result').map((o) => { const v = vals('critical_depth', o.inputs), D = f(f(val(o.inputs.diameter!)) / 12); return { o, q: v.discharge!, cap: manning(GEO_C2, D, f(0.9382 * D), kOf(v, v.slope!)) }; }).filter((x) => x.q > x.cap);
+    const v96 = vals('critical_depth', { diameter: '9.6', n: '.013', discharge: '2', slope: '.005' }), D96 = f(0.8);
+    row(`Manning's formula, typed n and slope, at 0.9382·D: 9.6 in, n .013, slope .005 gives ${manning(GEO_C2, D96, f(0.9382 * D96), kOf(v96, v96.slope!)).toPrecision(4)} cfs (full pipe ${manning(GEO_C2, D96, f(0.999999 * D96), kOf(v96, v96.slope!)).toPrecision(4)}), under obs-cdmenu-000002's 1.8 cfs; result goldens with q above it: ${over.length} (${over.slice(0, 4).map((x) => `${x.o.name} ${x.q} over ${x.cap.toPrecision(4)}`).join(', ')}${over.length > 4 ? ', ...' : ''})`);
+    // A·√(g·A/T) at a fixed share s of D: the 9.6 in messages need F(s·D) < q, every result F(s·D) ≥ its q.
+    const shareOf = (D: number, q: number) => { const F = circleCriticalDischarge(D); let lo = 0, hi = 1; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (f(F(f(m * D))) < q) lo = m; else hi = m; } return lo; };
+    const need = obs.filter((o) => o.seen === 'result').map((o) => ({ o, s: shareOf(f(f(val(o.inputs.diameter!)) / 12), f(val(o.inputs.discharge!)) * (1 - tol)) })).sort((a, b) => b.s - a.s)[0]!;
+    row(`A·√(g·A/T) at a fixed share of D: 3 cfs at 9.6 in (cd-circ-000071, the message) needs a share under ${shareOf(D96, 3).toFixed(4)}; ${need.o.name} (${need.o.inputs.diameter} in, ${need.o.inputs.discharge} cfs, a result) needs one of at least ${need.s.toFixed(4)}`); }
+
+  // The crown number scaled as D^2.5: menu above, message below, a result within 0.5%.
+  let cLo = 0, cHi = Infinity, loBy = '', hiBy = '';
+  for (const { o, p, q } of onD) {
+    const s = p.D ** 2.5;
+    if (o.seen === 'shape_menu' && (q * (1 + tol)) / s > cLo) { cLo = (q * (1 + tol)) / s; loBy = o.name; }
+    if (o.seen === 'rejected' && (q * (1 - tol)) / s < cHi) { cHi = (q * (1 - tol)) / s; hiBy = o.name; }
+  }
+  h('A number at the trial on D that scales as D^2.5, c·D^2.5: q more than 0.5% under it the shape menu, more than 0.5% over it the message');
+  row(`c above ${cLo.toPrecision(5)} (${loBy}) and below ${cHi.toPrecision(5)} (${hiBy}); at 9.6 in the change is then between ${(cLo * f(0.8) ** 2.5).toPrecision(5)} and ${(cHi * f(0.8) ** 2.5).toPrecision(5)} cfs`);
+  return { pipes, cLo, cHi };
+}
 const which = process.argv[2];
-if (which === 'floor') floorReport();
+if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
+else if (which === 'floor') floorReport();
 else if (which === 'a016') a016();
 else if (which === 'design') { designChanges(); h009(); }
 else if (which === 'a004') a004();
@@ -2292,4 +2534,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016'); process.exit(2); }
