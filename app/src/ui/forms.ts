@@ -142,6 +142,19 @@ export function screenLabel(mode: Mode, shape: Shape, field: string): string | n
   return null;
 }
 
+/**
+ * The upper-case heading QUICK-2 starts a field's row with, such as "CHANNEL BANK STATIONS:" on
+ * the irregular screen, spaces as on the screen; null for a row without one.
+ */
+export function screenRowHeading(mode: Mode, shape: Shape, field: string): string | null {
+  const layout = screenOf(mode, shape);
+  if (!layout) return null;
+  const window = [field, `in_${field}`, `in_irr_${field}`].find((w) => w in layout.windows);
+  if (!window) return null;
+  const row = layout.rows[pictureFor(layout, window).row] ?? '';
+  return /║ ([A-Z][A-Z' ]*:) /.exec(row)?.[1] ?? null;
+}
+
 /** The form of a built pair; null for a pair the solver does not compute. */
 export function formFor(mode: Mode, shape: Shape): FormModel | null {
   if (!isBuilt(mode, shape)) return null;
