@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import { DATA, open, ROOT } from './helpers.ts';
 
 const collapse = (s: string): string => s.replace(/\s+/g, ' ').trim();
+/** A text as the page shows it: each code span's value without its marks (criterion 5.8). */
+const unmarked = (s: string): string => collapse(s.replace(/`([^`]+)`/g, '$1'));
 // The comparator's known misses, by case id (results/known-misses.json), never typed here.
 const KNOWN_MISSES = new Set((JSON.parse(readFileSync(join(ROOT, 'results', 'known-misses.json'), 'utf-8')) as
   { classes: { cases: Record<string, string[]> }[] }).classes.flatMap((c) => Object.keys(c.cases)));
@@ -14,14 +16,19 @@ test('the limits page: every haunting, every Limits paragraph, each open questio
   const ids = readFileSync(join(ROOT, 'results', 'hauntings.md'), 'utf-8').split(/\r?\n/)
     .map((l) => /^## (H-\d{3}):/.exec(l)?.[1]).filter((x): x is string => !!x);
   for (const id of ids) await expect(page.locator(`#haunting-${id}`)).toBeVisible();
-  for (const l of DATA.limits) await expect(page.locator('#no-answer')).toContainText(collapse(l.paragraph));
+  // A known-miss class's entry is under its own heading (criterion 5.9); code marks are not shown (5.8).
+  const misses = new Set(DATA.knownMisses.map((c) => c.title));
+  for (const l of DATA.limits) {
+    await expect(page.locator(misses.has(l.title) ? '#known-misses' : '#no-answer')).toContainText(unmarked(l.paragraph));
+  }
+  await expect(page.locator('.limits-page')).not.toContainText('`');
   for (const q of DATA.openQuestions) {
     const block = page.locator(`#question-${q.id}`);
     const plain = block.locator('> p');
     const wording = block.locator('.ledger-wording');
-    await expect(plain).toHaveText(q.plain!);
+    await expect(plain).toHaveText(unmarked(q.plain!));
     await expect(wording).toContainText(q.id);
-    await expect(wording).toContainText(collapse(q.question));
+    await expect(wording).toContainText(unmarked(q.question));
     expect((await plain.boundingBox())!.y).toBeLessThan((await wording.boundingBox())!.y);
   }
 });

@@ -240,3 +240,39 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     - _Requirements: 4.2_
   - [ ]* 15.3 Check whether HEC-RAS imports the export, and record the result in `results/`.
     - _Requirements: 4.2_
+
+- [ ] 16. What a stranger meets (person, 2026-11-26: every screen read at 1280 px and 375 px)
+  - [ ] 16.1 Test: the first screen opens, above the examples, with what the page does and for
+    whom, how it was rebuilt, the headline count from `results/headline.md` linked to the proof
+    page, a link to the limits page and the notice; no number typed; on a phone both example
+    controls are inside the first screen. Then `views/intro.ts`.
+    - _Requirements: 8.10_
+  - [x] 16.2 Test: no backquote on the limits page, and each code span's value in the figures
+    face, H-008's line break included. Then `views/inline.ts` and the limits view.
+    - _Requirements: 5.3, 5.8_
+  - [x] 16.3 Test: the known-miss classes under their own heading, between the hauntings and the
+    no-answer entries, each with the headline run's cases it holds, summing to the run's misses.
+    Then the data module's `knownMisses` and the limits view.
+    - _Requirements: 5.9_
+  - [ ] 16.4 Test: the proof page marks a case by the comparator's rule (outcome and printed
+    fields, trimmed); the message and held prompt are shown trimmed and not counted; the cases
+    marked different are exactly the page's known misses; each row carries QUICK-2's label. Then
+    `views/proof.ts`.
+    - _Requirements: 5.1, 5.10_
+  - [ ] 16.5 Test: each label of the drawing has a ground of the paper colour under it, drawn over
+    the lines, on the main example, a circle and a trapezoid. Then `drawing/svg.ts`.
+    - _Requirements: 2.7_
+  - [ ] 16.6 Test: at 375 px the results tables' captions take the table's width and at most two
+    lines. Then the phone stylesheet.
+    - _Requirements: 2.9_
+  - [ ] 16.7 Test, with two builds in Playwright: when a newer build's worker takes over an open
+    page, the page says so in one line with a reload control, keeps typed values and does not
+    reload by itself; the control loads the newer build. Then `main.ts` and `views/shell.ts`.
+    - _Requirements: 1.13_
+  - [ ] 16.8 Test: H-001's Flag line names the cases that raise `cut_off_area_counted`, computed
+    as the flags test computes them. Then the line.
+    - _Requirements: 5.11_
+  - [ ] 16.9 Test: `results/held-out.md` has one row for each prediction round of
+    `results/attempts.md`, in order, each count and commit found under a heading that names the
+    round. Then the file.
+    - _Requirements: 5.12_

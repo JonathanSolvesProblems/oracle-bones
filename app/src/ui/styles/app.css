@@ -179,6 +179,9 @@ input.figures { font-family: var(--font-figures); }
 .limits-page .ledger-wording { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
 .limits-page .ledger-wording h3 { font: inherit; font-weight: 600; margin: var(--space-2) 0 0; }
 .limits-page .ledger-wording p { margin: 0; overflow-wrap: anywhere; }
+/* A value the files mark as code: the figures face at the text's own size, no marks (5.8). */
+.limits-page code { font-family: var(--font-figures); font-size: inherit; }
+.limits-page .miss-count { font-weight: 600; margin-bottom: var(--space-2); }
 .proof-case { border-top: var(--hairline); padding: var(--space-4) 0; }
 .proof-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
 .quick2-screen { margin: 0; min-width: 0; }

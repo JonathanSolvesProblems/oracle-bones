@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
-import { readGolden, readProofCase, type ProofCase } from './goldens.ts';
+import { goldenPath, readGolden, readProofCase, type ProofCase } from './goldens.ts';
 import { readHeadline, type Headline } from './headline.ts';
 import { readHauntings, type Haunting, type LimitEntry } from './hauntings.ts';
 import { readOpenQuestions } from './ledger.ts';
@@ -36,6 +36,12 @@ export interface QuickenedData {
   proof: ProofCase[];
   /** results/headline.md's count and date, or null while the file does not exist (criterion 5.2). */
   headline: Headline | null;
+  /**
+   * Each class of results/known-misses.json that has a Limits entry, by that entry's title, with
+   * how many of its cases are the headline batch's (their golden's seed is the batch's), or null
+   * with no headline run (criterion 5.9).
+   */
+  knownMisses: KnownMissClass[];
   /** Every case a haunting names, by id. */
   cases: Record<string, CaseData>;
   /** The worked examples' goldens (criteria 8.2, 8.4). */
@@ -54,13 +60,29 @@ function shortCommit(root: string): string {
   }
 }
 
+export interface KnownMissClass { id: string; title: string; cases: string[]; inHeadline: number | null; }
+
+/** The known-miss classes with a Limits entry; a class whose entry is missing fails the build. */
+export function readKnownMisses(root: string, source: string, limits: readonly LimitEntry[], headline: Headline | null): KnownMissClass[] {
+  const file = JSON.parse(source) as { classes: { id: string; limits: string | null; cases: Record<string, string[]> }[] };
+  return file.classes.filter((c) => c.limits !== null).map((c) => {
+    if (!limits.some((l) => l.title === c.limits)) {
+      throw new Error(`results/known-misses.json: class ${c.id} names the Limits entry "${c.limits}", which results/hauntings.md does not have`);
+    }
+    const cases = Object.keys(c.cases);
+    const seedOf = (id: string): unknown => (JSON.parse(readText(goldenPath(root, id))) as { seed?: unknown }).seed;
+    const inHeadline = headline?.seed === undefined ? null : cases.filter((id) => seedOf(id) === headline.seed).length;
+    return { id: c.id, title: c.limits!, cases, inHeadline };
+  });
+}
+
 /** The worked examples' cases (design: The worked examples). */
 export const EXAMPLE_CASES = { main: 'nd-irr-000006', cutoff: 'nd-irr-000010' } as const;
 
 /** The files the module is built from. */
 export function sourceFiles(root: string): string[] {
   return [join(root, 'results', 'hauntings.md'), join(root, 'results', 'ledger.json'), join(root, 'results', 'limits-plain.md'),
-    join(root, 'results', 'headline.md'), join(root, 'app', 'src', 'ui', 'proof', 'cases.json'),
+    join(root, 'results', 'headline.md'), join(root, 'results', 'known-misses.json'), join(root, 'app', 'src', 'ui', 'proof', 'cases.json'),
     join(root, 'realdata', 'huntington-section-01.json')];
 }
 
@@ -89,7 +111,9 @@ export function buildData(root: string = ROOT): QuickenedData {
     .map((q) => ({ ...q, plain: plain.find((p) => p.id === q.id)?.text ?? null }));
   const list = JSON.parse(readText(join(root, 'app', 'src', 'ui', 'proof', 'cases.json'))) as { id: string; reason: string }[];
   const proof = list.map((c) => readProofCase(root, c.id, c.reason));
-  return { hauntings: file.hauntings, limits: file.limits, openQuestions, proof, headline: readHeadline(root), cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
+  const headline = readHeadline(root);
+  const knownMisses = readKnownMisses(root, readText(join(root, 'results', 'known-misses.json')), file.limits, headline);
+  return { hauntings: file.hauntings, limits: file.limits, openQuestions, proof, headline, knownMisses, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
     build: {
       version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
       commit: shortCommit(root),
