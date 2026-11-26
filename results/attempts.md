@@ -2085,8 +2085,8 @@ trials are 0.2000000030, 0.4000000060, 0.6000000238 and 0.8000000119, which equa
 A·√(g·A/T) at the first three is 0.21001, 0.79936 and 1.7531 cfs. Trial 3 is more than 0.5%
 short of q for q above 1.7619 cfs. So 1.8, 2, 3 and 10 cfs take the same three trials, each
 short of q, and reach trial 4, equal to D, with nothing else done; 1.5 cfs is over q at trial
-3 and takes a chord. This is the person's check (`tmp/v2_trace.mts`), confirmed by the committed
-command. A rule that looks only at the trial and the diameter gives the four the same outcome,
+3 and takes a chord. The person checked this first; `node scripts/circle_outputs.mts grade-a016`
+prints these trials and the comparison at each (its section "The 9.6 in pipe"). A rule that looks only at the trial and the diameter gives the four the same outcome,
 and QUICK-2 gave them two.
 
 **All 184 combinations on all 69 observations.** A-013's 136 and the amendment's 48, scored as

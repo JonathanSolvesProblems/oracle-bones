@@ -1663,3 +1663,76 @@ as a side effect; I restored the committed file. tasks.md is not written, the so
 changed, and nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-016 grading session
+
+The session in the last entry used 94.32 credits over 35 min 25 s.
+
+### The Exhumer on A-017: thirteen cases
+
+Settings: the `exhumer` custom agent, in its own session.
+
+The Exhumer ran A-017's thirteen cases once each with record true (decision 104). B3 to B9 and
+E3 printed the message and are goldens, cd-circ-000073 to -000080. B1, B2, E1, E2 and N1 ended
+on the shape menu; each was added as a behaviour case, obs-cdmenu-000005 to -000009, and
+recorded in the next call, so each ran twice. W2's behaviour case, obs-cdmenu-000004, was
+recorded in B1's call, which answers Q-034. N1's behaviour case was recorded by one more
+recording call that then refused its own arguments and ran no case. Nothing was graded. Decision
+105 stops the session.
+
+Credits: 13.57. Time: 8 min 45 s.
+
+### A-017 graded, the full-pipe reading, the requirements and design revised, and A-018
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed by itself** (811f3a5): the eight goldens, the six behaviour
+cases with their captures, MANIFEST.json, the profile and the ledger.
+
+**A-017 graded** (51ae65a). `grade-a017` (about 3 s) works as `grade-a016` does: it reads A-017
+from d57eed5 and every record decision 104 lists, and the model rerun gives the committed cell
+on 26 of 26. Everything I reported held: the change at 9.6 in is between 2.2 and 2.3 cfs; E1
+and E2 ended on the menu and E3 printed the message; N1 ended as n .013 did; no result. The rule
+to build is right on 8 of 13, candidates 1 and 2 on their two predictions, and 1a on 12 of 13,
+missing E3, so no c·D^2.5 fits once 2.4 in is counted.
+
+**The full-pipe reading came from my prompt**, not from the session: at a trial on D, QUICK-2
+compares q with A·√(g·A/T) of the full pipe with T = D, which is 3.9497·D^2.5. The session
+checked it rather than adopting it. Its numbers and its split hold: all 14 messages that reach
+a trial on D are over the number, and the 7 menu endings and E3 are under it. Added to the 184
+combinations, with a run-time error read as the shape menu and the trial resumed from a short
+chord tested or not, that makes 736 variants; none fits all 82 observations, and the best fit
+75. W1 and W2 end on the menu in every variant, by a chord so near 0 that x rounds to 1. In the
+model, the discharges under the number never end on the menu: 1.8 cfs at 9.6 in, E1 and E2 find
+a result at the chord below D, and 2 to 2.2 cfs resume past D and get the message. Leaving the
+resumed trial untested gives those four the menu but turns 12 rejection goldens, E3 among them,
+into menus too.
+
+**circle-short-chord** (e4d1e18), bugfix.md and design.md together. 2.7 takes my decision on the
+floor: `error` with `returns_to_menu`, whose text becomes "QUICK-2 returns to its shape menu
+with no result for this input.", shown under the form; `never_finishes` is not used where a run
+was seen to end. The session chose to reuse the existing flag code and change its text for every
+use, and to get the outcome from the search (circle Critical Depth's F returns NaN where
+x/√(1−x²) has no value) rather than from a test of q against the floor. Under that rule the
+model also ends on the menu just above the floor in pipes up to 3072 in, which nobody has
+observed. Nothing in 3a fits, so 2.6 stays and lists all seven menu endings in pipes with a trial
+on D; I had said six. design.md: Q-029 is carried to a new question, and the open decision is
+gone. 2.12: A-018 is the last held-out round; after it the solver is built with the rule that
+fits best, an ending it gets wrong becomes a known difference on the limits page, and a wrong
+printed number still blocks the build. The counts for A-017's eight goldens (331 in the full
+set, 295 today, 326 after) are derived, not a comparator run. `a018` went into the script in
+this commit, because 2.7 cites its floor scan.
+
+**A-018** (3a8075b), committed by itself before anything runs. Thirteen cases: 2.24 to 2.28 cfs
+at 9.6 in, 3.91, 3.95 and 3.99 at 12 in, .395, .4 and .405 at 4.8 in; 50.4 in at 216 cfs; 768 in
+at .0023 cfs, 1.11 times the floor. The rule to build prints the message on the first twelve and
+ends F1 on the menu. The full-pipe reading prints a result at the trial on D on M2 to M4, M7 and
+M10, with every field given. M2 is 0.014% inside its band, and M7's Hyd R sits on a rounding
+boundary set by an assumed P = 3.1416·D.
+
+The "A-016 graded" section of results/attempts.md cited my untracked `tmp/v2_trace.mts`; it now
+cites `grade-a016`, which prints the same trials. My check for this session,
+`tmp/a017_check.mts`, is not cited anywhere. tasks.md is not written, the solver is not changed,
+and nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
