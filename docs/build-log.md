@@ -1736,3 +1736,80 @@ cites `grade-a016`, which prints the same trials. My check for this session,
 and nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-017 grading session
+
+The session in the last entry used 122.41 credits over 28 min 18 s.
+
+### The Exhumer on A-018: thirteen cases
+
+Settings: the `exhumer` custom agent, in its own session.
+
+The Exhumer ran A-018's thirteen cases once each with record true (decision 106). M2 to M4, M7
+and M10 gave a result and M5, M8, M11 and L1 printed the message; the nine are goldens,
+cd-circ-000081 to -000089. M1, M6, M9 and F1 ended on the shape menu; each was added as a
+behaviour case, obs-cdmenu-000010 to -000013, and recorded in the next case's call, so each ran
+twice. It opened Q-035: the Discharge field showed `0` after .395, .405 and .0023 were typed.
+Nothing was graded. Decision 107 stops the session.
+
+Credits: 16.94. Time: 7 min 58 s.
+
+### A-018 graded, the full-pipe rule, the requirements and design revised, and tasks.md
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed by itself** (0f7e517): the nine goldens, the four behaviour
+cases with their captures, MANIFEST.json, the profile and the ledger.
+
+**A-018 graded** (1452889). `grade-a018` (about 4 s) works as `grade-a017` does: it reads A-018
+from 3a8075b and every record decision 106 lists, and reruns A-018's models on the 82
+observations A-018 had, which give the committed cell on 52 of 52 and the committed printed
+field on 70 of 70. Everything I reported held. M1, M6, M9 and F1 ended on the shape menu; M2,
+M3, M4, M7 and M10 gave a result; M5, M8, M11 and L1 printed the message. Candidate 1 with the
+full-pipe number is right on all twelve cases it predicts, and the five results match its table
+on every printed field, 70 of 70, M7's Hyd R `0.3` among them. The rule to build is right on 5
+of 13 and T1·D1·X1 F on 10 of 13. Of the 203 tied variants none is right on all 13; the best 20
+are right on 10.
+
+**Where the pieces came from.** The full-pipe number came from my prompt to the A-017 grading
+session. The result bands at 0.5% of it, the table of printed fields for the five results, and
+the assumption that P = 3.1416·D at D were that session's. The reading named A and T only. The
+five results print with that P, but M7's Hyd R sits at A/P = 0.25 exactly, so the grade agrees
+with the assumption without singling it out.
+
+**Q-035.** M9, M10 and M11 ended three ways, so the form stored three numbers, and any
+two-decimal reading of the typed discharge is ruled out; a two-decimal reading would also store
+F1 as 0, which the form holds (cd-circ-000007), and F1's form moved on. Whether the fourth
+decimal of .0023 is kept is not known: with three decimals F1 is under the floor, where the rule
+gives the same menu. So F1 does not show what QUICK-2 does just above the floor, and Q-035 stays
+open.
+
+**The full-pipe rule.** `full-pipe-rule` (about 3 s) runs the rule I asked for inside the
+rebuild's search: at a stepped trial equal to D, a result at D within 0.5% of the number, the
+message more than 0.5% over it, the shape menu more than 0.5% under it in a pipe with a stepped
+trial inside D, and the message under it at 2.4 in. It ends all 95 stored circle Critical Depth
+observations as QUICK-2 did, every field of the 39 results among them, with no miss. 34 of the
+95 reach a stepped trial on D. Nothing moves at 1 ± 1e-4.
+
+**circle-short-chord** (88cb346). bugfix.md: 2.6 is the rule above, with (c) saying it was seen
+ten times in three pipes, that M1, M6 and M9 were predicted before they ran, and that no
+mechanism was found; 2.7 gives the limits page the same. The trial-on-D known difference is
+withdrawn, and 2.12 records that no ending and no printed number is left wrong. 2.9: full set
+295 of 340 today and 335 after, quick set 192 and 195 of 200 (none of A-018's goldens is in the
+quick set); both "after" counts and the 295 are derived, not comparator runs. design.md: the
+session chose how to build it: `search.ts` gets a `ceilingValue` option and a new reason,
+`under_ceiling_value`, which `circle.ts` already maps to `returns_to_menu`; `circle.ts` gets
+the full-pipe section at y = D; the limits text goes in a new "Limits" section of
+`results/hauntings.md`, since nothing is left as a known difference. It dropped the earlier
+design's test of 12 in at 1E-7 cfs, whose expected value came from the model, and did not add a
+property for 2.6, whose expected outcomes would too. tasks.md: seven tasks. The comparator's
+"before" run is task 2.2, before the solver changes, so the counts in 2.9 are checked before any
+edit; the ledger entries of 2.10 are one Exhumer task.
+
+The claim in bugfix.md 1.4 that `solve()` returns `never_finishes` on A-018's nine goldens today
+comes from the session's untracked check, `tmp/a018_today.mts`; `full-pipe-rule` shows the `error` outcome but not
+the flag. One shell command that spliced the open points was rejected, and the session
+redid the edits with the file tool. The solver is not changed, no task was run, and nothing was run on the
+oracle.
+
+Credits: not counted here; they go in the next entry.
