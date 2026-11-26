@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "guard-goldens",
+      "description": "Refuses any agent edit under oracle/goldens/. The guard exits 2 to refuse, which blocks the tool call and sends its stderr to the agent; it exits 0 otherwise. Tested with piped JSON, including through PowerShell (oracle/tests/test_guard.py). Goldens come from the binary, never from a text edit. The matcher is an anchored regular expression naming the built-in file-write tools only, so shell commands, reads and MCP tools (whose ids, such as mcp_oracle_ledger_write, would match a plain 'write') do not start the guard. Shell commands never carried a path for it to read; the goldens manifest check covers them.",
+      "trigger": "PreToolUse",
+      "matcher": "^(fs_write|fs_append|str_replace|create_file|edit_file|apply_patch|delete_file|write|semantic_rename|smart_relocate)$",
+      "action": { "type": "command", "command": "python scripts/guard_goldens.py" },
+      "timeout": 10,
+      "enabled": true
+    }
+  ]
+}

@@ -21,6 +21,16 @@ INCLUDE = [
     ("oracle/.dockerignore", ""),
     ("oracle/*.json", ""),
     ("oracle/targets/profile.schema.json", ""),
+    # Templates that init_workspace copies into the user's workspace (Requirement 7.1).
+    (".kiro/agents/exhumer.md", "workspace"),
+    (".kiro/agents/skeptic.md", "workspace"),
+    (".kiro/hooks/*.json", "workspace"),
+    (".kiro/steering/oracle-law.md", "workspace"),
+    (".kiro/workflows/resurrect.workflow.json", "workspace"),
+    ("scripts/guard_goldens.py", "workspace"),
+    ("scripts/ledger_status.py", "workspace"),
+    ("scripts/oracle_quick.py", "workspace"),
+    ("oracle/targets/quick2.json", "workspace"),
 ]
 # The folders this script owns. Every file in them must come from INCLUDE.
 GENERATED = ("oracle", "workspace")

@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "oracle-after-task",
+      "description": "After each spec task finishes, grades the solver against the quick golden set, so a task is never marked done on a build the dead program disagrees with. A command hook, so it spends no credits.",
+      "trigger": "PostTaskExec",
+      "action": { "type": "command", "command": "python scripts/oracle_quick.py" },
+      "timeout": 120,
+      "enabled": true
+    }
+  ]
+}

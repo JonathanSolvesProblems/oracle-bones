@@ -187,6 +187,19 @@ POWER_TOOLS = {
         "output": _ok({"workspace": {"type": "string"}, "from": {"enum": ["roots", "set_workspace"]}},
                       ["workspace", "from"]),
     },
+    "init_workspace": {
+        "description": "Copy the method's files into the workspace: the Exhumer and Skeptic agents, the four hooks, "
+                       "the oracle law, the resurrect workflow, the scripts the hooks call, the QUICK-2 profile and "
+                       "a .gitignore line for the downloads folder. Never overwrites: a file that exists with other "
+                       "content is left alone and listed under kept.",
+        "input": {"type": "object", "additionalProperties": False, "properties": {}},
+        "output": _ok({"workspace": {"type": "string"},
+                       "copied": {"type": "array", "items": {"type": "string"}},
+                       "unchanged": {"type": "array", "items": {"type": "string"}},
+                       "kept": {"type": "array", "items": {"type": "string"}},
+                       "gitignore": {"enum": ["added", "present"]}},
+                      ["workspace", "copied", "unchanged", "kept", "gitignore"]),
+    },
 }
 
 

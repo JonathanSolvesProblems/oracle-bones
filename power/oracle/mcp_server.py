@@ -131,6 +131,13 @@ class Server:
         elif paths.ROOT is None:
             from .errors import OracleError
             result = OracleError("setup_required", NO_WORKSPACE).to_dict()
+        elif name == "init_workspace":
+            from . import workspace
+            from .errors import OracleError
+            try:
+                result = workspace.init()
+            except OracleError as e:
+                result = e.to_dict()
         else:
             result = self.oracle.call(name, args)
         is_error = isinstance(result, dict) and set(result) == {"error"}

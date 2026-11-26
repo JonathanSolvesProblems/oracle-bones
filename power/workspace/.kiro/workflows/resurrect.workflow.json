@@ -1,0 +1,21 @@
+{
+  "name": "resurrect",
+  "description": "Exhume a dead program, write its spec, build it, and let the oracle grade it",
+  "inputs": {
+    "target": "prompt"
+  },
+  "steps": [
+    {
+      "type": "step",
+      "id": "exhume",
+      "agent": "exhumer",
+      "prompt": "Exhume {{target}}. Map its screens and write requirements with citations until you decide to stop. Report what stays unexercised."
+    },
+    {
+      "type": "step",
+      "id": "review",
+      "agent": "skeptic",
+      "prompt": "Pick the three requirements most likely to be wrong from this report and try to disprove them:\n\n{{exhume.output}}"
+    }
+  ]
+}

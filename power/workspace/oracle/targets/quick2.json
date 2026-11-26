@@ -1,0 +1,1900 @@
+{
+  "name": "quick2",
+  "version": "2",
+  "archive": {
+    "url": "https://web.archive.org/web/20121224173859id_/https://www.fema.gov/library/file?type=publishedFile&file=q2v1.zip&fileid=c76207a0-fe30-11df-a023-001cc4568fb6",
+    "file": "q2v1.zip",
+    "bytes": 392419,
+    "sha256": "6b8028faa250119878741ab7e2f3a21037e45844d87d245d7ebc7ad49c85de5e",
+    "must_contain": [
+      "QT.EXE",
+      "QUICK2.EXE"
+    ]
+  },
+  "env": {
+    "EMU2_DEFAULT_DRIVE": "C",
+    "EMU2_CWD": "QUICK2",
+    "TERM": "xterm"
+  },
+  "drive": {
+    "dirs": [
+      "QUICK2",
+      "QUICK2/DATA"
+    ],
+    "program_dir": "QUICK2",
+    "cite": [
+      "obs-nodata-000001",
+      "oracle/goldens/captures/obs-nodata-000001/screen-25.txt",
+      "nd-trap-000001"
+    ]
+  },
+  "entry": {
+    "program": "QUICK2/QT.EXE",
+    "unobserved": "spike 2026-11-06, outside repo: QT.EXE shows the main menu and chains to QUICK2.EXE"
+  },
+  "screen": {
+    "rows": 25,
+    "cols": 80,
+    "pty_rows": 27,
+    "cite": [
+      "nd-trap-000001",
+      "oracle/goldens/captures/nd-trap-000001/screen-10.txt"
+    ]
+  },
+  "frozen_time": "1995-06-01 12:00:00",
+  "limits": {
+    "settle_ms": 150,
+    "wait_timeout_s": 10,
+    "case_time_limit_s": 60,
+    "retry_limit": 3,
+    "hold_confirm_ms": 2000,
+    "stuck_confirm_ms": 20000
+  },
+  "keys": {
+    "list": [
+      "{Enter}",
+      "{F1}",
+      "{F2}",
+      "{F3}",
+      "{F5}", "{F6}",
+      "{F7}",
+      "{F8}",
+      "{F9}",
+      "{F10}",
+      "1",
+      "2",
+      "3",
+      "4",
+      "V",
+      "R",
+      "T",
+      "C",
+      "I"
+    ],
+    "unobserved": "spike 2026-11-06, outside repo: menu digits, shape letters, Enter and function keys; F1 on the main menu shows the help, key capture oracle/tests/captures/quick2/keys/F1-after.txt, 2026-11-21; F3 in the ground-points editor inserts a point, key capture oracle/tests/captures/quick2/keys/F3-after.txt, and F8 on the Step-Backwater result shows SAVING TEMPORARY FILE, key capture oracle/tests/captures/quick2/keys/F8-after.txt, 2026-11-22"
+  },
+  "codes": {
+    "modes": {
+      "critical_depth": "cd",
+      "channel_capacity": "cc",
+      "normal_depth": "nd",
+      "step_backwater": "sb"
+    },
+    "shapes": {
+      "trapezoid": "trap",
+      "irregular": "irr",
+      "v_ditch": "vdit",
+      "rectangle": "rect",
+      "circle": "circ"
+    }
+  },
+  "screens": [
+    {
+      "id": "title",
+      "kind": "other",
+      "marker": "VERSION\\s+1\\.0",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: a logo screen; the first key shows 'Press <Enter> to continue', a line input that takes typed characters until Enter"
+    },
+    {
+      "id": "main_menu",
+      "kind": "menu",
+      "marker": "MAIN\\s+MENU",
+      "resend": false,
+      "cite": [
+        "obs-menudrop-000001",
+        "oracle/goldens/captures/obs-menudrop-000001/screen-01.txt",
+        "nd-trap-000001"
+      ]
+    },
+    {
+      "id": "shape_menu",
+      "kind": "menu",
+      "marker": "SHAPE OF CROSS SECTION",
+      "cite": ["cd-vdit-000001", "cc-rect-000001", "nd-trap-000003", "nd-circ-000001", "nd-irr-000001"]
+    },
+    {
+      "id": "sb_start",
+      "kind": "form",
+      "marker": "Starting Water Surface Elevation Method",
+      "prompts": [
+        {"id": "sb_start", "pattern": "Enter a Slope or an Elevation:"}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    {
+      "id": "nd_trap_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*TRAPEZOIDAL CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {
+          "name": "in_left_slope",
+          "row": 8,
+          "col": 31,
+          "width": 4
+        },
+        {
+          "name": "in_right_slope",
+          "row": 8,
+          "col": 58,
+          "width": 4
+        },
+        {
+          "name": "in_bottom_width",
+          "row": 9,
+          "col": 30,
+          "width": 7
+        },
+        {
+          "name": "in_n",
+          "row": 9,
+          "col": 51,
+          "width": 13
+        },
+        {
+          "name": "in_discharge",
+          "row": 10,
+          "col": 28,
+          "width": 9
+        },
+        {
+          "name": "depth",
+          "row": 10,
+          "col": 50,
+          "width": 14
+        },
+        {
+          "name": "in_slope",
+          "row": 11,
+          "col": 26,
+          "width": 11
+        },
+        {
+          "name": "area",
+          "row": 15,
+          "col": 25,
+          "width": 12
+        },
+        {
+          "name": "wet_perimeter",
+          "row": 15,
+          "col": 58,
+          "width": 6
+        },
+        {
+          "name": "velocity",
+          "row": 16,
+          "col": 28,
+          "width": 9
+        },
+        {
+          "name": "hyd_radius",
+          "row": 16,
+          "col": 55,
+          "width": 9
+        },
+        {
+          "name": "top_width",
+          "row": 17,
+          "col": 27,
+          "width": 10
+        },
+        {
+          "name": "froude",
+          "row": 17,
+          "col": 48,
+          "width": 16
+        },
+        {
+          "name": "flow_type",
+          "row": 18,
+          "col": 49,
+          "width": 16
+        }
+      ],
+      "cite": [
+        "nd-trap-000003",
+        "nd-trap-000004",
+        "nd-trap-000005"
+      ]
+    },
+    {
+      "id": "nd_trap_form",
+      "kind": "form",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*TRAPEZOIDAL CHANNEL",
+      "prompts": [
+        {
+          "id": "left_slope",
+          "pattern": "Enter Left Side Slope"
+        },
+        {
+          "id": "right_slope",
+          "pattern": "Enter Right Side Slope"
+        },
+        {
+          "id": "bottom_width",
+          "pattern": "Enter Bottom Width"
+        },
+        {
+          "id": "n",
+          "pattern": "Enter Manning's n"
+        },
+        {
+          "id": "discharge",
+          "pattern": "Enter Discharge"
+        },
+        {
+          "id": "slope",
+          "pattern": "Enter Slope"
+        },
+        {
+          "id": "begin",
+          "pattern": "Begin Calculations\\s+<Enter>"
+        }
+      ],
+      "cite": [
+        "obs-zerohold-000001",
+        "nd-trap-000003"
+      ]
+    },
+    {
+      "id": "stray_listing",
+      "kind": "other",
+      "marker": "^C:\\\\QUICK2\\\\DATA\\s*$[\\s\\S]*File\\(s\\) Not Found",
+      "unobserved": "exploratory runs on 2026-11-20 in this repo, not yet recorded: saving a cross section without QUICK2/DATA prints the directory and 'File(s) Not Found', saves nothing, and holds"
+    },
+    {
+      "id": "irr_working",
+      "kind": "other",
+      "stuck": true,
+      "marker": "GROUND\\s+POINTS[\\s\\S]*W o r k i n g",
+      "cite": ["obs-irronept-000001", "nd-irr-000026"]
+    },
+    {
+      "id": "irr_station_rejected",
+      "kind": "rejected",
+      "marker": "ERROR\\s+\\.\\.\\.\\s+Stations[\\s\\S]*are NOT INCREASING",
+      "message": {"row": 24, "col": 5, "width": 71},
+      "cite": ["obs-irrelev-000001", "obs-irrstation-000001"]
+    },
+    {
+      "id": "irr_bank_rejected",
+      "kind": "rejected",
+      "marker": "ERROR!\\s+(?:LEFT|RIGHT)\\s+Bank Station DOES NOT MATCH a Ground Point",
+      "message": {"row": 24, "col": 5, "width": 71},
+      "cite": [
+        "obs-bankreject-000001",
+        "obs-bankreject-000002"
+      ]
+    },
+    {
+      "id": "sb_result",
+      "kind": "result",
+      "marker": "(?s)\\A(?!.*(?:Enter|Press|SAVING\\s+FILE)).*STEP\\s+-\\s+BACKWATER.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d",
+      "fields": [
+        {"name": "in_bank_left", "row": 16, "col": 37, "width": 9},
+        {"name": "in_bank_right", "row": 16, "col": 67, "width": 9},
+        {"name": "in_n_left", "row": 17, "col": 37, "width": 9},
+        {"name": "in_n_channel", "row": 17, "col": 53, "width": 9},
+        {"name": "in_n_right", "row": 17, "col": 67, "width": 9},
+        {"name": "in_len_left", "row": 18, "col": 37, "width": 9},
+        {"name": "in_len_channel", "row": 18, "col": 53, "width": 9},
+        {"name": "in_len_right", "row": 18, "col": 67, "width": 9},
+        {"name": "in_contraction", "row": 19, "col": 37, "width": 9},
+        {"name": "in_expansion", "row": 19, "col": 53, "width": 8},
+        {"name": "in_sb_discharge", "row": 19, "col": 68, "width": 8},
+        {"name": "ws_elev", "row": 20, "col": 12, "width": 20},
+        {"name": "depth", "row": 20, "col": 37, "width": 9},
+        {"name": "top_width", "row": 20, "col": 53, "width": 9},
+        {"name": "k_ratio", "row": 20, "col": 68, "width": 8},
+        {"name": "eg_elev", "row": 21, "col": 12, "width": 14},
+        {"name": "flow_regime", "row": 21, "col": 37, "width": 9},
+        {"name": "chan_velocity", "row": 21, "col": 53, "width": 9},
+        {"name": "froude", "row": 21, "col": 68, "width": 8}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    {
+      "id": "sb_editor",
+      "kind": "form",
+      "marker": "STEP\\s+-\\s+BACKWATER[\\s\\S]*GROUND\\s+POINTS",
+      "prompts": [
+        {"id": "grpt", "pattern": "F3\\}Insert GrPt"},
+        {"id": "bank_left", "pattern": "Enter\\s+LEFT\\s+Channel Bank Station"},
+        {"id": "bank_right", "pattern": "Enter\\s+RIGHT\\s+Channel Bank Station"},
+        {"id": "n_left", "pattern": "Enter\\s+LEFT\\s+Manning's n Value"},
+        {"id": "n_channel", "pattern": "Enter\\s+CHANNEL\\s+Manning's n Value"},
+        {"id": "n_right", "pattern": "Enter\\s+RIGHT\\s+Manning's n Value"},
+        {"id": "irr_discharge", "pattern": "Enter Discharge"},
+        {"id": "irr_begin", "pattern": "TO BEGIN CALCULATIONS\\s+Press\\s+<Enter>"}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    {
+      "id": "nd_irr_result",
+      "kind": "result",
+      "marker": "(?s)\\A(?!.*(?:Enter|Press|SAVING\\s+FILE)).*NORMAL\\s+DEPTH.*GROUND\\s+POINTS.*WS ELEV\\s+-?\\d",
+      "fields": [
+        {"name": "in_bank_left", "row": 16, "col": 37, "width": 9},
+        {"name": "in_bank_right", "row": 16, "col": 67, "width": 9},
+        {"name": "in_n_left", "row": 17, "col": 37, "width": 9},
+        {"name": "in_n_channel", "row": 17, "col": 53, "width": 9},
+        {"name": "in_n_right", "row": 17, "col": 67, "width": 9},
+        {"name": "in_irr_discharge", "row": 18, "col": 37, "width": 9},
+        {"name": "in_irr_slope", "row": 18, "col": 51, "width": 10},
+        {"name": "depth", "row": 18, "col": 67, "width": 9},
+        {"name": "ws_elev", "row": 20, "col": 12, "width": 20},
+        {"name": "area", "row": 20, "col": 37, "width": 9},
+        {"name": "top_width", "row": 20, "col": 53, "width": 9},
+        {"name": "hyd_radius", "row": 20, "col": 67, "width": 9},
+        {"name": "flow_type", "row": 21, "col": 14, "width": 15},
+        {"name": "chan_velocity", "row": 21, "col": 37, "width": 9},
+        {"name": "wet_perimeter", "row": 21, "col": 53, "width": 9},
+        {"name": "froude", "row": 21, "col": 67, "width": 9}
+      ],
+      "cite": [
+        "nd-irr-000001",
+        "nd-irr-000002",
+        "nd-irr-000003",
+        "nd-irr-000004",
+        "oracle/goldens/captures/obs-nodata-000001/screen-20.txt",
+        "oracle/goldens/captures/obs-nodata-000001/screen-24.txt"
+      ]
+    },
+    {
+      "id": "irr_editor",
+      "kind": "form",
+      "marker": "GROUND\\s+POINTS",
+      "prompts": [
+        {"id": "grpt", "pattern": "F3\\}Insert GrPt"},
+        {"id": "bank_left", "pattern": "Enter\\s+LEFT\\s+Channel Bank Station"},
+        {"id": "bank_right", "pattern": "Enter\\s+RIGHT\\s+Channel Bank Station"},
+        {"id": "n_left", "pattern": "Enter\\s+LEFT\\s+Manning's n Value"},
+        {"id": "n_channel", "pattern": "Enter\\s+CHANNEL\\s+Manning's n Value"},
+        {"id": "n_right", "pattern": "Enter\\s+RIGHT\\s+Manning's n Value"},
+        {"id": "irr_discharge", "pattern": "Enter Discharge"},
+        {"id": "irr_slope", "pattern": "Enter Slope"},
+        {"id": "irr_begin", "pattern": "TO BEGIN CALCULATIONS\\s+Press\\s+<Enter>"}
+      ],
+      "cite": [
+        "nd-irr-000001",
+        "obs-bankreject-000001",
+        "obs-nodata-000001"
+      ]
+    },
+    {
+      "id": "cd_circ_result",
+      "kind": "result",
+      "marker": "(?s)\\A(?!.*DEPTH is Greater than the DIAMETER).*CRITICAL\\s+DEPTH.*CIRCULAR\\s+CHANNEL.*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "critical_slope", "row": 11, "col": 54, "width": 10},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cd-circ-000001", "cd-circ-000002"]
+    },
+    {
+      "id": "cd_result",
+      "kind": "result",
+      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "critical_slope", "row": 11, "col": 54, "width": 10},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cd-vdit-000001", "cd-rect-000001", "cd-rect-000002", "cd-trap-000001"]
+    },
+    {
+      "id": "cd_circ_rejected",
+      "kind": "rejected",
+      "marker": "DEPTH is Greater than the DIAMETER",
+      "keeps_output": true,
+      "message": {"row": 20, "col": 13, "width": 51},
+      "cite": ["cd-circ-000039", "cd-circ-000040", "cd-circ-000041", "cd-circ-000042", "cd-circ-000043", "cd-circ-000044", "cd-circ-000045", "cd-circ-000046", "cd-circ-000047", "cd-circ-000048", "cd-circ-000049", "cd-circ-000050", "cd-circ-000051", "cd-circ-000052", "cd-circ-000053"]
+    },
+    {
+      "id": "cd_form",
+      "kind": "form",
+      "marker": "CRITICAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "discharge", "pattern": "Enter Discharge"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["cd-vdit-000001", "cd-rect-000001", "cd-trap-000001", "cd-circ-000001", "obs-fieldedge-000002"]
+    },
+    {
+      "id": "cc_circ_result",
+      "kind": "result",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "in_depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cc-circ-000001", "cc-circ-000002"]
+    },
+    {
+      "id": "cc_result",
+      "kind": "result",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "in_depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["cc-vdit-000001", "cc-rect-000001", "cc-trap-000001"]
+    },
+    {
+      "id": "cc_form",
+      "kind": "form",
+      "marker": "CHANNEL\\s+CAPACITY[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|TRAPEZOIDAL CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "depth", "pattern": "Enter Depth"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["cc-vdit-000001", "cc-rect-000001", "cc-trap-000001", "cc-circ-000001", "obs-fieldedge-000001", "obs-fieldover-000001"]
+    },
+    {
+      "id": "nd_circ_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*CIRCULAR\\s+CHANNEL[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_diameter", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "max_discharge", "row": 18, "col": 31, "width": 6},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["nd-circ-000001"]
+    },
+    {
+      "id": "nd_reg_result",
+      "kind": "result",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL)[\\s\\S]*Print\\s+<F5>",
+      "fields": [
+        {"name": "in_left_slope", "row": 8, "col": 31, "width": 4},
+        {"name": "in_right_slope", "row": 8, "col": 58, "width": 4},
+        {"name": "in_bottom_width", "row": 9, "col": 30, "width": 7},
+        {"name": "in_n", "row": 9, "col": 51, "width": 13},
+        {"name": "in_discharge", "row": 10, "col": 28, "width": 9},
+        {"name": "depth", "row": 10, "col": 50, "width": 14},
+        {"name": "in_slope", "row": 11, "col": 26, "width": 11},
+        {"name": "area", "row": 15, "col": 25, "width": 12},
+        {"name": "wet_perimeter", "row": 15, "col": 58, "width": 6},
+        {"name": "velocity", "row": 16, "col": 28, "width": 9},
+        {"name": "hyd_radius", "row": 16, "col": 55, "width": 9},
+        {"name": "top_width", "row": 17, "col": 27, "width": 10},
+        {"name": "froude", "row": 17, "col": 48, "width": 16},
+        {"name": "flow_type", "row": 18, "col": 49, "width": 16}
+      ],
+      "cite": ["nd-vdit-000001", "nd-rect-000001"]
+    },
+    {
+      "id": "nd_reg_form",
+      "kind": "form",
+      "marker": "NORMAL\\s+DEPTH[\\s\\S]*(?:V - DITCH|RECTANGULAR CHANNEL|CIRCULAR\\s+CHANNEL)",
+      "prompts": [
+        {"id": "left_slope", "pattern": "Enter Left Side Slope"},
+        {"id": "right_slope", "pattern": "Enter Right Side Slope"},
+        {"id": "bottom_width", "pattern": "Enter Bottom Width"},
+        {"id": "diameter", "pattern": "Enter Diameter"},
+        {"id": "n", "pattern": "Enter Manning's n"},
+        {"id": "discharge", "pattern": "Enter Discharge"},
+        {"id": "slope", "pattern": "Enter Slope"},
+        {"id": "begin", "pattern": "Begin Calculations\\s+<Enter>"}
+      ],
+      "cite": ["nd-vdit-000001", "nd-rect-000001", "nd-circ-000001"]
+    }
+  ],
+  "flows": {
+    "normal_depth/trapezoid": {
+      "steps": [
+        {
+          "expect": "title",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "main_menu",
+          "keys": "3{Enter}"
+        },
+        {
+          "expect": "shape_menu",
+          "keys": "T{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "left_slope",
+          "input": "left_slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "right_slope",
+          "input": "right_slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "bottom_width",
+          "input": "bottom_width",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "n",
+          "input": "n",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "discharge",
+          "input": "discharge",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "slope",
+          "input": "slope",
+          "then": "{Enter}"
+        },
+        {
+          "expect": "nd_trap_form",
+          "prompt": "begin",
+          "keys": "{Enter}"
+        },
+        {
+          "end": [
+            "nd_trap_result"
+          ]
+        }
+      ],
+      "cite": [
+        "nd-trap-000003",
+        "nd-trap-000004",
+        "nd-trap-000005"
+      ]
+    },
+    "normal_depth/irregular": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_01", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_01", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_02", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_02", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_03", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_03", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_04", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_04", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_05", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_05", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_06", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_06", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_07", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_07", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_08", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_08", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_09", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_09", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_10", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_10", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_11", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_11", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_12", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_12", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_13", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_13", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_14", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_14", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_15", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_15", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_16", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_16", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_17", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_17", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_18", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_18", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_19", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_19", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_20", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_20", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_21", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_21", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_22", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_22", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_23", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_23", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_24", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_24", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_25", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_25", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_26", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_26", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_27", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_27", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_28", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_28", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_29", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_29", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_30", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_30", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_31", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_31", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_32", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_32", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_33", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_33", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_34", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_34", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_35", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_35", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_36", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_36", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_37", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_37", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_38", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_38", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_39", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_39", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "sta_40", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "grpt", "input": "elev_40", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "bank_left", "input": "bank_left", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "bank_right", "input": "bank_right", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "n_left", "input": "n_left", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "n_channel", "input": "n_channel", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "n_right", "input": "n_right", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "irr_discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "irr_slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "irr_editor", "prompt": "irr_begin", "keys": "{Enter}"},
+        {"end": ["nd_irr_result"]}
+      ],
+      "cite": [
+        "nd-irr-000001",
+        "nd-irr-000002",
+        "nd-irr-000003",
+        "nd-irr-000004"
+      ],
+      "points": {"inputs": ["sta_", "elev_"], "min": 2, "max": 40, "end_keys": "{F10}",
+                 "cite": ["obs-irrtwopt-000001", "nd-irr-000001", "nd-irr-000006"]},
+      "sections": [
+        {"name": "the 40-point section",
+         "stations": ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "260", "270", "280", "290", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390"],
+         "elevations": ["12", "11.6", "11.1", "10.7", "10.4", "10.1", "9.9", "9.8", "9.6", "9.5", "9.3", "9.2", "9", "8.8", "8.5", "7.9", "6.2", "4.1", "2.6", "1.8", "1.5", "1.7", "2.4", "3.9", "5.8", "7.6", "8.4", "8.7", "8.9", "9.1", "9.2", "9.4", "9.6", "9.8", "10", "10.3", "10.7", "11.2", "11.8", "12.5"],
+         "discharges": ["2500", "8000", "30000"], "slopes": [".002"],
+         "cite": ["nd-irr-000001", "nd-irr-000002", "nd-irr-000003", "nd-irr-000004", "nd-irr-000005"]},
+        {"name": "Grapevine Branch, realdata/huntington-section-01.json",
+         "stations": ["0", "12.82", "25.64", "38.46", "51.28", "64.1", "76.92", "89.74", "102.56", "115.38", "128.21", "141.03", "153.85", "166.67", "179.49", "192.31", "205.13", "217.95", "230.77", "243.59", "256.41", "269.23", "282.05", "294.87", "307.69", "320.51", "333.33", "346.15", "358.97", "371.79", "384.62", "397.44", "410.26", "423.08", "435.9", "448.72", "461.54", "474.36", "487.18", "500"],
+         "elevations": ["660.4", "657.09", "653.35", "647.73", "641.36", "634.82", "626.02", "619.92", "613.3", "607.79", "603.72", "601.16", "596.87", "593.53", "591.78", "590.79", "589.22", "590.99", "591.95", "592.41", "592.81", "593.01", "593.6", "594.61", "596.45", "597.63", "597.93", "596.42", "595.75", "595.75", "595.71", "595.32", "595.59", "597.79", "602.38", "602.3", "602.04", "606.79", "613.53", "615.76"],
+         "discharges": ["1200", "3000"], "slopes": [".0035"],
+         "cite": ["nd-irr-000006", "nd-irr-000007", "nd-irr-000008", "nd-irr-000010"]}
+      ]
+    },
+    "step_backwater/irregular": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "4{Enter}"},
+        {"expect": "sb_start", "prompt": "sb_start", "input": "sb_start", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_01", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_01", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_02", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_02", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_03", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_03", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_04", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_04", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_05", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_05", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_06", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_06", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_07", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_07", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_08", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_08", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_09", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_09", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_10", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_10", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_11", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_11", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_12", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_12", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_13", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_13", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_14", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_14", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_15", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_15", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_16", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_16", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_17", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_17", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_18", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_18", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_19", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_19", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_20", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_20", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_21", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_21", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_22", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_22", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_23", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_23", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_24", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_24", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_25", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_25", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_26", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_26", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_27", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_27", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_28", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_28", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_29", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_29", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_30", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_30", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_31", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_31", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_32", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_32", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_33", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_33", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_34", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_34", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_35", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_35", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_36", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_36", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_37", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_37", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_38", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_38", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_39", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_39", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "sta_40", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "grpt", "input": "elev_40", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "bank_left", "input": "bank_left", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "bank_right", "input": "bank_right", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_left", "input": "n_left", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_channel", "input": "n_channel", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "n_right", "input": "n_right", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "irr_discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "sb_editor", "prompt": "irr_begin", "keys": "{Enter}"},
+        {"end": ["sb_result"]}
+      ],
+      "cite": ["sb-irr-000001", "sb-irr-000002", "sb-irr-000003"]
+    },
+    "critical_depth/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "cd_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-vdit-000001"]
+    },
+    "critical_depth/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "cd_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-rect-000001", "cd-rect-000002"]
+    },
+    "critical_depth/trapezoid": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cd_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_result"]}
+      ],
+      "cite": ["cd-trap-000001"]
+    },
+    "critical_depth/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cd_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cd_circ_result"]}
+      ],
+      "cite": ["cd-circ-000001", "cd-circ-000002"],
+      "fit": {"critical_depth_in_pipe": {"max_share": 0.9, "source": ["Critical flow in a circular section: Q = A sqrt(g A / T) at depth y, with A = D^2/8 (t - sin t), T = D sin(t/2), t = 2 acos(1 - 2y/D), Chow (1959), Open-Channel Hydraulics. The drawn discharge stays under the critical discharge at 0.9 D, so the critical depth falls inside the pipe. A judgement, not an observation of QUICK-2: Critical Depth printed the same Max Discharge at slopes .005 and .001 (cd-circ-000001, cd-circ-000002, Q-009), so a bound from the typed slope is not used for it."]}}
+    },
+    "channel_capacity/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "cc_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-vdit-000001"]
+    },
+    "channel_capacity/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "cc_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-rect-000001"]
+    },
+    "channel_capacity/trapezoid": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_result"]}
+      ],
+      "cite": ["cc-trap-000001"]
+    },
+    "channel_capacity/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cc_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "depth", "input": "depth", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "cc_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["cc_circ_result"]}
+      ],
+      "cite": ["cc-circ-000001", "cc-circ-000002"],
+      "fit": {"depth_in_pipe": {"max_share": 0.95, "cite": ["cc-circ-000018", "cc-circ-000001", "cc-circ-000002"]}}
+    },
+    "normal_depth/v_ditch": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "V{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "left_slope", "input": "left_slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "right_slope", "input": "right_slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_reg_result"]}
+      ],
+      "cite": ["nd-vdit-000001"]
+    },
+    "normal_depth/rectangle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "R{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "bottom_width", "input": "bottom_width", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_reg_result"]}
+      ],
+      "cite": ["nd-rect-000001"]
+    },
+    "normal_depth/circle": {
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "diameter", "input": "diameter", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "n", "input": "n", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "discharge", "input": "discharge", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "slope", "input": "slope", "then": "{Enter}"},
+        {"expect": "nd_reg_form", "prompt": "begin", "keys": "{Enter}"},
+        {"end": ["nd_circ_result"]}
+      ],
+      "cite": ["nd-circ-000001"],
+      "fit": {"discharge_in_pipe": {"max_share": 0.9, "source": ["Manning's equation for a pipe flowing full, Q = (1.486/n) A R^(2/3) S^(1/2) with A = pi D^2/4 and R = D/4 (D in ft), Chow (1959), Open-Channel Hydraulics. A judgement that bounds the drawn discharge, not an observation of QUICK-2."]}}
+    }
+  },
+  "ranges": {
+    "left_slope": {
+      "min": 0.1,
+      "max": 99.9,
+      "decimals": 1,
+      "boundaries": ["0", "-1", "100"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "nd-trap-000003"]
+    },
+    "right_slope": {
+      "min": 0.1,
+      "max": 99.9,
+      "decimals": 1,
+      "boundaries": ["0", "-1", "100"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-zerohold-000001", "nd-trap-000004"]
+    },
+    "bottom_width": {
+      "min": 0.1,
+      "max": 9999.9,
+      "decimals": 1,
+      "boundaries": ["0", "-1", "99999"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-zerohold-000001", "nd-trap-000005"]
+    },
+    "n": {
+      "min": 0.0001,
+      "max": 9.9999,
+      "decimals": 4,
+      "boundaries": [".000", "-1", "12.5"],
+      "practical": {"min": 0.011, "max": 0.5, "source": ["Chow (1959), Open-Channel Hydraulics, Table 5-6, as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.6, Table 3-1 Manning's n Values (natural streams, flood plains, lined and excavated channels): least minimum 0.011 (concrete trowel finish, glazed brick, smooth steel), greatest maximum 0.500 (vegetal lining). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.6/basic-data-requirements/geometric-data/energy-loss-coefficients"],
+        "shapes": {"circle": {"min": 0.008, "max": 0.033, "source": ["Chow (1959), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-1 Manning's n for Closed Conduits Flowing Partly Full: least minimum 0.008 (Lucite), greatest maximum 0.030 (corrugated metal storm drain, cemented rubble masonry). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient", "AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: greatest value 0.033 (6 x 2 in. corrugations, 60 in. diameter, unpaved). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]}}},
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negnstall-000001"]
+    },
+    "discharge": {
+      "min": 1,
+      "max": 999999,
+      "decimals": 0,
+      "boundaries": ["0", "-1", "1234567"],
+      "cite": ["obs-fieldedge-000002", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negreturn-000001"]
+    },
+    "diameter": {
+      "min": 0.1,
+      "max": 9999.9,
+      "decimals": 1,
+      "boundaries": ["0", "-1"],
+      "practical": {"min": 8, "max": 180, "source": ["AISI (1980), as reproduced in USACE HEC-RAS Hydraulic Reference Manual 6.5, Table 6-2 Manning's n for Corrugated Metal Pipe: diameters listed from 8 in. (0.667 ft) to 180 in. (15 ft). QUICK-2 asks for Diameter (in), so the bounds are in inches (cd-circ-000001, solver Requirement 4.4). https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.5/modeling-culverts/culvert-data-and-coefficients/manning-s-roughness-coefficient"]},
+      "cite": ["obs-fieldedge-000002", "cd-circ-000001"]
+    },
+    "depth": {
+      "min": 0.01,
+      "max": 999.99,
+      "decimals": 2,
+      "boundaries": ["0", "-1", "1000"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "cc-trap-000001"]
+    },
+    "slope": {
+      "min": 0.0001,
+      "max": 9.9999,
+      "decimals": 4,
+      "boundaries": ["0", "-1", "12.5"],
+      "cite": ["obs-fieldedge-000001", "obs-fieldover-000001", "obs-smallaccept-000001", "obs-zerohold-000001", "obs-negreturn-000002"]
+    }
+  },
+  "controls": [
+    {
+      "id": "nd-trap-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {
+        "left_slope": "3",
+        "right_slope": "2",
+        "bottom_width": "10",
+        "n": ".035",
+        "discharge": "300",
+        "slope": ".005"
+      },
+      "expect": {
+        "outcome": "result",
+        "printed": {
+          "depth": "3.27"
+        }
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "nd-trap-000002",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {
+        "left_slope": "3",
+        "right_slope": "2",
+        "bottom_width": "10",
+        "n": ".035",
+        "discharge": "500",
+        "slope": ".005"
+      },
+      "expect": {
+        "outcome": "result",
+        "printed": {
+          "depth": "4.22"
+        }
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "obs-nodata-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "setup": {
+        "omit_dirs": [
+          "QUICK2/DATA"
+        ]
+      },
+      "steps": [
+        {
+          "expect": "title",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "main_menu",
+          "keys": "3{Enter}"
+        },
+        {
+          "expect": "shape_menu",
+          "keys": "I{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "0{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "1{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "20{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "1{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "30{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{F10}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "10{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "20{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".05{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".035{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".05{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "100{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": ".005{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{Enter}"
+        },
+        {
+          "expect": "nd_irr_result",
+          "keys": "{F6}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "C{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "QUICK2\\DATA{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "TEST{Enter}"
+        },
+        {
+          "expect": "irr_editor",
+          "keys": "{Enter}"
+        },
+        {
+          "end": [
+            "stray_listing"
+          ],
+          "hold_ms": 3000
+        }
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "stray_listing"
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "obs-menudrop-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {
+          "expect": "title",
+          "keys": "3{Enter}"
+        },
+        {
+          "end": [
+            "main_menu"
+          ],
+          "hold_ms": 3000
+        }
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "main_menu"
+      },
+      "source": "spike 2026-11-06, outside repo"
+    },
+    {
+      "id": "obs-zerohold-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": "3{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".035{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": "300{Enter}"},
+        {"expect": "nd_trap_form", "keys": "0{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".005{Enter}"},
+        {"end": ["nd_trap_form"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "nd_trap_form"
+      },
+      "source": "exploratory session 47f8dd7a on 2026-11-21 (sessions write no run folder): 0 holds each of the six prompts and the next valid value is taken; single-field holds also in runs 20261121-164744-b832b8, 20261121-164743-974184, 20261121-164748-4c2552"
+    },
+    {
+      "id": "obs-negreturn-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": "3{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".035{Enter}"},
+        {"expect": "nd_trap_form", "keys": "-1{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".005{Enter}"},
+        {"expect": "nd_trap_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261121-165639-9da1f1"
+    },
+    {
+      "id": "obs-negreturn-000002",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": "3{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".035{Enter}"},
+        {"expect": "nd_trap_form", "keys": "300{Enter}"},
+        {"expect": "nd_trap_form", "keys": "-1{Enter}"},
+        {"expect": "nd_trap_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261121-165641-ab4f64"
+    },
+    {
+      "id": "obs-cdmenu-000001",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261125-100815-dff8b0"
+    },
+    {
+      "id": "obs-cdmenu-000002",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "1.8{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001523-d4c7e8"
+    },
+    {
+      "id": "obs-cdmenu-000003",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9999{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".5{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001714-439809"
+    },
+    {
+      "id": "obs-cdmenu-000004",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "7254{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".3{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001813-0cfa74"
+    },
+    {
+      "id": "obs-cdmenu-000005",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2.1{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095222-e41350"
+    },
+    {
+      "id": "obs-cdmenu-000006",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2.2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095333-e9502a"
+    },
+    {
+      "id": "obs-cdmenu-000007",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "12{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "3.6{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095543-11fe0c"
+    },
+    {
+      "id": "obs-cdmenu-000008",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "4.8{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095623-fd7c2f"
+    },
+    {
+      "id": "obs-cdmenu-000009",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".02{Enter}"},
+        {"expect": "cd_form", "keys": "2{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-095717-b9ff1c"
+    },
+    {
+      "id": "obs-cdmenu-000010",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "2.24{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-103746-339088"
+    },
+    {
+      "id": "obs-cdmenu-000011",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "12{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "3.91{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-103948-39aeec"
+    },
+    {
+      "id": "obs-cdmenu-000012",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "4.8{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".395{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-104105-fdeabb"
+    },
+    {
+      "id": "obs-cdmenu-000013",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "768{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".0023{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-104249-0cb6f5"
+    },
+    {
+      "id": "obs-negnstall-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": "3{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": "-1{Enter}"},
+        {"expect": "nd_trap_form", "keys": "300{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".005{Enter}"},
+        {"expect": "nd_trap_form", "keys": "{Enter}"},
+        {"end": ["nd_trap_form"], "hold_ms": 10000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "nd_trap_form"
+      },
+      "source": "20261121-165743-2917c3"
+    },
+    {
+      "id": "obs-bankreject-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}12{Enter}10{Enter}11.6{Enter}20{Enter}11.1{Enter}30{Enter}10.7{Enter}"},
+        {"expect": "irr_editor", "keys": "40{Enter}10.4{Enter}50{Enter}10.1{Enter}60{Enter}9.9{Enter}70{Enter}9.8{Enter}"},
+        {"expect": "irr_editor", "keys": "80{Enter}9.6{Enter}90{Enter}9.5{Enter}100{Enter}9.3{Enter}110{Enter}9.2{Enter}"},
+        {"expect": "irr_editor", "keys": "120{Enter}9{Enter}130{Enter}8.8{Enter}140{Enter}8.5{Enter}150{Enter}7.9{Enter}"},
+        {"expect": "irr_editor", "keys": "160{Enter}6.2{Enter}170{Enter}4.1{Enter}180{Enter}2.6{Enter}190{Enter}1.8{Enter}"},
+        {"expect": "irr_editor", "keys": "200{Enter}1.5{Enter}210{Enter}1.7{Enter}220{Enter}2.4{Enter}230{Enter}3.9{Enter}"},
+        {"expect": "irr_editor", "keys": "240{Enter}5.8{Enter}250{Enter}7.6{Enter}260{Enter}8.4{Enter}270{Enter}8.7{Enter}"},
+        {"expect": "irr_editor", "keys": "280{Enter}8.9{Enter}290{Enter}9.1{Enter}300{Enter}9.2{Enter}310{Enter}9.4{Enter}"},
+        {"expect": "irr_editor", "keys": "320{Enter}9.6{Enter}330{Enter}9.8{Enter}340{Enter}10{Enter}350{Enter}10.3{Enter}"},
+        {"expect": "irr_editor", "keys": "360{Enter}10.7{Enter}370{Enter}11.2{Enter}380{Enter}11.8{Enter}390{Enter}12.5{Enter}"},
+        {"expect": "irr_editor", "keys": "155{Enter}"},
+        {"end": ["irr_bank_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "irr_bank_rejected"
+      },
+      "source": "20261121-171145-3e44a3"
+    },
+    {
+      "id": "obs-bankreject-000002",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}12{Enter}10{Enter}11.6{Enter}20{Enter}11.1{Enter}30{Enter}10.7{Enter}"},
+        {"expect": "irr_editor", "keys": "40{Enter}10.4{Enter}50{Enter}10.1{Enter}60{Enter}9.9{Enter}70{Enter}9.8{Enter}"},
+        {"expect": "irr_editor", "keys": "80{Enter}9.6{Enter}90{Enter}9.5{Enter}100{Enter}9.3{Enter}110{Enter}9.2{Enter}"},
+        {"expect": "irr_editor", "keys": "120{Enter}9{Enter}130{Enter}8.8{Enter}140{Enter}8.5{Enter}150{Enter}7.9{Enter}"},
+        {"expect": "irr_editor", "keys": "160{Enter}6.2{Enter}170{Enter}4.1{Enter}180{Enter}2.6{Enter}190{Enter}1.8{Enter}"},
+        {"expect": "irr_editor", "keys": "200{Enter}1.5{Enter}210{Enter}1.7{Enter}220{Enter}2.4{Enter}230{Enter}3.9{Enter}"},
+        {"expect": "irr_editor", "keys": "240{Enter}5.8{Enter}250{Enter}7.6{Enter}260{Enter}8.4{Enter}270{Enter}8.7{Enter}"},
+        {"expect": "irr_editor", "keys": "280{Enter}8.9{Enter}290{Enter}9.1{Enter}300{Enter}9.2{Enter}310{Enter}9.4{Enter}"},
+        {"expect": "irr_editor", "keys": "320{Enter}9.6{Enter}330{Enter}9.8{Enter}340{Enter}10{Enter}350{Enter}10.3{Enter}"},
+        {"expect": "irr_editor", "keys": "360{Enter}10.7{Enter}370{Enter}11.2{Enter}380{Enter}11.8{Enter}390{Enter}12.5{Enter}"},
+        {"expect": "irr_editor", "keys": "150{Enter}"},
+        {"expect": "irr_editor", "keys": "255{Enter}"},
+        {"end": ["irr_bank_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "irr_bank_rejected"
+      },
+      "source": "20261121-171150-6d217d"
+    },
+    {
+      "id": "obs-fieldedge-000001",
+      "mode": "channel_capacity",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "keys": "100{Enter}"},
+        {"expect": "cc_form", "keys": "99.9{Enter}"},
+        {"expect": "cc_form", "keys": "9999.9{Enter}"},
+        {"expect": "cc_form", "keys": "9.9999{Enter}"},
+        {"expect": "cc_form", "keys": "999.99{Enter}"},
+        {"expect": "cc_form", "keys": "9.9999{Enter}"},
+        {"end": ["cc_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cc_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): 100 echoes %100.0; 99.9, 9999.9, 9.9999, 999.99 and 9.9999 fit their fields"
+    },
+    {
+      "id": "obs-fieldover-000001",
+      "mode": "channel_capacity",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "2{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "cc_form", "keys": "123456789{Enter}"},
+        {"expect": "cc_form", "keys": "99.9{Enter}"},
+        {"expect": "cc_form", "keys": "99999{Enter}"},
+        {"expect": "cc_form", "keys": "12.5{Enter}"},
+        {"expect": "cc_form", "keys": "1000{Enter}"},
+        {"expect": "cc_form", "keys": "12.5{Enter}"},
+        {"end": ["cc_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cc_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): each value past its print field is accepted and echoed with a leading %"
+    },
+    {
+      "id": "obs-fieldedge-000002",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9999.9{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "999999{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"end": ["cd_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "cd_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): diameter 9999.9 and discharge 999999 fit their fields"
+    },
+    {
+      "id": "obs-smallaccept-000001",
+      "mode": "normal_depth",
+      "shape": "trapezoid",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "T{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".04{Enter}"},
+        {"expect": "nd_trap_form", "keys": "2{Enter}"},
+        {"expect": "nd_trap_form", "keys": "10{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".00001{Enter}"},
+        {"expect": "nd_trap_form", "keys": "1234567{Enter}"},
+        {"expect": "nd_trap_form", "keys": ".00001{Enter}"},
+        {"end": ["nd_trap_form"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_trap_form"},
+      "source": "session ed51cabc on 2026-11-22 (sessions write no run folder): .04 (echo 0.0) and .00001 (echo 0.0000) are taken, not held; 1234567 echoes %1234567"
+    },
+    {
+      "id": "obs-irrtwopt-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}10{Enter}2{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": "10{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["nd_irr_result"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_irr_result"},
+      "source": "session 64ab4b1a on 2026-11-22 (sessions write no run folder): two ground points and F10 compute WS ELEV 7.60, Depth 5.6, with EXTENDED CROSS SECTION"
+    },
+    {
+      "id": "obs-irronept-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["irr_working"]}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_working"},
+      "source": "sessions b018e73c and d2c32fcf on 2026-11-22 and run 20261122-175134-d1f6a5: one ground point, F10 and Begin show 'W o r k i n g  ..........' and stay there; oracle/out/probe_working.py on 2026-11-22 watched it for 30 s, same text, never quiet for more than about 75 ms (Q-015)"
+    },
+    {
+      "id": "obs-bankexact-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "10.04{Enter}2{Enter}"},
+        {"expect": "irr_editor", "keys": "{F10}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}"},
+        {"expect": "irr_editor", "keys": "10{Enter}"},
+        {"expect": "irr_bank_rejected", "keys": "{Enter}"},
+        {"expect": "irr_editor", "keys": "10.04{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": ".035{Enter}"},
+        {"expect": "irr_editor", "keys": ".05{Enter}"},
+        {"expect": "irr_editor", "keys": "100{Enter}"},
+        {"expect": "irr_editor", "keys": ".005{Enter}"},
+        {"expect": "irr_editor", "keys": "{Enter}"},
+        {"end": ["nd_irr_result"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "nd_irr_result"},
+      "source": "session 6001ff05 on 2026-11-22 and oracle/out/probe_bankexact.py on 2026-11-22 (no run folder): bank 10 does not match ground station 10.04 (ERROR line), Enter returns to the RIGHT bank prompt with the LEFT bank -50.0 kept, and 10.04 is then taken; Begin computes WS ELEV 4.70 (Q-013, Q-017)"
+    },
+    {
+      "id": "obs-irrelev-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "0{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "20{Enter}0{Enter}"},
+        {"expect": "irr_editor", "keys": "5{Enter}"},
+        {"expect": "irr_editor", "keys": "30{Enter}-2{Enter}"},
+        {"expect": "irr_editor", "keys": "35{Enter}3{Enter}"},
+        {"expect": "irr_editor", "keys": "35{Enter}"},
+        {"end": ["irr_station_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_station_rejected"},
+      "source": "session 619da0d3 on 2026-11-22 (sessions write no run folder): elevation 0 is held, elevation -2 sends the cursor back to that point's station, and an equal station prints NOT INCREASING"
+    },
+    {
+      "id": "obs-irrstation-000001",
+      "mode": "normal_depth",
+      "shape": "irregular",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "3{Enter}"},
+        {"expect": "shape_menu", "keys": "I{Enter}"},
+        {"expect": "irr_editor", "keys": "-50{Enter}10{Enter}"},
+        {"expect": "irr_editor", "keys": "-60{Enter}"},
+        {"end": ["irr_station_rejected"], "hold_ms": 3000}
+      ],
+      "expect": {"outcome": "observed", "screen_id": "irr_station_rejected"},
+      "source": "session 6001ff05 on 2026-11-22 (sessions write no run folder): first station -50 is taken; -60 after it prints 'ERROR ... Stations -50  , -60  are NOT INCREASING !'"
+    }
+  ]
+}

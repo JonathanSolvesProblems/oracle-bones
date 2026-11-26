@@ -11,7 +11,17 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+ROOT = Path(__file__).resolve().parent.parent
+# In a workspace made by the power's init_workspace, oracle/power.json names the plugin root,
+# which holds the harness; in this repository the harness is here.
+_POWER = ROOT / "oracle" / "power.json"
+sys.dont_write_bytecode = _POWER.is_file()  # write nothing under the plugin root
+sys.path.insert(0, json.loads(_POWER.read_text(encoding="utf-8"))["plugin_root"] if _POWER.is_file() else str(ROOT))
+
+from oracle import paths  # noqa: E402
+
+if paths.ROOT is None:
+    paths.use_workspace(ROOT)
 
 from oracle import ledger  # noqa: E402
 from oracle.errors import OracleError  # noqa: E402
