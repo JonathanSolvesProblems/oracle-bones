@@ -2803,8 +2803,85 @@ function gradeA017() {
     for (const o of obs) { const v = vals('critical_depth', o.inputs), w = crownWord(crownSearch(o.inputs.diameter!, v.discharge!, X1, true)); for (const s of [1 + 1e-4, 1 - 1e-4]) { const w2 = crownWord(crownSearch(o.inputs.diameter!, v.discharge!, X1, true, s)); if (w2 !== w) changed.push(`${o.name} ×${s}: ${w2}`); } }
     row(`T1·D1·X1 F with A·√(g·A/T) × (1 ± 1e-4): ${changed.length ? `changes ${changed.join(', ')}` : 'no ending changes'}`); }
 }
+// ---- A-018: the last held-out round before the build ------------------------------------------
+/** The rule to build after A-017 graded: 2.4 with K1 (T1·D1·X2), a run-time error read as the menu. */
+const RULE_E = { id: 'T1·D1·X2', full: false };
+const A018_CASES: { name: string; d: string; q: string; part: string }[] = [
+  ...['2.24', '2.25', '2.26', '2.27', '2.28'].map((q, i) => ({ name: `M${i + 1}`, d: '9.6', q, part: 'a' })),
+  ...['3.91', '3.95', '3.99'].map((q, i) => ({ name: `M${i + 6}`, d: '12', q, part: 'a' })),
+  ...['.395', '.4', '.405'].map((q, i) => ({ name: `M${i + 9}`, d: '4.8', q, part: 'a' })),
+  { name: 'L1', d: '50.4', q: '216', part: 'b' },
+  { name: 'F1', d: '768', q: '.0023', part: 'd' },
+];
+function a018() {
+  const m2 = atShare(0.9382), all = all184(), obs = a016Observations(), tol = CIRCLE_TOL;
+  const rule = all.find((c) => c.id === RULE_E.id)!, X1 = all.find((c) => c.id === 'T1·D1·X1')!;
+  const variants = all.flatMap((c) => [false, true].flatMap((full) => [true, false].map((rt) => ({ c, full, rt, id: `${c.id} ${full ? 'F' : 'E'}${rt ? '' : 'u'}` }))));
+  const scored = variants.map((vr) => ({ vr, n: obs.filter((o) => crownFits(o, vr.c, vr.full, m2, vr.rt).ok).length }));
+  const best = Math.max(...scored.map((s) => s.n)), top = scored.filter((s) => s.n === best);
+  h(`A-018: the variants tied at the best score, ${best} of ${obs.length}: ${top.length} (${top.filter((s) => s.vr.full).length} with the full pipe at a trial on D)`);
+  const nobs = obs.length;
+  { const same = scored.find((s) => s.vr.id === `${RULE_E.id} E`)!; row(`the rule to build, ${RULE_E.id} E: ${same.n} of ${nobs}; the reading, T1·D1·X1 F: ${scored.find((s) => s.vr.id === 'T1·D1·X1 F')!.n} of ${nobs}`); }
+  const inputsOf = (d: string, q: string) => ({ diameter: d, n: '.013', discharge: q, slope: '.005' });
+  const table: string[] = [];
+  for (const c of A018_CASES) {
+    const inputs = inputsOf(c.d, c.q), v = vals('critical_depth', inputs), q = v.discharge!, D = f(f(val(c.d)) / 12);
+    const before = ALL.filter((g) => g.shape === 'circle' && g.mode === 'critical_depth' && sameInputs(g.inputs, inputs)).map((g) => g.id);
+    const r = crownSearch(c.d, q, rule, false), rf = crownSearch(c.d, q, X1, true);
+    const eps = [1 + 1e-4, 1 - 1e-4].map((s) => crownWord(crownSearch(c.d, q, rule, false, s))), epsF = [1 + 1e-4, 1 - 1e-4].map((s) => crownWord(crownSearch(c.d, q, X1, true, s)));
+    const g = new Map<string, number>(); for (const s of top) { const w = crownWord(crownSearch(c.d, q, s.vr.c, s.vr.full, 1, s.vr.rt)); g.set(w, (g.get(w) ?? 0) + 1); }
+    const p = onDiameterPipes().find((x) => val(x.d) === val(c.d)), num = p ? (crownEv(p.D, p.D, true) as { v: number }).v : NaN;
+    row(`${c.name} (${c.d} in, ${c.q} cfs): stored already: ${before.join(', ') || 'no'}; ${p ? `steps to trial ${p.k} on D for q above ${p.reach.toPrecision(5)} (${((q / p.reach - 1) * 100).toFixed(2)}% over); the full-pipe number ${num.toPrecision(5)}, result band ${(num / (1 + tol)).toPrecision(5)} to ${(num / (1 - tol)).toPrecision(5)} (q ${((q / num - 1) * 100).toFixed(3)}% from the number; ${((q / (num / (1 + tol)) - 1) * 100).toFixed(3)}% from the bottom, ${((q / (num / (1 - tol)) - 1) * 100).toFixed(3)}% from the top)` : `the floor ${cdFloor(D).q.toPrecision(4)} cfs, q ${(q / cdFloor(D).q).toPrecision(3)} of it`}`);
+    row(`    rule to build: ${crownWord(r)}${r.outcome === 'menu' ? ` (${menuHow(r)})` : ''}; at 1 ± 1e-4: ${eps.join(', ')}; T1·D1·X1 F: ${crownWord(rf)}${rf.y !== undefined ? ` at ${rf.y.toPrecision(7)}` : ''}; at 1 ± 1e-4: ${epsF.join(', ')}; the ${top.length} tied: ${[...g].map(([w, k]) => `${k} ${w}`).join(', ')}`);
+    row(`    T1·D1·X1 F path: ${rf.trace.slice(-5).join(', ')}`);
+    if (c.part === 'd') row(`    rule to build path: ${r.trace.slice(-4).join(', ')}`);
+    let fields = '';
+    if (rf.outcome === 'result') {
+      const out = cdFields(v, crownGeo(true), m2, rf.y!, CD_RULE.offset, 'q/A', D), pr = show('critical_depth', v, out);
+      fields = A016_FIELDS.map((k) => (pr[k] ?? '').trim()).join(' | ');
+      row(`    T1·D1·X1 F prints: ${A016_FIELDS.map((k) => `${k} ${(pr[k] ?? '').trim()}`).join(', ')}`);
+      const edge = A016_COMPUTED.map((k) => { const x = Number(out[k]), dec = ((pr[k] ?? '').trim().split('.')[1] ?? '').length, u = 10 ** -dec, half = (Math.floor(x / u) + 0.5) * u, near = Math.abs(x - half) < Math.abs(x - (half - u)) ? half : half - u; return { k, x, near, rel: Math.abs(x - near) / Math.abs(x) }; }).sort((a, b) => a.rel - b.rel);
+      row(`    nearest rounding boundaries: ${edge.slice(0, 2).map((e) => `${e.k} ${e.x.toPrecision(6)} against ${e.near.toPrecision(6)} (${(e.rel * 100).toPrecision(2)}%)`).join('; ')}`);
+    }
+    table.push(`| ${c.name} | ${c.d} | ${c.q} | ${crownWord(r)} | ${crownWord(rf)}${rf.y !== undefined ? ` at ${rf.y.toPrecision(5)}` : ''} | ${[...g].map(([w, k]) => `${k} ${w}`).join(', ')} | ${fields} |`);
+  }
+  console.log(`\n| Case | Diameter | Discharge | Rule to build | T1·D1·X1 F | The ${top.length} tied | ${A016_FIELDS.join(' | ')} |`);
+  console.log(`|${'---|'.repeat(6 + A016_FIELDS.length)}`);
+  for (const l of table) console.log(l);
+
+  h('The floor: the ending of the rule to build at q = floor × k in the 9999, 7254 and 12 in pipes (errors read as the menu)');
+  for (const d of ['9999', '7254', '12']) {
+    const D = f(f(val(d)) / 12), fl = cdFloor(D).q, ks = [0.5, 0.9, 0.99, 1.01, 1.1, 1.18, 1.5, 2, 2.5, 3, 5, 10, 100];
+    row(`${d} in (floor ${fl.toPrecision(4)} cfs): ${ks.map((k) => `${k}: ${crownWord(crownSearch(d, f(fl * k), rule, false))}`).join('; ')}`);
+    let lo = 1.01, hi = 100; // the change from the menu to a result, assuming one change
+    if (crownWord(crownSearch(d, f(fl * lo), rule, false)) === 'shape menu' && crownWord(crownSearch(d, f(fl * hi), rule, false)) === 'result') {
+      for (let i = 0; i < 50; i++) { const m = Math.sqrt(lo * hi); if (crownWord(crownSearch(d, f(fl * m), rule, false)) === 'result') hi = m; else lo = m; }
+      row(`    the menu up to about q = floor × ${lo.toPrecision(4)} (${(fl * lo).toPrecision(4)} cfs), a result from × ${hi.toPrecision(4)}, bisected on the ratio`);
+    }
+  }
+  h('Just above the floor, pipe by pipe: where the rule to build changes from the menu to a result, and what A-015\'s model (no run-time error) gave there');
+  for (const d of ['12', '24', '48', '96', '192', '384', '768', '1536', '3072', '6000', '7254', '9999']) {
+    const D = f(f(val(d)) / 12), fl = cdFloor(D).q;
+    let lo = 1.0001, hi = 1000;
+    const w = (k: number) => crownWord(crownSearch(d, f(fl * k), rule, false));
+    if (w(lo) !== 'shape menu') { row(`${d} in (floor ${fl.toPrecision(4)} cfs): ${w(lo)} at × ${lo}`); continue; }
+    for (let i = 0; i < 50; i++) { const m = Math.sqrt(lo * hi); if (w(m) === 'result') hi = m; else lo = m; }
+    const mid = Math.sqrt(lo), old = answerOf(rule, d, f(fl * mid)).a;
+    const mono = [1.0001, 1.05, 1.2, 1.5, 2, 3, 5, 10, 30, 100, 300].filter((k) => k <= lo || k >= hi).every((k) => w(k) === (k <= lo ? 'shape menu' : 'result'));
+    row(`${d} in (floor ${fl.toPrecision(4)} cfs): the menu up to × ${lo.toPrecision(4)} (${(fl * lo).toPrecision(4)} cfs), a result from × ${hi.toPrecision(4)}; one change on the grid checked: ${mono ? 'yes' : 'NO'}; at × ${mid.toPrecision(3)} (${(fl * mid).toPrecision(3)} cfs) A-015's model: ${old}`);
+  }
+  for (const [d, q] of [['768', '.0023'], ['768', '.0021'], ['768', '.0026'], ['9999', '1.5']] as const) {
+    const D = f(f(val(d)) / 12), fl = cdFloor(D).q, r = crownSearch(d, f(val(q)), rule, false);
+    row(`${d} in at ${q} cfs (${(val(q) / fl).toPrecision(3)} of the floor): rule to build ${crownWord(r)}${r.outcome === 'menu' ? ` (${menuHow(r)})` : r.y !== undefined ? ` at ${r.y.toPrecision(5)}` : ''}; at 1 ± 1e-4 ${[1 + 1e-4, 1 - 1e-4].map((s) => crownWord(crownSearch(d, f(val(q)), rule, false, s))).join(', ')}; A-015's model ${answerOf(rule, d, f(val(q))).a}; ${r.trace.slice(-3).join(', ')}`);
+  }
+  { // Where the rule to build never finishes on the observations: none should.
+    const nf = obs.filter((o) => { const v = vals('critical_depth', o.inputs); return crownSearch(o.inputs.diameter!, v.discharge!, rule, false).outcome === 'no_end'; });
+    row(`observations on which the rule to build never finishes: ${nf.map((o) => o.name).join(', ') || 'none'}`);
+    for (const o of obs.filter((x) => ['obs-cdmenu-000003', 'obs-cdmenu-000004'].includes(x.name))) { const v = vals('critical_depth', o.inputs), r = crownSearch(o.inputs.diameter!, v.discharge!, rule, false); row(`${o.name} (${o.inputs.diameter} in, ${o.inputs.discharge} cfs): ${menuHow(r)}; ${r.trace.slice(-3).join(', ')}`); } }
+}
 const which = process.argv[2];
 if (which === 'grade-a017') gradeA017();
+else if (which === 'a018') a018();
 else if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
 else if (which === 'a017') a017();
 else if (which === 'floor') floorReport();
@@ -2822,4 +2899,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017|grade-a017'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017|grade-a017|a018'); process.exit(2); }
