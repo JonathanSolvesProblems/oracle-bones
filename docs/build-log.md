@@ -2329,3 +2329,86 @@ preview's own origin, and the page is no wider than the window. Nothing was publ
 No server of this project was left running, and nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: quickened-app tasks 9 to 13, the second turn
+
+The second turn of the last entry's session used 54.31 credits over 15 min 22 s.
+
+### The headline batch and the ablation, outside Kiro
+
+Done by the person, not in a Kiro session of this project:
+
+- `results/headline-plan.md` (4e453ec), committed before the batch was recorded.
+- The batch, recorded from the command line with the plan's command (0248619): 999 goldens of
+  seed 201, at 48.5 cases a minute. The quick set rebuilt after it (511e7e0).
+- The two ablation runs, each in another Kiro window opened on an empty folder outside this
+  repository, from the prompt in `ablation/PROMPT.txt`: run 1 used 11.37 credits over 10 min
+  34 s, run 2 6.32 credits over 4 min 59 s. `ablation/README.md` says how they were made
+  (1b73e3f).
+- `results/headline-batch-201.json` and `scripts/grade_rebuild.py` (0c766ed).
+
+These four files were written outside Kiro.
+
+### The headline batch graded
+
+Settings: Claude Opus 5.5, a new session. The solver is at 5f76327 and was not changed.
+Nothing was run on the oracle.
+
+**Commits:**
+
+- d671882: `scripts/headline.py` writes `results/headline.md` and
+  `results/ablation-manual-only.md`; no number in either is typed.
+  `oracle/tests/test_headline.py` fails when either differs from what the script writes. The
+  script grades the rebuild and both ablation runs by `oracle.compare.compare_one`, reads the
+  committed goldens even under a scratch `ORACLE_GOLDENS`, and never writes the ledger. It runs
+  in about 3 s.
+- b3b27f7: `results/known-misses.json`, the 24 full-set misses in six classes, which
+  `oracle/tests/test_known_misses.py` checks against the comparator both ways; every test that
+  walked the goldens with typed ids reads it instead. The Limits entries in
+  `results/hauntings.md` and A-019 in `results/attempts.md`.
+- dbc39f0: the ledger after the comparator, and dated notes in four specs.
+- The commit before this entry: the proof page's count of its cases marked same and
+  different, each linked, under the headline it reads from `results/headline.md`.
+
+**The counts.** Quickened 980 of 999 on the batch, 335 of 337 on the earlier goldens
+(Step-Backwater's three not built). Run 2 48 of 999 and 53 of 337; run 1 33 of 999 and 52 of
+337. 568 of the 999 have a field QUICK-2 printed in its overflow form; with those fields left
+out, run 2 matches 71 and run 1 47. Run 2's numeric differences: median 0.19%, 81% under 1%.
+The comparator: quick set 195 of 200, full set 1315 of 1339. Every count the person typed
+agreed with the script's.
+
+**Findings and choices the person should see:**
+
+- Vitest failed 18 tests, not 17: the 18th was the proof test that expects no
+  `results/headline.md`, once step 1 wrote it. The others were 11 circle goldens, Property 11
+  and the search snapshot (the fixtures predate the batch, so they now hold the goldens before
+  it, the batch's seed read from `results/headline-batch-201.json`), the two irregular-flags
+  tests (a typed count of 27, now derived; `cut_off_area_counted` is raised on more batch
+  goldens, so the three-case list is kept for the earlier goldens and the batch's raised cases
+  must print QUICK-2's fields), and Property 10 of the station error (an empty draw range once
+  the batch's stations came into the span; the test draws in hundredths now).
+- The fifth class is named `depth-same-fields-differ`, not "a search that stops elsewhere": the
+  goldens show the printed Depth agrees and fields beside it differ, not where a search stops.
+  The person's reading is the question A-019 asks.
+- `results/known-misses.json` has a sixth class, `not-built`, for Step-Backwater's three, so the
+  list is the comparator's whole miss list. It has no Limits entry.
+- The limits page shows every `# Limits` entry under "Where Quickened gives no answer"
+  (quickened-app design). The five new entries are answers that differ, so that heading does
+  not fit them. The heading is not changed here.
+- On the proof page 19 of its 25 cases are marked same and 6 different: cc-circ-000035,
+  nd-circ-000020, and four circle "DEPTH is Greater than the DIAMETER" rejections
+  (cd-circ-000039, -000043, -000049, -000050), where QUICK-2's message window holds trailing
+  spaces and Quickened's message does not. The comparator does not compare messages. Not
+  changed here.
+- H-001's Flag line still names only the cases before the batch.
+- The links of the proof page's count go to `#/proof/<case id>`; the router reads that as the
+  proof page and scrolls to the case.
+- The offline pytest suite needs `.venv`: the `python` on the PATH has no hypothesis.
+
+**Checks.** Vitest 2583 passed. `npm run typecheck` passed. Playwright 39 passed, 1 skipped
+(the phone-width check, in the phone project only). pytest `-m "not live"`: 194 passed, 48
+deselected. It took 6 min 21 s in step 2 and 50 min 46 s in step 4, two compare tests taking
+274 s and 104 s of it, while other programs on the machine were busy; a first try in step 4
+was stopped at 20 min with no result.
+
+Credits: not counted here; they go in the next entry.
