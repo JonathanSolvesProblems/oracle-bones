@@ -2770,3 +2770,55 @@ M1, M6 and M9 were predicted before they ran, but no form written here produces 
 
 **Not part of this.** The solver is not changed. circle-short-chord's bugfix.md and design.md
 are revised in the next commit. Normal Depth's search (N2, Q-026) is not tested by any case here.
+
+## A-019: the headline batch graded
+
+**Written 2026-11-26, after the headline batch (seed 201, recorded in 0248619) was graded by
+`python scripts/headline.py` against the solver at 5f76327, which this session does not change.
+Nothing in this section is a prediction, and no class below is explained. Every count is that
+script's output (`results/headline.md`, `results/ablation-manual-only.md`) or the comparator's
+(`oracle/tests/test_known_misses.py`).**
+
+**The counts.** Of 1,000 cases drawn, QUICK-2 answered and stored 999 (998 results, 1 rejection);
+nd-circ-000036 did not finish within the runner's wait and has no golden. Quickened matches 980 of
+the 999. On the earlier goldens it matches 335 of 337 graded, and Step-Backwater's three are not
+built. The comparator's full set has 24 misses: the 19 of the batch, cc-circ-000035,
+nd-circ-000020 and the three Step-Backwater goldens. The two ablation runs, on the same cases:
+run 2 (the baseline) 48 of 999 and 53 of 337, run 1 33 of 999 and 52 of 337.
+
+**The classes.** `results/known-misses.json` lists every miss by class, with the fields that
+differ; the comparator's misses must be exactly that list. Read field by field from the goldens:
+
+| Class | Cases | What differs |
+|---|---|---|
+| `max-discharge-one-unit` | 7: cc-circ-000035, -000073, -000091, -000102, -000105, nd-circ-000079, -000097 | circle Max Discharge, Quickened one more in each; nothing else |
+| `circle-normal-depth-velocity` | 6: nd-circ-000020, -000024, -000049, -000070, -000076, -000087 | circle Normal Depth Velocity and Froude # by 0.1 to 0.3, in both directions; Depth by 0.01 in nd-circ-000087 only |
+| `flow-type-critical` | 3: cc-rect-000028, nd-irr-000052, nd-vdit-000091 | QUICK-2 CRITICAL beside Froude # `1.0`, `0.98`, `1.0`; Quickened SUBCRITICAL, SUBCRITICAL, SUPERCRITICAL with the same Froude # |
+| `last-digit` | 3: cc-vdit-000071, nd-irr-000084, nd-rect-000059 | one field's last digit, Quickened one more: Discharge `%41694`/`%41695`, Area `5892`/`5893`, Area `2439.3`/`2439.4` |
+| `depth-same-fields-differ` | 2: cd-rect-000058, nd-irr-000102 | the same Depth; Area `536.7`/`534.8` and Critical Slope `0.7375`/`0.7464`; WS Elev `145.16`/`145.17` and Froude # `1.51`/`1.50` |
+| `not-built` | 3: sb-irr-000001 to -000003 | Step-Backwater: QUICK-2 a result, Quickened not built |
+
+The person's reading named the fifth class "a search that stops elsewhere". The goldens show only
+that the printed Depth agrees and the fields beside it do not, so the class is named for that.
+
+**The question each class leaves for an Exhumer session.**
+
+- `max-discharge-one-unit`: what value does QUICK-2 hold for Max Discharge before it prints it,
+  and how does it round it? Q-028 asked this for cc-circ-000035 alone; seven cases now carry it,
+  each one more in Quickened.
+- `circle-normal-depth-velocity`: at what depth does QUICK-2 compute Velocity and Froude # in these
+  six pipes, and is it the depth it prints? Q-026 asked how the circle Normal Depth search goes on
+  when no 0.1 ft trial comes within 0.5%; whether these six reach that point is not known.
+- `flow-type-critical`: for which Froude numbers does QUICK-2 print CRITICAL? nd-irr-000052 shows
+  it does so at a printed 0.98; the edges of that band are not known.
+- `last-digit`: what value does QUICK-2 hold for the field before it rounds it in each of the three,
+  and is the difference in the value or in the rounding?
+- `depth-same-fields-differ`: at what depth does QUICK-2 stop in cd-rect-000058 and nd-irr-000102,
+  given that it prints the same Depth as Quickened and different fields beside it?
+- `not-built`: none for the Exhumer; Step-Backwater is not built.
+
+**Not part of this.** The solver is not changed. Each difference class has a Limits entry in
+`results/hauntings.md`, saying what each program prints and that the cause is not found. H-001's
+Flag line names the cases where the rebuild raises `cut_off_area_counted` before this batch; the
+batch raises it on more irregular goldens, and `app/test/flags.test.ts` checks that Quickened
+prints QUICK-2's fields on each of them.

@@ -3,7 +3,8 @@ import { search } from '../src/solver/search.ts';
 import { solve } from '../src/solver/index.ts';
 import { readFileSync } from 'node:fs';
 import { SNAPSHOT_PATH, computeSnapshot, entryOf, exactDecimal, searchOf, type SnapshotEntry } from './searchSnapshot.ts';
-import { golden } from './golden.ts';
+import { golden, goldens } from './golden.ts';
+import { HEADLINE_SEED } from './knownMisses.ts';
 
 const spec = { bottom: 0, first: 0.5, step: 0.5 };
 
@@ -149,8 +150,12 @@ describe('preservation: the prismatic and irregular searches return what they re
     expect(exactDecimal(0.1)).toBe('0.1000000000000000055511151231257827021181583404541015625');
     expect(exactDecimal(-3)).toBe('-3');
   });
-  it('every prismatic and irregular golden that reaches the search is in the snapshot, and no other', () => {
-    expect(Object.keys(computeSnapshot()).sort()).toEqual(Object.keys(snapshot).sort());
+  // The headline batch's goldens were recorded after the snapshot, so it does not hold them; the
+  // comparator grades them (results/headline.md).
+  it('every prismatic and irregular golden before the headline batch that reaches the search is in the snapshot, and no other', () => {
+    const later = new Set(goldens().filter((g) => g.seed === HEADLINE_SEED).map((g) => g.id));
+    expect(later.size).toBeGreaterThan(0);
+    expect(Object.keys(computeSnapshot()).filter((id) => !later.has(id)).sort()).toEqual(Object.keys(snapshot).sort());
   });
   for (const [id, entry] of Object.entries(snapshot)) {
     it(`${id}: same depth, value and trial count`, () => {

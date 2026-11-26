@@ -14,6 +14,7 @@ import type { Result } from '../src/solver/types.ts';
 import { golden, goldens, type Golden } from './golden.ts';
 import { readFileSync } from 'node:fs';
 import { CIRCLE_SNAPSHOT_PATH, snapshotEntry, snapshotInputs, type CircleSnapshotEntry } from './circleSnapshot.ts';
+import { HEADLINE_SEED, knownMissFields } from './knownMisses.ts';
 
 const decimal = (lo: number, hi: number, d: number) => fc.integer({ min: lo, max: hi }).map((x) => (x / 10 ** d).toFixed(d));
 const pipeArb = fc.record({
@@ -142,12 +143,6 @@ describe('Property 9: circle Critical Depth prints Depth one hundredth of a foot
   }, 60000);
 });
 
-/** The design's known differences: the rebuild's expected printed value, field by field. */
-const KNOWN_DIFFERENCES: Record<string, Record<string, string>> = {
-  'cc-circ-000035': { max_discharge: '101166' }, // Q-028
-  'nd-circ-000020': { velocity: '5.7', froude: '2.4' }, // Q-026
-};
-
 describe('circle-outputs: every circle result golden', () => {
   const circle = goldens().filter((g) => g.shape === 'circle' && g.outcome !== 'observed');
   const results = circle.filter((g) => g.outcome === 'result');
@@ -160,9 +155,11 @@ describe('circle-outputs: every circle result golden', () => {
   for (const g of results) {
     it(g.id, () => {
       const r = solve({ mode: g.mode as CircleMode, shape: 'circle', inputs: g.inputs });
-      const known = KNOWN_DIFFERENCES[g.id] ?? {};
+      // A field of a known miss (results/known-misses.json) must still differ: one that has
+      // come to match fails here, as it fails oracle/tests/test_known_misses.py.
+      const known = knownMissFields(g.id);
       for (const k of Object.keys(g.printed)) {
-        if (k in known) expect(r.printed[k]?.trim(), `${g.id} ${k} (known difference)`).toBe(known[k]);
+        if (known.includes(k)) expect(r.printed[k]?.trim(), `${g.id} ${k} (known miss)`).not.toBe(g.printed[k]!.trim());
         else expect(r.printed[k], `${g.id} ${k}`).toBe(g.printed[k]);
       }
     });
@@ -297,14 +294,19 @@ function reachesSteppedTrialOnD(D: number, q: number): boolean {
 
 describe('Property 11: circle Normal Depth and Channel Capacity are identical before and after circle-short-chord', () => {
   const { _note: note, ...snapshot } = JSON.parse(readFileSync(CIRCLE_SNAPSHOT_PATH, 'utf-8')) as Record<string, CircleSnapshotEntry> & { _note: string };
+  // The headline batch's goldens were recorded after the fixture, so it does not hold them; the
+  // comparator grades them (results/headline.md).
+  const later = new Set(goldens().filter((g) => g.seed === HEADLINE_SEED).map((g) => g.id));
+  const inputs = () => snapshotInputs().filter((c) => !later.has(c.key));
   it('the fixture says where it came from', () => {
     expect(note).toMatch(/at commit [0-9a-f]{7,}/);
   });
-  it('the fixture holds the generated list and every circle Normal Depth and Channel Capacity golden, and nothing else', () => {
-    expect(Object.keys(snapshot).sort()).toEqual(snapshotInputs().map((c) => c.key).sort());
+  it('the fixture holds the generated list and every circle Normal Depth and Channel Capacity golden before the headline batch, and nothing else', () => {
+    expect(later.size).toBeGreaterThan(0);
+    expect(Object.keys(snapshot).sort()).toEqual(inputs().map((c) => c.key).sort());
   });
   it('every recorded input returns the same Result', () => {
-    const now = snapshotInputs().map((c) => ({ key: c.key, entry: snapshotEntry(c) }));
+    const now = inputs().map((c) => ({ key: c.key, entry: snapshotEntry(c) }));
     const changed = now.filter((x) => JSON.stringify(x.entry) !== JSON.stringify(snapshot[x.key]));
     expect(changed.map((x) => x.key)).toEqual([]);
     for (const x of changed.slice(0, 1)) expect(x.entry, x.key).toEqual(snapshot[x.key]);

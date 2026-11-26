@@ -5,7 +5,9 @@ import { join } from 'node:path';
 import { DATA, open, ROOT } from './helpers.ts';
 
 const collapse = (s: string): string => s.replace(/\s+/g, ' ').trim();
-const KNOWN_DIFFERENCES = ['cc-circ-000035', 'nd-circ-000020'];
+// The comparator's known misses, by case id (results/known-misses.json), never typed here.
+const KNOWN_MISSES = new Set((JSON.parse(readFileSync(join(ROOT, 'results', 'known-misses.json'), 'utf-8')) as
+  { classes: { cases: Record<string, string[]> }[] }).classes.flatMap((c) => Object.keys(c.cases)));
 
 test('the limits page: every haunting, every Limits paragraph, each open question plain first', async ({ page }) => {
   await open(page, '#/limits');
@@ -30,5 +32,7 @@ test('the proof page: each listed case, the known differences as different, the 
   for (const c of DATA.proof) {
     await expect(page.locator(`#case-${c.id} pre`)).toHaveText(c.capture);
   }
-  for (const id of KNOWN_DIFFERENCES) await expect(page.locator(`#case-${id} h2`)).toContainText('different');
+  const listed = DATA.proof.filter((c) => KNOWN_MISSES.has(c.id));
+  expect(listed.length).toBeGreaterThan(0);
+  for (const c of listed) await expect(page.locator(`#case-${c.id} h2`)).toContainText('different');
 });

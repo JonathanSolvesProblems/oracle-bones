@@ -196,6 +196,11 @@ gives no answer because QUICK-2 gave none, and the rule behind it is described b
 explained. The app's limits page shows the paragraph after **Limits page:** of each entry; the
 quickened-app spec reads it from here and does not copy it.
 
+From 2026-11-26 it also lists each class of the comparator's known misses
+(`results/known-misses.json`): where Quickened prints otherwise than QUICK-2 and the cause is not
+found yet. Each entry says what differs, as the goldens show it, and nothing more; the question
+for each is in `results/attempts.md` A-019.
+
 ### Circle Critical Depth, a discharge under the full-pipe number at a trial on D
 
 - **Cases:** obs-cdmenu-000001, -000002, -000005 to -000012 (behaviour cases; ledger decisions 98, 102, 104, 106).
@@ -203,3 +208,43 @@ quickened-app spec reads it from here and does not copy it.
 - **Quickened:** returns no result and says "QUICK-2 returns to its shape menu with no result for this input."
 - **Why it is described, not explained:** circle-short-chord 2.6 (c); results/attempts.md A-017 graded and A-018 graded; the question that carries Q-029.
 - **Limits page:** For Critical Depth in a circular pipe of 4.8, 9.6, 12, 50.4, 52.8, 55.2 or 57.6 in, QUICK-2's search can reach a depth equal to the diameter. There, when the discharge is more than 0.5% below what the full pipe carries at critical flow, QUICK-2 went back to its shape menu without a message or an answer. It did this ten times in the 9.6, 12 and 4.8 in pipes, and three of the ten were predicted before they were run. Quickened gives no answer there either, and says that QUICK-2 returns to its shape menu. Why QUICK-2 does this is not known.
+
+### Circle Max Discharge, one unit above QUICK-2's
+
+- **Cases:** cc-circ-000035, cc-circ-000073, cc-circ-000091, cc-circ-000102, cc-circ-000105, nd-circ-000079, nd-circ-000097 (known-miss class `max-discharge-one-unit`).
+- **QUICK-2:** printed Max Discharge `101165`, `54287`, `19540`, `359`, `19975`, `34422` and `14050`.
+- **Quickened:** prints `101166`, `54288`, `19541`, `360`, `19976`, `34423` and `14051`, one unit more in each, and every other field as QUICK-2 printed it.
+- **Why it is described, not explained:** the cause is not found yet; ledger Q-028 holds cc-circ-000035; results/attempts.md A-019 states the question.
+- **Limits page:** In seven recorded circular pipes, Quickened's Max Discharge is one cubic foot per second more than QUICK-2 printed, for example 360 where QUICK-2 printed 359. Every other number of those answers is the same as QUICK-2's. Why the last digit differs is not found yet.
+
+### Circle Normal Depth, Velocity, Froude number or Depth not QUICK-2's
+
+- **Cases:** nd-circ-000020, nd-circ-000024, nd-circ-000049, nd-circ-000070, nd-circ-000076, nd-circ-000087 (known-miss class `circle-normal-depth-velocity`).
+- **QUICK-2:** printed Velocity `5.8`, `38.5`, `37.1`, `52.5` and `52.2` (the first five); Froude # `2.5`, `16.5`, `18.6`, `20.0` and `7.0` (all but nd-circ-000076); Depth `0.34` in nd-circ-000087.
+- **Quickened:** prints Velocity `5.7`, `38.8`, `36.8`, `52.7` and `52.3`; Froude # `2.4`, `16.6`, `18.4`, `20.1` and `7.1`; Depth `0.33` in nd-circ-000087. In the other five the Depth is the same as QUICK-2's.
+- **Why it is described, not explained:** the cause is not found yet; ledger Q-026 holds nd-circ-000020; results/attempts.md A-019 states the question.
+- **Limits page:** For Normal Depth in a circular pipe, in six recorded cases Quickened's velocity or Froude number differs from QUICK-2's by 0.1 to 0.3, and in one of them the depth differs by 0.01 ft. In the other five the depth is the same as QUICK-2's. Why they differ is not found yet.
+
+### Flow Type CRITICAL near a Froude number of 1
+
+- **Cases:** cc-rect-000028, nd-irr-000052, nd-vdit-000091 (known-miss class `flow-type-critical`).
+- **QUICK-2:** printed Flow Type `CRITICAL` in all three, beside a Froude # of `1.0`, `0.98` and `1.0`.
+- **Quickened:** prints the same Froude # and Flow Type `SUBCRITICAL` (cc-rect-000028, nd-irr-000052) or `SUPERCRITICAL` (nd-vdit-000091), and every other field as QUICK-2 printed it.
+- **Why it is described, not explained:** the cause is not found yet. nd-irr-000052 shows that QUICK-2 printed CRITICAL beside a Froude # of 0.98, so it does not keep CRITICAL for a Froude number of exactly 1; the rule it uses is not known. results/attempts.md A-019 states the question.
+- **Limits page:** When the Froude number is close to 1, QUICK-2 can call the flow CRITICAL where Quickened calls it subcritical or supercritical. This happened in three recorded cases, one of them with a Froude number of 0.98. The Froude number itself is the same in both programs. The rule QUICK-2 uses to call a flow critical is not found yet.
+
+### One field's last digit, one above QUICK-2's
+
+- **Cases:** cc-vdit-000071, nd-irr-000084, nd-rect-000059 (known-miss class `last-digit`).
+- **QUICK-2:** printed Discharge `%41694` (cc-vdit-000071, in its overflow form), Area `5892` (nd-irr-000084) and Area `2439.3` (nd-rect-000059).
+- **Quickened:** prints `%41695`, `5893` and `2439.4`, one more in the last digit, and every other field as QUICK-2 printed it.
+- **Why it is described, not explained:** the cause is not found yet; results/attempts.md A-019 states the question.
+- **Limits page:** In three recorded cases, one number's last digit is one more in Quickened than QUICK-2 printed: an area of 5893 where QUICK-2 printed 5892, an area of 2439.4 where it printed 2439.3, and a channel capacity where the last digit is 5 and QUICK-2's is 4. Every other number of those answers is the same. Why the last digit differs is not found yet.
+
+### The same Depth, with other fields not QUICK-2's
+
+- **Cases:** cd-rect-000058, nd-irr-000102 (known-miss class `depth-same-fields-differ`).
+- **QUICK-2:** printed Area `536.7` and Critical Slope `0.7375` in cd-rect-000058; WS Elev `145.16` and Froude # `1.51` in nd-irr-000102.
+- **Quickened:** prints the same Depth in both, and Area `534.8` and Critical Slope `0.7464` in cd-rect-000058; WS Elev `145.17` and Froude # `1.50` in nd-irr-000102.
+- **Why it is described, not explained:** the cause is not found yet; results/attempts.md A-019 states the question.
+- **Limits page:** In two recorded cases, Quickened prints the same depth as QUICK-2 but other numbers differ: for a rectangular channel's critical depth, an area of 534.8 sq ft where QUICK-2 printed 536.7 and a critical slope of 0.7464 where it printed 0.7375; for an irregular section's normal depth, a water surface 0.01 ft higher and a Froude number 0.01 lower. Why they differ is not found yet.

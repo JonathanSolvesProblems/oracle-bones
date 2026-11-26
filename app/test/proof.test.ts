@@ -1,14 +1,18 @@
 // The proof page (quickened-app task 10.3; criteria 5.1, 5.2). For each listed case the view model
 // holds the recorded capture, the golden's printed text and runJob's, marked same or different;
-// the two known differences are marked different. The expected texts are read here from the
-// goldens and captures, never typed.
+// a case is marked different exactly when it is a known miss (results/known-misses.json). The
+// expected texts are read here from the goldens and captures, never typed.
 import { describe, expect, it } from 'vitest';
 import { data } from 'virtual:quickened/data';
 import { runJob } from '../src/ui/state.ts';
 import { NO_HEADLINE, proofModel, proofView } from '../src/ui/views/proof.ts';
 import { findAll, textOf } from '../src/ui/vnode.ts';
 import type { AppJob } from '../src/ui/job.ts';
-import { finalCapture, golden } from './golden.ts';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parseHeadline } from '../build/headline.ts';
+import { finalCapture, golden, ROOT } from './golden.ts';
+import { isKnownMiss } from './knownMisses.ts';
 
 const model = proofModel(data.proof, data.headline);
 const jobOf = (g: { mode: string; shape: string; inputs: Readonly<Record<string, string>> }): AppJob =>
@@ -48,14 +52,25 @@ describe('the proof view model', () => {
       expect(c.same, c.id).toBe(c.rows.every((x) => x.same));
     }
   });
-  it('marks the two known differences different', () => {
-    for (const id of ['cc-circ-000035', 'nd-circ-000020']) expect(model.cases.find((c) => c.id === id)!.same, id).toBe(false);
+  // The comparator compares the outcome and the printed fields, not the message or the held
+  // prompt; the page marks those rows too, so a case can be different by its message alone.
+  it('marks every known miss (results/known-misses.json) different, and no other case on its outcome or printed fields', () => {
+    expect(model.cases.some((c) => isKnownMiss(c.id))).toBe(true);
+    for (const c of model.cases) {
+      if (isKnownMiss(c.id)) expect(c.same, c.id).toBe(false);
+      else expect(c.rows.filter((x) => x.kind === 'outcome' || x.kind === 'printed').every((x) => x.same), c.id).toBe(true);
+    }
   });
-  it('says no headline run has been recorded, with no count, while results/headline.md is missing', () => {
-    expect(data.headline).toBeNull();
-    const text = textOf(proofView(model));
-    expect(text).toContain(NO_HEADLINE);
-    expect(model.headline).toBeNull();
+  it('states the count and date of results/headline.md', () => {
+    const file = parseHeadline(readFileSync(join(ROOT, 'results', 'headline.md'), 'utf-8'));
+    expect(data.headline).toEqual(file);
+    expect(model.headline).toMatch(new RegExp(`${file.matched} of ${file.total}.*${file.run}`));
+    expect(textOf(proofView(model))).not.toContain(NO_HEADLINE);
+  });
+  it('says no headline run has been recorded, with no count, when there is none', () => {
+    const m = proofModel(data.proof, null);
+    expect(m.headline).toBeNull();
+    expect(textOf(proofView(m))).toContain(NO_HEADLINE);
   });
   it('states the count and date when there is a headline', () => {
     const m = proofModel(data.proof, { matched: 1, total: 2, run: '2026-01-02' });

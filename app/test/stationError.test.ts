@@ -70,13 +70,17 @@ describe('Property 10: the station error splits at its "!", and the message stay
   const [lo, hi] = stationSpan();
   // Stations as typed in the recorded cases: plain decimals with at most two decimals, read the
   // way the editor reads them.
+  // The pair is drawn in hundredths and read afterwards. Drawing the second station up to the
+  // first one's single-precision value gave an empty range when that value read below its
+  // typed hundredths; it failed so once the headline batch's stations came into the span.
   const HUNDREDTHS = 100;
-  const typed = (a: number, b: number) => fc.integer({ min: Math.ceil(a * HUNDREDTHS), max: Math.floor(b * HUNDREDTHS) })
-    .map((k) => readSingle(String(k / HUNDREDTHS)));
+  const kLo = Math.ceil(lo * HUNDREDTHS);
+  const kHi = Math.floor(hi * HUNDREDTHS);
+  const read = (k: number) => readSingle(String(k / HUNDREDTHS));
 
   it('for any previous station in the span and any station not greater, the split gives the text and the rest', () => {
     fc.assert(fc.property(
-      typed(lo, hi).chain((previous) => fc.tuple(fc.constant(previous), typed(lo, previous))),
+      fc.integer({ min: kLo, max: kHi }).chain((p) => fc.tuple(fc.constant(read(p)), fc.integer({ min: kLo, max: p }).map(read))),
       ([previous, station]) => {
         const message = stationError(previous, station);
         const split = splitStationError(message);

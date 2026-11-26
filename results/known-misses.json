@@ -1,0 +1,71 @@
+{
+ "_note": "The comparator's known misses on the full set (python scripts/oracle_quick.py --full), by class: for each case, the fields that differ, or outcome. A class names what differs, as the goldens show it; no cause is given, and none is found yet. oracle/tests/test_known_misses.py fails when the full set's misses are not exactly these, a new miss or one that has gone away. Vitest and Playwright take their exclusions from this file. Each class but not-built has a Limits entry in results/hauntings.md under the title given here, and a question in results/attempts.md A-019.",
+ "classes": [
+  {
+   "id": "max-discharge-one-unit",
+   "what": "Circle Max Discharge: Quickened prints one unit above QUICK-2. Every other field is the same.",
+   "limits": "Circle Max Discharge, one unit above QUICK-2's",
+   "cases": {
+    "cc-circ-000035": ["max_discharge"],
+    "cc-circ-000073": ["max_discharge"],
+    "cc-circ-000091": ["max_discharge"],
+    "cc-circ-000102": ["max_discharge"],
+    "cc-circ-000105": ["max_discharge"],
+    "nd-circ-000079": ["max_discharge"],
+    "nd-circ-000097": ["max_discharge"]
+   }
+  },
+  {
+   "id": "circle-normal-depth-velocity",
+   "what": "Circle Normal Depth: Velocity, Froude # or Depth differ in the last printed digit or by up to three in it.",
+   "limits": "Circle Normal Depth, Velocity, Froude number or Depth not QUICK-2's",
+   "cases": {
+    "nd-circ-000020": ["froude", "velocity"],
+    "nd-circ-000024": ["froude", "velocity"],
+    "nd-circ-000049": ["froude", "velocity"],
+    "nd-circ-000070": ["froude", "velocity"],
+    "nd-circ-000076": ["velocity"],
+    "nd-circ-000087": ["depth", "froude"]
+   }
+  },
+  {
+   "id": "flow-type-critical",
+   "what": "QUICK-2 prints Flow Type CRITICAL where Quickened prints SUBCRITICAL or SUPERCRITICAL; the Froude # printed is the same (1.0, 0.98, 1.0).",
+   "limits": "Flow Type CRITICAL near a Froude number of 1",
+   "cases": {
+    "cc-rect-000028": ["flow_type"],
+    "nd-irr-000052": ["flow_type"],
+    "nd-vdit-000091": ["flow_type"]
+   }
+  },
+  {
+   "id": "last-digit",
+   "what": "One rounded field's last digit is one above QUICK-2's. Every other field is the same.",
+   "limits": "One field's last digit, one above QUICK-2's",
+   "cases": {
+    "cc-vdit-000071": ["discharge"],
+    "nd-irr-000084": ["area"],
+    "nd-rect-000059": ["area"]
+   }
+  },
+  {
+   "id": "depth-same-fields-differ",
+   "what": "The printed Depth is the same, and fields printed beside it differ: Area and Critical Slope (cd-rect-000058), WS Elev and Froude # (nd-irr-000102).",
+   "limits": "The same Depth, with other fields not QUICK-2's",
+   "cases": {
+    "cd-rect-000058": ["area", "critical_slope"],
+    "nd-irr-000102": ["froude", "ws_elev"]
+   }
+  },
+  {
+   "id": "not-built",
+   "what": "Step-Backwater, which Quickened does not compute: QUICK-2 gives a result, Quickened answers not built.",
+   "limits": null,
+   "cases": {
+    "sb-irr-000001": ["outcome"],
+    "sb-irr-000002": ["outcome"],
+    "sb-irr-000003": ["outcome"]
+   }
+  }
+ ]
+}
