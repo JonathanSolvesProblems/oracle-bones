@@ -2087,3 +2087,88 @@ The hand check of 2.4 at both widths is the person's. No dev server was left run
 nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: quickened-app tasks 1 to 4
+
+The session of the last entry used 173.49 credits over 46 min 20 s.
+
+### quickened-app tasks 5 to 8
+
+Settings: Claude Opus 5.5, a new session.
+
+> Run tasks 5 to 8 of the quickened-app spec, in order, then stop. Tasks 1 to 4 are done and I
+> have looked at their screens at 1280 px and 375 px: they work.
+
+The person's rules were those of the last entry, with these changes: one commit per task, not
+per sub-task; each test still before its code, but the full suite run once per task; only the
+parts of the spec a task needs read. Two fixes from the person's look at the screens came with
+task 5. Midway the person added a rule: a typed count in a task that disagrees with the file it
+was counted from is not a reason to stop. Derive it from the file, correct the task's number,
+note it here and go on. Stop only when what QUICK-2 printed, a golden, or the meaning of a
+requirement is in question.
+
+**Commits**, one per task. Each test was shown failing before its code:
+
+- Task 5, the cross-section drawing (af02de1): `drawing/section.ts`, `axis.ts` and `svg.ts`,
+  Property 5, the water-surface mark on the drawing, before the main figure and as the
+  favicon. With it, the person's two fixes: the method list's Search limit sentence ended with
+  two full stops and now ends with one, and before a calculation the right page is the ruled
+  sketch page with the line "The result and the drawing appear here."
+- Task 6, hauntings on the results screen (c8994a7): `build/hauntings.ts`, `build/goldens.ts`,
+  the `virtual:quickened/data` plugin in Vite and Vitest, `ui/hauntingLinks.ts`, Property 7,
+  the Exact column with its caption, and the links.
+- Task 7, the worked examples (1b694c3): the two controls, the origin change on edit, the
+  sources block read from realdata/huntington-section-01.json, and both discharge sentences.
+- Task 8, the print view (23140d2): `views/print.ts`, `print.css`, the US Letter page and the
+  print colours in tokens.css, and Print offered only for a result.
+
+**Checks.** `npx vitest run` went from 34 files and 1140 tests to 35 and 1151 (task 5), 38 and
+1190 (task 6), 39 and 1200 (task 7), and 40 and 1207 (task 8), all passing. `npm run
+typecheck` passed after each task. `npm run build` writes dist/ with relative URLs and the
+favicon. The comparator's quick set is 195 of 200, unchanged: no solver file changed. Its run
+rewrote the `last_run` times in results/ledger.json, which are committed with this entry.
+
+**Stops and the person's calls:**
+
+- Task 5, Property 5 failed on five circle Critical Depth goldens (cd-circ-000081, 000082,
+  000083, 000085, 000087). The search stops at y = D, where the solver takes the full pipe's
+  section with Top Width = D (circle-short-chord 2.6 (a)), and the drawing had used the real
+  chord, which is 0 at the crown. The person's call: draw QUICK-2's assumption, as the walls
+  of `extended_section` are drawn. The pipe is drawn full, with a dashed line across the
+  diameter at the crown labelled "QUICK-2's assumption for a full pipe: top width taken as the
+  diameter". Property 5 stays as written.
+- Task 6.2 said "the real file's 15 Exact by field lines". results/hauntings.md has 13, one
+  for each case the entries name; the 15 counted the introduction's two mentions of the form.
+  The person's call: tasks.md now says 13, and the test types no count. It checks that each
+  case a haunting names has exactly one line and that no line names another case.
+- Task 7.4, criterion 8.9 said 3,000 cfs was chosen "to put the water surface between 595.75
+  and 596.42 ft". Neither record it cites holds that range. The ledger's Q-021 names 595.75 to
+  597.93, and the realdata file's caveat a bench near 595 to 596 ft. The person's call: drop
+  the range. Criterion 8.9 is amended with a dated note (2026-11-26), and the design's line on
+  it matches.
+
+**Findings and choices the person should see:**
+
+- The drawing writes no number that is not a printed field's text or the scale, as criterion
+  2.7 asks. The note under a circle Critical Depth drawing therefore says that QUICK-2 prints
+  Depth a little below the drawn water and links H-004 without the 0.01 ft, which the method
+  list gives. The person agreed.
+- Property 5 runs over the result goldens the solver answers with a result. sb-irr-000001 has
+  no drawing while Step-Backwater is not built. The person agreed.
+- Phone height of the drawing: a new token, `--drawing-phone-height: 200px`, gives the
+  design's 343 × 200. `--sketch-lines` sets the empty sketch page's height on a desktop.
+- A refusal or a stop links its hauntings too: H-009 on a circle Critical Depth refusal with a
+  message (not on a held prompt), and H-008 on a stop with `negative_input`. A `none` line
+  (H-008, H-009) gives the link and no exact value.
+- The print header's version and commit come from the data module: package.json's version and
+  `git rev-parse --short HEAD`. The build fails outside a git checkout. The print view is drawn
+  on `beforeprint` with the local date and replaces the page while printing, so no element
+  appears twice. Links in the print are written as text.
+- `@page` (US Letter portrait, 0.5 in) and the print colours sit in tokens.css, since the
+  stylesheet test allows a length or colour literal nowhere else.
+- The one-page fit of criterion 4.4 is a Playwright check of task 12.2. It has not been run.
+- No package was added.
+
+No dev server was left running, and nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
