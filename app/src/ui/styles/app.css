@@ -1,0 +1,60 @@
+/* Quickened's page styles. Every colour, size and space comes from tokens.css. */
+@import './tokens.css';
+@import './fonts.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--paper); color: var(--ink); }
+
+body {
+  margin: 0;
+  font: var(--text-md) var(--font-body);
+}
+
+a { color: var(--water); }
+
+:focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); }
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-12);
+}
+
+/* Top line: the name, and Calculate, Limits and Proof on the right. No logo. */
+.top-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  border-bottom: var(--hairline);
+}
+.top-line .name {
+  font: var(--text-lg) var(--font-label);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+.top-line ul { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-4); }
+.top-line li a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  min-width: var(--tap);
+}
+.top-line li a[aria-current='page'] { color: var(--ink); text-decoration-color: var(--pencil); }
+
+h1 { font: var(--text-xl) var(--font-body); font-weight: 600; margin: var(--space-6) 0 var(--space-4); }
+h2 { font: var(--text-lg) var(--font-body); font-weight: 600; margin: var(--space-6) 0 var(--space-2); }
+p { margin: 0 0 var(--space-4); }
+
+@media (max-width: 959.98px) {
+  .top-line .name, .top-line li a { font: var(--text-sm) var(--font-label); }
+  .top-line .name { letter-spacing: var(--label-tracking); }
+}

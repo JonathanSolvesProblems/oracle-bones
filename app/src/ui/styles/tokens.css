@@ -1,0 +1,51 @@
+/* Every colour, type size and space of Quickened's pages (quickened-app design: Tokens).
+   No other stylesheet may hold a colour, size or spacing literal; test/styles.test.ts checks. */
+
+:root {
+  /* Colour */
+  --paper: #F4EFE2;        /* page background, the field book's buff page */
+  --paper-rule: #D9CFB8;   /* the horizontal rules of tables and the ruled page */
+  --grid: #C9DCCB;         /* the cross-section paper grid behind the drawing */
+  --ink: #1F2A36;          /* text, ground line, borders */
+  --ink-muted: #5A6470;    /* secondary text, scale labels */
+  --pencil: #B23A2E;       /* the red centre rule, flags and the fields they mark */
+  --water: #2F6FA3;        /* the water-surface line and mark, links, focus ring */
+  --water-fill: #CFE0EE;   /* water connected to the channel */
+  /* cut-off water counted by QUICK-2: --water-fill with --water hatching at 45 degrees */
+  --water-cutoff: repeating-linear-gradient(45deg, var(--water) 0 1px, var(--water-fill) 1px 6px);
+  --ground: #6B4E2E;       /* the ground hatch */
+
+  /* Type: self-hosted IBM Plex (fonts.css), then the fallbacks of the design */
+  --font-label: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-figures: 'IBM Plex Mono', ui-monospace, monospace;
+  --label-tracking: 0.06em; /* column heads and field labels, upper case */
+  --text-xs: 12px / 16px;
+  --text-sm: 14px / 20px;
+  --text-md: 16px / 24px;
+  --text-lg: 20px / 28px;
+  --text-xl: 28px / 32px;
+  --text-figure: 40px / 48px;
+
+  /* Space */
+  --rule: 24px;            /* the ruled line: body line height, table row height, rhythm */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --margin-rule: 2px solid var(--pencil); /* the field book's red centre line */
+  --radius: 2px;           /* inputs and buttons; surfaces have no radius */
+  --tap: 44px;             /* least height and width of anything that can be pressed */
+  --focus: 2px solid var(--water);
+  --focus-offset: 2px;
+  --hairline: 1px solid var(--paper-rule); /* table rules and the binding between the pages */
+  --page-max: 1200px;      /* the desktop spread */
+}
+
+/* The main figure is 32px / 40px under 480px. */
+@media (max-width: 479.98px) {
+  :root { --text-figure: 32px / 40px; }
+}
