@@ -6,7 +6,8 @@ import { formFor } from '../forms.ts';
 import type { Row } from '../job.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { formView } from './form.ts';
-import { picker, pickerModel, shapeChoice } from './picker.ts';
+import { notBuiltModel, notBuiltView } from './notBuilt.ts';
+import { picker, pickerModel, shapeChoice, STEP_BACKWATER_SHAPE } from './picker.ts';
 
 export interface CalculatorState {
   mode: Mode | null;
@@ -34,7 +35,7 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
   const form = picked ? formFor(s.mode!, s.shape!) : null;
   let left: Child;
   if (!picked) left = h('p', { class: 'prompt' }, PICK_PROMPT);
-  else if (!form) left = parts.notBuilt ?? h('p', {}, 'Quickened does not compute this pair yet.');
+  else if (!form) left = parts.notBuilt ?? notBuiltView(notBuiltModel(s.mode!, s.shape ?? STEP_BACKWATER_SHAPE));
   else {
     left = formView({
       form, values: s.values, rows: s.rows, marked: s.marked,

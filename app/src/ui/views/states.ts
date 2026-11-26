@@ -7,6 +7,7 @@ import { screenLabel } from '../forms.ts';
 import type { AppJob } from '../job.ts';
 import type { ScreenState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
+import { notBuiltModel } from './notBuilt.ts';
 import { NOTICE, noticeView } from './notice.ts';
 
 export const QUICK2_MESSAGE = "QUICK-2's message:";
@@ -87,8 +88,9 @@ export function stateModel(job: AppJob, state: Exclude<ScreenState, { kind: 'idl
       return m;
     }
     case 'not_built': {
-      const m = base('not_built', 'Not built yet', job, state.result);
-      m.sentences = ['Quickened does not compute this pair yet.'];
+      const nb = notBuiltModel(state.mode, state.shape);
+      const m = base('not_built', nb.heading, job, state.result);
+      m.sentences = [nb.sentences[0]!, NO_RESULT];
       return m;
     }
     case 'result': {
