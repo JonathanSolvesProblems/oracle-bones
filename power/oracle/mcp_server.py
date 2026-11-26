@@ -19,6 +19,8 @@ PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]
 SERVER_INFO = {"name": "oracle", "title": "Oracle Bones harness", "version": "0.1.0"}
 
 
+# The tools that start a container. send_keys and read_screen need a session one of these made.
+DOCKER_TOOLS = ("boot_target", "run_case", "run_batch", "draft_target")
 NO_WORKSPACE = ("No workspace is set. Call set_workspace with the absolute path of your project folder, "
                 "then try again.")
 
@@ -50,6 +52,7 @@ class Server:
         self._pending = {}  # id of a request we sent -> what to do with the answer
         self._sent = 0
         self.workspace_from = None
+        self.docker_ok = False  # docker version answered once
 
     # ---- the workspace (installed power only) ------------------------------------------
 
@@ -136,6 +139,16 @@ class Server:
             from .errors import OracleError
             try:
                 result = workspace.init()
+            except OracleError as e:
+                result = e.to_dict()
+        elif name in DOCKER_TOOLS and not self.docker_ok:
+            # Before the oracle exists, so nothing else starts and nothing is written (8.1).
+            from . import sandbox
+            from .errors import OracleError
+            try:
+                sandbox.docker_check()
+                self.docker_ok = True
+                result = self.oracle.call(name, args)
             except OracleError as e:
                 result = e.to_dict()
         else:

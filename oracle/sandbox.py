@@ -47,6 +47,23 @@ def docker(*args, check=True, timeout=120, **kw):
     return r
 
 
+def docker_check():
+    """Run `docker version` once and say plainly what is wrong (resurrection-power 8.1): no
+    executable means not installed, a non-zero exit means installed but not running."""
+    try:
+        r = subprocess.run(["docker", "version", "--format", "{{.Server.Version}}"], capture_output=True,
+                           text=True, timeout=30)
+    except FileNotFoundError:
+        raise OracleError("docker_unavailable", "Docker is not installed: there is no docker command on the PATH. "
+                                                "Install Docker Desktop, start it, and try again.")
+    except subprocess.TimeoutExpired:
+        raise OracleError("docker_unavailable", "Docker is installed but not running: it did not answer within 30 s. "
+                                                "Start Docker Desktop and try again.")
+    if r.returncode != 0:
+        raise OracleError("docker_unavailable", "Docker is installed but not running. Start Docker Desktop and try "
+                                                "again.", {"docker": (r.stderr or "").strip()[-300:]})
+
+
 def docker_available():
     try:
         docker("info", "--format", "{{.ServerVersion}}", timeout=30)
