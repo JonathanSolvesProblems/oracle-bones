@@ -1595,3 +1595,71 @@ decision is open: `ledger_write` cannot reopen Q-029. tasks.md is not written, a
 is not changed. Not run.
 
 Credits: not counted here; they go in the next entry.
+
+**Correction, 2026-11-26** (the text above is left as written): "Two of them fix errors the
+session had written" is wrong. The false 2.7 sentence and "the ten cases it was not chosen on"
+were in my prompt to the A-015 session, not written by the session.
+
+### Credits: the review and design session
+
+The session in the last entry used 108.77 credits over 25 min 9 s.
+
+### The Exhumer on A-016: twelve cases
+
+Settings: the `exhumer` custom agent, in its own session.
+
+The Exhumer ran A-016's twelve cases once each with record true (decision 102). Nine are
+goldens, cd-circ-000064 to -000072. V2 (9.6 in, 1.8 cfs) and W1 (9999 in, .5 cfs) ended on the
+shape menu; each was added as a behaviour case, obs-cdmenu-000002 and -000003, and recorded at
+the start of the next case's call, so both ran twice. W2 (7254 in, .3 cfs) ended on the shape
+menu too; its behaviour case, obs-cdmenu-000004, is in the profile but not recorded (Q-034).
+The three menu runs ended as a timeout after a 10 s wait, none at the 60 s case limit. Nothing
+was graded. Decision 103 stops the session.
+
+Credits: 12.36. Time: 6 min 13 s.
+
+### A-016 graded, the requirements revised, and A-017
+
+Settings: Claude Opus 5.5, a new session.
+
+**The Exhumer's work, committed by itself** (89c65a3): the nine goldens, the two behaviour
+cases with their captures, MANIFEST.json, the profile and the ledger. The message says
+obs-cdmenu-000004 has no golden yet.
+
+**A-016 graded** (f03afe6). `grade-a016` (about 2 s) reads A-016 from 414cad4 and every
+golden, behaviour case and run folder decision 102 lists; the model rerun gives the committed
+outcome on 12 of 12 and the committed field on 42 of 42. 9 of 12, which is my count: V2, W1 and
+W2 ended on the shape menu, and the other nine as predicted, the three results on every field
+(V1's Critical Slope `0.0086`; 1.71 cfs shows as `2`). In the 9.6 in pipe, 1.8, 2, 3 and 10 cfs
+take the same three trials and reach trial 4, which equals D, which confirms my check. None of
+the 184 combinations fits all 69 observations; A-015's 56 fit 65 and miss the four menu endings.
+The section lists candidates for the discharge dependence without choosing one: q compared with
+a number met at the trial on D (with a variant scaling as D^2.5), q acting through the chord
+after trial 4, and a test on q from n or the slope whose written form 8 results refute. A cap at
+a fixed share of D, the ratio to the last trial and a straight-line look-ahead are ruled out by
+goldens; cd-circ-000045 and obs-cdmenu-000001 sit at ratios 1.1405 and 1.1408 and ended
+differently. A scan of 0.1 to 180 in finds eight pipes whose stored diameter is a stepped trial.
+Under the floor the model's chords reach y = 0 at chords 17 and 18, the first observation that
+fits A-013's reading of a run-time error as the shape menu.
+
+**circle-short-chord** (6f4c2d0). 2.7: under the floor QUICK-2 ends on the shape menu, so "it
+keeps searching" is refuted there; what the system returns instead is an open decision, and the
+flag stays until it is made. 2.6 and 2.10: the 9.6 in difference is 1.8 and 2 cfs; Q-029 stays
+answered and is carried to a new question that names it, as I chose. 2.4 says K1 and trial >= D
+stand for results and rejections, 65 of 65 with A-016's nine predicted, and are kept as the rule
+that reproduces them, not as how QUICK-2 tests a trial on D. 2.9: 295 of 323 today, 318 after,
+quick set unchanged at 192 and 195 of 200. 2.11 and 2.12: A-017 and the recording of
+obs-cdmenu-000004 run next, and A-017 is graded before the solver changes. The design still
+holds the open decision on reopening Q-029; it is not updated here.
+
+**A-017** (d57eed5), committed before anything runs. `a017` (about 1 s). Thirteen cases: 9.6 in
+at 2.1 to 2.9 cfs; 12 in at 3.6, 4.8 in at .2 and 2.4 in at .05 cfs; 9.6 in at 2 cfs with n .02.
+The rule to build gives the message on all thirteen. The D^2.5 variant puts the 9.6 in change
+between 2.01 and 2.28 cfs and predicts the menu at 4.8 and 2.4 in; B3 is its closest call, 0.45%.
+E1 is 2.1% over the discharge that reaches its trial on D. Nothing moves at 1 ± 1e-4.
+
+Two comparator runs (full set and quick set) rewrote the mismatch counts in results/ledger.json
+as a side effect; I restored the committed file. tasks.md is not written, the solver is not
+changed, and nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
