@@ -1818,7 +1818,7 @@ Credits: not counted here; they go in the next entry.
 
 The session in the last entry used 65.97 credits over 21 min 10 s.
 
-### circle-short-chord tasks 1 to 4.2, stopped at 4.3
+### circle-short-chord tasks 1 to 6, with a stop at 4.3 for stale tests
 
 Settings: Claude Opus 5.5, a new session.
 
@@ -1882,5 +1882,65 @@ results/ledger.json, which is not committed.
 cd-circ-000061 to -000063 (c865f11), and the goldens recorded since change the draw. Nothing
 under oracle/ changed this session. No test, golden, quick set or spec was changed to get past
 them. Tasks 4.3, 5 and 6 are not done; task 7 is the Exhumer's. Nothing was run on the oracle.
+
+**Second part: the stale tests, the quick set, and tasks 4.3 to 6.**
+
+> Good stop. Those failures are stale tests, not solver faults, and I want them fixed properly
+> before 4.3, not accepted. Same rules as before.
+
+The person asked for each failing group to be explained and its selection fixed, counts
+derived from the goldens, a test for the search rejections if nothing else covered them, the
+quick set rebuilt with its own command and committed by itself, the new counts put in 2.9 and
+the tasks with a dated note, and then 4.3, 5 and 6, with no assertion about what QUICK-2 printed
+weakened.
+
+**The stale tests** (c22d6d3). All three groups assumed a rejected regular golden is held at
+a form prompt. The 43 circle Critical Depth rejections cd-circ-000039 to -000089 are rejected
+by the search after the whole form is typed, with the message and no held prompt. The prompt
+order test (43 failures) looked up the held prompt, found none and failed on -1. It now checks
+a rejection by the search on the whole form, as it checks a result, and requires a message. The
+holds block (44 failures) expected 47 and found 90, and expected each search rejection to be
+held. It now covers the 47 goldens held at a prompt, as before. Its count test checks that
+there is at least one hold and that every rejection without a held prompt has a message. A new
+block covers every rejection without a held prompt: the form passes, and the outcome, held
+prompt, message and printed fields are the golden's. circle.test.ts already covered the 43, but
+from a typed list, so the new block is the one that will cover a new golden. The message is
+compared trimmed, because the golden's message is its padded message window. In circle.test.ts
+the count "finds the 60 circle result goldens" had been typed when 60 was every circle result.
+It is replaced by a test that every circle golden is a result, a hold, or a rejection by the
+search with the message, and that there is at least one result. Vitest: 930 passed.
+
+**The quick set** (3cc4821, by itself). `python -m oracle.record --build-quickset`, seed 1,
+from stored goldens, with no container. 21 cases left and 21 joined. cd-circ-000038, -000057
+and -000058 left; cd-circ-000050, -000062, -000082 and -000086 joined. On the rebuilt set the
+comparator gives 195 of 200, with the misses cc-circ-000035, nd-circ-000020 and sb-irr-000001 to
+-000003 on the same fields. Before the fix it would have given 191 of 200: that count is derived
+case by case from the comparator's full-set report on the unchanged solver, not run. The four
+that joined miss there and match now. bugfix.md 2.9, tasks.md and design.md got a dated note
+saying that 192 and 195 of 200 were right for the quick set of c865f11 (5014eaf).
+
+**Task 4.3** (a7166b7). Vitest 930 passed; offline Python 189 passed, 48 deselected; quick set
+195 of 200, full set 335 of 340. The comparator's mismatch counts in results/ledger.json are in
+the commit, and tasks 1 to 4 are ticked.
+
+**Task 5** (78981bf). circle-outputs 2.9 got a dated note. quick2-solver's design got Critical
+Depth's K1, trial ≥ D and the full-pipe number in The depth search, with the ending under the
+number described and not explained. The sentence "No circle Critical Depth golden reaches the
+branch" is gone. The search table and a pointer in the circle section follow. In the flag
+table, `returns_to_menu` has the new text and its two new uses. The design now says W1 and W2
+fit the reading of a run-time error as the menu. The search.ts header now says that circle.ts
+maps both new reasons to `returns_to_menu`, and neither header names a case id. H-009 has its
+three goldens and their exact critical depths from `design`. A-016 held, so its two sentences
+are written with cd-circ-000064 (1.6 cfs, the message) and cd-circ-000065 (1.71 cfs, Depth
+`0.59`). The script still labels those two cases "not run".
+
+**Task 6** (c7316df). A "Limits" section in results/hauntings.md, with one entry for 2.6 (c).
+Its ledger decisions, 98, 102, 104 and 106, were checked against the ledger. The Limits page
+paragraph is the design's draft and names no case id. There is no FEMA styling or claim, no
+mascot, and no "Known differences" section.
+
+The on-save hook ran the quick comparator after the search.ts edit. That run changed only the
+`last_run` times in results/ledger.json, and those changes are not committed. Task 7, the
+ledger entries of 2.10, is the Exhumer's. Nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
