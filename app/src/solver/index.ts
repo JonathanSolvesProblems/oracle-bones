@@ -7,7 +7,7 @@ import { criticalDepthCircle, normalDepthCircle } from './modes/circle.ts';
 import { criticalDepthPrismatic } from './modes/criticalDepth.ts';
 import { normalDepthPrismatic } from './modes/normalDepth.ts';
 import { normalDepthIrregular } from './modes/normalDepthIrregular.ts';
-import { failed, rejected, type Job, type RegularMode, type RegularShape, type Result } from './types.ts';
+import { failed, rejected, type Job, type Mode, type RegularMode, type RegularShape, type Result, type Shape } from './types.ts';
 
 export type { Flag, FlagCode, Job, Mode, Result, Shape } from './types.ts';
 
@@ -38,9 +38,22 @@ const REGULAR_SHAPES = new Set<string>(['trapezoid', 'v_ditch', 'rectangle', 'ci
 
 export const NOT_BUILT = 'not built';
 
+function isRegular(mode: Mode, shape: Shape): boolean {
+  return REGULAR_MODES.has(mode) && REGULAR_SHAPES.has(shape);
+}
+
+/**
+ * Whether solve() computes this pair, read from the tables it dispatches on: false exactly
+ * when solve() answers `not built` (quickened-app criterion 7.4). Changes no Result.
+ */
+export function isBuilt(mode: Mode, shape: Shape): boolean {
+  const key = `${mode}/${shape}`;
+  return isRegular(mode, shape) ? key in REGULAR_METHODS : key in METHODS;
+}
+
 export function solve(job: Job): Result {
   const key = `${job.mode}/${job.shape}`;
-  if (REGULAR_MODES.has(job.mode) && REGULAR_SHAPES.has(job.shape)) {
+  if (isRegular(job.mode, job.shape)) {
     const form = readRegularForm(job.mode as RegularMode, job.shape as RegularShape, job.inputs);
     if (!form.ok) return rejected(form.held);
     const method = REGULAR_METHODS[key];
