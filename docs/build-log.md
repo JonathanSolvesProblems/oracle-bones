@@ -2004,4 +2004,12 @@ in tasks 14 and 15, which wait for the Exhumer.
 Nothing was built and nothing was run on the oracle. The session stopped for the person's
 review.
 
+**After review.** The person made five calls: nd-irr-000006 at 1,200 cfs becomes the main
+example, with nd-irr-000010 kept beside it as the cut-off example; the station error splits at
+its "!" through a solver export; open questions get plain sentences; hauntings get exact
+values by field; and the no-other-origin rule, the axe check and Chromium only stay.
+results/hauntings.md got 15 Exact by field lines with values the entries already state, and
+results/limits-plain.md has 13 entries written from the ledger's text (f250dfb, by
+themselves). The spec followed (e8a4d91).
+
 Credits: not counted here; they go in the next entry.
