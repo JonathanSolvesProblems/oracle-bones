@@ -169,6 +169,18 @@ class Store:
 SAMPLE_EVERY = 20
 
 
+def profile_cases_note(ids):
+    """What a recording adds to its reply when it first recorded the profile's own cases
+    (resurrection-power Requirement 10.4): in a new workspace that is dozens of boots and minutes
+    of silence, and goldens the user did not ask for."""
+    if not ids:
+        return {}
+    return {"profile_cases": list(ids),
+            "note": "Before this case the oracle recorded the profile's own %d control case(s), which were not "
+                    "stored yet. They check the profile against the program, and they are in oracle/goldens/ "
+                    "beside this one. Later recordings skip this step." % len(ids)}
+
+
 def sequence(cid):
     tail = cid.rsplit("-", 1)[-1]
     return int(tail) if tail.isdigit() else None
@@ -398,13 +410,14 @@ class Recorder:
 
     def create(self, profile, mode, shape, inputs, manager=None):
         ledger.set_unobserved(profile_mod.unobserved(profile))
-        self.ensure_controls(profile, manager)
+        controls = self.ensure_controls(profile, manager)
         cases.steps_for(profile, mode, shape)  # unknown mode or shape fails before an id is taken
         job = {"id": self._new_id(profile, mode, shape), "mode": mode, "shape": shape, "inputs": dict(inputs),
                "control": None, "seed": None, "generator_version": None}
         out = self.record_job(profile, job, manager, block=False)
         self.update_coverage()
         out.pop("determinism")  # a differing second run is in the ledger's nondeterminism
+        out.update(profile_cases_note([c["case_id"] for c in controls]))
         return out
 
     def create_batch(self, profile, seed, count, modes=None, shapes=None, manager=None, range_set="accepted"):

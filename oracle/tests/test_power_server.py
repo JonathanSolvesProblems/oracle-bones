@@ -16,7 +16,7 @@ NINE = {"boot_target", "read_screen", "send_keys", "run_case", "run_batch", "com
 
 def installed_copy(tmp_path):
     plugin = tmp_path / "plugin"
-    shutil.copytree(ROOT / "power", plugin, ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(ROOT / "powers" / "oracle-bones", plugin, ignore=shutil.ignore_patterns("__pycache__"))
     return plugin
 
 

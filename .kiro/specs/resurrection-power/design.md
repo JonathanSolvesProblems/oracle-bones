@@ -84,3 +84,26 @@ same runner, reads one screen, and writes `oracle/targets/<id>.json` with `statu
   install tells whether the agents' tool list needs both names; any change is made here first,
   so the drift test still holds.
 - What MAINHLP.EXE does in the emulator is unknown until its live boot.
+
+## What the clean install showed (2026-11-26)
+
+Added from the command line, outside Kiro, after task 6.1 (`docs/build-log.md`, session 16).
+The documentation did not say any of these; the install did:
+
+- Kiro names a power installed from a folder after the folder, not after `plugin.json`'s `name`.
+  The package moved from `power/` to `powers/oracle-bones/`; `oracle/paths.py` names it as
+  `PACKAGE`, and a test fails when the folder's name is not the manifest's (1.5).
+- Installing copies the folder into Kiro's own powers folder. Nothing here depends on it.
+- Kiro found `python` by its bare name on Windows.
+- Kiro gave the server no workspace through MCP roots, so the workspace lives one window:
+  `set_workspace` is called again in each new one, and the no-workspace message carries the
+  agent there by itself.
+- Hooks copied into a window that had opened in Restricted Mode showed as disabled until the
+  window was reopened.
+
+For Requirement 10: `init_workspace` returns `next`, three sentences from `oracle/workspace.py`.
+`oracle/compare.py` takes the rebuild from `oracle/rebuild.json` in a workspace made by the power
+and from `oracle/harness.json` here; with neither it returns `not_graded` and exit code 0.
+`scripts/guard_goldens.py` picks its second sentence by whether `oracle/power.json` exists beside
+it. `Recorder.create` adds `profile_cases` and `note` to its reply when it had to record the
+profile's control cases first.

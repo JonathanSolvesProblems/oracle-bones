@@ -1,9 +1,9 @@
 """Write the generated parts of the power package from this repository (resurrection-power
-Requirement 5.1). Nothing under power/oracle/ or power/workspace/ is edited by hand.
+Requirement 5.1). Nothing under the package's oracle/ or workspace/ is edited by hand.
 
 Usage: python scripts/build_power.py [--check] [--power DIR]
 --check compares without writing and prints each differing, missing or extra file; exit code 1
-when there is any. DIR defaults to power/. Files are copied byte for byte.
+when there is any. DIR defaults to powers/oracle-bones/. Files are copied byte for byte.
 """
 import argparse
 import sys
@@ -88,7 +88,7 @@ def build(power):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="compare only; write nothing")
-    ap.add_argument("--power", default=str(ROOT / "power"), help="the package folder")
+    ap.add_argument("--power", default=str(ROOT / "powers" / "oracle-bones"), help="the package folder")
     args = ap.parse_args(argv)
     power = Path(args.power)
     if args.check:

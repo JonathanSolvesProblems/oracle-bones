@@ -11,7 +11,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "build_power.py"
-POWER = ROOT / "power"
+POWER = ROOT / "powers" / "oracle-bones"
 
 
 def check(power):

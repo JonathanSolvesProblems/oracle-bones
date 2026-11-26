@@ -280,6 +280,34 @@ def _write_mismatches(items, path):
     os.replace(tmp, path)
 
 
+NO_REBUILD = ("No rebuild is set for this workspace, so nothing was graded. When you have one, name its command "
+              "in oracle/rebuild.json, for example {\"command\": [\"node\", \"my-rebuild.js\"]}.")
+
+
+def rebuild_command(cfg):
+    """(command, time limit in seconds) of the rebuild to grade.
+
+    In this repository it is oracle/harness.json's. In a workspace made by the power it is the
+    workspace's own oracle/rebuild.json, or (None, limit) while the user has no rebuild: the
+    package's harness.json names this repository's app, which is not theirs to be graded on
+    (resurrection-power Requirement 10.2).
+    """
+    limit = cfg["rebuild"]["time_limit_s"]
+    if not paths.INSTALLED:
+        return cfg["rebuild"]["command"], limit
+    own = paths.ORACLE / "rebuild.json"
+    if not own.is_file():
+        return None, limit
+    try:
+        named = json.loads(own.read_text(encoding="utf-8"))
+    except ValueError:
+        raise OracleError("invalid_arguments", "oracle/rebuild.json is not JSON")
+    command = named.get("command") if isinstance(named, dict) else None
+    if not (isinstance(command, list) and command and all(isinstance(c, str) for c in command)):
+        raise OracleError("invalid_arguments", "oracle/rebuild.json needs a command, a list of strings")
+    return command, named.get("time_limit_s", limit)
+
+
 def run(which="quick", case_ids=None, cfg=None, profile=None, store=None, command=None,
         quickset_path=None, mismatches_path=None, write_ledger=True):
     """Compare and return the `compare` tool's output plus `problems`, `note` and `count`."""
@@ -293,23 +321,33 @@ def run(which="quick", case_ids=None, cfg=None, profile=None, store=None, comman
                 "report_path": _rel(mpath), "exit_code": 4, "note": note, "problems": list(problems),
                 "category": category}
 
+    try:
+        cfg = cfg or config_mod.load()
+    except OracleError as e:
+        return cannot(e.message, [json.dumps(e.detail)] if e.detail else [], e.category)
+    limit = cfg["rebuild"]["time_limit_s"]
+    if not command:
+        command, limit = rebuild_command(cfg)
+    if not command and paths.INSTALLED:
+        # A workspace made by the power with no rebuild yet: nothing to grade, and not a failure.
+        return {"total": 0, "matched": 0, "by_kind": {}, "by_field": {}, "uncovered": [],
+                "report_path": _rel(mpath), "exit_code": 0, "note": NO_REBUILD, "problems": [],
+                "not_graded": True}
     problems = golden_check(store.root)
     if problems:
         return cannot("the golden check failed; nothing was compared", problems, "golden_check_failed")
     try:
-        cfg = cfg or config_mod.load()
         profile = profile or profile_mod.load()
         goldens, uncovered = choose(which, store, case_ids, quickset_path)
     except OracleError as e:
         return cannot(e.message, [json.dumps(e.detail)] if e.detail else [], e.category)
     if not goldens:
         return cannot("no goldens to compare in the %s set" % which)
-    command = command or cfg["rebuild"]["command"]
     if not command:
         return cannot("no rebuild command in oracle/harness.json (rebuild.command is null)")
 
     requests = [{"id": g["id"], "mode": g["mode"], "shape": g["shape"], "inputs": g["inputs"]} for g in goldens]
-    got = run_rebuild(command, requests, cfg["rebuild"]["time_limit_s"])
+    got = run_rebuild(command, requests, limit, cwd=str(paths.ROOT) if paths.INSTALLED else None)
     run_id = runs.new_run_id()
     log = paths.RUNS / ("compare-" + run_id)
     log.mkdir(parents=True, exist_ok=True)
@@ -337,6 +375,8 @@ def run(which="quick", case_ids=None, cfg=None, profile=None, store=None, comman
 def summary(out, which):
     """The printed summary: counts grouped by field (Requirement 11.4)."""
     lines = []
+    if out.get("not_graded"):
+        return out["note"]
     if out["exit_code"] == 4:
         lines.append("could not compare: %s" % out["note"])
         lines.extend("  " + p for p in out["problems"])

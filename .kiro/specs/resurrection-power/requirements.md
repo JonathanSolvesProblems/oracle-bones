@@ -3,11 +3,11 @@
 ## Introduction
 
 The Kiro power is what a developer installs to run a resurrection on their own dead program.
-It is an Agent Plugins 1.0.0 package in `power/`: a manifest, one MCP server (the oracle) and
+It is an Agent Plugins 1.0.0 package in `powers/oracle-bones/` (`power/` until 2026-11-26; see 1.5): a manifest, one MCP server (the oracle) and
 skills. Everything else the method needs is copied into the user's workspace. The format was
 checked against the documentation on 2026-11-26; see the design.
 
-Terms: the *package* is `power/`. The *plugin root* is the folder Kiro runs it from. The
+Terms: the *package* is `powers/oracle-bones/`, written `power/` in the criteria below, which predate the move. The *plugin root* is the folder Kiro runs it from. The
 *workspace* is the folder the user has open in Kiro.
 
 ## Requirements
@@ -22,6 +22,8 @@ Terms: the *package* is `power/`. The *plugin root* is the folder Kiro runs it f
 2. THE SYSTEM SHALL ship `power/mcp.json` with the 1.0.0 `mcp.schema.json`, only `$schema` and `mcpServers` at the top level, and one stdio server that uses only `type`, `command`, `args`, `env` and `cwd`, whose `command` is a bare name, with no `cwd` (so it starts in the plugin root), and whose `env` does not set `PLUGIN_ROOT` or `PLUGIN_DATA`.
 3. THE SYSTEM SHALL ship each skill as `power/skills/<name>/SKILL.md` whose frontmatter `name` equals `<name>` and follows the Agent Skills name rules, with a non-empty `description` of at most 1,024 characters.
 4. THE SYSTEM SHALL ship no program binary, no emu2 file and no file from `oracle/vendor/`, `oracle/goldens/` or `oracle/out/`: no file in the package starts with the bytes `MZ` or `\x7fELF`, or ends in `.exe`, `.com` or `.zip`.
+
+5. THE SYSTEM SHALL keep the package in a folder named as `plugin.json` names the power, `oracle-bones`. _(Added 2026-11-26 from the command line, outside Kiro: the clean install showed that Kiro names a power installed from a folder after the folder, so `power/` installed as "power".)_
 
 ### Requirement 2: Run on a new target
 
@@ -105,3 +107,22 @@ Terms: the *package* is `power/`. The *plugin root* is the folder Kiro runs it f
 
 1. WHEN a profile's program is not in the workspace THE SYSTEM SHALL download it from the address in the profile into the workspace, as `scripts/setup.py` does now.
 2. WHEN the download's sha256 differs from the profile's pinned hash THE SYSTEM SHALL delete it, say both hashes, and boot nothing.
+
+### Requirement 10: What the clean install found
+
+Added 2026-11-26 from the command line, outside Kiro, after task 6.1. Kiro had reached its usage
+limit, so these criteria, their tests and their code were not written in a Kiro session. Each
+one is something the person met in a workspace made by the power; the record is in
+`docs/build-log.md`, session 16.
+
+**User Story:** As a developer who has just installed the power, I want it to tell me what my new workspace still needs, so that I am not misled by a guard that is off or a grade that is not mine.
+
+#### Acceptance Criteria
+
+1. WHEN `init_workspace` replies THE SYSTEM SHALL say in plain sentences, under `next`: that hooks shown as disabled stay off until the window is closed and the folder opened again, and that the guard does not run while they are off; that `set_workspace` is needed in each new window; and where the user names their rebuild's command.
+2. WHEN a workspace made by the power has no `oracle/rebuild.json` THE SYSTEM's grading script SHALL print one line saying that no rebuild is set and nothing was graded, grade nothing, and exit with code 0; it SHALL never grade the user on this repository's app. WHEN the file names a command THE SYSTEM SHALL grade that command, run in the workspace.
+3. WHEN the guard refuses an edit THE SYSTEM SHALL name what works where it runs: in this repository the recorder's command line, and in a workspace made by the power the oracle's `run_case` tool with `record` true.
+4. WHEN a recording first records the profile's own control cases THE SYSTEM SHALL list them in its reply and say that they check the profile against the program and where they are stored.
+5. THE SYSTEM's `resurrect` skill SHALL say each of 10.1, 10.2 and 10.4 before the user meets it, and that the first recording takes a few minutes.
+
+Not covered, and said in the README's limits: whether the Exhumer's `@oracle` tool source finds the power's server in a new workspace. No Exhumer run was made in a clean folder.

@@ -8,7 +8,7 @@ import json
 import re
 from pathlib import Path
 
-POWER = Path(__file__).resolve().parents[2] / "power"
+POWER = Path(__file__).resolve().parents[2] / "powers" / "oracle-bones"
 SCHEMA_BASE = "https://agent-plugins.org/schemas/1.0.0/"
 MANIFEST_FIELDS = {"$schema", "name", "version", "description", "author", "homepage", "repository",
                    "license", "keywords", "extensions"}
@@ -32,6 +32,13 @@ def test_plugin_manifest():
     assert isinstance(m["author"], dict) and set(m["author"]) <= {"name", "email", "url"} and m["author"]["name"]
     assert re.match(r"^\d+\.\d+\.\d+$", m["version"])
     assert isinstance(m["keywords"], list) and all(isinstance(k, str) and k for k in m["keywords"])
+
+
+def test_the_folder_carries_the_manifests_name():
+    """Requirement 1.5: Kiro names a power installed from a folder after the folder (the clean
+    install of 2026-11-26 registered power/ as "power"), so the folder is named as plugin.json is."""
+    assert POWER.is_dir(), POWER
+    assert POWER.name == _json("plugin.json")["name"]
 
 
 def test_mcp_config():

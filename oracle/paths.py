@@ -15,6 +15,9 @@ CODE_ORACLE = CODE / "oracle"
 HARNESS_CONFIG = CODE_ORACLE / "harness.json"
 PROFILE_SCHEMA = CODE_ORACLE / "targets" / "profile.schema.json"
 INSTALLED = (CODE / "plugin.json").is_file()
+# In this repository, the power package. Kiro names a power installed from a folder after the
+# folder, so the folder carries the name plugin.json gives (resurrection-power 1.5).
+PACKAGE = CODE / "powers" / "oracle-bones"
 
 ROOT = ORACLE = VENDOR = OUT = REPO_GOLDENS = GOLDENS = TARGETS = LEDGER = RUNS = DEFAULT_PROFILE = None
 

@@ -25,12 +25,16 @@ ask again.
 1. **Set the workspace.** If Kiro gives the oracle one workspace folder, it uses that. If not,
    every tool answers that you must call `set_workspace` first. Call it with the absolute path
    of your project folder. Everything the oracle writes goes under that folder, never into
-   the power.
+   the power. The oracle does not remember the folder: call `set_workspace` again in
+   each new window.
 2. **Initialise it.** Call `init_workspace`. It copies the Exhumer and Skeptic agents, four
    hooks, the oracle law steering file, the `resurrect` workflow, the scripts the hooks call,
    the QUICK-2 profile (`oracle/targets/quick2.json`, a worked example) and a `.gitignore`
    line for the downloads folder. A file that already exists with other content is left alone
-   and listed in the reply.
+   and listed in the reply. Then look at Kiro's Agent Hooks panel. If the four hooks show as
+   disabled, close the window and open the folder again: a window that opened in Restricted
+   Mode keeps them off until then, and the guard on `oracle/goldens/` does not run while they
+   are off.
 3. **Fetch and check the program.** For a profile with an address and a hash, the first
    tool that runs the program downloads it into `oracle/vendor/` and checks the hash. On a
    mismatch it deletes the download, prints both hashes and boots nothing. For your own
@@ -41,7 +45,10 @@ ask again.
 4. **Find one answer you can reproduce by hand.** A worked example from the manual or a saved
    printout. Run it through the oracle and check the printed value by hand. This is the first
    checkpoint; nothing else is trusted until it passes. For QUICK-2 it is Normal Depth for the
-   trapezoid at 300 cfs, which prints 3.27 ft.
+   trapezoid at 300 cfs, which prints 3.27 ft. The first recording in a new workspace (`run_case`
+   with `record: true`) takes a few minutes: before your case, the oracle records the profile's
+   own control cases to check the profile against the program, and says so in its reply. For
+   QUICK-2 that is 32 cases, and they stay in `oracle/goldens/` beside yours.
 5. **Let the Exhumer write the requirements.** Start the `resurrect` workflow with the target
    name. The Exhumer boots the program, maps its screens, runs cases and writes requirements
    from what the program prints. Each requirement cites the case id or screen capture that
@@ -51,7 +58,11 @@ ask again.
 7. **Commit predictions before running their cases.** When you grade the rebuild on a new
    batch, commit what the rebuild predicts first, then run the batch on the program. A
    prediction written after the answer is not evidence.
-8. **Write down the limits you found.** `ledger_read` with section `coverage` lists what was
+8. **Name your rebuild when you have one.** Two of the hooks grade your rebuild against the
+   goldens after each task and on save. Until you have a rebuild they grade nothing and say so.
+   Put its command in `oracle/rebuild.json`, for example `{"command": ["node", "my-rebuild.js"]}`.
+   The rebuild reads one JSON request per line and writes one JSON response per line.
+9. **Write down the limits you found.** `ledger_read` with section `coverage` lists what was
    never exercised. Record each difference from the exact answer as a haunting, and record
    with `ledger_write` op `stop` why you stopped. Report coverage only from the ledger.
 

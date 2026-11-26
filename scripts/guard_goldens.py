@@ -22,8 +22,15 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 GOLDENS = REPO / "oracle" / "goldens"
 
-REFUSAL = ("Refused: %s is under oracle/goldens/. Goldens are recorded from the binary by the case "
-           "runner, never typed. To replace one, a person runs python -m oracle.record --rerecord <case-id>.")
+_WHY = "Refused: %s is under oracle/goldens/. Goldens are recorded from the binary by the case runner, never typed. "
+# The second sentence names what works where the script runs. In this repository the harness is
+# here, so a person can rerecord from its command line. In a workspace made by the power's
+# init_workspace (oracle/power.json exists) the package is in the power's folder, and what works
+# is the oracle's own tool (resurrection-power Requirement 10.3).
+REFUSAL = _WHY + ("To record a case, call the oracle's run_case tool with record true; it adds a new case and never "
+                  "replaces one."
+                  if (REPO / "oracle" / "power.json").is_file() else
+                  "To replace one, a person runs python -m oracle.record --rerecord <case-id>.")
 
 
 def _norm(p):

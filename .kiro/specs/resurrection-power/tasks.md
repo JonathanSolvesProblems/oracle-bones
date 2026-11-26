@@ -33,7 +33,7 @@ Each task writes its tests first. "Live" means it boots the program; the rest ru
     - _Requirements: 2.4_
 
 - [ ] 6. The clean install (the person)
-  - [ ] 6.1 In an empty folder in a new Kiro window, install the power and reproduce the control case; paste back what happened, and record it in the build log. Live.
+  - [x] 6.1 In an empty folder in a new Kiro window, install the power and reproduce the control case; paste back what happened, and record it in the build log. Live.
     - _Requirements: 3.1_
   - [ ] 6.2 Write the README's "How to run it" from that record only. Offline.
     - _Requirements: 3.2_
@@ -47,3 +47,11 @@ Each task writes its tests first. "Live" means it boots the program; the rest ru
 - [ ]* 8. Second target (optional)
   - [ ]* 8.1 Point the power at USNO's Interactive Computer Ephemeris, only if everything else is done by December 1. Live.
     - _Requirements: 2.1_
+
+- [x] 9. What the clean install found (from the command line, outside Kiro, 2026-11-26)
+  - [x] 9.1 Test that the package's folder carries the manifest's name; then move `power/` to `powers/oracle-bones/` and make the script, the tests and the paths follow. Offline.
+    - _Requirements: 1.5_
+  - [x] 9.2 Test `init_workspace`'s `next`, the grading script with no rebuild and with `oracle/rebuild.json`, the guard's message in both places, the first recording's note and the skill's words; then write them. Offline.
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+  - [x] 9.3 Drive the server from a copy of the package outside this repository through `set_workspace`, `init_workspace` and the control case. Live.
+    - _Requirements: 6.1, 3.1_

@@ -56,7 +56,7 @@ def test_init_leaves_a_different_file_alone_and_lists_it(tmp_path):
 
 def test_a_template_that_differs_from_this_repository_fails_the_drift_check(tmp_path):
     power = tmp_path / "power"
-    shutil.copytree(ROOT / "power", power, ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(ROOT / "powers" / "oracle-bones", power, ignore=shutil.ignore_patterns("__pycache__"))
     p = power / "workspace" / ".kiro" / "agents" / "skeptic.md"
     p.write_bytes(p.read_bytes() + b"\nedited\n")
     r = subprocess.run([sys.executable, str(SCRIPT), "--check", "--power", str(power)],

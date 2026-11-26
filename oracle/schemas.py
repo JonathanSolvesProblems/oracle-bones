@@ -101,7 +101,9 @@ TOOLS = {
                        "screen_id": {"type": ["string", "null"]},
                        "printed": STRMAP, "message": {"type": ["string", "null"]}, "files": FILES,
                        "capture_path": {"type": "string"}, "recorded": {"type": "boolean"},
-                       "reason": {"type": ["string", "null"]}},
+                       "reason": {"type": ["string", "null"]},
+                       "profile_cases": {"type": "array", "items": {"type": "string"}},
+                       "note": {"type": "string"}},
                       ["run_id", "case_id", "outcome", "printed", "message", "files", "capture_path", "recorded"]),
     },
     "run_batch": {
@@ -197,8 +199,9 @@ POWER_TOOLS = {
                        "copied": {"type": "array", "items": {"type": "string"}},
                        "unchanged": {"type": "array", "items": {"type": "string"}},
                        "kept": {"type": "array", "items": {"type": "string"}},
-                       "gitignore": {"enum": ["added", "present"]}},
-                      ["workspace", "copied", "unchanged", "kept", "gitignore"]),
+                       "gitignore": {"enum": ["added", "present"]},
+                       "next": {"type": "array", "items": {"type": "string"}}},
+                      ["workspace", "copied", "unchanged", "kept", "gitignore", "next"]),
     },
     "draft_target": {
         "description": "Boot a new program once: unpack the zip archive into the workspace's downloads folder, start "
