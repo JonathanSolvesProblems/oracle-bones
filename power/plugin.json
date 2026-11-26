@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "oracle-bones",
+  "version": "0.1.0",
+  "description": "Rebuild a dead DOS program that has no source code. The oracle runs the original in an emulator in Docker, questions it, and grades the rebuild against what it prints.",
+  "author": { "name": "Jonathan Andrei" },
+  "repository": "https://github.com/JonathanSolvesProblems/oracle-bones",
+  "license": "MIT",
+  "keywords": ["legacy", "dos", "emulator", "reverse-engineering", "test-oracle", "specs"]
+}

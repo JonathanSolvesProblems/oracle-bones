@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "oracle": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "oracle.mcp_server"],
+      "env": {
+        "ORACLE_TARGET": "oracle/targets/quick2.json",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      }
+    }
+  }
+}
