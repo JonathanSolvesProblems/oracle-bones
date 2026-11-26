@@ -2435,3 +2435,47 @@ Settings: Claude Opus 5.5, a new session. Nothing was built and nothing was run 
 **Checks.** `scripts/check_traceability.py`: 74 criteria checked, 0 problems.
 
 Credits: not counted here; they go in the next entry.
+
+## 2026-11-26, session 15: the power built, tasks 1.1 to 5.2 and 7.1
+
+### Credits: the spec revised
+
+That session used 14.92 credits over 6 min 1 s.
+
+### The build
+
+Settings: Claude Opus 5.5, a new session. One commit per task, tests first: 8dcd44d (1.1),
+8346716 (1.2), 574848c (2.1), 7231473 (2.2), 5388d17 (3.1), 0a699d8 (4.1), 00d93db (4.2),
+f32be3c (4.3), 551dd7e (5.1), 7e9c683 (5.2), 4c75bc5 (7.1). 6.1 is the person's; 7.2 waits
+for `art/`, which is empty.
+
+- `power/` holds 51 files, 347,334 bytes: `plugin.json`, `mcp.json`, the `resurrect` skill,
+  and 48 files written by `scripts/build_power.py` (36 in `oracle/`, 12 in `workspace/`).
+- In this repository the code root and the workspace root are the same folder, so every path,
+  the comparator, the recorder, the goldens and `.kiro/settings/mcp.json` are unchanged. After
+  2.2, `python scripts/oracle_quick.py --full` with `ORACLE_LEDGER` on a copy under `tmp/`
+  printed "full set: 1315 of 1339 case(s) match".
+- **The live boot (5.2).** No oracle container was running. The Kiro oracle server that was
+  running (started 2026-11-25 13:28) predates this session's changes and was not used: the
+  test started a new server from a copy of `power/` made after the last change. MAINHLP.EXE
+  started. Its first screen is a box headed "MAIN MENU HELP SCREEN" that describes options 1 to
+  4 and ends "Press <Enter> to continue". The draft says `started: true`, `failures: []`,
+  `exited: null`, with the archive's sha256 equal to the QUICK-2 pin; it matched the server's
+  reply and the run's capture. 1 passed in 9.6 s.
+- Choices the spec left open, each recorded in its commit: the include list adds
+  `oracle/targets/profile.schema.json`, which the profile loader needs. The standard-library
+  test allows `runner/agent.py` to import `pyte` and `settle`, because it runs only in the
+  container. `mcp.json` sets `PYTHONDONTWRITEBYTECODE`, and the hook scripts turn bytecode off
+  in a workspace, so nothing is written under the plugin root. `set_workspace` refuses a folder
+  inside the power and does not change once set. In this repository the server ignores MCP
+  roots and lists only the nine tools. The automatic download runs only in an installed power;
+  `fetch.setup` now deletes an archive it has just downloaded when the hash differs. The
+  Dockerfile was not edited, so the image tag here is unchanged.
+- Not covered: in a new workspace `oracle_quick.py` still uses the package's `harness.json`,
+  whose rebuild command is this repository's app, so grading there fails until the user sets
+  their own. No requirement covers it.
+
+**Checks.** pytest `-m "not live"`: 241 passed, 49 deselected in 6 min 10 s. Vitest: 2583
+passed in 52 files. `scripts/check_traceability.py`: 74 criteria checked, 0 problems.
+
+Credits: not counted here; they go in the next entry.
