@@ -3323,11 +3323,55 @@
         "cd-circ-000039",
         "cd-circ-000045"
       ],
-      "status": "open",
+      "status": "answered",
       "asked_at": "2026-11-25T18:45:03Z",
-      "answer": null,
-      "answer_evidence": [],
-      "answered_at": null
+      "answer": "Part (2), from what discharge QUICK-2 prints 'DEPTH is Greater than the DIAMETER' for a given pipe, is answered with the rules the rebuild uses, circle-short-chord bugfix 2.4 and 2.6. The message is printed when a stored trial is at or past the stored diameter D (trial >= D) before a trial or chord is within 0.5% of q, except a stepped trial exactly on D; at that trial, when q is more than 0.5% over the full-pipe number (A*sqrt(g*A/T) of the full pipe with T = D), or under it in a pipe with no stepped trial inside D (2.4 in). So the boundary is not a fixed discharge or a fixed share of the diameter. The rules end all 43 rejection goldens that reach the search with the message (A-015; A-016 graded; A-017 graded; A-018 graded). They are the rules that reproduce the observations, not a finding about how QUICK-2 tests a trial: on the observations before A-018, 56 of A-013's 184 combinations, trial >= D (T1*D1*X2) among them, fit equally, nothing observed separated them, and the other 55 have not been run with 2.6 (A-015; A-017 graded, 3a). The full-pipe number is the person's reading (A-017 graded), which A-018 tested (A-018 graded). Part (1), the key that leaves the screen, is carried to Q-036, open and unobserved.",
+      "answer_evidence": [
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044",
+        "cd-circ-000045",
+        "cd-circ-000046",
+        "cd-circ-000047",
+        "cd-circ-000048",
+        "cd-circ-000049",
+        "cd-circ-000050",
+        "cd-circ-000051",
+        "cd-circ-000052",
+        "cd-circ-000053",
+        "cd-circ-000054",
+        "cd-circ-000055",
+        "cd-circ-000056",
+        "cd-circ-000057",
+        "cd-circ-000058",
+        "cd-circ-000059",
+        "cd-circ-000060",
+        "cd-circ-000061",
+        "cd-circ-000062",
+        "cd-circ-000063",
+        "cd-circ-000064",
+        "cd-circ-000066",
+        "cd-circ-000067",
+        "cd-circ-000069",
+        "cd-circ-000071",
+        "cd-circ-000072",
+        "cd-circ-000073",
+        "cd-circ-000074",
+        "cd-circ-000075",
+        "cd-circ-000076",
+        "cd-circ-000077",
+        "cd-circ-000078",
+        "cd-circ-000079",
+        "cd-circ-000080",
+        "cd-circ-000084",
+        "cd-circ-000086",
+        "cd-circ-000088",
+        "cd-circ-000089"
+      ],
+      "answered_at": "2026-11-26T12:13:08Z"
     },
     {
       "id": "Q-034",
@@ -3357,6 +3401,45 @@
       ],
       "status": "open",
       "asked_at": "2026-11-26T10:43:54Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-036",
+      "question": "Carried from Q-033 (1), which Q-033's answer does not cover: what key leaves cd_circ_rejected ('DEPTH is Greater than the DIAMETER')? Unobserved: no recorded case presses a key on that screen, since every case ends where the stop screen appears. The only observations are Q-032's exploratory sessions (Enter, F2 and F7 by hand, not recorded), which are not citations.",
+      "evidence": [
+        "cd-circ-000039",
+        "cd-circ-000045",
+        "20261125-141415-e06fc2"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-26T12:12:59Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-037",
+      "question": "Carries Q-029, whose recorded answer stays as it is (the ending repeated, and the screens do not show what happened); this new question is used instead of reopening it (the person's decision, 2026-11-26). At a stepped circle Critical Depth trial whose stored value equals the stored diameter D, before a trial or chord is within 0.5% of q, QUICK-2 ended as follows against the full-pipe number, A*sqrt(g*A/T) of the full pipe with the top width taken as D (circle-short-chord bugfix 2.6): (a) q within 0.5% of it: a result at D on every printed field, from the full pipe (cd-circ-000081 to -000083, -000085, -000087); (b) more than 0.5% over it: 'DEPTH is Greater than the DIAMETER' (eighteen goldens, cd-circ-000084, -000086, -000088 and -000089 among them); (c) more than 0.5% under it, in a pipe with a stepped trial inside D: the shape menu with no result and no message, ten times in three pipes, 9.6, 12 and 4.8 in (obs-cdmenu-000001, -000002, -000005 to -000012), three of them predicted before they ran; (d) under it in the 2.4 in pipe, whose trial on D is the first trial: the message (cd-circ-000080). What in QUICK-2 sends a discharge under the full-pipe number back to the shape menu? Tried without an answer: A-015 (Q-029 goes back to open; none of A-013's 184 ways of forming the trial, storing the diameter and testing one against the other fits; the person's search of about 32,000 wider models found 16 that fit, chosen by one pipe, so none is adopted); A-016 graded (What the misses say: candidates 1 to 3, none modelled to the end, and the forms the goldens rule out: a cap at a fixed share of D, the ratio of q to the last trial's A*sqrt(g*A/T), a straight line through the last two trials, Manning at 0.9382*D); A-017 graded (1a, the number as one c*D^2.5, refuted by E3; the full-pipe reading in 736 variants, none of which gives the menu under the number and keeps the results and rejections, 3a and 3b); A-018 graded (candidate 1 with the full-pipe number right on 12 of 12, but no form written produces the menu). The captures keep one screen per step, so nothing between the last Enter and the menu is seen, and no capture shows a QuickBASIC error.",
+      "evidence": [
+        "obs-cdmenu-000001",
+        "obs-cdmenu-000002",
+        "obs-cdmenu-000005",
+        "obs-cdmenu-000006",
+        "obs-cdmenu-000007",
+        "obs-cdmenu-000008",
+        "obs-cdmenu-000009",
+        "obs-cdmenu-000010",
+        "obs-cdmenu-000011",
+        "obs-cdmenu-000012",
+        "cd-circ-000080",
+        "cd-circ-000081",
+        "cd-circ-000082",
+        "cd-circ-000083"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-26T12:13:18Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -4785,12 +4868,79 @@
       "why": "The person's request is done: A-018's thirteen cases each ran once and are recorded, as goldens cd-circ-000081 to -000089 (result or rejected) or as behaviour cases obs-cdmenu-000010 to -000013 (shape menu), all four behaviour cases recorded. Q-035 is open on the discharge digits. The person asked for nothing else to run and no grading.",
       "evidence": [],
       "at": "2026-11-26T10:44:08Z"
+    },
+    {
+      "n": 108,
+      "saw": "The circle-short-chord fix is built (a7166b7); the person reports the comparator at 195 of 200 on the quick set and 335 of 340 on the full set, misses cc-circ-000035, nd-circ-000020 and sb-irr-000001 to -000003. Circle Critical Depth's short-chord branch: K1 (the chord becomes the lower end and the next trial is the chord plus 0.2 ft) was chosen on cd-circ-000033 and P1 (A-009). Under K1 cd-circ-000033 prints Critical Slope `0.0090`, as QUICK-2 did, where N2 prints `0.0089` (A-008). K1 predicted Q1 to Q4 before they ran and got 4 of 4, N2 0 of 4 (A-010): QUICK-2 rejected Q1 (cd-circ-000043) and Q2 (cd-circ-000044) with 'DEPTH is Greater than the DIAMETER' and printed K1's row on every field of cd-circ-000035 and cd-circ-000036. P1 (cd-circ-000040) is rejected under K1, as QUICK-2 did, and a result under N2. The Q-022 run, P2 and P4 (cd-circ-000039, -000041, -000042) pass the diameter before any chord, so both rules reject them (circle-short-chord bugfix 3.6).",
+      "chose": "write_requirement",
+      "why": "circle-short-chord bugfix 2.1 and 2.4. K1 is recorded as observed for circle Critical Depth's short-chord branch. trial >= D (a stored trial at or past the stored diameter, store(store(VAL)/12), is rejected with the message, except a stepped trial exactly on D, which 2.6 decides) is recorded as the rule the rebuild uses: it reproduces every circle Critical Depth result on every printed field and every rejection with the message away from a stepped trial on D. It is not recorded as a finding about how QUICK-2 tests a trial against the diameter (bugfix 2.4; A-016 graded), because 56 of A-013's 184 combinations fit those observations equally (A-015; A-017 graded, 3a). Circle Normal Depth keeps N2 (Q-026 stays open). A-009's 79 generated circles where K1 and the old rebuild differ are predictions, not observations, and are not coverage.",
+      "evidence": [
+        "cd-circ-000033",
+        "cd-circ-000035",
+        "cd-circ-000036",
+        "cd-circ-000039",
+        "cd-circ-000040",
+        "cd-circ-000041",
+        "cd-circ-000042",
+        "cd-circ-000043",
+        "cd-circ-000044"
+      ],
+      "at": "2026-11-26T12:12:44Z"
+    },
+    {
+      "n": 109,
+      "saw": "At a stepped circle Critical Depth trial equal to the stored diameter D, QUICK-2's ending follows q against the full-pipe number, A*sqrt(g*A/T) of the full pipe with the top width taken as D (the person's reading, A-017 graded; 0.070654 cfs at 2.4 in, 0.39968 at 4.8 in, 2.2609 at 9.6 in, 3.9497 at 12 in, 142.79 at 50.4 in), which A-018 tested (A-018 graded). (a) Within 0.5%: a result at D, printed from the full pipe, on every printed field, 70 of 70: M2 to M4, M7 and M10 (cd-circ-000081 to -000083, -000085, -000087), all five predicted before they ran by candidate 1 with the full-pipe number. (b) More than 0.5% over: 'DEPTH is Greater than the DIAMETER': M5, M8, M11 and L1 (cd-circ-000084, -000086, -000088, -000089), and fourteen earlier goldens. (c) More than 0.5% under, in a pipe with a stepped trial inside D: the shape menu with no result and no message, ten times in three pipes, 9.6, 12 and 4.8 in (obs-cdmenu-000001, -000002, -000005 to -000012), each twice or more; M1, M6 and M9 (obs-cdmenu-000010 to -000012) were predicted before they ran by candidate 1, where every model written predicted the message. (d) Under it in the 2.4 in pipe, whose trial on D is the first trial: the message, E3 (cd-circ-000080, 29.23% under).",
+      "chose": "write_requirement",
+      "why": "circle-short-chord bugfix 2.6 (a) to (d), with 2.7's returns_to_menu flag for (c). With 2.1 to 2.4 and 2.7 the rule ends all 95 stored circle Critical Depth observations as QUICK-2 did (full-pipe-rule). (c) has no mechanism: in every model of the search a discharge under the number takes a chord below D and ends on a result or the message (A-017 graded, 3a and 3b; A-018 graded), so (c) describes what QUICK-2 was seen to do and does not explain it; the question is carried by a new open question that names Q-029. No known difference is recorded for a trial on D. P = 3.1416*D at D is the assumption of the session that wrote A-018; no case separates it. Unobserved: a result under (a) at 2.4 in, anything at 52.8 in, and a discharge within 0.5% of the number with an n other than .013.",
+      "evidence": [
+        "cd-circ-000081",
+        "cd-circ-000082",
+        "cd-circ-000083",
+        "cd-circ-000085",
+        "cd-circ-000087",
+        "cd-circ-000084",
+        "cd-circ-000086",
+        "cd-circ-000088",
+        "cd-circ-000089",
+        "obs-cdmenu-000001",
+        "obs-cdmenu-000002",
+        "obs-cdmenu-000005",
+        "obs-cdmenu-000006",
+        "obs-cdmenu-000007",
+        "obs-cdmenu-000008",
+        "obs-cdmenu-000009",
+        "obs-cdmenu-000010",
+        "obs-cdmenu-000011",
+        "obs-cdmenu-000012",
+        "cd-circ-000080"
+      ],
+      "at": "2026-11-26T12:12:55Z"
+    },
+    {
+      "n": 110,
+      "saw": "Under the floor of circle Critical Depth (the least A*sqrt(g*A/T) a pipe gives over 0 < y < D), QUICK-2 ended on the shape menu with no result and no message: W1, 9999 in at .5 cfs, 0.393 of the floor (obs-cdmenu-000003), and W2, 7254 in at .3 cfs, 0.527 of the floor (obs-cdmenu-000004), three runs and two recordings, none reaching the case limit (A-016 graded, A-017 graded). F1, 768 in at .0023 cfs (obs-cdmenu-000013), also ended on the menu. F1 is 1.11 times the floor of 0.002078 cfs only if the form kept the fourth decimal of .0023; with three decimals it is 0.002 cfs, under the floor, where the rule gives the same ending (A-018 graded; Q-035 open).",
+      "chose": "write_requirement",
+      "why": "circle-short-chord bugfix 2.7, the person's decision of 2026-11-26: a circle Critical Depth discharge under the floor returns outcome error with the returns_to_menu flag, text 'QUICK-2 returns to its shape menu with no result for this input.', and no printed field, never never_finishes. The outcome comes from the search, whose chords on [0, 0.2] reach a run-time error (chord 1.864515e-15 ft for W1, 1.658026e-16 ft for W2; A-017 graded, 3a); that QUICK-2 met a run-time error is an inference that no capture shows. F1 is not reported as coverage just above the floor: what QUICK-2 does there stays unobserved until Q-035 is answered. Q-035 stays open. The three are behaviour cases, in no comparator count.",
+      "evidence": [
+        "obs-cdmenu-000003",
+        "obs-cdmenu-000004",
+        "obs-cdmenu-000013"
+      ],
+      "at": "2026-11-26T12:13:25Z"
+    },
+    {
+      "n": 111,
+      "saw": "circle-short-chord task 7.1 is recorded: decisions 108 (K1 observed; trial >= D as the rebuild's rule), 109 (2.6 (a) to (d), (c) with no mechanism) and 110 (the floor of 2.7); Q-036 carries Q-033 (1), open and unobserved; Q-033 answered for part (2); Q-037 carries Q-029, open, with Q-029's answer unchanged. The person asked that no case run. Q-026, Q-032 (a) and Q-035 stay open; no known difference is recorded for a trial on D; A-009's 79 generated circles and F1 above the floor are not coverage; mismatch counts are left as the comparator wrote them.",
+      "chose": "stop",
+      "why": "circle-short-chord task 7.1 is recorded: decisions 108 (K1 observed; trial >= D as the rebuild's rule), 109 (2.6 (a) to (d), (c) with no mechanism) and 110 (the floor of 2.7); Q-036 carries Q-033 (1), open and unobserved; Q-033 answered for part (2); Q-037 carries Q-029, open, with Q-029's answer unchanged. The person asked that no case run. Q-026, Q-032 (a) and Q-035 stay open; no known difference is recorded for a trial on D; A-009's 79 generated circles and F1 above the floor are not coverage; mismatch counts are left as the comparator wrote them.",
+      "evidence": [],
+      "at": "2026-11-26T12:13:29Z"
     }
   ],
   "stopped": {
-    "why": "The person's request is done: A-018's thirteen cases each ran once and are recorded, as goldens cd-circ-000081 to -000089 (result or rejected) or as behaviour cases obs-cdmenu-000010 to -000013 (shape menu), all four behaviour cases recorded. Q-035 is open on the discharge digits. The person asked for nothing else to run and no grading.",
-    "decision": 107,
-    "at": "2026-11-26T10:44:08Z",
+    "why": "circle-short-chord task 7.1 is recorded: decisions 108 (K1 observed; trial >= D as the rebuild's rule), 109 (2.6 (a) to (d), (c) with no mechanism) and 110 (the floor of 2.7); Q-036 carries Q-033 (1), open and unobserved; Q-033 answered for part (2); Q-037 carries Q-029, open, with Q-029's answer unchanged. The person asked that no case run. Q-026, Q-032 (a) and Q-035 stay open; no known difference is recorded for a trial on D; A-009's 79 generated circles and F1 above the floor are not coverage; mismatch counts are left as the comparator wrote them.",
+    "decision": 111,
+    "at": "2026-11-26T12:13:29Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
