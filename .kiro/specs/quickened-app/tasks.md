@@ -259,7 +259,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     marked different are exactly the page's known misses; each row carries QUICK-2's label. Then
     `views/proof.ts`.
     - _Requirements: 5.1, 5.10_
-  - [ ] 16.5 Test: each label of the drawing has a ground of the paper colour under it, drawn over
+  - [x] 16.5 Test: each label of the drawing has a ground of the paper colour under it, drawn over
     the lines, on the main example, a circle and a trapezoid. Then `drawing/svg.ts`.
     - _Requirements: 2.7_
   - [ ] 16.6 Test: at 375 px the results tables' captions take the table's width and at most two

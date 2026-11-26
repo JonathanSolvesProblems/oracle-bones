@@ -78,3 +78,35 @@ describe('the drawing labels', () => {
     expect(overlaps(a, { x0: 10, y0: 0, x1: 20, y1: 10 })).toBe(false);
   });
 });
+
+// Task 16.5, criterion 2.7 amended 2026-11-26 (person): on the main example the ground line crossed
+// the bank stations and "El. 594.37". Each label now has a ground of the paper colour, drawn over
+// every line and under the text, so a line that passes behind a label does not cross its letters.
+describe('the ground under each label', () => {
+  const LINES = new Set(['line', 'polyline', 'polygon', 'circle', 'use']);
+  const first = (shape: string) => results.find((g) => g.shape === shape)!;
+  const cases = [golden('nd-irr-000006'), first('circle'), first('trapezoid')];
+  for (const g of cases) {
+    it(`${g.id} (${g.shape}): a paper rect covers each label's box, after every line and before the text`, () => {
+      const m = drawn(g)!;
+      const labels = placeLabels(m, frameFor(m));
+      expect(labels.length).toBeGreaterThan(0);
+      const svg = findAll(drawingView(m), (n) => n.tag === 'svg' && n.attrs.class === 'section-drawing')[0]!;
+      const kids = svg.children.filter((c): c is Exclude<typeof c, string> => typeof c !== 'string');
+      const lastLine = Math.max(...kids.flatMap((k, i) => (LINES.has(k.tag) ? [i] : [])));
+      for (const l of labels) {
+        const t = kids.findIndex((k) => k.tag === 'text' && textOf(k) === l.text && k.attrs.x === l.x.toFixed(1));
+        expect(t, l.text).toBeGreaterThan(lastLine);
+        const ground = kids.slice(lastLine + 1, t).find((k) => k.tag === 'rect' && k.attrs.class === 'label-ground'
+          && Number(k.attrs.x) <= l.box.x0 && Number(k.attrs.y) <= l.box.y0
+          && Number(k.attrs.x) + Number(k.attrs.width) >= l.box.x1 && Number(k.attrs.y) + Number(k.attrs.height) >= l.box.y1);
+        expect(ground, `${g.id}: no ground under "${l.text}"`).toBeDefined();
+      }
+    });
+  }
+  it('fills the ground with the paper colour', async () => {
+    const { readFileSync } = await import('node:fs');
+    const css = readFileSync(new URL('../src/ui/styles/app.css', import.meta.url), 'utf-8');
+    expect(css).toMatch(/\.section-drawing \.label-ground \{[^}]*fill: var\(--paper\)/);
+  });
+});

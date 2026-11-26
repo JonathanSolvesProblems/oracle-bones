@@ -266,6 +266,7 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .section-drawing .ws-line { stroke: var(--water); stroke-width: 2; }
 .section-drawing .ws-line.assumed, .section-drawing .wall { stroke: var(--water); stroke-width: 2; stroke-dasharray: 6 4; }
 .section-drawing .bank, .section-drawing .tick { stroke: var(--ink); stroke-width: 1; }
+.section-drawing .label-ground { fill: var(--paper); stroke: none; }
 .section-drawing text { font: var(--text-xs) var(--font-figures); fill: var(--ink); }
 .section-drawing text.words { font: var(--text-xs) var(--font-body); }
 .section-drawing text.scale { fill: var(--ink-muted); }

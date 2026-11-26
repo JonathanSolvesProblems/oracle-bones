@@ -8,6 +8,8 @@ import { bankTickTop, placeLabels } from './labels.ts';
 import type { DrawingModel, Pt } from './section.ts';
 
 const MARK = 24;
+/** Room round a label's box on its paper ground, in SVG units. */
+const GROUND_PAD = 2;
 
 /** The one definition of the water-surface mark: an inverted triangle on the water line, two shorter lines under it. */
 export function wsMarkSymbol(): VNode {
@@ -37,6 +39,7 @@ export function drawingView(m: DrawingModel, opts: { links: boolean } = { links:
   const groundLine = m.circle ? null : h('polyline', { class: 'ground-line', points: pts(m.ground) });
   const main = m.spans.find((s) => !s.cutOff) ?? m.spans[0];
   const ws = f.py(m.waterLevel);
+  const labels = placeLabels(m, f);
   return h('figure', { class: 'drawing' },
     h('svg', { class: 'section-drawing', viewBox: `0 0 ${BOX.width} ${BOX.height}`, role: 'img', 'aria-label': m.alt },
       h('defs', {},
@@ -59,7 +62,11 @@ export function drawingView(m: DrawingModel, opts: { links: boolean } = { links:
       }),
       main ? h('use', { href: '#ws-mark', class: 'ws-mark-on', x: coord(f.px((main.from + main.to) / 2) - MARK / 2), y: coord(ws - MARK / 2), width: String(MARK), height: String(MARK) }) : null,
       f.ticks.map((t) => h('line', { class: 'tick', x1: coord(f.px(t.x)), x2: coord(f.px(t.x)), y1: coord(bottom), y2: coord(bottom + 6) })),
-      placeLabels(m, f).map((l) => text(l.cls, l.x, l.y, l.text, l.anchor))),
+      // Each label on a ground of the paper colour, over every line, so no line crosses its letters (2.7).
+      // The grounds all go first, so one label's ground never covers the letters of the next.
+      labels.map((l) => h('rect', { class: 'label-ground', x: coord(l.box.x0 - GROUND_PAD), y: coord(l.box.y0 - GROUND_PAD),
+        width: coord(l.box.x1 - l.box.x0 + 2 * GROUND_PAD), height: coord(l.box.y1 - l.box.y0 + 2 * GROUND_PAD) })),
+      labels.map((l) => text(l.cls, l.x, l.y, l.text, l.anchor))),
     m.words.some((w) => !w.at)
       ? h('figcaption', {}, m.words.filter((w) => !w.at).map((w) => h('p', { class: 'note' }, w.text,
         w.haunting ? [' ', opts.links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)))
