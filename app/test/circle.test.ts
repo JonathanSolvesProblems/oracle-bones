@@ -149,9 +149,13 @@ const KNOWN_DIFFERENCES: Record<string, Record<string, string>> = {
 };
 
 describe('circle-outputs: every circle result golden', () => {
-  const results = goldens().filter((g) => g.shape === 'circle' && g.outcome === 'result');
-  it('finds the 60 circle result goldens (the other 20 of the 80 circle goldens are holds)', () => {
-    expect(results.length).toBe(60);
+  const circle = goldens().filter((g) => g.shape === 'circle' && g.outcome !== 'observed');
+  const results = circle.filter((g) => g.outcome === 'result');
+  it('every circle golden is a result, a hold at a prompt or a rejection by the search with its message', () => {
+    expect(results.length).toBeGreaterThan(0);
+    const other = circle.filter((g) => g.outcome !== 'result'
+      && !(g.outcome === 'rejected' && (g.held_prompt || g.message?.trim() === DEPTH_ABOVE_DIAMETER)));
+    expect(other.map((g) => `${g.id} ${g.outcome}`)).toEqual([]);
   });
   for (const g of results) {
     it(g.id, () => {

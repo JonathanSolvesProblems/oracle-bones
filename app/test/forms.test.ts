@@ -38,21 +38,32 @@ describe('regular prompt order against the golden transcripts', () => {
     it(`${g.id}: ${prompts.join(', ')}`, () => {
       const want = prompts.map((p) => g.inputs[p]);
       const got = typed(g);
-      if (g.outcome === 'rejected') {
-        const at = prompts.indexOf(g.held_prompt!);
+      if (g.outcome === 'rejected' && g.held_prompt) {
+        // Held at a prompt: the form stops there.
+        const at = prompts.indexOf(g.held_prompt);
         expect(at).toBeGreaterThanOrEqual(0);
         expect(got).toEqual(want.slice(0, at + 1));
       } else {
+        // A result, or a rejection by the search after the whole form was typed, which prints
+        // its message (circle Critical Depth, "DEPTH is Greater than the DIAMETER").
+        if (g.outcome === 'rejected') expect(g.message?.trim(), `${g.id} has neither a held prompt nor a message`).toBeTruthy();
         expect(got).toEqual(want);
       }
     });
   }
 });
 
+/** Rejected regular goldens: held at a form prompt, or rejected by the search with a message. */
+const rejectedRegular = regular.filter((g) => g.outcome === 'rejected');
+const heldAtPrompt = rejectedRegular.filter((g) => g.held_prompt);
+const rejectedBySearch = rejectedRegular.filter((g) => !g.held_prompt);
+
 describe('holds against every rejected regular golden', () => {
-  const rejectedCases = regular.filter((g) => g.outcome === 'rejected');
-  it('finds the rejected goldens', () => expect(rejectedCases.length).toBe(47));
-  for (const g of rejectedCases) {
+  it('every rejected regular golden is held at a prompt or rejected by the search with a message', () => {
+    expect(heldAtPrompt.length).toBeGreaterThan(0);
+    expect(rejectedBySearch.filter((g) => !g.message?.trim()).map((g) => g.id)).toEqual([]);
+  });
+  for (const g of heldAtPrompt) {
     it(`${g.id} holds ${g.held_prompt}`, () => {
       const r = solve({ mode: g.mode as RegularMode, shape: g.shape as RegularShape, inputs: g.inputs });
       expect(r).toMatchObject({ outcome: 'rejected', held: g.held_prompt, message: g.message, printed: {} });
@@ -63,6 +74,17 @@ describe('holds against every rejected regular golden', () => {
       expect(readRegularForm(g.mode as RegularMode, g.shape as RegularShape, g.inputs).ok, g.id).toBe(true);
     }
   });
+});
+
+describe('rejections by the search against every rejected regular golden with no held prompt', () => {
+  for (const g of rejectedBySearch) {
+    it(`${g.id} passes the form and is rejected with "${g.message?.trim()}"`, () => {
+      expect(readRegularForm(g.mode as RegularMode, g.shape as RegularShape, g.inputs).ok).toBe(true);
+      const r = solve({ mode: g.mode as RegularMode, shape: g.shape as RegularShape, inputs: g.inputs });
+      // The golden's message is its message window, padded to the window's width.
+      expect([r.outcome, r.held, r.message?.trim(), r.printed]).toEqual(['rejected', null, g.message!.trim(), g.printed]);
+    });
+  }
 });
 
 describe('echoes against the captured forms', () => {
