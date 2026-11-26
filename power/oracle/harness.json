@@ -1,0 +1,11 @@
+{
+  "emu2": {
+    "repo": "https://github.com/dmsc/emu2",
+    "commit": "9d8698d06e67359bc8b230c2d19d5b1503e60819"
+  },
+  "image": "oracle-bones-runner",
+  "max_sessions": 8,
+  "container": {"cpus": "1.0", "memory": "256m", "pids": 64},
+  "session_idle_limit_s": 900,
+  "rebuild": {"command": ["node", "app/src/oracle/entry.ts"], "time_limit_s": 25}
+}

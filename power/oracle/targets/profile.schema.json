@@ -1,0 +1,249 @@
+{
+  "title": "Oracle target profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "archive", "env", "drive", "entry", "screen", "frozen_time",
+               "limits", "keys", "codes", "screens", "flows", "ranges", "controls"],
+  "definitions": {
+    "cite": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "unobserved": {"type": "string", "minLength": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "share": {
+      "type": "object", "additionalProperties": false, "required": ["max_share"],
+      "properties": {
+        "max_share": {"type": "number", "minimum": 0.01, "maximum": 1},
+        "cite": {"$ref": "#/definitions/cite"},
+        "source": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expect": {"$ref": "#/definitions/id"},
+        "prompt": {"$ref": "#/definitions/id"},
+        "keys": {"type": "string"},
+        "input": {"$ref": "#/definitions/id"},
+        "then": {"type": "string"},
+        "immediate": {"type": "boolean"},
+        "hold_ms": {"type": "integer", "minimum": 0},
+        "end": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/id"}}
+      },
+      "anyOf": [
+        {"type": "object", "required": ["expect", "keys"]},
+        {"type": "object", "required": ["expect", "input"]},
+        {"type": "object", "required": ["end"]}
+      ]
+    }
+  },
+  "properties": {
+    "name": {"$ref": "#/definitions/id"},
+    "version": {"type": "string", "minLength": 1},
+    "archive": {
+      "type": "object", "additionalProperties": false,
+      "required": ["url", "file", "bytes", "sha256"],
+      "properties": {
+        "url": {"type": "string", "pattern": "^https://"},
+        "file": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "bytes": {"type": ["integer", "null"], "minimum": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "must_contain": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "env": {"type": "object", "additionalProperties": {"type": "string"}},
+    "drive": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dirs", "program_dir"],
+      "properties": {
+        "dirs": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*$"}},
+        "program_dir": {"type": "string", "pattern": "^[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*$"},
+        "cite": {"$ref": "#/definitions/cite"},
+        "unobserved": {"$ref": "#/definitions/unobserved"}
+      }
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false, "required": ["program"],
+      "properties": {
+        "program": {"type": "string", "pattern": "^[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*\\.(EXE|COM|exe|com)$"},
+        "cite": {"$ref": "#/definitions/cite"},
+        "unobserved": {"$ref": "#/definitions/unobserved"}
+      }
+    },
+    "screen": {
+      "type": "object", "additionalProperties": false, "required": ["rows", "cols", "pty_rows"],
+      "properties": {
+        "rows": {"type": "integer", "minimum": 1, "maximum": 64},
+        "cols": {"type": "integer", "minimum": 1, "maximum": 240},
+        "pty_rows": {"type": "integer", "minimum": 1, "maximum": 64},
+        "cite": {"$ref": "#/definitions/cite"},
+        "unobserved": {"$ref": "#/definitions/unobserved"}
+      }
+    },
+    "frozen_time": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d$"},
+    "limits": {
+      "type": "object", "additionalProperties": false,
+      "required": ["settle_ms", "wait_timeout_s", "case_time_limit_s", "retry_limit"],
+      "properties": {
+        "settle_ms": {"type": "integer", "minimum": 10},
+        "wait_timeout_s": {"type": "number", "minimum": 0.1},
+        "case_time_limit_s": {"type": "number", "minimum": 1},
+        "retry_limit": {"type": "integer", "minimum": 0},
+        "hold_confirm_ms": {"type": "integer", "minimum": 0},
+        "stuck_confirm_ms": {"type": "integer", "minimum": 0}
+      }
+    },
+    "keys": {
+      "type": "object", "additionalProperties": false, "required": ["list"],
+      "properties": {
+        "list": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "cite": {"$ref": "#/definitions/cite"},
+        "unobserved": {"$ref": "#/definitions/unobserved"}
+      }
+    },
+    "codes": {
+      "type": "object", "additionalProperties": false, "required": ["modes", "shapes"],
+      "properties": {
+        "modes": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[a-z]{2,4}$"}},
+        "shapes": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[a-z]{2,5}$"}}
+      }
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "kind", "marker"],
+        "properties": {
+          "id": {"$ref": "#/definitions/id"},
+          "kind": {"enum": ["menu", "form", "result", "rejected", "error", "other"]},
+          "marker": {"type": ["string", "null"], "minLength": 1},
+          "resend": {"type": "boolean"},
+          "stuck": {"type": "boolean"},
+          "keeps_output": {"type": "boolean"},
+          "prompts": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": false, "required": ["id", "pattern"],
+                      "properties": {"id": {"$ref": "#/definitions/id"},
+                                     "pattern": {"type": "string", "minLength": 1}}}
+          },
+          "fields": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": false,
+                      "required": ["name", "row", "col", "width"],
+                      "properties": {"name": {"$ref": "#/definitions/id"},
+                                     "row": {"type": "integer", "minimum": 0},
+                                     "col": {"type": "integer", "minimum": 0},
+                                     "width": {"type": "integer", "minimum": 1},
+                                     "compare": {"enum": ["trimmed", "raw"]}}}
+          },
+          "message": {
+            "type": "object", "additionalProperties": false, "required": ["row", "col", "width"],
+            "properties": {"row": {"type": "integer", "minimum": 0},
+                           "col": {"type": "integer", "minimum": 0},
+                           "width": {"type": "integer", "minimum": 1}}
+          },
+          "cite": {"$ref": "#/definitions/cite"},
+          "unobserved": {"$ref": "#/definitions/unobserved"}
+        }
+      }
+    },
+    "flows": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false, "required": ["steps"],
+        "properties": {
+          "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/step"}},
+          "cite": {"$ref": "#/definitions/cite"},
+          "unobserved": {"$ref": "#/definitions/unobserved"},
+          "points": {
+            "type": "object", "additionalProperties": false,
+            "required": ["inputs", "min", "max", "end_keys", "cite"],
+            "properties": {
+              "inputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "min": {"type": "integer", "minimum": 1},
+              "max": {"type": "integer", "minimum": 1},
+              "end_keys": {"type": "string", "minLength": 1},
+              "cite": {"$ref": "#/definitions/cite"}
+            }
+          },
+          "sections": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["name", "stations", "elevations", "discharges", "slopes", "cite"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "stations": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+                "elevations": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+                "discharges": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "slopes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "cite": {"$ref": "#/definitions/cite"}
+              }
+            }
+          },
+          "fit": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "depth_in_pipe": {"$ref": "#/definitions/share"},
+              "discharge_in_pipe": {"$ref": "#/definitions/share"},
+              "critical_depth_in_pipe": {"$ref": "#/definitions/share"}
+            }
+          }
+        }
+      }
+    },
+    "ranges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false, "required": ["min", "max", "decimals"],
+        "properties": {
+          "min": {"type": "number"}, "max": {"type": "number"},
+          "decimals": {"type": "integer", "minimum": 0, "maximum": 6},
+          "boundaries": {"type": "array", "items": {"type": "string"}},
+          "practical": {
+            "type": "object", "additionalProperties": false, "required": ["min", "max", "source"],
+            "properties": {
+              "min": {"type": "number"}, "max": {"type": "number"},
+              "source": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "shapes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object", "additionalProperties": false, "required": ["min", "max", "source"],
+                  "properties": {
+                    "min": {"type": "number"}, "max": {"type": "number"},
+                    "source": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+                  }
+                }
+              }
+            }
+          },
+          "cite": {"$ref": "#/definitions/cite"},
+          "unobserved": {"$ref": "#/definitions/unobserved"}
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "mode", "shape", "inputs", "expect", "source"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^([a-z]{2,4}-[a-z]{2,5}|obs-[a-z]+)-\\d{6}$"},
+          "mode": {"type": "string"}, "shape": {"type": "string"},
+          "inputs": {"type": "object", "additionalProperties": {"type": "string"}},
+          "setup": {
+            "type": "object", "additionalProperties": false,
+            "properties": {"omit_dirs": {"type": "array", "items": {"type": "string"}},
+                           "resend": {"type": "boolean"}}
+          },
+          "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/step"}},
+          "expect": {
+            "type": "object", "additionalProperties": false, "required": ["outcome"],
+            "properties": {"outcome": {"enum": ["result", "rejected", "error", "observed"]},
+                           "printed": {"type": "object", "additionalProperties": {"type": "string"}},
+                           "screen_id": {"$ref": "#/definitions/id"}}
+          },
+          "source": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
