@@ -2172,3 +2172,92 @@ rewrote the `last_run` times in results/ledger.json, which are committed with th
 No dev server was left running, and nothing was run on the oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: quickened-app tasks 5 to 8
+
+The session of the last entry used 125.15 credits over 30 min 40 s, turn by turn: 29.78 over
+9 min 55 s, 12.7 over 3 min 14 s, 51.11 over 11 min 44 s and 31.56 over 5 min 47 s.
+
+### quickened-app tasks 9 to 13, stopped in task 12
+
+Settings: Claude Opus 5.5, a new session.
+
+> Run tasks 9 to 13 of the quickened-app spec, in order, then stop. Tasks 1 to 8 are done and I
+> have looked at their screens and the printed PDF.
+
+The person's rules were those of the last entry, with these added: the program is not run (the
+tests, the comparator, a local build and the Playwright run are allowed); files are edited with
+the file tool only and shell commands kept short; new packages come from the npm registry at an
+exact version; Playwright uses the installed Microsoft Edge (channel 'msedge'), with no browser
+downloaded. Four fixes from the person's look at the screens and the PDF came before task 12.
+
+**Commits**, one per task. Each test was shown failing before its code:
+
+- Task 9, the limits page (5476e52): `build/ledger.ts` reads the ledger's open questions,
+  `build/plain.ts` reads results/limits-plain.md, and the coverage check names the question on
+  each of the four fixtures of criterion 5.7. The real files have 13 open questions and 13
+  entries, as the task says. `views/limits.ts` shows the hauntings, the Limits paragraphs, the
+  pairs not built and each open question's plain sentences above the ledger's wording.
+- Task 10, the proof page (9c11d40): `src/ui/proof/cases.json` with 25 cases and their
+  reasons, `build/headline.ts` (null while results/headline.md does not exist), and
+  `views/proof.ts`, each capture beside a field-by-field table marked same or different.
+- Task 11, offline (0f2f158): `build/serviceWorker.ts` writes sw.js from `src/sw.ts` with the
+  build's files and a hash of them; the test makes a real build into a temporary folder.
+  `tsconfig.sw.json` typechecks the worker.
+- The four fixes (acf8168): the irregular screen's Chan Vel label; the drawing's labels placed
+  so none overlap (`drawing/labels.ts`, tested over the 245 result goldens that draw); the
+  print laid out as a sheet, with requirements 4.4 and 4.5 amended and dated; and a check that
+  the empty sketch page is ruled, and hidden, at no width.
+- Task 12 is not committed: the stop below came during 12.2. The working tree holds
+  `playwright.config.ts`, `e2e/` (six spec files), the two pinned packages, the design's note
+  on Edge, `.gitignore` lines for the Playwright output, and a fix to `src/sw.ts` found by the
+  offline spec.
+
+**Checks.** `npx vitest run` went from 40 files and 1207 tests to 43 and 1224 (task 9), 46 and
+1240 (task 10), 47 and 1242 (task 11), and 51 and 1263 (the fixes), all passing. `npm run
+typecheck` passed after each. The comparator's quick set is 195 of 200, unchanged; its run
+rewrote the `last_run` times in results/ledger.json, which are committed with this entry. The
+Playwright run (Edge, desktop and phone): 35 passed, 2 failed, 1 skipped. The skip is the
+phone-width check, which runs in the phone project only. The two failures are the station-error
+case on both projects, below.
+
+**The stop.** Testing Strategy item 2 asks for a station error (35 after 35, from
+obs-irrelev-000001's keys) shown as QUICK-2's message up to its "!" with the key-line sentence.
+No job typed in the form can reach that state. `solve()` never returns the station error:
+QUICK-2's editor prints it on row 24 and goes on taking keys (solver 10.3, 10.4), and the
+solver models that, so the row is shown as not taken (criterion 1.10) and the job gives a
+result. The state of criterion 6.10 is built and tested in Vitest on a Result made by hand.
+Making it reachable means ending a job as rejected where QUICK-2 is not recorded to end it. Is
+6.10's state meant to be reached from the form, and if so, on what recorded behaviour? Or is
+item 2's station error the grid's not-taken note? The spec was not changed, and the failing
+spec was left as the design words it.
+
+**Findings and choices the person should see:**
+
+- Task 10's design says the capture shown is `screen-<last step>.txt`. A batch case keeps only
+  its final screen, as screen-00.txt (cc-vdit-000012, cc-trap-000015), so the reader takes the
+  highest-numbered screen file. For nd-circ-000008, a held prompt, that is screen-03 of 4 steps.
+- The Property 7 edit test got a 30 s timeout: it ran past 5 s once with the suite in parallel.
+- The double "QUICKENED" on the print came from the stylesheet order. app.css imports
+  print.css before its own rules, so its `.top-line` rule beat print.css's. The print rules
+  that must win are now the more specific, and the print's tables use their own classes, which
+  the phone rules (label above value) do not reach.
+- The print's notes print once under the fields, numbered, with "Note 1." on each row they
+  belong to, rather than the cut-off sentence three times.
+- Playwright found that the service worker missed the cached script offline: a module script's
+  request carries an Origin header, and a `Vary: Origin` response does not match it. The worker
+  now matches with `ignoreVary`. Offline reload then passes on both projects.
+- The print specs: a regular shape and a typed 40-point section each print to one PDF page.
+  The main example prints to two, its sources on the second; that its job fits one page is
+  measured in print media at the page's content width, since printing redraws the view and a
+  PDF of the job alone cannot be made.
+- The phone check counts buttons, text fields, navigation links and each radio's label as
+  controls. A link inside a sentence is left out, as WCAG 2.5.8 exempts inline targets.
+- The station-error spec uses stations 0, 20, 30, 35, 35 typed as pairs. obs-irrelev-000001's
+  keys hold a lone 5 after the 0 elevation at station 20, which pairs cannot type.
+- Packages added: @playwright/test 1.65.1 and @axe-core/playwright 4.14.1, exact versions.
+
+Task 13, the deploy check, was not reached. No server of this project was left running, and
+nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
