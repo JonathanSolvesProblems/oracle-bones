@@ -477,6 +477,11 @@ recorded, in a frame labelled "QUICK-2's screen, recorded <date>", and beside it
 printed field: QUICK-2's text, Quickened's text computed in the browser by `runJob`, and "same"
 or "different". The known differences show as different.
 
+(2026-11-26: the known differences are now read from `results/known-misses.json`, which lists
+the comparator's 24 full-set misses after the headline batch. The proof list still holds
+cc-circ-000035 and nd-circ-000020; the tests check that every listed known miss shows as
+different, and no other listed case on its outcome or printed fields.)
+
 The page's header states the case count and the date of the run from `results/headline.md`.
 The file does not exist yet (exhume-loop task 5.1). `build/headline.ts` reads two labelled
 lines, `Cases:` (matched of total) and `Run:` (yyyy-mm-dd); when the file is missing it returns

@@ -49,6 +49,12 @@ comparator's. Of the 85 circle Critical Depth goldens, 3 are held at a prompt an
 the search (cd-circ-000003, -000007, -000008); of the other 82, 42 match today and all 82 match
 after (`full-pipe-rule`). The 40 that change:
 
+(2026-11-26, after the headline batch of seed 201: the comparator's full set is 1315 of 1339,
+these 335 of 340 and 980 of the batch's 999, with the solver unchanged. Its 24 misses are listed
+by class in `results/known-misses.json`, which the checks read. The quick set, rebuilt in
+511e7e0, is 195 of 200; its misses are nd-circ-000020, nd-circ-000087 and sb-irr-000001 to
+-000003, and cc-circ-000035 is no longer in it.)
+
 | Golden | Today | After | Why |
 |---|---|---|---|
 | cd-circ-000033 | Critical Slope `0.0089` for `0.0090` | match | K1 (1.1, 2.1) |

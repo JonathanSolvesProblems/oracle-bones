@@ -164,6 +164,10 @@ matching on the full set. The two misses SHALL be exactly the known differences 
 The full set SHALL then be 279 of 284: those two and the three unbuilt Step-Backwater cases.
 The quick set count SHALL be reported before and after.
 
+(2026-11-26, after the headline batch of seed 201: the full set is 1315 of 1339, and the two
+known differences are now two of 24 misses, listed by class in `results/known-misses.json`. The
+checks that walked the goldens with these two typed take their exclusions from that file.)
+
 2.14 WHEN the fix is built THEN the ledger SHALL answer Q-027 with the rule of 2.9 to 2.11 and
 its evidence, including the A-005 cases. Q-026 and Q-028 SHALL stay open. Neither is reported
 as observed coverage (oracle law rule 7).

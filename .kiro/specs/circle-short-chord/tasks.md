@@ -101,7 +101,10 @@ details. The full-set counts do not change.
     match.)
     - _Requirements: 2.9, 3.1, 3.4_
   - [x] 4.2 Run `python scripts/oracle_quick.py --full` and show the report: 335 of 340, the same
-    five misses. Every golden recorded from A-011 to A-018 matches.
+    five misses. Every golden recorded from A-011 to A-018 matches. (2026-11-26, after the
+    headline batch: 1315 of 1339 with the solver unchanged, these 335 of 340 among them; the 24
+    misses are listed by class in `results/known-misses.json`. The quick set rebuilt in 511e7e0
+    is 195 of 200, with nd-circ-000087 among its misses and cc-circ-000035 no longer in it.)
     - _Requirements: 2.9, 3.1 to 3.5_
   - [x] 4.3 Run the full Python and Vitest suites and show that they pass. Commit the reports'
     counts in the message.
