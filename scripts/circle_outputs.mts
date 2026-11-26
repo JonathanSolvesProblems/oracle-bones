@@ -25,6 +25,8 @@
 //   node scripts/circle_outputs.mts grade-a016 A-016's twelve answers against A-016 (414cad4), the 184 combinations on every
 //                                              circle Critical Depth outcome, the pipes whose diameter is a stepped trial, and the
 //                                              tests on q those pipes rule out (about 2 s)
+//   node scripts/circle_outputs.mts a017       A-017: each case under the rule to build and under a number c·D^2.5 at the trial
+//                                              on D, the 184, and the 1 ± ε check (about 1 s)
 //
 // `grade-a009` reads A-009 from git (80c87fd), each result from the stored golden, and each
 // rejection from the run folder that ledger decision 80 names. Run folders are under oracle/out,
@@ -2517,8 +2519,39 @@ function onDiameterReport(print: boolean) {
   row(`c above ${cLo.toPrecision(5)} (${loBy}) and below ${cHi.toPrecision(5)} (${hiBy}); at 9.6 in the change is then between ${(cLo * f(0.8) ** 2.5).toPrecision(5)} and ${(cHi * f(0.8) ** 2.5).toPrecision(5)} cfs`);
   return { pipes, cLo, cHi };
 }
+// ---- A-017: where the 9.6 in pipe changes from the shape menu to the message -------------------
+const A017_CASES: { name: string; d: string; q: string; n?: string }[] = [
+  ...['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9'].map((q, i) => ({ name: `B${i + 1}`, d: '9.6', q })),
+  { name: 'E1', d: '12', q: '3.6' }, { name: 'E2', d: '4.8', q: '.2' }, { name: 'E3', d: '2.4', q: '.05' },
+  { name: 'N1', d: '9.6', q: '2', n: '.02' },
+];
+function a017() {
+  const m2 = atShare(0.9382), all = all184(), K1X2 = A016_MODELS[0]!, tol = CIRCLE_TOL;
+  const { pipes, cLo, cHi } = onDiameterReport(false);
+  h('A-017: each case, the rule to build, the number at the trial on D, the 184, and the knife edges');
+  const tableRows: string[] = [];
+  for (const c of A017_CASES) {
+    const n = c.n ?? '.013', inputs = { diameter: c.d, n, discharge: c.q, slope: '.005' };
+    const v = vals('critical_depth', inputs), q = v.discharge!, D = f(f(val(c.d)) / 12), p = pipes.find((x) => val(x.d) === val(c.d));
+    const before = ALL.filter((g) => g.shape === 'circle' && g.mode === 'critical_depth' && (sameInputs(g.inputs, inputs) || (g.id.startsWith('obs-') && typedInputs(rawCase(g.id)) && sameInputs(typedInputs(rawCase(g.id))!, inputs)))).map((g) => g.id);
+    const o = a016Search(c.d, q, K1X2);
+    const eps = [1e-6, 1e-4].map((e) => [1 + e, 1 - e].map((s) => a016Word(a016Search(c.d, q, K1X2, s))));
+    const steps = p ? q > p.reach : false, margin = p && p.reach > 0 ? (q / p.reach - 1) * 100 : NaN;
+    const s25 = D ** 2.5, cMenu = (q * (1 + tol)) / s25, cMsg = (q * (1 - tol)) / s25;
+    const crown = !steps ? '-' : cMenu <= cLo ? 'shape menu' : cMsg > cHi ? 'message' : `menu if c > ${cMenu.toPrecision(4)}, message if c < ${cMsg.toPrecision(4)}`;
+    const g184 = new Map<string, number>(); for (const cc of all) { const a = answerOf(cc, c.d, q).a; g184.set(a, (g184.get(a) ?? 0) + 1); }
+    row(`${c.name}: ${inputText(inputs)}: stored already: ${before.join(', ') || 'no'}; ${p ? `trial ${p.k} equals D ${D.toPrecision(10)}; q ${!steps ? 'NOT above the least that steps to it' : p.reach > 0 ? `${margin.toFixed(2)}% above the least that steps to it, ${p.reach.toPrecision(5)} cfs` : 'steps to it at any discharge (no trial inside)'}` : 'no trial on D'}`);
+    row(`    2.4 with K1: ${a016Word(o)}${o.at !== undefined ? ` at trial ${o.at.toPrecision(10)} (${o.at === D ? 'equal to D' : `${(o.at - D).toPrecision(3)} ft from D`})` : ''}; at 1 ± 1e-6: ${eps[0]!.join(', ')}; at 1 ± 1e-4: ${eps[1]!.join(', ')}; the 184: ${[...g184].map(([a, k]) => `${k} ${a}`).join(', ')}`);
+    row(`    c·D^2.5: c that puts q 0.5% under it ${cMenu.toPrecision(5)}, 0.5% over it ${cMsg.toPrecision(5)}; inside (${cLo.toPrecision(5)}, ${cHi.toPrecision(5)}): ${crown}`);
+    tableRows.push(`| ${c.name} | ${c.d} | ${n} | ${c.q} | ${p ? `trial ${p.k}, ${p.reach > 0 ? `${margin.toFixed(1)}% over` : 'any q'}` : '-'} | ${a016Word(o)} | ${crown} |`);
+  }
+  console.log(`\n| Case | Diameter | n | Discharge | Steps to the trial on D | 2.4 with K1 | c·D^2.5 |`);
+  console.log('|---|---|---|---|---|---|---|');
+  for (const l of tableRows) console.log(l);
+}
 const which = process.argv[2];
 if (which === 'grade-a016') { gradeA016(); onDiameterReport(true); }
+else if (which === 'a017') a017();
 else if (which === 'floor') floorReport();
 else if (which === 'a016') a016();
 else if (which === 'design') { designChanges(); h009(); }
@@ -2534,4 +2567,4 @@ else if (which === 'a013') a013();
 else if (which === 'a013-amendment') a013Amendment();
 else if (which === 'grade-a013') { gradeA013(); await a014Diameter(); }
 else if (which === 'grade-a014') gradeA014();
-else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016'); process.exit(2); }
+else { console.error('usage: node scripts/circle_outputs.mts a004|a005|grade-a005|critical-slope|a009|grade-a009|a011|grade-a011|a013|a013-amendment|grade-a013|grade-a014|floor|a016|design|grade-a016|a017'); process.exit(2); }

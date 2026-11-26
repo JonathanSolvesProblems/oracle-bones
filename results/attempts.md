@@ -2177,3 +2177,118 @@ how QUICK-2 tests a trial against the diameter.
 **Not part of this.** The solver is not changed. circle-short-chord's bugfix.md is revised in
 the next commit, and A-017 follows it. Normal Depth's search (N2, Q-026) is not tested by any
 case here.
+
+## A-017: where the 9.6 in pipe changes from the shape menu to the message (for the Exhumer)
+
+**Written and committed before any of these cases runs. Nothing in this section changes after
+the runs; the results go in a new section. The solver is not changed.**
+
+**Thirteen cases. Nine find where the 9.6 in pipe changes from the shape menu (1.8 and 2 cfs) to
+the message (3 cfs), at 2.1 to 2.9 cfs. Three put a discharge on another pipe whose stored
+diameter equals a stepped trial: 12 in at 3.6 cfs, 4.8 in at .2 cfs and 2.4 in at .05 cfs. One
+repeats obs-cdmenu-000001 with n .02. The rule to build (2.4 with K1) gives the message on all
+thirteen. Candidates 1 and 2 of A-016 graded predict one change along the nine; only 1 allows a
+result there, with Depth `0.79`; only its variant 1a predicts the shape menu at 4.8 and 2.4 in.**
+
+**Source.** Every number below is printed by `node scripts/circle_outputs.mts a017` (about 1 s)
+at the commit that adds this section, and the pipes and the bounds on c by `grade-a016`. It runs
+A-016's written-out search with K1 and trial ≥ D on each case, multiplies A·√(g·A/T) by 1 ± 1e-6
+and 1 ± 1e-4, scores the 184 combinations, and checks that no stored case has these inputs. It
+never runs the program.
+
+**Candidates (A-016 graded, What the misses say).**
+- **2.4 with K1**: the rule to build. Not an explanation of the 9.6 in pattern; listed so a
+  case's difference from the rebuild is known before it runs.
+- **1**: q is compared with a number QUICK-2 gets at the trial on D. Menu more than 0.5% under
+  it, message more than 0.5% over it, a result at the trial on D (Depth `0.79` at 9.6 in) within
+  0.5%. The number belongs to the pipe and is unknown: at 9.6 in it lies between 2.01 and 2.985
+  cfs, and at 12 in below 3.98 cfs (cd-circ-000045).
+- **1a**: candidate 1 with the number c·D^2.5, c above 3.5113 (obs-cdmenu-000001) and below
+  3.9800 (cd-circ-000045).
+- **2**: q acts through the chord after trial 4. One change from menu to message; no result.
+- **3**: a test on q made before the search, from n or the slope. No form of it fits the goldens,
+  so it predicts nothing here except that N1 may differ from obs-cdmenu-000001.
+
+### The cases
+
+n .013 and slope .005 except N1. "Message" and "shape menu" are as in A-016. In every case the
+discharge steps to a trial that equals the stored D exactly, under the rebuild's trial and
+diameter store; "over" is how far the discharge is above the least one that steps past the last
+trial inside to it.
+
+| Case | Diameter | n | Discharge | Steps to the trial on D | 2.4 with K1 | 1 | 1a (c·D^2.5) | 2 | 3 |
+|---|---|---|---|---|---|---|---|---|---|
+| B1 | 9.6 | .013 | 2.1 | trial 4, 19.2% over | message | one change along B1 to B9 | menu if c > 3.687, message if c < 3.650, result between | one change along B1 to B9 | none |
+| B2 | 9.6 | .013 | 2.2 | trial 4, 24.9% over | message | one change | menu if c > 3.862, message if c < 3.824, result between | one change | none |
+| B3 | 9.6 | .013 | 2.3 | trial 4, 30.5% over | message | one change | message | one change | none |
+| B4 | 9.6 | .013 | 2.4 | trial 4, 36.2% over | message | one change | message | one change | none |
+| B5 | 9.6 | .013 | 2.5 | trial 4, 41.9% over | message | one change | message | one change | none |
+| B6 | 9.6 | .013 | 2.6 | trial 4, 47.6% over | message | one change | message | one change | none |
+| B7 | 9.6 | .013 | 2.7 | trial 4, 53.2% over | message | one change | message | one change | none |
+| B8 | 9.6 | .013 | 2.8 | trial 4, 58.9% over | message | one change | message | one change | none |
+| B9 | 9.6 | .013 | 2.9 | trial 4, 64.6% over | message | one change | message | one change | none |
+| E1 | 12 | .013 | 3.6 | trial 5, 2.1% over | message | none | menu if c > 3.618, message if c < 3.582, result between | none | none |
+| E2 | 4.8 | .013 | .2 | trial 2, 40.8% over | message | none | shape menu | none | none |
+| E3 | 2.4 | .013 | .05 | trial 1, any q | message | none | shape menu | none | none |
+| N1 | 9.6 | .02 | 2 | trial 4, 13.5% over | message | shape menu | shape menu | shape menu | may differ from obs-cdmenu-000001 |
+
+"One change" means: B1 to B9 end on the shape menu up to some discharge and on the message above
+it, with at most one result between, and only under 1. "None" means the candidate does not fix
+the outcome. The 184 combinations give 74 shape menu and 110 message on B1 to B9 and N1, 56 and
+128 on E1, and 80 and 104 on E2 and E3; none of them fits all 69 outcomes (A-016 graded), so they
+are not a candidate here.
+
+**Joint predictions.**
+- Under 1 and 2, B1 to B9 change once, from the menu to the message. A message below a menu
+  along the series refutes both.
+- Under 1a, B3 to B9 print the message, and the change falls below 2.28 cfs: before B1,
+  between B1 and B2, or between B2 and B3. E1 ends
+  on the menu if B1 does (B1's menu needs c > 3.687, above E1's 3.618), and if E1 prints the
+  message, so do B1 and B2 (c < 3.582).
+- Under 1 and 1a, a result within 0.5% of the number prints Depth `0.79` at 9.6 in (D − 0.01 at
+  0.8000000119 ft) and is the only result possible on B1 to B9. Under 2 there is none.
+- Under 1, 1a and 2, N1 ends on the shape menu, since n does not enter A·√(g·A/T) or the steps.
+
+### How far each prediction is from a knife edge
+
+- **Reaching the trial on D.** Every case steps to it. The nearest is E1: 3.6 cfs is 2.13% over
+  the least discharge that steps past trial 4 (0.8000000119 ft, A·√(g·A/T) 3.5072, reached above
+  3.5248 cfs). B1 is 19.2% over 1.7619 cfs, N1 13.5%, E2 40.8% over 0.14202 cfs, and E3's pipe
+  has no trial inside, so any discharge steps to trial 1.
+- **Rounding of A·√(g·A/T).** Multiplied by 1 ± 1e-6 and by 1 ± 1e-4, no outcome under 2.4 with
+  K1 changes.
+- **The trial on D.** The trial equals D exactly in every case (trial 4 in the 9.6 in pipe,
+  trial 5 at 12 in, trial 2 at 4.8 in, trial 1 at 2.4 in); that tie is what the cases are for.
+- **1a.** B3 is the closest: its message needs c under 3.9978, and c is known only to be under
+  3.9800, a margin of 0.45%. B1 and B2 depend on c. E2 needs c above 1.986 for the menu and E3
+  above 2.809, against a known 3.5113, margins of 77% and 25%. N1 has obs-cdmenu-000001's
+  discharge and pipe, so its bound is the same by construction.
+- **The grid.** B1 to B9 are 0.1 cfs apart, so they place the change to within 0.1 cfs. A
+  result under 1 needs a discharge within 0.5% of the number, a band about 0.02 cfs wide here,
+  which the grid can step over. No result on B1 to B9 does not refute 1.
+
+### What each answer would mean
+
+- B1 to B9 changing once: what 1, 1a and 2 predict. Where the change falls is the finding; above
+  2.28 cfs (B3 or later on the menu) refutes 1a.
+- A message below a menu along B1 to B9: refutes 1 and 2.
+- A result on B1 to B9 with Depth `0.79`: supports 1 and refutes 2. Any other result is a miss of
+  every candidate.
+- E2 or E3 on the shape menu: supports 1a. The message at either refutes 1a.
+- E1 on the menu: in a second pipe, a discharge just over the reach of the trial on D ends on
+  the menu, as 1.8 cfs did at 9.6 in. The message there means the menu is not seen just over the
+  reach in every pipe with a trial on D.
+- N1 differing from obs-cdmenu-000001: n matters, which only 3 allows.
+- Any case on the shape menu is a known difference from the rebuild under 2.6, unless 2.6 does
+  not yet name it, in which case circle-short-chord's requirements are revised again before the
+  solver changes (its 2.12). A result or the message where 2.4 gives the other is a miss of the
+  rule to build and revises them too.
+
+**How to run.** Each case once, with record true, in any order. A case that ends on the shape
+menu stores no golden; add a behaviour case with the same keys (`hold_ms` 3000, as
+obs-cdmenu-000002 has) and record it. In the same session record obs-cdmenu-000004, W2's
+behaviour case, already in the profile (Q-034); it ran once and ended on the shape menu, and that
+is its prediction. A shape-menu run waits 10 s for a result or a rejection before it ends.
+
+**Not part of this.** The solver, circle-short-chord's bugfix.md and the ledger are unchanged.
+Normal Depth's search (N2, Q-026) is not tested by any case here.
