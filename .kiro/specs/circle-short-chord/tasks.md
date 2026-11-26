@@ -142,8 +142,8 @@ details. The full-set counts do not change.
     mascot, and no "Known differences" section added for circle Critical Depth. Commit.
     - _Requirements: 2.7, 2.12_
 
-- [ ] 7. The ledger entries of 2.10 (an Exhumer session, through `ledger_write` only)
-  - [ ] 7.1 After 4.2 confirms 335 of 340, an Exhumer session records the following and runs no
+- [x] 7. The ledger entries of 2.10 (an Exhumer session, through `ledger_write` only)
+  - [x] 7.1 After 4.2 confirms 335 of 340, an Exhumer session records the following and runs no
     case. The default agent does not edit `results/ledger.json`.
     - `decide`, chose `write_requirement`: K1 and trial ≥ D as what circle Critical Depth does,
       evidence cd-circ-000033, -000035, -000036 and cd-circ-000039 to -000044.
