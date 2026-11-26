@@ -6,6 +6,12 @@ entry gives the case, what the program printed, the exact answer, and the size o
 "Exact" here means the answer under the stated physical assumption, computed by the rebuild with
 QUICK-2's own search and constants; it is not an observation.
 
+Each haunting (H-NNN) has one **Exact by field** line for each case its **Case:** or **Cases:**
+line names, in a fixed form that Quickened reads to put each exact value beside its printed field:
+`- **Exact by field (case-id):** field value; field value`. The field names are those of the
+case's golden, and each value is the one the entry's exact answer states, written as there. The
+line reads `none` when the entry gives no exact value for any printed field of that case.
+
 ## H-001: low ground cut off from the channel is counted as flowing
 
 - **Case:** nd-irr-000010. The Grapevine section, n .06 / .04 / .06, discharge 3000 cfs, slope .0035.
@@ -17,6 +23,7 @@ QUICK-2's own search and constants; it is not an observation.
   rebuild does the same and matches all nine fields.
 - **Exact answer, with the pocket treated as ineffective (wet but carrying no flow, and left
   out of the section):** WS ELEV 596.42, Area 586, Top Wid 152, Wet Per 153.
+- **Exact by field (nd-irr-000010):** ws_elev 596.42; area 586; top_width 152; wet_perimeter 153
 - **Difference:** WS ELEV 0.05 ft lower in QUICK-2. Top Wid 67 ft wider (44%), Area 37 sq ft larger
   (6%), Wet Per 67 ft longer.
 - **Flag:** `cut_off_area_counted`. The rebuild also raises it for nd-irr-000014 (a second pool
@@ -35,6 +42,7 @@ QUICK-2's own search and constants; it is not an observation.
 - **Exact answer, with the walls counted as wetted boundary:** Wet Per 404.9 ft and Hyd R 10.4 ft,
   at the same Area 4226. A real channel this full spills past the ends; the true answer needs a
   wider section, which QUICK-2 does not ask for.
+- **Exact by field (nd-irr-000005):** wet_perimeter 404.9; hyd_radius 10.4
 - **Difference:** Wet Per 13.7 ft shorter in QUICK-2 (3.4%), Hyd R 0.36 ft larger (10.80 against 10.44,
   3.5%).
 - **Flag:** `extended_section`.
@@ -50,6 +58,7 @@ QUICK-2's own search and constants; it is not an observation.
   against the triangle (results/attempts.md A-004, hypothesis C2; circle-outputs requirement
   2.2). The rebuild uses the same π and the same form and prints `3783.9`.
 - **Exact answer, with the true π:** Discharge 3782.98.
+- **Exact by field (cc-circ-000031):** discharge 3782.98
 - **Difference:** 0.92 cfs, 0.024%, higher in QUICK-2. The effect grows as the pipe gets larger
   and the flow shallower: the area error is about r²·3.7e-6 (0.031 sq ft at r = 91.7 ft), a
   larger share of a smaller area.
@@ -65,6 +74,7 @@ QUICK-2's own search and constants; it is not an observation.
   cc-circ-000031 to -000033; A-004 measurement 2; circle-outputs requirements 2.10, 2.12). The
   rebuild does the same and keeps the search depth as `raw.search_depth`.
 - **Exact answer, with the true π and no single-precision rounding:** critical depth 4.9030 ft.
+- **Exact by field (cd-circ-000019):** depth 4.9030
 - **Difference:** the printed Depth is 0.0116 ft below the exact critical depth (0.24%), and
   0.01 ft below the depth its own fields describe.
 ## H-005: the depth search stops anywhere within 1% of the discharge
@@ -84,6 +94,8 @@ QUICK-2's own search and constants; it is not an observation.
 - **Exact answer, the root of QUICK-2's own equation:** nd-trap-000001 normal depth 3.2853 ft
   with QUICK-2's exponent .667 (3.2857 ft with 2/3), Area 59.8 sq ft. cd-vdit-000001 critical
   depth 2.5088 ft with g = 32.2, Area 15.73 sq ft, Velocity 6.36 ft/s.
+- **Exact by field (nd-trap-000001):** depth 3.2853; area 59.8
+- **Exact by field (cd-vdit-000001):** depth 2.5088; area 15.73; velocity 6.36
 - **Difference:** nd-trap-000001 Depth 0.011 ft shallower in QUICK-2 (0.32%), Area 0.28 sq ft
   smaller (0.47%). cd-vdit-000001 Depth 0.0088 ft shallower (0.35%), Area 0.11 sq ft smaller
   (0.70%). The stop allows up to 1% in discharge on every channel size; because discharge grows
@@ -103,6 +115,7 @@ QUICK-2's own search and constants; it is not an observation.
   discharge is 1.5605E+11 cfs. The circle and the irregular section use .6667 (exponent B),
   which is 3.3e-5 above 2/3.
 - **Exact answer, with 2/3:** Velocity 5095.17 ft/s, Discharge 1.5575E+11 cfs, Froude 53.30.
+- **Exact by field (cc-vdit-000012):** velocity 5095.17; discharge 1.5575E+11; froude 53.30
 - **Difference:** 9.6 ft/s, 0.19% higher in QUICK-2, and the discharge by the same share. The
   extra power is R^(1/3000): nothing at R = 1 ft, 0.023% at R = 2 ft, 0.077% at 10 ft, 0.19% at
   284 ft. Below R = 1 ft QUICK-2's value is slightly low instead. In a channel of ordinary size
@@ -120,6 +133,8 @@ QUICK-2's own search and constants; it is not an observation.
   printed `53`.
 - **Exact answer, the pipe's capacity at the slope it is laid on:** 50.73 cfs at .005 (prints
   `51`) and 22.69 cfs at .001 (would print `23`).
+- **Exact by field (cd-circ-000001):** max_discharge 50.73
+- **Exact by field (cd-circ-000002):** max_discharge 22.69
 - **Difference:** at slope .005, 2.11 cfs (4.2%) higher in QUICK-2; at .001, 30.2 cfs, 2.3 times
   the pipe's capacity. The ratio is √(critical slope / entered slope), so the figure is the
   capacity of the same pipe laid at its critical slope, whatever slope was typed.
@@ -136,6 +151,7 @@ QUICK-2's own search and constants; it is not an observation.
 - **Exact answer:** none. A negative roughness or bottom width has no physical meaning, and a
   correct program would refuse it. Read with n = +1 and the same section, the discharge would be
   +3.4654E+09 cfs and the Froude number +1.55, SUPERCRITICAL.
+- **Exact by field (cc-trap-000015):** none
 - **Difference:** Discharge, Velocity and Froude # have the wrong sign, and the Flow Type is
   SUBCRITICAL where the magnitude of the Froude number, 1.55, is supercritical. Normal Depth
   shows the other outcomes of negative inputs: a negative side slope or width gives a result
@@ -162,6 +178,9 @@ QUICK-2's own search and constants; it is not an observation.
   | cd-circ-000049 | 15 in, 7 cfs | 1.0600 ft | 0.848 | 0.1900 ft (2.28 in) |
   | cd-circ-000050 | 18 in, 12 cfs | 1.3141 ft | 0.876 | 0.1859 ft (2.23 in) |
 
+- **Exact by field (cd-circ-000043):** none
+- **Exact by field (cd-circ-000049):** none
+- **Exact by field (cd-circ-000050):** none
 - **Difference:** a refusal where an answer exists. The exact critical depth is about 2.2 to
   2.3 in below the crown in each, and QUICK-2 gives no depth at all.
 - **The boundary is not one discharge per pipe.** In the same 8 in pipe QUICK-2 refuses 1.6 cfs
