@@ -13,7 +13,7 @@ import traceback
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import cases, evidence, freshness, generator, ledger, paths, reread, runs, sandbox, screen
+from . import cases, evidence, fetch, freshness, generator, ledger, paths, reread, runs, sandbox, screen
 from .recorder import Recorder
 from . import profile as profile_mod
 from .errors import OracleError
@@ -58,6 +58,8 @@ class Oracle:
         """The profile for a tool that runs the program. Whenever its sha256 changes, every
         stored golden is re-read under it first (exhume-loop Requirement 4.3)."""
         prof = self._profile(name)
+        if paths.INSTALLED:  # resurrection-power 9.1: fetch the program into the workspace
+            fetch.ensure(prof)
         if getattr(self, "_reread_sha", None) != prof["_sha256"]:
             reread.check(prof, self.recorder.store)
             self._reread_sha = prof["_sha256"]

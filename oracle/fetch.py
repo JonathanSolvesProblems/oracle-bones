@@ -106,7 +106,8 @@ def setup(profile, log=print):
     """Run setup. Returns 0 when verified and unpacked, 1 when it stopped."""
     archive = archive_path(profile)
     expected = profile["archive"]["sha256"]
-    if not archive.exists():
+    fresh = not archive.exists()
+    if fresh:
         download(profile, log)
     actual = sha256_file(archive)
     size = archive.stat().st_size
@@ -126,12 +127,31 @@ def setup(profile, log=print):
         log("HASH MISMATCH for %s" % archive)
         log("  expected (profile): %s" % expected)
         log("  actual   (archive): %s" % actual)
+        if fresh:  # resurrection-power 9.2: a download that fails the pin is not kept
+            archive.unlink()
+            log("Deleted the download. Nothing was booted.")
         log("Stopped. The unpacked program was not changed.")
         return 1
     unpack(profile)
     stamp_path(profile).write_text(json.dumps({"sha256": actual, "archive": archive.name}), encoding="utf-8")
     log("verified %s (sha256 %s) and unpacked into %s" % (archive.name, actual, unpacked_dir(profile)))
     return 0
+
+
+def ensure(profile, log=None):
+    """An installed power's setup: when the program is not verified in the workspace, download it
+    from the profile's address, check it and unpack it, as scripts/setup.py does. Raises with
+    setup's own words when it stops."""
+    try:
+        return require_verified(profile)
+    except OracleError:
+        pass
+    lines = []
+    code = setup(profile, log=lambda s: (lines.append(s), log and log(s)))
+    if code != 0:
+        mismatch = any(s.startswith("HASH MISMATCH") for s in lines)
+        raise OracleError("hash_mismatch" if mismatch else "setup_required", "\n".join(lines))
+    return require_verified(profile)
 
 
 def require_verified(profile):
