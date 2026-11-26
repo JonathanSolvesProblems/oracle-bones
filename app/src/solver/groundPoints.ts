@@ -40,15 +40,36 @@ export interface EditorState {
 }
 
 /** Row 24's key line in the editor, as the message window cuts it. */
-const EDITOR_KEY_LINE = 'F3}Insert GrPt F4}Delete GrPt                            F1 }HELP      ';
+export const EDITOR_KEY_LINE = 'F3}Insert GrPt F4}Delete GrPt                            F1 }HELP      ';
 
 export const LEFT_BANK_ERROR = 'ERROR! LEFT Bank Station DOES NOT MATCH a Ground Point.  Press <ENTER> ';
 export const RIGHT_BANK_ERROR = 'ERROR! RIGHT Bank Station DOES NOT MATCH a Ground Point. Press <ENTER> ';
 
+/** The station error's own text, up to and including its "!" (criteria 10.3, 10.4). */
+export function stationErrorText(previous: number, station: number): string {
+  return `ERROR ... Stations ${printNumber(previous)} , ${printNumber(station)} are NOT INCREASING !`;
+}
+
 /** The station error as the message window shows it: the error written over the key line. */
 export function stationError(previous: number, station: number): string {
-  const text = `ERROR ... Stations ${printNumber(previous)} , ${printNumber(station)} are NOT INCREASING !`;
+  const text = stationErrorText(previous, station);
   return text + EDITOR_KEY_LINE.slice(text.length);
+}
+
+/**
+ * A station error's two parts: the error text up to its "!", and the rest of the key line that
+ * row 24 still shows. For a message as long as the key line, the longest end of it that equals
+ * the same end of EDITOR_KEY_LINE is the rest; it must not be empty, and what comes before it
+ * must end with "!". Any other message gives null (quickened-app criterion 6.10).
+ */
+export function splitStationError(message: string): { text: string; keyLineRest: string } | null {
+  if (message.length !== EDITOR_KEY_LINE.length) return null;
+  let start = message.length;
+  while (start > 0 && message[start - 1] === EDITOR_KEY_LINE[start - 1]) start -= 1;
+  if (start === message.length) return null;
+  const text = message.slice(0, start);
+  if (!text.endsWith('!')) return null;
+  return { text, keyLineRest: message.slice(start) };
 }
 
 export function startEditor(): EditorState {
