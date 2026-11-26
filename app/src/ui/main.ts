@@ -3,6 +3,7 @@
 import { data } from 'virtual:quickened/data';
 import type { Mode, Shape } from '../solver/index.ts';
 import { limitsModel, limitsView } from './views/limits.ts';
+import { proofModel, proofView } from './views/proof.ts';
 import { render, type Dispatch } from './dom.ts';
 import { formFor } from './forms.ts';
 import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from './job.ts';
@@ -14,7 +15,7 @@ import { calculatePage, type CalculatorState } from './views/calculate.ts';
 import { gridParts } from './views/grid.ts';
 import { pasteControl, type PasteState } from './views/paste.ts';
 import { shapeChoice, STEP_BACKWATER_SHAPE } from './views/picker.ts';
-import { placeholder, routeOf, shell, type Route } from './views/shell.ts';
+import { routeOf, shell, type Route } from './views/shell.ts';
 import { screenView } from './views/screen.ts';
 import type { Action, Child } from './vnode.ts';
 
@@ -33,7 +34,7 @@ let last: { job: AppJob; screen: ScreenState } | null = null;
 function page(route: Route): Child {
   switch (route) {
     case 'limits': return limitsView(limitsModel(data));
-    case 'proof': return placeholder('Proof', 'The proof page is not built yet.');
+    case 'proof': return proofView(proofModel(data.proof, data.headline));
     default: {
       if (printing && last && last.screen.kind === 'result') return printView(printModel(last.job, last.screen, printing));
       const grid = gridParts(state.rows);

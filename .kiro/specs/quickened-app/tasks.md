@@ -174,17 +174,17 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     from it. Then `views/limits.ts`.
     - _Requirements: 5.3, 5.4, 7.3_
 
-- [ ] 10. The proof page
-  - [ ] 10.1 Test: `proof/cases.json` has at least one result golden per built pair, every
+- [x] 10. The proof page
+  - [x] 10.1 Test: `proof/cases.json` has at least one result golden per built pair, every
     haunting case, nd-irr-000006 and nd-irr-000010, a held prompt, a bank message, the circle
     message, and
     cc-circ-000035 and nd-circ-000020, each with a reason; each id's golden and final capture
     exist. Then the list.
     - _Requirements: 5.1_
-  - [ ] 10.2 Test: `build/headline.ts` returns `null` with no `results/headline.md` and reads the
+  - [x] 10.2 Test: `build/headline.ts` returns `null` with no `results/headline.md` and reads the
     `Cases:` and `Run:` lines of a fixture. Then the reader.
     - _Requirements: 5.2_
-  - [ ] 10.3 Test: for each listed case the proof view model holds the capture text, the golden's
+  - [x] 10.3 Test: for each listed case the proof view model holds the capture text, the golden's
     printed text and `runJob`'s, marked same or different, with the two known differences marked
     different. Then `views/proof.ts`.
     - _Requirements: 5.1, 5.2_

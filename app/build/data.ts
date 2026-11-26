@@ -7,7 +7,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
-import { readGolden } from './goldens.ts';
+import { readGolden, readProofCase, type ProofCase } from './goldens.ts';
+import { readHeadline, type Headline } from './headline.ts';
 import { readHauntings, type Haunting, type LimitEntry } from './hauntings.ts';
 import { readOpenQuestions } from './ledger.ts';
 import { readPlain } from './plain.ts';
@@ -31,6 +32,10 @@ export interface QuickenedData {
    * from results/limits-plain.md, or null where the file has no entry (criterion 5.7's test fails).
    */
   openQuestions: { id: string; question: string; plain: string | null }[];
+  /** The proof page's cases, from src/ui/proof/cases.json, with their goldens and final captures. */
+  proof: ProofCase[];
+  /** results/headline.md's count and date, or null while the file does not exist (criterion 5.2). */
+  headline: Headline | null;
   /** Every case a haunting names, by id. */
   cases: Record<string, CaseData>;
   /** The worked examples' goldens (criteria 8.2, 8.4). */
@@ -55,6 +60,7 @@ export const EXAMPLE_CASES = { main: 'nd-irr-000006', cutoff: 'nd-irr-000010' } 
 /** The files the module is built from. */
 export function sourceFiles(root: string): string[] {
   return [join(root, 'results', 'hauntings.md'), join(root, 'results', 'ledger.json'), join(root, 'results', 'limits-plain.md'),
+    join(root, 'results', 'headline.md'), join(root, 'app', 'src', 'ui', 'proof', 'cases.json'),
     join(root, 'realdata', 'huntington-section-01.json')];
 }
 
@@ -81,7 +87,9 @@ export function buildData(root: string = ROOT): QuickenedData {
   const plain = readPlain(readText(join(root, 'results', 'limits-plain.md')));
   const openQuestions = readOpenQuestions(readText(join(root, 'results', 'ledger.json')))
     .map((q) => ({ ...q, plain: plain.find((p) => p.id === q.id)?.text ?? null }));
-  return { hauntings: file.hauntings, limits: file.limits, openQuestions, cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
+  const list = JSON.parse(readText(join(root, 'app', 'src', 'ui', 'proof', 'cases.json'))) as { id: string; reason: string }[];
+  const proof = list.map((c) => readProofCase(root, c.id, c.reason));
+  return { hauntings: file.hauntings, limits: file.limits, openQuestions, proof, headline: readHeadline(root), cases, examples: { main, cutoff }, sources: readSources(root, n, cutoff.inputs.discharge ?? ''),
     build: {
       version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
       commit: shortCommit(root),

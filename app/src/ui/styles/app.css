@@ -177,6 +177,17 @@ input.figures { font-family: var(--font-figures); }
 .limits-page .ledger-wording { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
 .limits-page .ledger-wording h3 { font: inherit; font-weight: 600; margin: var(--space-2) 0 0; }
 .limits-page .ledger-wording p { margin: 0; overflow-wrap: anywhere; }
+.proof-case { border-top: var(--hairline); padding: var(--space-4) 0; }
+.proof-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+.quick2-screen { margin: 0; min-width: 0; }
+.quick2-screen figcaption { font: var(--text-sm) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-1); }
+.quick2-screen pre { margin: 0; overflow-x: auto; border: var(--hairline); padding: var(--space-2); font-size: var(--text-xs); }
+.quick2-screen pre:focus { outline: var(--focus); outline-offset: var(--focus-offset); }
+.proof-table { border-collapse: collapse; width: 100%; }
+.proof-table caption { text-align: left; font: var(--text-sm) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
+.proof-table th, .proof-table td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; overflow-wrap: anywhere; }
+.proof-table td.figures { white-space: pre-wrap; }
+.proof-table tr.different .mark { color: var(--pencil); font-weight: 600; }
 table.printed { border-collapse: collapse; width: 100%; margin-bottom: var(--space-6); }
 table.printed caption {
   text-align: left;
