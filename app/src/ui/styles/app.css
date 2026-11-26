@@ -186,6 +186,7 @@ table.printed .row-heading { color: var(--ink-muted); }
 table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pencil); }
 .row-extra { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
 .flag-ref { color: var(--pencil); margin-right: var(--space-2); }
+.field-note { display: block; color: var(--ink); }
 
 .method h3 {
   font: var(--text-sm) var(--font-label);

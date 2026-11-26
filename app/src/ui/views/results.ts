@@ -23,7 +23,12 @@ export interface PrintedRow {
   text: string;
   /** The numbers of the flags that name this field. */
   flagNumbers: number[];
+  /** Quickened's lines beside the field (the cut-off line). */
+  notes: string[];
 }
+
+/** Beside the fields the cut_off_area_counted flag names: Area, Top Wid and Wet Per (6.8). */
+export const CUT_OFF_LINE = 'Includes low ground cut off from the channel, which QUICK-2 counts as flowing.';
 
 export interface ResultsModel {
   heading: string;
@@ -53,6 +58,7 @@ export function resultsModel(job: AppJob, state: Extract<ShownState, { kind: 're
     rowHeading: screenRowHeading(job.mode, job.shape, field),
     text: r.printed[field]!.trim(),
     flagNumbers: r.flags.flatMap((f, i) => (f.fields.includes(field) ? [i + 1] : [])),
+    notes: r.flags.some((f) => f.code === 'cut_off_area_counted' && f.fields.includes(field)) ? [CUT_OFF_LINE] : [],
   });
   const rows = [...order, ...rest].map(row);
   const main = mainFigureField(job.mode, job.shape);
@@ -73,6 +79,7 @@ function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row:
       h('td', { class: 'figures', 'data-field': x.field }, x.text),
       h('td', { class: 'row-extra' },
         x.flagNumbers.length ? h('span', { class: 'flag-ref' }, `Flag ${x.flagNumbers.join(', ')}`) : null,
+        x.notes.map((n) => h('span', { class: 'field-note' }, n)),
         extra(x))))));
 }
 
