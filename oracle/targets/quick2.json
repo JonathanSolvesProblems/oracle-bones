@@ -1363,6 +1363,72 @@
       "source": "20261125-100815-dff8b0"
     },
     {
+      "id": "obs-cdmenu-000002",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9.6{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": "1.8{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001523-d4c7e8"
+    },
+    {
+      "id": "obs-cdmenu-000003",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "9999{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".5{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001714-439809"
+    },
+    {
+      "id": "obs-cdmenu-000004",
+      "mode": "critical_depth",
+      "shape": "circle",
+      "inputs": {},
+      "steps": [
+        {"expect": "title", "keys": "{Enter}"},
+        {"expect": "main_menu", "keys": "1{Enter}"},
+        {"expect": "shape_menu", "keys": "C{Enter}"},
+        {"expect": "cd_form", "keys": "7254{Enter}"},
+        {"expect": "cd_form", "keys": ".013{Enter}"},
+        {"expect": "cd_form", "keys": ".3{Enter}"},
+        {"expect": "cd_form", "keys": ".005{Enter}"},
+        {"expect": "cd_form", "keys": "{Enter}"},
+        {"end": ["shape_menu"], "hold_ms": 3000}
+      ],
+      "expect": {
+        "outcome": "observed",
+        "screen_id": "shape_menu"
+      },
+      "source": "20261126-001813-0cfa74"
+    },
+    {
       "id": "obs-negnstall-000001",
       "mode": "normal_depth",
       "shape": "trapezoid",

@@ -1,21 +1,21 @@
 {
   "screens": {
     "title": {
-      "visits": 633,
+      "visits": 651,
       "keys_tried": [
         "{Enter}",
         "literal"
       ]
     },
     "main_menu": {
-      "visits": 635,
+      "visits": 653,
       "keys_tried": [
         "literal",
         "{Enter}"
       ]
     },
     "shape_menu": {
-      "visits": 641,
+      "visits": 668,
       "keys_tried": [
         "literal",
         "{Enter}",
@@ -70,7 +70,7 @@
       ]
     },
     "cd_form": {
-      "visits": 210,
+      "visits": 228,
       "keys_tried": [
         "literal",
         "{Enter}"
@@ -85,7 +85,7 @@
       ]
     },
     "cd_circ_result": {
-      "visits": 44,
+      "visits": 47,
       "keys_tried": [],
       "keys_untried": [
         "{F5}",
@@ -181,7 +181,7 @@
       ]
     },
     "cd_circ_rejected": {
-      "visits": 44,
+      "visits": 50,
       "keys_tried": [
         "{Enter}",
         "{F2}",
@@ -203,37 +203,37 @@
       "cases": 148
     },
     "in_n": {
-      "cases": 213
+      "cases": 216
     },
     "in_discharge": {
-      "cases": 154
+      "cases": 157
     },
     "depth": {
-      "cases": 181
+      "cases": 184
     },
     "in_slope": {
-      "cases": 213
+      "cases": 216
     },
     "area": {
-      "cases": 237
+      "cases": 240
     },
     "wet_perimeter": {
-      "cases": 237
+      "cases": 240
     },
     "velocity": {
-      "cases": 213
+      "cases": 216
     },
     "hyd_radius": {
-      "cases": 237
+      "cases": 240
     },
     "top_width": {
-      "cases": 240
+      "cases": 243
     },
     "froude": {
-      "cases": 240
+      "cases": 243
     },
     "flow_type": {
-      "cases": 237
+      "cases": 240
     },
     "in_bank_left": {
       "cases": 27
@@ -263,13 +263,13 @@
       "cases": 27
     },
     "critical_slope": {
-      "cases": 87
+      "cases": 90
     },
     "in_diameter": {
-      "cases": 65
+      "cases": 68
     },
     "max_discharge": {
-      "cases": 65
+      "cases": 68
     },
     "discharge": {
       "cases": 59
@@ -331,8 +331,8 @@
       "observed": 0
     },
     "cd-circ": {
-      "result": 31,
-      "rejected": 28,
+      "result": 34,
+      "rejected": 34,
       "error": 0,
       "observed": 0
     },
@@ -400,7 +400,7 @@
       "result": 0,
       "rejected": 0,
       "error": 0,
-      "observed": 1
+      "observed": 3
     },
     "obs-fieldedge": {
       "result": 0,
@@ -2108,6 +2108,57 @@
       "waited_for": "shape_menu",
       "capture": "oracle/out/runs/20261125-184734-96cde0/final.txt",
       "at": "2026-11-25T18:47:34Z"
+    },
+    {
+      "run_id": "20261126-001523-d4c7e8",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": "1.8",
+          "diameter": "9.6",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261126-001523-d4c7e8/final.txt",
+      "at": "2026-11-26T00:15:23Z"
+    },
+    {
+      "run_id": "20261126-001714-439809",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": ".5",
+          "diameter": "9999",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261126-001714-439809/final.txt",
+      "at": "2026-11-26T00:17:15Z"
+    },
+    {
+      "run_id": "20261126-001813-0cfa74",
+      "case": {
+        "mode": "critical_depth",
+        "shape": "circle",
+        "inputs": {
+          "discharge": ".3",
+          "diameter": "7254",
+          "slope": ".005",
+          "n": ".013"
+        }
+      },
+      "reason": "waited 10.0s for ['cd_circ_result', 'irr_station_rejected', 'irr_bank_rejected', 'cd_circ_rejected']",
+      "waited_for": "shape_menu",
+      "capture": "oracle/out/runs/20261126-001813-0cfa74/final.txt",
+      "at": "2026-11-26T00:18:13Z"
     }
   ],
   "unknown_screens": [
@@ -3121,6 +3172,18 @@
       ],
       "status": "open",
       "asked_at": "2026-11-25T18:45:03Z",
+      "answer": null,
+      "answer_evidence": [],
+      "answered_at": null
+    },
+    {
+      "id": "Q-034",
+      "question": "A-016 W2 (Critical Depth, circle, diameter 7254, n .013, discharge .3, slope .005) ran once, in run 20261126-001813-0cfa74, and left the form for shape_menu after the last Enter (runner reported timeout after waiting 10.0 s for a result or rejected screen; final screen shape_menu). No golden was stored. Behaviour case obs-cdmenu-000004 with the same keys (source 20261126-001813-0cfa74) is in the profile but not recorded, because no further recording call was allowed in this session. Does a recorded run of these inputs also end on shape_menu?",
+      "evidence": [
+        "20261126-001813-0cfa74"
+      ],
+      "status": "open",
+      "asked_at": "2026-11-26T00:18:41Z",
       "answer": null,
       "answer_evidence": [],
       "answered_at": null
@@ -4422,12 +4485,52 @@
       "why": "A-014's three held-out cases (H1 to H3) are recorded as cd-circ-000061 to -000063, as the person asked. The person asked for nothing else to be run, graded or written, so no further question is in scope for this session.",
       "evidence": [],
       "at": "2026-11-25T19:20:05Z"
+    },
+    {
+      "n": 102,
+      "saw": "A-016's twelve cases, Critical Depth, circle, n .013, slope .005, each run once with record true, in this order: U1 8/1.6 run 20261126-001352-8d0e17 rejected cd-circ-000064; U2 8/1.71 run 20261126-001406-f2f758 result cd-circ-000065; U3 8/1.8 run 20261126-001418-489629 rejected cd-circ-000066; U4 15/10.5 run 20261126-001428-fd8dd6 rejected cd-circ-000067; U5 15/10.8 run 20261126-001438-2cb7f3 result cd-circ-000068; U6 15/11 run 20261126-001451-7c4a5a rejected cd-circ-000069; V1 9.6/1.5 run 20261126-001501-e6c9d8 result cd-circ-000070; V2 9.6/1.8 run 20261126-001523-d4c7e8 ended on shape_menu, no golden; obs-cdmenu-000002 added to the profile (source that run) and recorded at the start of V3's call; V3 9.6/3 run 20261126-001616-046275 rejected cd-circ-000071; V4 9.6/10 run 20261126-001650-f37143 rejected cd-circ-000072; W1 9999/.5 run 20261126-001714-439809 ended on shape_menu (form took 9999), no golden; obs-cdmenu-000003 added (source that run) and recorded at the start of W2's call; W2 7254/.3 run 20261126-001813-0cfa74 ended on shape_menu, no golden; obs-cdmenu-000004 added (source that run), not recorded (Q-034). The three shape_menu runs were reported as timeout after a 10.0 s wait; none ran to the 60 s case limit.",
+      "chose": "record_case",
+      "why": "The person asked for every A-016 case recorded once, shape-menu endings as behaviour cases like obs-cdmenu-000001, and one decision for U1 to W2 written after the runs; no grading. Times each input ran on the oracle: U1 to V1, V3 and V4 once each; V2 twice (20261126-001523-d4c7e8, then obs-cdmenu-000002 inside call 20261126-001616-046275); W1 twice (20261126-001714-439809, then obs-cdmenu-000003 inside call 20261126-001813-0cfa74); W2 once (20261126-001813-0cfa74). No other run was made.",
+      "evidence": [
+        "20261126-001352-8d0e17",
+        "cd-circ-000064",
+        "20261126-001406-f2f758",
+        "cd-circ-000065",
+        "20261126-001418-489629",
+        "cd-circ-000066",
+        "20261126-001428-fd8dd6",
+        "cd-circ-000067",
+        "20261126-001438-2cb7f3",
+        "cd-circ-000068",
+        "20261126-001451-7c4a5a",
+        "cd-circ-000069",
+        "20261126-001501-e6c9d8",
+        "cd-circ-000070",
+        "20261126-001523-d4c7e8",
+        "obs-cdmenu-000002",
+        "20261126-001616-046275",
+        "cd-circ-000071",
+        "20261126-001650-f37143",
+        "cd-circ-000072",
+        "20261126-001714-439809",
+        "obs-cdmenu-000003",
+        "20261126-001813-0cfa74"
+      ],
+      "at": "2026-11-26T00:18:52Z"
+    },
+    {
+      "n": 103,
+      "saw": "The person's A-016 recording task is done: all twelve inputs ran once, ten are stored as goldens or behaviour cases (decision 102), and W2's behaviour case obs-cdmenu-000004 waits for the next recording call (Q-034). The person asked that nothing else be run.",
+      "chose": "stop",
+      "why": "The person's A-016 recording task is done: all twelve inputs ran once, ten are stored as goldens or behaviour cases (decision 102), and W2's behaviour case obs-cdmenu-000004 waits for the next recording call (Q-034). The person asked that nothing else be run.",
+      "evidence": [],
+      "at": "2026-11-26T00:18:55Z"
     }
   ],
   "stopped": {
-    "why": "A-014's three held-out cases (H1 to H3) are recorded as cd-circ-000061 to -000063, as the person asked. The person asked for nothing else to be run, graded or written, so no further question is in scope for this session.",
-    "decision": 101,
-    "at": "2026-11-25T19:20:05Z",
+    "why": "The person's A-016 recording task is done: all twelve inputs ran once, ten are stored as goldens or behaviour cases (decision 102), and W2's behaviour case obs-cdmenu-000004 waits for the next recording call (Q-034). The person asked that nothing else be run.",
+    "decision": 103,
+    "at": "2026-11-26T00:18:55Z",
     "coverage": {
       "unexercised_fields": [],
       "untried_keys": {
@@ -4504,7 +4607,7 @@
         "outcome",
         "velocity"
       ],
-      "unanswered_runs": 71,
+      "unanswered_runs": 74,
       "unknown_screens": 16,
       "nondeterministic_cases": 0
     }
