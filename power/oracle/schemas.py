@@ -200,6 +200,21 @@ POWER_TOOLS = {
                        "gitignore": {"enum": ["added", "present"]}},
                       ["workspace", "copied", "unchanged", "kept", "gitignore"]),
     },
+    "draft_target": {
+        "description": "Boot a new program once: unpack the zip archive into the workspace's downloads folder, start "
+                       "the named executable in the emulator, read one screen, and write oracle/targets/<name>.json "
+                       "marked draft, with the archive's sha256, whether it started, the first screen as read and "
+                       "what failed. Never replaces a profile that is not a draft.",
+        "input": {"type": "object", "additionalProperties": False, "required": ["archive", "exe"],
+                  "properties": {"archive": {"type": "string", "minLength": 1,
+                                             "description": "The .zip, as an absolute path or relative to the workspace."},
+                                 "exe": {"type": "string", "minLength": 1,
+                                         "description": "The executable in the archive, by name or path."}}},
+        "output": _ok({"path": {"type": "string"},
+                       "draft": {"type": "object", "required": ["status", "name", "started", "archive",
+                                                                "first_screen", "failures"]}},
+                      ["path", "draft"]),
+    },
 }
 
 

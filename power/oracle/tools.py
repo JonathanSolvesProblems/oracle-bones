@@ -19,7 +19,10 @@ from . import profile as profile_mod
 from .errors import OracleError
 from .jsonschema_lite import validate
 from .runner import keys as keys_mod
-from .schemas import LEDGER_OPS, TOOLS, output_schema
+from .schemas import LEDGER_OPS, TOOLS, output_schema, tool_def
+
+# Installed-power tools that this class answers; set_workspace and init_workspace are the server's.
+ORACLE_POWER_TOOLS = ("draft_target",)
 from .sessions import SessionManager
 
 
@@ -76,9 +79,9 @@ class Oracle:
 
     def call(self, name, args):
         """Validate, run and validate the reply. Always returns a dict, never raises."""
-        if name not in TOOLS:
+        if name not in TOOLS and name not in ORACLE_POWER_TOOLS:
             return OracleError("invalid_arguments", "unknown tool %s" % name).to_dict()
-        errors = validate(args or {}, TOOLS[name]["input"])
+        errors = validate(args or {}, tool_def(name)["input"])
         if errors:
             return OracleError("invalid_arguments", "invalid arguments", {"errors": errors}).to_dict()
         try:
@@ -259,6 +262,13 @@ class Oracle:
         else:
             entry = ledger.triage(args["field"], args["classification"], args["status"], args["why"], ev)
         return {"op": op, "entry": entry}
+
+    def draft_target(self, archive, exe):
+        """resurrection-power 2.1: boot exe from archive once and write a draft profile."""
+        from . import draft
+        freshness.check()
+        self._need_docker()
+        return draft.draft_target(archive, exe, cfg=self.manager.cfg)
 
     def shutdown(self, session_id=None):
         if session_id is None:
