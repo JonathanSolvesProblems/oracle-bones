@@ -187,6 +187,19 @@ table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pe
 .row-extra { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
 .flag-ref { color: var(--pencil); margin-right: var(--space-2); }
 
+.method h3 {
+  font: var(--text-sm) var(--font-label);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: var(--space-6) 0 var(--space-2);
+}
+.method ul { padding-left: var(--space-6); margin: 0; }
+.method li { margin-bottom: var(--space-1); }
+.method .method-name { font-weight: 600; }
+.method li.quickened { border-left: var(--margin-rule); border-left-color: var(--ink-muted); padding-left: var(--space-2); list-style: none; margin-left: calc(-1 * var(--space-3)); }
+
 @media (max-width: 959.98px) {
   table.printed, table.printed tbody, table.printed tr { display: block; }
   table.printed tr { border-bottom: var(--hairline); padding: var(--space-1) 0; }
