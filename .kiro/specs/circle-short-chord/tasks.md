@@ -107,12 +107,12 @@ details. The full-set counts do not change.
     counts in the message.
     - _Requirements: 2.9, 3.9_
 
-- [ ] 5. The records of 2.8, and H-009
-  - [ ] 5.1 `.kiro/specs/circle-outputs/bugfix.md` 2.9: after "A short chord SHALL be handled as
+- [x] 5. The records of 2.8, and H-009
+  - [x] 5.1 `.kiro/specs/circle-outputs/bugfix.md` 2.9: after "A short chord SHALL be handled as
     in 2.7", a note that circle Critical Depth now uses K1, trial ≥ D and the full-pipe number at
     a stepped trial on D, pointing to circle-short-chord.
     - _Requirements: 2.8_
-  - [ ] 5.2 `.kiro/specs/quick2-solver/design.md`: in "The depth search", the paragraph on
+  - [x] 5.2 `.kiro/specs/quick2-solver/design.md`: in "The depth search", the paragraph on
     `afterShortChord` (K1 with `rejectAtCeiling` and `ceilingValue` for circle Critical Depth, N2
     for circle Normal Depth, each with its evidence; the comparison at a stepped trial on D named,
     with 2.6 (c) described and not explained); remove "No circle Critical Depth golden reaches
@@ -120,14 +120,14 @@ details. The full-set counts do not change.
     and 2.6 (c). In "Negative values and abandoned calculations", that W1 and W2 are the first
     observations that fit the reading of a run-time error as the menu.
     - _Requirements: 2.8_
-  - [ ] 5.3 Check that the header comments of `search.ts` and `circle.ts` written in 3.1 and 3.2
+  - [x] 5.3 Check that the header comments of `search.ts` and `circle.ts` written in 3.1 and 3.2
     say everything 2.8 lists, and that neither has a case id.
     - _Requirements: 2.8, 3.9_
-  - [ ] 5.4 `results/hauntings.md`: haunting H-009 as the design writes it, with cd-circ-000043,
+  - [x] 5.4 `results/hauntings.md`: haunting H-009 as the design writes it, with cd-circ-000043,
     -000049 and -000050 and their exact critical depths from `node scripts/circle_outputs.mts
     design`. Write the A-016 sentences only with their golden ids, as the design says.
     - _Requirements: 2.5_
-  - [ ] 5.5 Commit 5.1 to 5.4 together.
+  - [x] 5.5 Commit 5.1 to 5.4 together.
     - _Requirements: 2.5, 2.8_
 
 - [ ] 6. The limits text for the app

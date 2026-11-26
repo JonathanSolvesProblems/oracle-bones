@@ -41,7 +41,8 @@
 //
 // A value that is not a number ends the search with `not_a_number`. Circle Critical Depth's F
 // returns one where QUICK-2's formula has no value, so a discharge under the floor of A·√(g·A/T)
-// ends that way (circle-short-chord 2.7).
+// ends that way (circle-short-chord 2.7). modes/circle.ts maps both `not_a_number` and
+// `under_ceiling_value` to outcome `error` with the `returns_to_menu` flag.
 //
 // QUICK-2 never ends when F can never reach q. The rebuild stops when the trial passes
 // SEARCH_DEPTH_LIMIT, when F stops growing, or after SEARCH_MAX_TRIALS, and reports that.

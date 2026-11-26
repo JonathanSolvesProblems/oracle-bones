@@ -142,3 +142,30 @@ QUICK-2's own search and constants; it is not an observation.
   (nd-trap-000003 to -000005), n = -1 never finishes (ledger Q-002), and discharge or slope -1
   returns to the shape menu (ledger Q-003). Those two print no value, so they are not hauntings.
 - **Flag:** `negative_input`.
+## H-009: circle Critical Depth refuses a pipe that could carry the flow
+- **Cases:** cd-circ-000043, Critical Depth, Diameter 8 in, n .013, discharge 1 cfs, slope .005;
+  cd-circ-000049, 15 in, 7 cfs; cd-circ-000050, 18 in, 12 cfs. All three are n .013 and slope
+  .005; the slope does not change a Critical Depth outcome (H-007).
+- **QUICK-2 printed:** "DEPTH is Greater than the DIAMETER" on the form, and no result, for all
+  three.
+- **What happens:** the search steps 0.2 ft from 0.2 ft. When the next trial, the one after the
+  last trial inside the pipe or the one 0.2 ft above a short chord, is at or past the diameter,
+  QUICK-2 prints the message and stops (circle-short-chord 2.1, 2.4; results/attempts.md A-009,
+  A-010, A-012). It does so although the pipe's critical depth lies inside it, a few inches
+  below the crown. The rebuild does the same: outcome `rejected` with the message.
+- **Exact answer, with the true π, double precision, nothing stored and g = 32.2 (bisection on
+  A·√(g·A/T) = q; `node scripts/circle_outputs.mts design`):**
+
+  | Case | Pipe and discharge | Exact critical depth | Share of D | Below the crown |
+  |---|---|---|---|---|
+  | cd-circ-000043 | 8 in, 1 cfs | 0.4744 ft | 0.712 | 0.1922 ft (2.31 in) |
+  | cd-circ-000049 | 15 in, 7 cfs | 1.0600 ft | 0.848 | 0.1900 ft (2.28 in) |
+  | cd-circ-000050 | 18 in, 12 cfs | 1.3141 ft | 0.876 | 0.1859 ft (2.23 in) |
+
+- **Difference:** a refusal where an answer exists. The exact critical depth is about 2.2 to
+  2.3 in below the crown in each, and QUICK-2 gives no depth at all.
+- **The boundary is not one discharge per pipe.** In the same 8 in pipe QUICK-2 refuses 1.6 cfs
+  (cd-circ-000064) and answers 1.71 cfs (cd-circ-000065). The exact critical depths are
+  0.5867 ft (0.880·D, 0.96 in below the crown) and 0.6002 ft (0.900·D, 0.80 in below); 1.71 cfs
+  prints Depth `0.59` because A·√(g·A/T) at the stepped trial 0.6 ft is within 0.5% of 1.71
+  cfs, and Depth prints 0.01 ft below the search depth (H-004).

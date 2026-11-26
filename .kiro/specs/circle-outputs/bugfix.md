@@ -131,6 +131,14 @@ predicted, including cd-circ-000030 to -000032, which print the 0.2 ft predictio
 0.1 ft one (A-006). No Critical Depth golden reaches the short-chord branch, so the 2.7 rule is
 unobserved there.
 
+**Note (2026-11-26): superseded for circle Critical Depth by `.kiro/specs/circle-short-chord`.**
+After "A short chord SHALL be handled as in 2.7": circle Critical Depth now resumes stepping
+0.2 ft above a short chord (K1, circle-short-chord 2.1 to 2.3), rejects a trial at or past the
+diameter (trial ≥ D, 2.4), and at a stepped trial equal to the diameter compares q with the
+full-pipe number instead of the circle formula (2.6). The sentence above about the short-chord
+branch is out of date: cd-circ-000033, -000035 and -000036 reach it. Circle Normal Depth still
+handles a short chord as in 2.7.
+
 2.10 WHEN a Critical Depth circle result is shown THEN the system SHALL compute Area, Wet
 Perimeter, Top Width, Hyd Radius, Velocity, Froude #, Critical Slope and Max Discharge at the
 search depth and print Depth as the search depth minus 0.01 ft, stored in single precision.

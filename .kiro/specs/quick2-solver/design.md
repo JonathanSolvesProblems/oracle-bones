@@ -189,10 +189,27 @@ critical-flow discharge A·√(gA/T) for Critical Depth) and a target q:
 
 What a short chord does is a per-shape option of `search.ts` (`afterShortChord`). The
 prismatic shapes and the irregular section resume stepping, as rule 3 says (`'resume'`, the
-default). The circle repeats the chord on the narrowed bracket, from the short chord to the same
-upper trial, until a chord is within 0.5% (`'narrow'`, Q-026 candidate N2). Q-026 is open:
-N1 (resume) prints the same three branch cases, and nd-circ-000020 fits no candidate. No circle
-Critical Depth golden reaches the branch. Added by `.kiro/specs/circle-outputs` (2.7, 2.9).
+default). Circle Normal Depth repeats the chord on the narrowed bracket, from the short chord to
+the same upper trial, until a chord is within 0.5% (`'narrow'`, Q-026 candidate N2), and
+rejects a trial past the diameter (trial > D). Q-026 is open: N1 (resume) prints the same three
+branch cases, and nd-circ-000020 fits no candidate. Added by `.kiro/specs/circle-outputs` (2.7,
+2.9).
+
+Circle Critical Depth resumes stepping (`'resume'`, K1), because cd-circ-000033, -000035 and
+-000036 print every field as QUICK-2 printed them only with it, and the trial after a short
+chord passes the diameter on the rejections QUICK-2 printed the message for (cd-circ-000039 to
+-000044 and later goldens; results/attempts.md A-008 to A-010). It passes two more options:
+`rejectAtCeiling`, so a trial at or past the diameter is rejected (trial ≥ D), and
+`ceilingValue`. At a stepped trial equal to the diameter, with no short chord before it, the
+search does not call A·√(g·A/T), where T is 0; it compares q with the full-pipe number,
+store(A·√(g·A/D)) with A = store(3.1416·D²/4). Within 0.5% it returns a result at D, printed
+from the full pipe; more than 0.5% over it, the message; more than 0.5% under it, `error` with
+`returns_to_menu` in a pipe with a stepped trial inside D (the reason `under_ceiling_value`),
+and the message in a pipe without one. QUICK-2 went back to its shape menu on every one of the
+ten observations under the number; that ending is described, not explained, since no mechanism
+for it is known. Circle Critical Depth's F is NaN where QUICK-2's formula has no value,
+1 − x² ≤ 0, so a discharge under the floor of A·√(g·A/T) ends with `returns_to_menu` too.
+Changed by `.kiro/specs/circle-short-chord` (2.1 to 2.7).
 
 This explains the two things the Exhumer flagged (ledger Q-008). F is convex in depth, so a
 chord from below undershoots, and the 1% stop accepts the first trial that is close enough:
@@ -215,7 +232,7 @@ Search start and step by shape:
 |---|---|---|
 | Trapezoid, V-ditch, rectangle | 0.5 ft, 0.5 ft | ND 53 of 53, CD 56 of 56 (tasks 3.2, 3.3) |
 | Irregular | lowest ground point + 0.1 ft, 0.5 ft; the bottom of the first bracket is the lowest point | ND 24 of 24, Step-Backwater 3 of 3 |
-| Circle | Normal Depth 0.1 ft, 0.1 ft; Critical Depth 0.2 ft, 0.2 ft; 0.5% stop; short chord repeated on the narrowed bracket; the diameter is a ceiling | ND 13 of 14 and CD 26 of 26 results (the miss is the known difference nd-circ-000020). Corrected by `.kiro/specs/circle-outputs` (A-004 to A-006) |
+| Circle | Normal Depth 0.1 ft, 0.1 ft, short chord repeated on the narrowed bracket, trial > D; Critical Depth 0.2 ft, 0.2 ft, stepping resumed after a short chord, trial ≥ D and the full-pipe number at a stepped trial on D; 0.5% stop | ND 13 of 14 results (the miss is the known difference nd-circ-000020); CD all 82 goldens that reach the search. Corrected by `.kiro/specs/circle-outputs` (A-004 to A-006) and `.kiro/specs/circle-short-chord` |
 
 The second interpolation step (settled in task 3.2). The 6 Normal Depth misses of the first
 fit (nd-rect-000002, -000004, -000007, -000026, nd-trap-000009, -000014) are the shallow cases
@@ -295,7 +312,8 @@ Normal Depth searches on the Channel Capacity discharge from stored geometry and
 the narrowed chord (The depth search). Velocity = q/A.
 
 Critical Depth searches on A·√(g·A/T) from stored A and T, in 0.2 ft steps from 0.2 ft with the
-same stop and chord rule. Every field is computed at the search depth y: Area, Wet Perimeter,
+same stop; its short-chord rule, its test against the diameter and the full-pipe number at a
+stepped trial on D are in The depth search (`.kiro/specs/circle-short-chord`). Every field is computed at the search depth y: Area, Wet Perimeter,
 Top Width, Hyd Radius, Velocity = q/A, Froude = Velocity/√(g·A/T), Critical Slope
 ((q/A)·n/(1.486·R^.667))² and Max Discharge. Depth prints store(y − 0.01): QUICK-2's printed
 Depth is 0.01 ft below the depth its other fields describe (Q-024, Q-027; haunting H-004). The
@@ -353,6 +371,12 @@ function call" errors, which QUICK-2 appears to trap by returning to the menu. T
 returns outcome `error` with the `returns_to_menu` flag. This mechanism is an inference, and
 what outcome the recorder would give such a case is open, because only behaviour cases exist
 for it.
+
+W1 and W2 (obs-cdmenu-000003, 9999 in at .5 cfs, and obs-cdmenu-000004, 7254 in at .3 cfs) are
+the first observations that fit the reading of a run-time error as the menu: under the floor of
+A·√(g·A/T) the circle Critical Depth chords fall until one is so near 0 that x/√(1−x²) divides
+by zero, and QUICK-2 went back to the shape menu there with no message (circle-short-chord 2.7).
+They fit the reading; they do not prove it.
 
 ## Printing
 
@@ -418,7 +442,7 @@ The app decides how to show them; the solver never changes a printed value becau
 | `cut_off_area_counted` | Low ground cut off from the channel by higher ground is counted as carrying water, as QUICK-2 does. You may judge it ineffective flow area. | the wet part of the section at WS is more than one span | 9.7; nd-irr-000010, sb-irr-000003 |
 | `negative_input` | QUICK-2 accepted a negative value for this field and computed with it. A negative value has no physical meaning here. | an accepted side slope, width, diameter, n, discharge, depth or slope is below 0 (not stations or elevations) | 2.1, 2.5 to 2.7; nd-trap-000003 to 000005, cc-trap-000015 |
 | `never_finishes` | QUICK-2 never finishes this calculation; it keeps searching. Quickened stops and shows no answer. | the search cannot reach the discharge | 2.8; nd-irr-000026 |
-| `returns_to_menu` | QUICK-2 abandons this calculation and goes back to the shape menu without a message. | a square root or fractional power of a negative number | 2.9, 2.10 |
+| `returns_to_menu` | QUICK-2 returns to its shape menu with no result for this input. | a square root or fractional power of a negative number in Normal Depth; a run-time error in the circle Critical Depth search, under the floor of A·√(g·A/T) (circle-short-chord 2.7); a discharge more than 0.5% under the full-pipe number at a stepped trial on the diameter, in a pipe with a stepped trial inside it (circle-short-chord 2.6 (c)) | 2.9, 2.10; obs-cdmenu-000003, -000004, -000013; obs-cdmenu-000001, -000002, -000005 to -000012 |
 
 The search's 1% stop, the `.667` velocity, Critical Depth's Max Discharge at the critical slope,
 the cut-off low ground, the frictionless end walls and the use of negative values disagree with
