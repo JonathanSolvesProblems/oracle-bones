@@ -12,7 +12,8 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
     "oracle": "node src/oracle/entry.ts",
-    "snapshot:search": "node test/searchSnapshot.ts write"
+    "snapshot:search": "node test/searchSnapshot.ts write",
+    "snapshot:circle": "node test/circleSnapshot.ts record"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

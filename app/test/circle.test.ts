@@ -13,6 +13,8 @@ import { store } from '../src/solver/single.ts';
 import { FLAG_TEXT } from '../src/solver/flags.ts';
 import type { Result } from '../src/solver/types.ts';
 import { golden, goldens, type Golden } from './golden.ts';
+import { readFileSync } from 'node:fs';
+import { CIRCLE_SNAPSHOT_PATH, snapshotEntry, snapshotInputs, type CircleSnapshotEntry } from './circleSnapshot.ts';
 
 const decimal = (lo: number, hi: number, d: number) => fc.integer({ min: lo, max: hi }).map((x) => (x / 10 ** d).toFixed(d));
 const pipeArb = fc.record({
@@ -296,6 +298,22 @@ function reachesSteppedTrialOnD(D: number, q: number): boolean {
   }
   return false;
 }
+
+describe('Property 11: circle Normal Depth and Channel Capacity are identical before and after circle-short-chord', () => {
+  const { _note: note, ...snapshot } = JSON.parse(readFileSync(CIRCLE_SNAPSHOT_PATH, 'utf-8')) as Record<string, CircleSnapshotEntry> & { _note: string };
+  it('the fixture says where it came from', () => {
+    expect(note).toMatch(/at commit [0-9a-f]{7,}/);
+  });
+  it('the fixture holds the generated list and every circle Normal Depth and Channel Capacity golden, and nothing else', () => {
+    expect(Object.keys(snapshot).sort()).toEqual(snapshotInputs().map((c) => c.key).sort());
+  });
+  it('every recorded input returns the same Result', () => {
+    const now = snapshotInputs().map((c) => ({ key: c.key, entry: snapshotEntry(c) }));
+    const changed = now.filter((x) => JSON.stringify(x.entry) !== JSON.stringify(snapshot[x.key]));
+    expect(changed.map((x) => x.key)).toEqual([]);
+    for (const x of changed.slice(0, 1)) expect(x.entry, x.key).toEqual(snapshot[x.key]);
+  }, 60000);
+});
 
 describe('Property 10: no depth at or past the diameter reaches the circle Critical Depth formula', () => {
   it('every depth given to A·√(g·A/T) is below D', () => {
