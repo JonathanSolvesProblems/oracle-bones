@@ -1813,3 +1813,74 @@ redid the edits with the file tool. The solver is not changed, no task was run, 
 oracle.
 
 Credits: not counted here; they go in the next entry.
+
+### Credits: the A-018 grading session
+
+The session in the last entry used 65.97 credits over 21 min 10 s.
+
+### circle-short-chord tasks 1 to 4.2, stopped at 4.3
+
+Settings: Claude Opus 5.5, a new session.
+
+> Run tasks 1 to 6 of the circle-short-chord spec, in order, then stop. I reviewed the
+> requirements, the design and the task list (88cb346) and approve them. Task 7 is for the
+> Exhumer: don't do it.
+
+The person's rules: no run of the program; edits with the file tool only; commit messages in a
+file without a byte order mark; stop at any check that comes out differently from what its
+task expects, and change no expected value, golden or spec to get past it; and show that
+bugfix.md 1.4's claim about A-018's nine goldens holds in task 1.7's output, or correct 1.4.
+
+**Before task 1.** The full Vitest suite at 0f6c688, with no change made, had 99 failures of
+823: in circle.test.ts the count "finds the 60 circle result goldens" (73 now) and ten circle
+Critical Depth result goldens; in forms.test.ts 87 tests on the rejection goldens
+cd-circ-000039 to -000089 (the prompt order and "holds against every rejected regular golden",
+which expect 47 and find 90); and Property 7, on its 5 s timeout. No task or entry mentions
+these failures.
+
+**Task 1** (c76f4fa). The tests, failing: 102 failed, 241 passed of 343 in circle.test.ts and
+search.test.ts, 91 of the failures new. All 40 goldens of the design's table fail, on the
+fields or outcomes the table names. A-018's nine all return `error` with `never_finishes` in
+this output: cd-circ-000084, -000086, -000088 and -000089 where QUICK-2 printed the message,
+and cd-circ-000081 to -000083, -000085 and -000087 where it printed a result. So 1.4 holds as
+written and was not changed. Of the 43 rejection goldens, the 30 among the 40 fail and 13 pass,
+the rejections that match today, as 2.9's "42 match today" requires. The 13 behaviour cases
+fail with `never_finishes`, the flag text fails, and the six search option cases fail.
+Property 10 fails on a draw that reaches a stepped trial on D (2.4 in, the first trial); until
+task 3.2 it used the spec `searchCircle` passes today, since `circleSearchSpec` did not exist.
+Task 1.4 says "in the flag test" and "leave the never_finishes text test as it is", but no test
+checked a flag's text. The new text test went into circle.test.ts, so that 1.7's command runs
+it, and no `never_finishes` text test was added.
+
+**Task 2.1** (833d623). `npm run snapshot:circle` records 451 circle Normal Depth and Channel
+Capacity Results from the solver at c76f4fa: 400 generated (seed 20261126, practical and
+accepted ranges, one input in ten a boundary value) and the 51 goldens. A flag is recorded by
+code and fields, without its text, which 2.7 changes. The script's argument is `record`,
+because `searchSnapshot.ts`, which it imports, writes its own fixture on `write`. The replay
+passed on the unchanged code.
+
+**Task 2.2.** The comparator on the unchanged solver: quick set 192 of 200, full set 295 of
+340, and the misses are the ones 2.9 lists, case for case.
+
+**Task 3** (ca8d823). `search.ts`, `modes/circle.ts` and `flags.ts` as the design has them. The
+full-pipe area is written 3.1416·(D/2)·(D/2), which is the same double as 3.1416·D·D/4 and
+needs no new literal. Full Vitest suite: 88 failed, 842 passed of 930. Every test of task 1
+passes, Property 10 with 5 of 200 draws reaching a stepped trial on D; Property 11, the search
+snapshot and the guard pass. Eleven earlier tests changed, all from failing to passing: the
+ten circle result goldens, and Property 7, now 1.9 s. The 88 failures are the ones that
+failed before task 1. Task 3.5: `full-pipe-rule` reports 82 of 82 goldens matching through
+its `solve()` column and its own search, none stopping to match, and 95 of 95 observations.
+
+**Task 4.1 and 4.2.** Quick set 195 of 200, full set 335 of 340. The five misses are
+cc-circ-000035, nd-circ-000020 and sb-irr-000001 to -000003, with the same fields as in 2.2,
+and every golden that matched in 2.2 still matches. The comparator wrote its mismatch counts to
+results/ledger.json, which is not committed.
+
+**Stopped at 4.3.** The task expects the full Python and Vitest suites to pass. Vitest has the
+88 failures above. The offline Python suite (`.venv`, `-m "not live"`) has 1 failure of 189,
+`test_committed_quickset_is_current`: oracle/quickset.json was last rebuilt after
+cd-circ-000061 to -000063 (c865f11), and the goldens recorded since change the draw. Nothing
+under oracle/ changed this session. No test, golden, quick set or spec was changed to get past
+them. Tasks 4.3, 5 and 6 are not done; task 7 is the Exhumer's. Nothing was run on the oracle.
+
+Credits: not counted here; they go in the next entry.
