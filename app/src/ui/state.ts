@@ -1,6 +1,7 @@
 // runJob and classify: Job -> ScreenState (quickened-app design: How the UI calls solve(),
 // Screen states; criteria 1.2, 1.9, 6.1 to 6.6, 6.9). runJob is the only call to solve() in ui/.
 import { solve, NOT_BUILT, type Flag, type Mode, type Result, type Shape } from '../solver/index.ts';
+import { splitStationError } from '../solver/groundPoints.ts';
 import type { AppJob } from './job.ts';
 import { whenValid } from './validate.ts';
 
@@ -36,7 +37,14 @@ export function classify(job: AppJob, result: Result): ShownState {
   const r = result;
   if (r.outcome === 'result') return { kind: 'result', result: r, exact: null, links: [] };
   if (r.outcome === 'rejected' && r.held !== null) return { kind: 'held', result: r, prompt: r.held, message: r.message };
-  if (r.outcome === 'rejected' && r.message !== null) return { kind: 'rejected', result: r, message: r.message, keyLineRest: null };
+  if (r.outcome === 'rejected' && r.message !== null) {
+    // A station error is QUICK-2's text up to its "!", written over the editor's key line; the
+    // split is the solver's (criterion 6.10). result.message itself is never changed.
+    const split = splitStationError(r.message);
+    return split
+      ? { kind: 'rejected', result: r, message: split.text, keyLineRest: split.keyLineRest }
+      : { kind: 'rejected', result: r, message: r.message, keyLineRest: null };
+  }
   if (r.outcome === 'error' && r.flags.length > 0) return { kind: 'stopped', result: r, flags: r.flags };
   if (r.outcome === 'error' && r.message === NOT_BUILT) return { kind: 'not_built', result: r, mode: job.mode, shape: job.shape };
   if (r.outcome === 'error') return { kind: 'failed', result: r, message: r.message ?? NO_MESSAGE };

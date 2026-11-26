@@ -12,6 +12,7 @@ import { NOTICE, noticeView } from './notice.ts';
 export const QUICK2_MESSAGE = "QUICK-2's message:";
 export const QUICKENED_MESSAGE = "Quickened's message:";
 export const NO_RESULT = 'There is no result.';
+export const KEY_LINE_SENTENCE = 'QUICK-2 writes this message over its key line and leaves the rest of that line on the screen:';
 export const HELD_SENTENCE = 'QUICK-2 keeps this prompt and shows no message: it does not take the value. Your other values are kept.';
 export const INVALID_SENTENCE = 'Quickened sends QUICK-2 only plain decimals, such as 12, .035 or -1. What QUICK-2 does with an empty field or other text has not been observed.';
 
@@ -24,6 +25,8 @@ export interface StateModel {
   sentences: string[];
   /** QUICK-2's message, trimmed; null when there is none. */
   quick2Message: string | null;
+  /** For a station error: the rest of the key line QUICK-2 leaves on the screen, trimmed. */
+  keyLineRest: string | null;
   /** Quickened's message for a `failed` state. */
   quickenedMessage: string | null;
   flags: FlagLine[];
@@ -45,7 +48,7 @@ function flagLines(job: AppJob, flags: readonly Flag[]): FlagLine[] {
 function base(kind: StateModel['kind'], heading: string, job: AppJob, result: Result | null): StateModel {
   const flags = result ? flagLines(job, result.flags) : [];
   return {
-    kind, heading, sentences: [], quick2Message: null, quickenedMessage: null, flags,
+    kind, heading, sentences: [], quick2Message: null, keyLineRest: null, quickenedMessage: null, flags,
     marked: result ? [...new Set(result.flags.flatMap((f) => f.fields))] : [], notice: NOTICE, result,
   };
 }
@@ -68,6 +71,7 @@ export function stateModel(job: AppJob, state: Exclude<ScreenState, { kind: 'idl
     case 'rejected': {
       const m = base('rejected', 'QUICK-2 refuses this input', job, state.result);
       m.quick2Message = state.message.trim();
+      m.keyLineRest = state.keyLineRest === null ? null : state.keyLineRest.trim();
       m.sentences = [NO_RESULT];
       return m;
     }
@@ -107,6 +111,8 @@ export function stateView(m: StateModel, body: Child | null = null): VNode {
     m.sentences.length ? m.sentences.map((s) => h('p', {}, s)) : null,
     m.quick2Message !== null ? h('p', { class: 'message' },
       h('span', { class: 'message-label' }, QUICK2_MESSAGE), ' ', h('span', { class: 'figures' }, `“${m.quick2Message}”`)) : null,
+    m.keyLineRest !== null ? h('p', { class: 'key-line' },
+      KEY_LINE_SENTENCE, ' ', h('span', { class: 'figures' }, m.keyLineRest)) : null,
     m.quickenedMessage !== null ? h('p', { class: 'message' },
       h('span', { class: 'message-label' }, QUICKENED_MESSAGE), ' ', m.quickenedMessage) : null,
     body,
