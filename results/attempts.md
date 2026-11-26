@@ -620,6 +620,11 @@ committed in A-007 (dcd4e85), S(f) predicted P1, P2 and P4. For P3 it said "resu
 fitted P3 rather than predicted it. The wording came from the user's prompt for this section.
 The sentence above is left as written.
 
+*Count, 2026-11-26.* Counted as A-006 counts A-005, by the outcome and every printed field, R1
+is right on 2 of 4: P2 and P4. P1 has the wrong outcome and P3 misses Critical Slope. The count
+is added for `results/held-out.md`, written from the command line outside Kiro; nothing else in
+this section is changed.
+
 **How graded.** The Exhumer ran the four cases as A-007 types them (ledger decision 75). P3
 ended on a result and is golden cd-circ-000033. P1, P2 and P4 timed out on `cd_form` with
 the message on the form, so they store no golden; each observation is the final screen of its
@@ -1566,6 +1571,11 @@ combinations, only T1·D3·X6 and T2·D3·X6 fit every one of the 54 circle Crit
 goldens. The score is seven new cases for one group, and the group was picked by these same
 seven cases, so it has not yet passed a test it was not chosen on. It needs one more held-out
 test; three held-out cases are predicted below.**
+
+*Count, 2026-11-26.* Counted in groups, 1 of 14 is right on all seven cases: G3. The count is
+added for `results/held-out.md`, which gives A-013 in groups because no group was picked before
+the runs. It is written from the command line outside Kiro; nothing else in this section is
+changed.
 
 **How graded.** `node scripts/circle_outputs.mts grade-a013` (about 2 s) reads A-013 from
 commit 69338b5 and its amendment from 6ecfb3c with `git show`: both case tables, n .013 and
