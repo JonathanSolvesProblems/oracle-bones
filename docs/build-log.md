@@ -2679,3 +2679,17 @@ lists each outside source. Both were written outside Kiro and are not committed.
   `devpost/sources.md` are committed. The script renders the submission page's pictures from the
   results files and from captures of the running app, and stops when a number cannot be found;
   the frame is a capture of the Kiro window during the clean install, cropped and not edited.
+
+### Later still, outside Kiro: the renamed power installed in Kiro
+
+With the person away from the PC, Kiro was opened on a second empty folder. The old "power" was
+uninstalled from Kiro's Powers panel, and `powers/oracle-bones` was installed from the folder.
+Kiro's notice read `Power "oracle-bones" installed successfully.`; the Installed list shows
+"oracle-bones", MCP SERVERS shows `power-oracle-bones-oracle` connected, and
+`~/.kiro/powers/installed.json` names the power `oracle-bones`. So the folder's name is what Kiro
+uses, as the clean install had shown, and the rename does what it was meant to.
+
+The control case was then asked for in chat, as in the clean install, and Kiro answered "Error
+sending prompt: You've reached your monthly usage limit", though the status bar read "Kiro Free
+50 / 50". So the free plan's counter is not the limit that applies, and no Kiro agent turn has
+run since session 16. The README's install section says what was and was not observed.

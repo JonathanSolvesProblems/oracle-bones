@@ -77,10 +77,13 @@ These are the steps of the clean install of 2026-11-26, on Windows with Docker r
    workflow into the folder, downloads and checks the program, and answers 3.27 ft.
 
 In that install the folder was still named `power`, so Kiro registered the power as "power". The
-folder has been renamed since, and the renamed package was then driven outside Kiro through the
-same three tools, from a copy outside this repository, to the same 3.27. Installing it in Kiro
-under its new name has not been repeated yet. Installing from the repository's address has not
-been run either: Kiro asks for a public address, and the repository was private at the time.
+folder was renamed, and the package was installed again from `powers/oracle-bones` in a second
+empty folder: Kiro's notice read `Power "oracle-bones" installed successfully.`, and its server
+appears as `power-oracle-bones-oracle`. The control case was not run again in Kiro that time,
+because Kiro's monthly usage limit had been reached; the renamed package was driven through the
+same three tools from a copy outside this repository, outside Kiro, to the same 3.27. Installing
+from the repository's address has not been run: Kiro asks for a public address, and the
+repository was private at the time.
 
 ## What the numbers are
 
