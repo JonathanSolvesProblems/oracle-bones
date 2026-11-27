@@ -175,9 +175,13 @@ const root = document.getElementById('app');
 if (!root) throw new Error('index.html has no #app element');
 
 const dispatch: Dispatch = (action, value) => {
+  if (action.type !== RELOAD_ACTION && action.type !== PRINT_ACTION) touched = true;
   update(action, value);
   draw();
 };
+
+/** Whether the reader has done anything on the page beyond moving between pages (criterion 1.13). */
+let touched = false;
 
 /** An element to move focus to once the page is drawn, when an action opens or closes a part. */
 let focusAfterDraw: string | null = null;
@@ -215,15 +219,18 @@ window.addEventListener('afterprint', () => { printing = null; draw(); });
 draw();
 // The service worker exists only in a build (build/serviceWorker.ts); the dev server has none.
 // The worker serves the cache first and takes over open pages when a newer build installs, so a
-// page open at a deploy is the previous build's. The first worker to control a page is not a
-// newer build; any later one is, and the page says so in one line. It never reloads by itself:
-// the Reload control is the reader's, so typed values are never lost (criterion 1.13).
+// page opened just after a deploy is the previous build's. The first worker to control a page is
+// not a newer build; any later one is. A page where nothing was done but moving between pages
+// reloads into the newer build by itself; once the reader has typed or picked anything, the page
+// says so in one line and the Reload control is the reader's, so typed values are never lost
+// (criterion 1.13, amended 2026-11-27).
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   let controlled = navigator.serviceWorker.controller !== null;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (controlled && !newerBuild) {
       newerBuild = true;
-      draw();
+      if (touched) draw();
+      else location.reload();
     }
     controlled = true;
   });

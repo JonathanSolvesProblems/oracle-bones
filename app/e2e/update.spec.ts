@@ -3,9 +3,11 @@
 // page, are served in turn from one folder by a server of this spec's own. When the second
 // build's worker takes over the open page, the page says so in one line with a reload control,
 // keeps what was typed and does not reload by itself; the control loads the second build.
+// Amended 2026-11-27: a page where nothing was typed reloads by itself, and a page of a build from
+// before the amendment is reloaded by the newer build's worker.
 import { expect, test } from '@playwright/test';
 import { createServer, type Server } from 'node:http';
-import { existsSync, mkdtempSync, readFileSync, statSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { extname, join, normalize, sep } from 'node:path';
 import { build } from 'vite';
@@ -31,6 +33,16 @@ async function buildTo(marker: string): Promise<string> {
 
 let root = '';
 let server: Server | null = null;
+let builds: { a: string; b: string } | null = null;
+
+/** The two builds, made once for the file, and the server, started once. */
+async function ready(): Promise<{ a: string; b: string }> {
+  if (!builds) {
+    builds = { a: await buildTo('A'), b: await buildTo('B') };
+    await serve();
+  }
+  return builds;
+}
 
 function serve(): Promise<void> {
   server = createServer((req, res) => {
@@ -50,13 +62,11 @@ test.afterAll(async () => {
   await new Promise<void>((ok) => (server ? server.close(() => ok()) : ok()));
 });
 
-test('a newer build that takes over the open page is announced in one line, and the page never reloads by itself', async ({ page }, info) => {
+test('a newer build that takes over a page holding typed values is announced in one line, and that page never reloads by itself', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop', 'the worker does not depend on the width');
   test.setTimeout(300_000);
-  const a = await buildTo('A');
-  const b = await buildTo('B');
+  const { a, b } = await ready();
   root = a;
-  await serve();
 
   await page.goto(URL0);
   await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null), { timeout: 30_000 }).toBe(true);
@@ -87,4 +97,52 @@ test('a newer build that takes over the open page is announced in one line, and 
   await line.getByRole('button', { name: 'Reload' }).click();
   await expect(page.locator('meta[name="quickened-test-build"]')).toHaveAttribute('content', 'B');
   await expect(page.locator('#update-line')).toHaveCount(0);
+});
+
+// Amended 2026-11-27: a returning visitor who has only opened a page gets the newer build without
+// a tap, on the page the link pointed at.
+test('a page where nothing was typed reloads into the newer build by itself, on the same page', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'the worker does not depend on the width');
+  test.setTimeout(300_000);
+  const { a, b } = await ready();
+  root = a;
+
+  await page.goto(`${URL0}#/story`);
+  await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null), { timeout: 30_000 }).toBe(true);
+  await expect(page.locator('meta[name="quickened-test-build"]')).toHaveAttribute('content', 'A');
+
+  root = b;
+  await page.evaluate(async () => { await (await navigator.serviceWorker.getRegistration())?.update(); });
+  await expect(page.locator('meta[name="quickened-test-build"]')).toHaveAttribute('content', 'B', { timeout: 30_000 });
+  expect(new URL(page.url()).hash).toBe('#/story');
+  await expect(page.locator('.story-page')).toBeVisible();
+  await expect(page.locator('#update-line')).toHaveCount(0);
+});
+
+// Pages of the builds deployed before the amendment only show the line. When the newer build's
+// worker replaces such a build (its cache is named without "quickened-2-"), the worker reloads
+// those pages itself. Here the page holds a typed value, so the reload can only be the worker's.
+test('a page of a build from before the amendment is reloaded into the newer build by its worker', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'the worker does not depend on the width');
+  test.setTimeout(300_000);
+  const { a, b } = await ready();
+  const before = mkdtempSync(join(tmpdir(), 'quickened-A0-'));
+  cpSync(a, before, { recursive: true });
+  const sw = join(before, 'sw.js');
+  expect(readFileSync(sw, 'utf-8')).toContain('quickened-2-');
+  writeFileSync(sw, readFileSync(sw, 'utf-8').replaceAll('quickened-2-', 'quickened-'));
+  root = before;
+
+  await page.goto(URL0);
+  await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null), { timeout: 30_000 }).toBe(true);
+  await expect.poll(() => page.evaluate(async () => (await caches.keys()).filter((k) => k.startsWith('quickened-')).join())).toMatch(/^quickened-[0-9a-f]{16}$/);
+  const g = golden('nd-trap-000001');
+  await pick(page, g.mode, g.shape);
+  const [key, value] = Object.entries(fieldInputs(g))[0]!;
+  await page.locator(`#field-${key}`).fill(value);
+
+  root = b;
+  await page.evaluate(async () => { await (await navigator.serviceWorker.getRegistration())?.update(); });
+  await expect(page.locator('meta[name="quickened-test-build"]')).toHaveAttribute('content', 'B', { timeout: 30_000 });
+  await expect.poll(() => page.evaluate(async () => (await caches.keys()).filter((k) => k.startsWith('quickened-')).join())).toMatch(/^quickened-2-[0-9a-f]{16}$/);
 });

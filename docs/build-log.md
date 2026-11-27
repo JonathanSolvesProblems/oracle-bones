@@ -2812,3 +2812,14 @@ is an old word for alive, so Quickened is QUICK-2 brought back to life. The READ
 section, and criterion 11.4 is amended. Before the repository was made public, its whole history
 was checked: every commit under the person's own address, no private planning file, no secret,
 and no quote of his beyond the two he cleared.
+
+### A returning visitor gets the new build (outside Kiro, 2026-11-27; criterion 1.13 amended)
+The worker serves the cache first, so someone who had opened the site before was shown the
+previous build, with a line and a Reload control, when sent a link after a deploy. The person
+asked that a returning visitor get the new build. A page where nothing was typed or picked now
+reloads into the newer build by itself, on the same page; a page holding typed values keeps the
+line, so nothing typed is lost. The builds already deployed cannot do that, so the new worker
+reloads their open pages itself when it replaces one (their cache names lack "quickened-2-").
+First try hung: the worker waited for those reloads inside its own activation, and a reload is
+fetched through the same worker, which serves nothing until activation ends. The reloads are now
+started and not waited for. Three Playwright tests with two real builds cover the three cases.
