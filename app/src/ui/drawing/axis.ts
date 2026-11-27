@@ -59,15 +59,21 @@ function niceAtMost(limit: number): number {
   return n;
 }
 
-/** The scale that makes the section fill the box, with a round vertical exaggeration. */
-export function frameFor(m: DrawingModel, box: DrawingBox = BOX): Frame {
+/** The scale that makes the section fill the box, with a round vertical exaggeration (ine: to two figures, so the section fills the box's height). */
+/** The largest exaggeration of two significant figures at or below `r`, never below 1: at most 10% short of it. */
+function niceFine(r: number): number {
+  if (r < 1) return 1;
+  const q = 10 ** Math.max(Math.floor(Math.log10(r)) - 1, -1);
+  return Math.max(1, Math.round(Math.floor(r / q + 1e-9) * q * 10) / 10);
+}
+export function frameFor(m: DrawingModel, box: DrawingBox = BOX, opts: { fine?: boolean } = {}): Frame {
   const w = box.width - box.left - box.right;
   const h = box.height - box.top - box.bottom;
   const xSpan = Math.max(m.bounds.xMax - m.bounds.xMin, 1e-6);
   const ySpan = Math.max(m.bounds.yMax - m.bounds.yMin, 1e-6);
   const fitX = w / xSpan;
   const fitY = h / ySpan;
-  const exaggeration = fitY >= fitX ? niceAtMost(fitY / fitX) : 1;
+  const exaggeration = fitY >= fitX ? (opts.fine ? niceFine(fitY / fitX) : niceAtMost(fitY / fitX)) : 1;
   const sx = fitY >= fitX ? fitX : fitY;
   const sy = sx * exaggeration;
   const ox = box.left + (w - xSpan * sx) / 2;

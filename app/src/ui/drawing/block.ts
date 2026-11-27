@@ -13,20 +13,33 @@ import { angleText, coord, frameFor, gaugeFigure, niceAtLeast, scaleText, statio
 import { overlaps, type Anchor, type Box } from './labels.ts';
 import { DRAWING_WORDS, type DrawingModel, type Pt } from './section.ts';
 
-export const BLOCK = { width: 440, height: 244 } as const;
-/** The room the front face has in the viewBox: the gauge to its left, the extrusion to its right. */
-export const BLOCK_BOX: DrawingBox = { width: BLOCK.width, height: BLOCK.height, left: 76, right: 132, top: 78, bottom: 34 };
-/** The block's depth, drawn: one extrusion for every result, up and to the right. */
-export const DEPTH = { dx: 100, dy: -52 } as const;
-/** The type of the drawing, in viewBox units: --text-md. 16 units x 343/440 = 12.5 px on a phone. */
-export const TEXT = 16;
-const CHAR = 8.4;
-const ASCENT = 14;
-const DESCENT = 4;
-const LINE = 18;
-const GAP = 6;
-/** The least space between two figures on the gauge, in viewBox units: a line of type and a little air. */
-export const GAUGE_GAP = 20;
+/** The width the block is drawn at before its container has been measured. */
+export const DEFAULT_WIDTH = 640;
+/** The frame's height as a share of its width: taller on a phone, where the width is short. */
+export const frameHeight = (width: number): number => Math.round(width * (width >= 560 ? 0.6 : 0.75));
+/** The block's depth, drawn: one extrusion for every result, up and to the right, in a share of the width. */
+export const depthFor = (width: number): { dx: number; dy: number } => ({ dx: Math.round(width * 0.2), dy: -Math.round(width * 0.12) });
+/** The type of the drawing, in px: the viewBox is in CSS px, so every label is this size at any width. */
+export const TEXT = 13;
+const CHAR = 7.2;
+const ASCENT = 11;
+const DESCENT = 3;
+const LINE = 16;
+const GAP = 5;
+/** The least space between two figures on the gauge, in px: a line of type and a little air. */
+export const GAUGE_GAP = 15;
+/** The gauge's figures are at most this many units apart wherever that many units are at least GAUGE_GAP px. */
+export const GAUGE_STEP_MAX = 10;
+/** The room above the front face for the bank labels, and below it for the stations, in px. */
+const LABEL_ROOM = 26;
+const FOOT_ROOM = 28;
+/** The widest gauge figure the box keeps room for, in characters. */
+const GAUGE_CHARS = 6;
+/** The room the front face has in the drawing: the gauge to its left, the extrusion to its right. */
+function boxFor(width: number, stations: boolean): DrawingBox {
+  const { dx, dy } = depthFor(width);
+  return { width, height: frameHeight(width), left: 4 + 18 + GAUGE_CHARS * CHAR + 6, right: dx + 6, top: -dy + LABEL_ROOM, bottom: stations ? FOOT_ROOM : 10 };
+}
 
 /** Quickened's short words on the drawing; the full sentences are in the caption. */
 export const BLOCK_WORDS = { cutOff: 'cut off', wall: "QUICK-2's wall", fullPipe: 'assumed', left: 'Left', right: 'Right' } as const;
@@ -45,8 +58,13 @@ export interface BlockLabel {
 
 export interface BlockLayout {
   f: Frame;
+  /** The drawing's width in px, and the block's depth, drawn. */
+  width: number;
+  depth: { dx: number; dy: number };
+  /** The viewBox: the full width, fitted in height to what is drawn. */
+  view: { y: number; height: number };
   /** Front-face corners and baseline, in viewBox units. */
-  face: { x0: number; x1: number; yBase: number };
+  face: { x0: number; x1: number; yBase: number; top: number };
   /** The solid's ground line: the section, or a flat top for a pipe. */
   ground: Pt[];
   labels: BlockLabel[];
@@ -85,7 +103,21 @@ export function hitsBox(a: Pt, b: Pt, box: Box): boolean {
   return t1 - t0 > 1e-6;
 }
 
-const within = (b: Box): boolean => b.x0 >= 0 && b.y0 >= 0 && b.x1 <= BLOCK.width && b.y1 <= BLOCK.height;
+/** Whether the box meets the polygon: a vertex inside the box, a box corner inside the polygon, or an edge through the box. */
+function meetsPolygon(poly: readonly Pt[], b: Box): boolean {
+  const inside = (p: Pt): boolean => {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const a = poly[i]!;
+      const d = poly[j]!;
+      if ((a.y > p.y) !== (d.y > p.y) && p.x < ((d.x - a.x) * (p.y - a.y)) / (d.y - a.y) + a.x) c = !c;
+    }
+    return c;
+  };
+  if (poly.some((p) => p.x > b.x0 && p.x < b.x1 && p.y > b.y0 && p.y < b.y1)) return true;
+  if ([{ x: b.x0, y: b.y0 }, { x: b.x1, y: b.y0 }, { x: b.x0, y: b.y1 }, { x: b.x1, y: b.y1 }].some(inside)) return true;
+  return poly.some((p, i) => hitsBox(p, poly[(i + 1) % poly.length]!, b));
+}
 const clamp01 = (t: number): number => Math.max(0, Math.min(1, t));
 
 /** The solid to draw: the section with its base lowered, or a pipe in a block of cover. */
@@ -116,11 +148,14 @@ function decimalsOf(step: number): number {
   return d;
 }
 
-export function blockLayout(m: DrawingModel): BlockLayout {
+export function blockLayout(m: DrawingModel, width: number = DEFAULT_WIDTH): BlockLayout {
   const solid = solidOf(m);
-  const f = frameFor({ ...m, bounds: solid.bounds }, BLOCK_BOX);
+  const depth = depthFor(width);
+  const height = frameHeight(width);
+  const f = frameFor({ ...m, bounds: solid.bounds }, boxFor(width, !!m.stations), { fine: true });
+  const within = (b: Box): boolean => b.x0 >= 0 && b.y0 >= 0 && b.x1 <= width && b.y1 <= height;
   const P = (x: number, y: number): Pt => ({ x: f.px(x), y: f.py(y) });
-  const back = (p: Pt): Pt => ({ x: p.x + DEPTH.dx, y: p.y + DEPTH.dy });
+  const back = (p: Pt): Pt => ({ x: p.x + depth.dx, y: p.y + depth.dy });
   const x0 = f.px(solid.bounds.xMin);
   const x1 = f.px(solid.bounds.xMax);
   const yBase = f.py(solid.bounds.yMin);
@@ -134,7 +169,8 @@ export function blockLayout(m: DrawingModel): BlockLayout {
   const extension = top < rEnd.y - 0.01
     ? [{ x: x1, y: top }, back({ x: x1, y: top }), back({ x: x1, y: rEnd.y }), { x: x1, y: rEnd.y }] : null;
 
-  // The staff gauge: a mark every unit, a figure every fifth unit, a unit chosen so the figures are 24 units apart.
+  // The staff gauge: a mark every unit, a figure every fifth unit, a unit chosen so the figures are as close as
+  // GAUGE_GAP px allows (never wider than GAUGE_STEP_MAX where that many units fit the gap).
   const perFoot = Math.abs(f.py(1) - f.py(0));
   const step = niceUp(GAUGE_GAP / perFoot);
   const unit = step / 5;
@@ -152,7 +188,7 @@ export function blockLayout(m: DrawingModel): BlockLayout {
   const lines: [Pt, Pt][] = [];
   const keepOut: Box[] = [
     { x0: gauge.x - 2, y0: gauge.top - 2, x1: gauge.x + gauge.width + 2, y1: gauge.bottom + 2 },
-    { x0: x1, y0: Math.min(...[...quad, ...(extension ?? [])].map((p) => p.y)), x1: x1 + DEPTH.dx, y1: yBase },
+    { x0: x1, y0: Math.min(...[...quad, ...(extension ?? [])].map((p) => p.y)), x1: x1 + depth.dx, y1: yBase },
   ];
   const ground = solid.ground.map((p) => P(p.x, p.y));
   for (let i = 0; i + 1 < ground.length; i++) lines.push([ground[i]!, ground[i + 1]!]);
@@ -174,7 +210,7 @@ export function blockLayout(m: DrawingModel): BlockLayout {
   const fixed = (role: BlockLabel['role'], cls: string, text: string, s: Spot): void => {
     labels.push({ cls, role, text, ...s, box: boxOf(text, s.x, s.y, s.anchor), stem: null });
   };
-  for (const g of marks.filter((x) => x.major)) fixed('gauge', 'scale gauge-figure', gaugeFigure(g.v, decimals), { x: gauge.x + 18, y: g.y + 5, anchor: 'start' });
+  for (const g of marks.filter((x) => x.major)) fixed('gauge', 'scale gauge-figure', gaugeFigure(g.v, decimals), { x: gauge.x + 18, y: g.y + 4, anchor: 'start' });
   if (m.stations) {
     const sx = f.px(1) - f.px(0);
     for (let k = 0; k < 60; k++) {
@@ -184,7 +220,7 @@ export function blockLayout(m: DrawingModel): BlockLayout {
       for (let t = Math.ceil(solid.bounds.xMin / s) * s; t <= solid.bounds.xMax; t += s) ticks.push(t);
       const longest = Math.max(...ticks.map((t) => stationText(t, 0).length), 1);
       if (s * sx >= longest * CHAR + 10) {
-        for (const t of ticks) fixed('tick', 'scale', stationText(t, 0), { x: f.px(t), y: yBase + 22, anchor: 'middle' });
+        for (const t of ticks) fixed('tick', 'scale', stationText(t, 0), { x: f.px(t), y: yBase + 19, anchor: 'middle' });
         break;
       }
     }
@@ -210,29 +246,31 @@ export function blockLayout(m: DrawingModel): BlockLayout {
     labels.push({ cls, role, text, ...s, box: boxOf(text, s.x, s.y, s.anchor), stem: null });
   };
 
-  // The bank stations: a stake from the ground up, the station lettered at its head.
+  // The bank stations: a small stake from the top surface up, the station lettered on a canvas chip just above its
+  // head. The nearest spot that is clear of the far terrain wins; if none is near, the nearest free spot does.
+  const terrain = ground.slice(0, -1).map((a, i) => [a, ground[i + 1]!, back(ground[i + 1]!), back(a)]);
   const banks = m.values.filter((v) => v.role === 'bank');
   banks.forEach((v, i) => {
     const text = `${i === 0 ? BLOCK_WORDS.left : BLOCK_WORDS.right} ${v.text}`;
-    // The stake stands on the top surface, over the bank station, partway back; the labels fan outward from the stakes.
     const at0 = P(v.at.x, v.at.y);
-    const foot = { x: at0.x + DEPTH.dx * 0.55, y: at0.y + DEPTH.dy * 0.55 };
-    const order = i === 0 ? (['end', 'middle', 'start'] as const) : (['start', 'middle', 'end'] as const);
-    for (let k = 0; k <= 12; k++) {
-      for (const anchor of order) {
-        const head = { x: foot.x, y: foot.y - 10 - k * LINE };
-        const at = { x: foot.x, y: head.y - 2 - DESCENT, anchor };
-        const b = boxOf(text, at.x, at.y, anchor);
-        const stem: [Pt, Pt] = [foot, head];
-        if (free(b, stem) && !lines.some(([a, c]) => hitsBox(a, c, { x0: foot.x - 0.5, y0: head.y, x1: foot.x + 0.5, y1: foot.y - 1 }))) {
-          labels.push({ cls: 'value bank-value', role: 'bank', text, ...at, box: b, stem });
-          return;
-        }
-      }
+    const order = i === 0 ? (['end', 'middle', 'start'] as const) : (['start', 'end', 'middle'] as const);
+    const attempt = (frac: number, k: number, anchor: Anchor, clear: boolean): boolean => {
+      const foot = { x: at0.x + depth.dx * frac, y: at0.y + depth.dy * frac };
+      const head = { x: foot.x, y: foot.y - 8 - k * LINE };
+      const at = { x: foot.x, y: head.y - 2 - DESCENT, anchor };
+      const b = boxOf(text, at.x, at.y, anchor);
+      const stem: [Pt, Pt] = [foot, head];
+      if (!free(b, stem) || lines.some(([a, c]) => hitsBox(a, c, { x0: foot.x - 0.5, y0: head.y, x1: foot.x + 0.5, y1: foot.y - 1 }))) return false;
+      if (clear && terrain.some((poly) => meetsPolygon(poly, b))) return false;
+      labels.push({ cls: 'value bank-value', role: 'bank', text, ...at, box: b, stem });
+      return true;
+    };
+    for (const [clear, kMax, fracs] of [[true, 5, [0.5, 0.25, 0.75]], [false, 12, [0.55, 0.3, 0.8, 0.1]]] as const) {
+      for (let k = 0; k <= kMax; k++) for (const anchor of order) for (const frac of fracs) if (attempt(frac, k, anchor, clear)) return;
     }
-    labels.push({ cls: 'value bank-value', role: 'bank', text, x: foot.x, y: foot.y - 14, anchor: 'middle', box: boxOf(text, foot.x, foot.y - 14, 'middle'), stem: [foot, { x: foot.x, y: foot.y - 10 }] });
+    const foot = { x: at0.x + depth.dx * 0.55, y: at0.y + depth.dy * 0.55 };
+    labels.push({ cls: 'value bank-value', role: 'bank', text, x: foot.x, y: foot.y - 12, anchor: 'middle', box: boxOf(text, foot.x, foot.y - 12, 'middle'), stem: [foot, { x: foot.x, y: foot.y - 8 }] });
   });
-
   for (const w of m.words) {
     if (!w.at) continue;
     const at = P(w.at.x, w.at.y);
@@ -248,13 +286,21 @@ export function blockLayout(m: DrawingModel): BlockLayout {
 
   const level = m.values.find((v) => v.role === 'ws' || v.role === 'depth');
   const mark = level ? {
-    x: x1 + DEPTH.dx * 0.1, y: ws + DEPTH.dy * 0.1, length: DEPTH.dx * 0.8,
-    angle: (Math.atan2(DEPTH.dy, DEPTH.dx) * 180) / Math.PI, text: level.text, level: ws,
+    x: x1 + depth.dx * 0.1, y: ws + depth.dy * 0.1, length: depth.dx * 0.8,
+    angle: (Math.atan2(depth.dy, depth.dx) * 180) / Math.PI, text: level.text, level: ws,
   } : null;
 
-  return { f, face: { x0, x1, yBase }, ground, labels, gauge, mark, wall: { quad, extension }, lines, keepOut };
-}
+  // The viewBox is fitted to what is drawn: the highest of the extrusion's back edge, the end wall, the gauge, the
+  // chips and the high-water figure down to the stations, with a few px of air; no band above or below.
+  const markTop = mark ? ws + depth.dy * 0.5 - Math.abs(depth.dy / depth.dx) * (mark.text.length * CHAR) / 2 - 9 - ASCENT : Infinity;
+  const highest = Math.min(top + depth.dy, ws + depth.dy, ...ground.map((p) => p.y + depth.dy), ...quad.map((p) => p.y), ...(extension ?? []).map((p) => p.y),
+    gauge.top - 3, markTop, ...labels.map((l) => l.box.y0 - 3), ...labels.flatMap((l) => (l.stem ? [l.stem[1].y] : [])));
+  const lowest = Math.max(yBase + 3, ...labels.map((l) => l.box.y1 + 3));
+  const y = Math.floor(highest - 4);
+  const view = { y, height: Math.ceil(lowest + 4) - y };
 
+  return { f, width, depth, view, face: { x0, x1, yBase, top: f.py(solid.bounds.yMax) }, ground, labels, gauge, mark, wall: { quad, extension }, lines, keepOut };
+}
 /** The drawing's caption: the scale, that the depth is drawn, and Quickened's words in full. */
 function caption(m: DrawingModel, f: Frame, links: boolean): VNode {
   const n = f.exaggeration;
@@ -264,10 +310,32 @@ function caption(m: DrawingModel, f: Frame, links: boolean): VNode {
       w.haunting ? [' ', links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)));
 }
 
-/** The block's drawing: a `figure` with the SVG and its caption. `id` keeps two drawings on a page apart. */
-export function blockView(m: DrawingModel, opts: { links?: boolean; id?: string } = {}): VNode {
+/** The models drawn, by id, so the page can draw one again at the width its container has. */
+const drawn = new Map<string, DrawingModel>();
+
+/**
+ * The block's drawing: a `figure` with a host for the SVG and the caption. `id` keeps two drawings on a page apart.
+ * The SVG is laid out in `width` px (the container's, once measured; the page redraws it by `redrawBlock`).
+ */
+export function blockView(m: DrawingModel, opts: { links?: boolean; id?: string; width?: number } = {}): VNode {
   const id = opts.id ?? 'block';
-  const L = blockLayout(m);
+  const width = opts.width ?? DEFAULT_WIDTH;
+  drawn.set(id, m);
+  return h('figure', { class: 'drawing' },
+    h('div', { class: 'block-host', 'data-block': id, 'data-width': String(width) }, blockSvg(m, id, width)),
+    caption(m, frameFor({ ...m, bounds: solidOf(m).bounds }, boxFor(width, !!m.stations), { fine: true }), opts.links ?? true));
+}
+
+/** The SVG of the drawing `id` at `width` px, or null if no such drawing was made. */
+export function redrawBlock(id: string, width: number): VNode | null {
+  const m = drawn.get(id);
+  return m ? blockSvg(m, id, width) : null;
+}
+
+/** The reach block's SVG in a viewBox `width` px wide, fitted in height to what is drawn. */
+export function blockSvg(m: DrawingModel, id: string, width: number): VNode {
+  const L = blockLayout(m, width);
+  const DEPTH = L.depth;
   const { f, face, gauge, mark, wall } = L;
   const P = (x: number, y: number): Pt => ({ x: f.px(x), y: f.py(y) });
   const back = (p: Pt): Pt => ({ x: p.x + DEPTH.dx, y: p.y + DEPTH.dy });
@@ -332,18 +400,17 @@ export function blockView(m: DrawingModel, opts: { links?: boolean; id?: string 
 
   const hwm = mark ? h('g', { class: 'hwm', transform: `translate(${coord(mark.x)} ${coord(mark.y)}) skewY(${angleText(mark.angle)})` },
     h('line', { class: 'hwm-line', x1: '0', y1: '0', x2: coord(mark.length), y2: '0' }),
-    h('line', { class: 'hwm-line', x1: '0', y1: '-8', x2: '0', y2: '8' }),
-    h('line', { class: 'hwm-line', x1: coord(mark.length), y1: '-8', x2: coord(mark.length), y2: '8' }),
-    h('text', { class: 'hwm-figure', x: coord(mark.length / 2), y: '-11', 'text-anchor': 'middle' }, mark.text)) : null;
+    h('line', { class: 'hwm-line', x1: '0', y1: '-6', x2: '0', y2: '6' }),
+    h('line', { class: 'hwm-line', x1: coord(mark.length), y1: '-6', x2: coord(mark.length), y2: '6' }),
+    h('text', { class: 'hwm-figure', x: coord(mark.length / 2), y: '-9', 'text-anchor': 'middle' }, mark.text)) : null;
 
   const staff = h('g', { class: 'gauge' },
     h('rect', { class: 'gauge-plate', x: coord(gauge.x), y: coord(gauge.top), width: coord(gauge.width), height: coord(gauge.bottom - gauge.top) }),
     h('line', { class: 'gauge-stem', x1: coord(gauge.x + 4), x2: coord(gauge.x + 4), y1: coord(gauge.top), y2: coord(gauge.bottom) }),
-    gauge.marks.map((k) => h('line', { class: k.major ? 'gauge-mark major' : 'gauge-mark', x1: coord(gauge.x + 4), x2: coord(gauge.x + (k.major ? 16 : 11)), y1: coord(k.y), y2: coord(k.y) })),
+    gauge.marks.map((k) => h('line', { class: k.major ? 'gauge-mark major' : 'gauge-mark', x1: coord(gauge.x + 4), x2: coord(gauge.x + (k.major ? 15 : 10)), y1: coord(k.y), y2: coord(k.y) })),
     h('line', { class: 'gauge-water', x1: coord(gauge.x - 3), x2: coord(gauge.x + gauge.width + 3), y1: coord(ws), y2: coord(ws) }));
 
-  return h('figure', { class: 'drawing' },
-    h('svg', { class: 'section-drawing reach-block', viewBox: `0 0 ${BLOCK.width} ${BLOCK.height}`, role: 'img', 'aria-label': m.alt },
+  return h('svg', { class: 'section-drawing reach-block', viewBox: `0 ${L.view.y} ${width} ${L.view.height}`, 'font-size': String(TEXT), role: 'img', 'aria-label': m.alt },
       h('defs', {},
         h('pattern', { id: `${id}-soil`, width: '8', height: '8', patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
           h('rect', { class: 'soil', width: '8', height: '8' }),
@@ -371,8 +438,7 @@ export function blockView(m: DrawingModel, opts: { links?: boolean; id?: string 
       f.ticks.length || m.stations ? L.labels.filter((l) => l.role === 'tick').map((l) => h('line', { class: 'tick', x1: coord(l.x), x2: coord(l.x), y1: coord(face.yBase), y2: coord(face.yBase + 6) })) : null,
       L.labels.filter((l) => l.stem).map((l) => h('line', { class: 'bank', x1: coord(l.stem![0].x), x2: coord(l.stem![1].x), y1: coord(l.stem![0].y), y2: coord(l.stem![1].y) })),
       L.labels.filter((l) => l.role !== 'gauge').map((l) => h('rect', { class: 'label-ground', x: coord(l.box.x0 - 2), y: coord(l.box.y0 - 2), width: coord(l.box.x1 - l.box.x0 + 4), height: coord(l.box.y1 - l.box.y0 + 4) })),
-      L.labels.map((l) => h('text', { class: l.cls, x: coord(l.x), y: coord(l.y), 'text-anchor': l.anchor }, l.text))),
-    caption(m, f, opts.links ?? true));
+      L.labels.map((l) => h('text', { class: l.cls, x: coord(l.x), y: coord(l.y), 'text-anchor': l.anchor }, l.text)));
 }
 
 /** A circle as a path, to cut the pipe's opening out of the front face. */

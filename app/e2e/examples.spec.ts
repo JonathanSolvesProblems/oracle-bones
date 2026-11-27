@@ -11,6 +11,31 @@ test('before a calculation there is no empty ruled page: the first screen is the
   await expect(block.locator('text.hwm-figure')).toHaveText(golden(DATA.examples.main.id).printed.ws_elev!.trim());
 });
 
+test('the block is laid out in the width it has: every label is 13 px, the front face fills the frame', async ({ page }) => {
+  await open(page);
+  const block = page.locator('.hero svg.reach-block');
+  await expect(block).toBeVisible();
+  // The first measure redraws the drawing at its container's width, so the viewBox is as wide as the svg.
+  await expect.poll(async () => {
+    const box = (await block.boundingBox())!;
+    const vb = (await block.getAttribute('viewBox'))!.split(' ').map(Number);
+    return Math.abs(vb[2]! - box.width) < 1.5;
+  }).toBe(true);
+  const sizes = await block.locator('text').evaluateAll((els) => els.map((e) => {
+    const svg = e.ownerSVGElement!;
+    const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+    return parseFloat(getComputedStyle(e).fontSize) * scale;
+  }));
+  expect(sizes.length).toBeGreaterThan(4);
+  for (const px of sizes) {
+    expect(px).toBeGreaterThanOrEqual(12);
+    expect(px).toBeLessThanOrEqual(14);
+  }
+  const box = (await block.boundingBox())!;
+  const frame = box.width * (box.width >= 560 ? 0.6 : 0.75);
+  expect(box.height, 'no empty band: the block is no taller than its frame, a little over').toBeLessThanOrEqual(frame + 14);
+  expect(box.height).toBeGreaterThan(frame * 0.7);
+});
 test('the worked examples: one click each, their goldens, sources, cut-off line and exact values; one edit drops them', async ({ page }) => {
   await open(page);
   const examples = page.locator('button.example');

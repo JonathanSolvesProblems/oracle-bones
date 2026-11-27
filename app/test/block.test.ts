@@ -8,7 +8,7 @@ import type { Mode, Shape } from '../src/solver/index.ts';
 import type { AppJob } from '../src/ui/job.ts';
 import { runJob, classify } from '../src/ui/state.ts';
 import { sectionDrawing, DRAWING_WORDS, type DrawingModel } from '../src/ui/drawing/section.ts';
-import { BLOCK, BLOCK_WORDS, DEPTH, GAUGE_GAP, TEXT, blockLayout, blockView, hitsBox } from '../src/ui/drawing/block.ts';
+import { BLOCK_WORDS, DEFAULT_WIDTH, GAUGE_GAP, GAUGE_STEP_MAX, TEXT, blockLayout, blockView, depthFor, frameHeight, hitsBox, redrawBlock } from '../src/ui/drawing/block.ts';
 import { overlaps } from '../src/ui/drawing/labels.ts';
 import { screenView } from '../src/ui/views/screen.ts';
 import { findAll, textOf, type Child, type VNode } from '../src/ui/vnode.ts';
@@ -30,6 +30,8 @@ const count = (n: Child, cls: string) => findAll(n, (x) => String(x.attrs.class 
 const svgOf = (v: VNode) => findAll(v, (n) => n.tag === 'svg')[0]!;
 const tokensCss = readFileSync(join(ROOT, 'app', 'src', 'ui', 'styles', 'tokens.css'), 'utf-8');
 const appCss = readFileSync(join(ROOT, 'app', 'src', 'ui', 'styles', 'app.css'), 'utf-8');
+/** The widths tested: a 375 px phone's drawing, and a desktop's. */
+const WIDTHS = [343, 640] as const;
 
 describe('the block is drawn: front face, top surface, end wall, water, gauge, mark', () => {
   for (const [what, g] of [['the main example (irregular)', MAIN], ['a circle', circle], ['a trapezoid', trapezoid]] as const) {
@@ -87,23 +89,24 @@ describe('the block is drawn: front face, top surface, end wall, water, gauge, m
 
 describe('the geometry: an oblique extrusion with the water standing level in it', () => {
   it('the end wall is the front face\'s right edge pushed back by the one extrusion, up and to the right', () => {
-    for (const g of [MAIN, circle, trapezoid]) {
-      const { wall, face } = blockLayout(drawnOf(g).m);
+    for (const g of [MAIN, circle, trapezoid]) for (const w of WIDTHS) {
+      const { wall, face, depth: DEPTH } = blockLayout(drawnOf(g).m, w);
       const [a, b, c, d] = wall.quad as [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }, { x: number; y: number }];
       expect([a.x, d.x], g.id).toEqual([face.x1, face.x1]);
       expect(d.y, g.id).toBeCloseTo(face.yBase, 6);
-      expect([b.x - a.x, b.y - a.y], g.id).toEqual([DEPTH.dx, DEPTH.dy]);
-      expect([c.x - d.x, c.y - d.y], g.id).toEqual([DEPTH.dx, DEPTH.dy]);
+      expect([b.x - a.x, b.y - a.y], g.id).toEqual([expect.closeTo(DEPTH.dx, 6), DEPTH.dy]);
+      expect([c.x - d.x, c.y - d.y], g.id).toEqual([expect.closeTo(DEPTH.dx, 6), DEPTH.dy]);
       expect(DEPTH.dx).toBeGreaterThan(0);
       expect(DEPTH.dy).toBeLessThan(0);
     }
   });
 
   it('the water of each span is a plane at one level: front edge at the water line, back edge one extrusion behind', () => {
-    for (const g of [MAIN, circle, trapezoid]) {
+    for (const g of [MAIN, circle, trapezoid]) for (const w of WIDTHS) {
       const { m } = drawnOf(g);
-      const L = blockLayout(m);
-      const svg = svgOf(blockView(m));
+      const L = blockLayout(m, w);
+      const DEPTH = L.depth;
+      const svg = svgOf(blockView(m, { width: w }));
       const planes = findAll(svg, (n) => String(n.attrs.class ?? '').startsWith('water-plane'));
       planes.forEach((p, i) => {
         const xy = String(p.attrs.points).split(' ').map((s) => s.split(',').map(Number) as [number, number]);
@@ -120,9 +123,10 @@ describe('the geometry: an oblique extrusion with the water standing level in it
   });
 
   it('the high-water mark lies on the end wall at the water\'s level, skewed to the wall, the printed figure above it', () => {
-    for (const g of all) {
+    for (const g of all) for (const w of WIDTHS) {
       const { m } = drawnOf(g);
-      const L = blockLayout(m);
+      const L = blockLayout(m, w);
+      const DEPTH = L.depth;
       const mark = L.mark!;
       const level = m.values.find((v) => v.role === 'ws' || v.role === 'depth')!;
       expect(mark.text, g.id).toBe(level.text);
@@ -134,7 +138,7 @@ describe('the geometry: an oblique extrusion with the water standing level in it
       expect(along + mark.length / DEPTH.dx, g.id).toBeLessThan(1);
       expect(mark.y - along * DEPTH.dy, g.id).toBeCloseTo(L.f.py(m.waterLevel), 6);
       expect(mark.angle, g.id).toBeCloseTo((Math.atan2(DEPTH.dy, DEPTH.dx) * 180) / Math.PI, 6);
-      const svg = svgOf(blockView(m));
+      const svg = svgOf(blockView(m, { width: w }));
       const g1 = findAll(svg, (n) => n.attrs.class === 'hwm')[0]!;
       expect(g1.attrs.transform, g.id).toMatch(/^translate\(.+\) skewY\(-?\d+\.\d\d\)$/);
       expect(findAll(g1, (n) => n.tag === 'line'), g.id).toHaveLength(3);
@@ -143,9 +147,9 @@ describe('the geometry: an oblique extrusion with the water standing level in it
   });
 
   it('the staff gauge: marks a unit apart, a figure every fifth unit, the water\'s line across it', () => {
-    for (const g of all) {
+    for (const g of all) for (const w of WIDTHS) {
       const { m } = drawnOf(g);
-      const L = blockLayout(m);
+      const L = blockLayout(m, w);
       expect(L.gauge.step, g.id).toBeCloseTo(5 * L.gauge.unit, 9);
       const majors = L.gauge.marks.filter((k) => k.major);
       expect(majors.length, g.id).toBeGreaterThan(0);
@@ -153,11 +157,63 @@ describe('the geometry: an oblique extrusion with the water standing level in it
       for (let i = 1; i < majors.length; i++) expect(majors[i - 1]!.y - majors[i]!.y, g.id).toBeGreaterThanOrEqual(GAUGE_GAP - 0.1);
       const figs = L.labels.filter((l) => l.role === 'gauge').map((l) => l.text);
       expect(figs, g.id).toEqual(majors.map((k) => k.v.toFixed(L.gauge.decimals)));
-      const water = findAll(svgOf(blockView(m)), (n) => n.attrs.class === 'gauge-water')[0]!;
+      // A figure at least every GAUGE_STEP_MAX units wherever that many units are GAUGE_GAP px apart or more.
+      const perUnit = Math.abs(L.f.py(1) - L.f.py(0));
+      if (GAUGE_STEP_MAX * perUnit >= GAUGE_GAP) expect(L.gauge.step, ` at `).toBeLessThanOrEqual(GAUGE_STEP_MAX);
+      const water = findAll(svgOf(blockView(m, { width: w })), (n) => n.attrs.class === 'gauge-water')[0]!;
       expect(Number(water.attrs.y1), g.id).toBeCloseTo(L.f.py(m.waterLevel), 0);
       expect(Number(water.attrs.x1), g.id).toBeLessThan(L.gauge.x);
       expect(Number(water.attrs.x2), g.id).toBeGreaterThan(L.gauge.x + L.gauge.width);
     }
+  });
+});
+
+describe('the layout is the drawing\'s real width in CSS px, and fills its frame', () => {
+  it('the extrusion is 0.2 of the width across and 0.12 up; the frame is 0.6 of the width on a desktop and 0.75 on a phone', () => {
+    expect(depthFor(640)).toEqual({ dx: 128, dy: -77 });
+    expect(depthFor(343)).toEqual({ dx: 69, dy: -41 });
+    expect(frameHeight(640)).toBe(384);
+    expect(frameHeight(343)).toBe(257);
+  });
+
+  it('the viewBox is the width, fitted in height to what is drawn; the front face is at least 55% of its height', () => {
+    const failed: string[] = [];
+    const ratios: number[] = [];
+    for (const g of all) for (const w of WIDTHS) {
+      const L = blockLayout(drawnOf(g).m, w);
+      const svg = svgOf(blockView(drawnOf(g).m, { width: w }));
+      expect(svg.attrs.viewBox, g.id).toBe(`0 ${L.view.y} ${w} ${L.view.height}`);
+      const faceHeight = L.face.yBase - L.face.top;
+      ratios.push(faceHeight / L.view.height);
+      if (faceHeight / L.view.height < 0.55) failed.push(`${g.id} at ${w}: the face is ${(100 * faceHeight / L.view.height).toFixed(0)}% of the frame`);
+      // No empty band: something is drawn within 12 px of the top and of the bottom of the viewBox.
+      const top = Math.min(L.face.top + L.depth.dy, ...L.labels.map((l) => l.box.y0 - 2), L.gauge.top);
+      if (top - L.view.y > 12) failed.push(`${g.id} at ${w}: a band of ${(top - L.view.y).toFixed(0)} px above`);
+      const bottom = Math.max(L.face.yBase, ...L.labels.map((l) => l.box.y1 + 2));
+      if (L.view.y + L.view.height - bottom > 12) failed.push(`${g.id} at ${w}: a band of ${(L.view.y + L.view.height - bottom).toFixed(0)} px below`);
+      expect(L.view.height, g.id).toBeLessThanOrEqual(frameHeight(w) + 12);
+    }
+    expect(failed).toEqual([]);
+    expect(Math.min(...ratios)).toBeGreaterThanOrEqual(0.55);
+  });
+
+  it('the exaggeration is the largest to two figures that keeps the section in its box; the scale says it', () => {
+    for (const g of all.filter((x) => x.shape === 'irregular').slice(0, 20)) {
+      const m = drawnOf(g).m;
+      const n = blockLayout(m, 640).f.exaggeration;
+      expect(n, g.id).toBeGreaterThanOrEqual(1);
+      expect(textOf(findAll(blockView(m, { width: 640 }), (x) => x.tag === 'figcaption')[0]!), g.id).toContain(`Vertical scale ×${n}`);
+    }
+  });
+
+  it('the page draws the block again at the width it measures: the host names the drawing and the width it was laid out in', () => {
+    const { m } = drawnOf(MAIN);
+    const host = findAll(blockView(m, { id: 'again' }), (n) => n.attrs.class === 'block-host')[0]!;
+    expect(host.attrs['data-block']).toBe('again');
+    expect(host.attrs['data-width']).toBe(String(DEFAULT_WIDTH));
+    expect(svgOf(host).attrs.viewBox).toMatch(new RegExp(`^0 -?\\d+ ${DEFAULT_WIDTH} \\d+$`));
+    expect(svgOf(redrawBlock('again', 343)!).attrs.viewBox).toMatch(/^0 -?\d+ 343 \d+$/);
+    expect(redrawBlock('never drawn', 343)).toBeNull();
   });
 });
 
@@ -197,14 +253,14 @@ describe('every value written on the drawing is a printed field\'s text or the s
   });
 });
 
-describe('labels: never on a line, never over one another, and at least 12 px on a 375 px screen', () => {
-  it('on every result golden, each label box is inside the drawing, clear of the others and of every line and region it must avoid', () => {
+describe('labels: never on a line, never over one another, and 13 px at any width', () => {
+  it('on every result golden at 343 and 640 px, each label box is inside the drawing, clear of the others and of every line and region it must avoid', () => {
     const failed: string[] = [];
-    for (const g of all) {
-      const L = blockLayout(drawnOf(g).m);
+    for (const g of all) for (const w of WIDTHS) {
+      const L = blockLayout(drawnOf(g).m, w);
       L.labels.forEach((a, i) => {
         const b = a.box;
-        if (b.x0 < 0 || b.y0 < 0 || b.x1 > BLOCK.width || b.y1 > BLOCK.height) failed.push(`${g.id}: "${a.text}" leaves the drawing`);
+        if (b.x0 < 0 || b.y0 < L.view.y || b.x1 > w || b.y1 > L.view.y + L.view.height) failed.push(`${g.id} at ${w}: "${a.text}" leaves the drawing`);
         L.labels.slice(i + 1).forEach((o) => { if (overlaps(b, o.box)) failed.push(`${g.id}: "${a.text}" overlaps "${o.text}"`); });
         if (a.role === 'gauge' || a.role === 'tick') return;
         for (const k of L.keepOut) if (overlaps(b, k)) failed.push(`${g.id}: "${a.text}" is on the gauge or the end wall`);
@@ -237,17 +293,38 @@ describe('labels: never on a line, never over one another, and at least 12 px on
     expect(appCss).toMatch(/\.section-drawing \.label-ground \{[^}]*fill: var\(--canvas\)/);
   });
 
-  it('the type is --text-md in a 440-unit viewBox: 12 px or more on a 375 px phone (343 px of drawing)', () => {
-    const md = Number(/--text-md:\s*(\d+)px/.exec(tokensCss)![1]);
-    expect(TEXT).toBe(md);
-    expect((TEXT * 343) / BLOCK.width).toBeGreaterThanOrEqual(12);
-    expect(appCss).toMatch(/\.reach-block text \{[^}]*font: var\(--text-md\)/);
-    const lg = Number(/--text-lg:\s*(\d+)px/.exec(tokensCss)![1]);
-    expect((lg * 343) / BLOCK.width).toBeGreaterThanOrEqual(12);
-    expect(appCss).toMatch(/text\.hwm-figure \{[^}]*font: var\(--text-lg\)/);
+  it('the type is 13 px in a viewBox in CSS px: between 12 and 14 px at 1280 and at 375, whatever the width', () => {
+    expect(TEXT).toBeGreaterThanOrEqual(12);
+    expect(TEXT).toBeLessThanOrEqual(14);
+    for (const w of WIDTHS) {
+      const svg = svgOf(blockView(drawnOf(MAIN).m, { width: w }));
+      expect(svg.attrs['font-size']).toBe(String(TEXT));
+      // The viewBox is as wide as the drawing, so a unit is a px and the text is as big as its font-size says.
+      expect(String(svg.attrs.viewBox).split(' ')[2]).toBe(String(w));
+    }
+    // The stylesheet leaves the size to the svg's font-size attribute, in every label, the high-water figure included.
+    expect(appCss).toMatch(/\.reach-block text \{[^}]*font-size: inherit/);
+    expect(appCss).toMatch(/\.reach-block text\.words \{[^}]*font-size: inherit/);
+    expect(appCss).toMatch(/text\.hwm-figure \{[^}]*font-size: inherit/);
+  });
+
+  it('the gauge\'s E-marks are at least 2 px thick, the figures\' marks 3', () => {
+    expect(Number(/\.reach-block \.gauge-mark \{[^}]*stroke-width: ([\d.]+)/.exec(appCss)![1])).toBeGreaterThanOrEqual(2);
+    expect(Number(/\.reach-block \.gauge-mark\.major \{[^}]*stroke-width: ([\d.]+)/.exec(appCss)![1])).toBeGreaterThanOrEqual(3);
+  });
+
+  it('a bank label is a small stake with its text on a chip just above the stake\'s head', () => {
+    for (const g of all) for (const w of WIDTHS) {
+      const banks = blockLayout(drawnOf(g).m, w).labels.filter((l) => l.role === 'bank');
+      for (const l of banks) {
+        const [foot, head] = l.stem!;
+        expect(foot.y - head.y, g.id).toBeGreaterThan(0);
+        expect(l.box.y1, g.id).toBeLessThanOrEqual(head.y);
+        expect(head.y - l.box.y1, `${g.id} at ${w}`).toBeLessThanOrEqual(3);
+      }
+    }
   });
 });
-
 describe('where the block is used', () => {
   it('the results screen draws the block, and only the block', () => {
     const job = jobOf(MAIN);
