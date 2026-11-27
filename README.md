@@ -52,7 +52,9 @@ python -m venv .venv
 ```
 
 On Linux or macOS the interpreter is `.venv/bin/python`. `oracle_quick.py --full` runs the rebuild
-on every recorded case and prints how many match. `check_goldens.py` checks that no recorded
+on every recorded case and prints how many match. It exits with 1 while any case differs, and some
+do: they are the known misses in `results/known-misses.json`, which a test holds equal to the cases
+that differ. `check_goldens.py` checks that no recorded
 answer was edited. The pytest run is offline and takes 8 to 25 minutes. None of these runs the
 1995 program: its answers are already recorded in `oracle/goldens/`, each with the screen it came
 from.
