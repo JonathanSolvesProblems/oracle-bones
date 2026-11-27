@@ -11,10 +11,11 @@ import { data } from 'virtual:quickened/data';
 import { NOTICE } from '../src/ui/views/notice.ts';
 import { ROOT } from './golden.ts';
 import { femaSentences, filesUnder, identityProblems } from './identity.ts';
+import { INTRO_FEMA_PIECES } from '../src/ui/views/intro.ts';
 
 const APP = join(import.meta.dirname, '..');
 /** Where FEMA may be named (criterion 9.2): the notice, and the data sources and their caveats. */
-const FEMA_ALLOWED = [NOTICE, ...data.sources.items.map((i) => i.text), ...data.sources.caveats, data.sources.mainDischarge, data.sources.cutoffDischarge];
+const FEMA_ALLOWED = [NOTICE, ...INTRO_FEMA_PIECES, ...data.sources.items.map((i) => i.text), ...data.sources.caveats, data.sources.mainDischarge, data.sources.cutoffDischarge];
 
 describe('the identity of the built site', () => {
   it('has no federal mark, no mascot, no binary, and FEMA only where criterion 9.2 allows', async () => {

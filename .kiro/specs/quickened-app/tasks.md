@@ -287,7 +287,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     field's text; no label on a line; labels at least 12 px at 375 px; the print view keeps the
     2D front face. Then `drawing/`.
     - _Requirements: 10.2, 2.7_
-  - [ ] 17.3 Test: the first screen's order (opening with its three statements and two links,
+  - [x] 17.3 Test: the first screen's order (opening with its three statements and two links,
     the live block, the examples, the calculator), no ruled notepad, and a footer on every page.
     Then `views/`.
     - _Requirements: 10.3, 8.10_

@@ -35,10 +35,10 @@ describe('the worked examples', () => {
     const buttons = findAll(examplesView(), (n) => n.tag === 'button');
     expect(buttons.map((b) => [b.on.click?.type, b.on.click?.origin, textOf(b)])).toEqual(EXAMPLES.map((e) => ['example', e.origin, e.label]));
     const page = calculatePage({ mode: null, shape: null, values: {}, rows: [], marked: new Set() }, { examples: examplesView() });
-    const notes = findAll(page, (n) => n.attrs.class === 'field-notes')[0]!;
-    const order = notes.children.map((c) => (typeof c === 'string' ? '' : String(c.attrs.class ?? '')));
+    // Criterion 10.3: the controls come before the calculator, whose picker is in the spread.
+    const order = page.children.map((c) => (typeof c === 'string' ? '' : String(c.attrs.class ?? '')));
     expect(order.indexOf('examples')).toBeGreaterThanOrEqual(0);
-    expect(order.indexOf('examples')).toBeLessThan(order.indexOf('picker'));
+    expect(order.indexOf('examples')).toBeLessThan(order.findIndex((c) => c.startsWith('spread')));
   });
 
   it('main example: nd-irr-000006\'s inputs key for key and text for text; its printed fields and no exact value (8.2, 8.3)', () => {

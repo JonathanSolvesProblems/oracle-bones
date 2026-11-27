@@ -6,7 +6,7 @@
    rules, so a rule here that must beat one there is more specific (body ...), and the print's
    tables use classes app.css does not style. */
 @media print {
-  body .top-line, button, nav, .examples, .paste, .row-controls { display: none; }
+  body .top-line, button, nav, .examples, .paste, .row-controls, .site-footer, .hero { display: none; }
   body .page { max-width: none; padding: 0; }
   body { font: var(--text-xs) var(--font-body); }
   .print-view .print-header { border-bottom: var(--margin-rule); margin: 0 0 var(--space-2); }

@@ -65,18 +65,30 @@ for (const scheme of ['light', 'dark'] as const) {
 
 // Criterion 8.10 (2026-11-26): the opening sits above the examples and, on a phone, leaves both
 // example controls inside the first screen.
-test('the first screen opens above the examples, and both examples stay inside the first screen', async ({ page }) => {
+test('the first screen is the opening beside the main example\'s block, then the examples, then the calculator, with a footer', async ({ page }) => {
   await open(page, '#/');
   const intro = page.locator('section.intro');
   await expect(intro).toBeVisible();
   await expect(intro).toContainText(DATA.headline ? `${DATA.headline.matched} of ${DATA.headline.total} cases` : 'No headline run has been recorded yet.');
+  // Criterion 10.3: the opening and the main example's block are the first screen; the examples
+  // follow them, and the calculator follows the examples.
   const height = page.viewportSize()!.height;
+  const block = page.locator('.hero svg.reach-block');
+  await expect(block).toBeVisible();
   const introBox = (await intro.boundingBox())!;
+  const blockBox = (await block.boundingBox())!;
+  expect(blockBox.y, 'the block is in the first screen').toBeLessThan(height);
+  expect(blockBox.width, 'the block is large').toBeGreaterThan(page.viewportSize()!.width * 0.4);
+  expect(Math.abs(blockBox.y - introBox.y) < 200 || blockBox.y > introBox.y, 'the block beside or after the opening').toBe(true);
+  const formTop = (await page.locator('section.field-notes').boundingBox())!.y;
   for (const b of await page.locator('button.example').all()) {
     const box = (await b.boundingBox())!;
-    expect(box.y, 'an example below the opening').toBeGreaterThan(introBox.y);
-    expect(box.y + box.height, `an example below the first screen (${height}px)`).toBeLessThanOrEqual(height);
+    expect(box.y, 'an example above the opening ends').toBeGreaterThan(introBox.y);
+    expect(box.y + box.height, 'an example after the block starts').toBeGreaterThan(blockBox.y);
+    expect(box.y, 'an example above the calculator').toBeLessThan(formTop);
   }
+  await expect(page.locator('.sketch-empty')).toHaveCount(0);
+  await expect(page.locator('footer.site-footer')).toContainText('not a FEMA product');
 });
 
 // Criterion 2.9 (2026-11-26): at 375 px "Computed by QUICK-2's method" broke one word to a line.

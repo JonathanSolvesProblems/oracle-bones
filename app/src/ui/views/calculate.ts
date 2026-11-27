@@ -26,21 +26,16 @@ export interface CalculatePageParts {
   notBuilt?: Child | null;
   /** The right-hand page: the screen state. */
   results?: Child | null;
-  /** Above the examples: the opening of the first screen (criterion 8.10). */
-  intro?: Child | null;
-  /** Above the picker: the worked-example controls (criterion 8.1). */
+  /** First: the opening and the main example's block (criteria 8.10, 10.3). */
+  hero?: Child | null;
+  /** After the hero, before the calculator: the worked-example controls (criterion 8.1). */
   examples?: Child | null;
   /** Under the form: the loaded example's sources block (criterion 8.7). */
   afterForm?: Child | null;
 }
 
 export const PICK_PROMPT = 'Pick a mode and the shape of the cross section.';
-/** The right-hand page before a calculation: the ruled sketch page and this one line. */
-export const SKETCH_EMPTY = 'The result and the drawing appear here.';
-
-function emptySketch(): VNode {
-  return h('div', { class: 'sketch-empty' }, h('p', {}, SKETCH_EMPTY));
-}
+export const CALCULATE_HEADING = 'Calculate a section of your own';
 
 export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}): VNode {
   const picked = s.mode !== null && (s.shape !== null || !shapeChoice(s.mode));
@@ -54,14 +49,15 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
       aboveRows: parts.aboveRows, rowNotes: parts.rowNotes, belowRows: parts.belowRows,
     });
   }
-  return h('div', { class: 'spread' },
-    h('section', { class: 'field-notes', 'aria-label': 'Field notes' },
-      h('h1', { class: 'visually-hidden' }, 'Calculate'),
-      parts.intro ?? null,
-      parts.examples ?? null,
-      picker(pickerModel(s.mode, s.shape)),
-      left,
-      parts.afterForm ?? null),
-    h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? emptySketch()),
-  );
+  // Before a calculation the right page is empty and hidden: there is no ruled notepad (criterion 10.3).
+  return h('div', { class: 'calculate' },
+    parts.hero ?? null,
+    parts.examples ?? null,
+    h('div', { class: parts.results ? 'spread' : 'spread solo' },
+      h('section', { class: 'field-notes', 'aria-label': 'Field notes' },
+        h('h2', { class: 'calculate-heading' }, CALCULATE_HEADING),
+        picker(pickerModel(s.mode, s.shape)),
+        left,
+        parts.afterForm ?? null),
+      h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? null)));
 }

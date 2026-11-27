@@ -1,6 +1,7 @@
 // The page frame: the top line with Quickened's name and the links Calculate, Limits and Proof
 // (quickened-app design: Desktop layout, Phone layout; criterion 5.5).
 import { h, type Child, type VNode } from '../vnode.ts';
+import { NOTICE } from './notice.ts';
 
 export type Route = 'calculate' | 'limits' | 'proof';
 
@@ -49,7 +50,21 @@ export function shell(route: Route, main: Child, opts: { newerBuild?: boolean } 
     ),
     opts.newerBuild ? updateLine() : null,
     h('main', { id: 'main' }, main),
+    footer(),
   );
+}
+
+/** The source repository of the project, linked from every page's footer. */
+export const REPOSITORY_URL = 'https://github.com/JonathanSolvesProblems/oracle-bones';
+
+/** The footer of every page (criterion 10.3): the source, the limits and proof pages, and the notice. */
+export function footer(): VNode {
+  return h('footer', { class: 'site-footer' },
+    h('ul', { class: 'footer-links' },
+      h('li', {}, h('a', { href: REPOSITORY_URL, rel: 'noopener' }, 'Source repository')),
+      h('li', {}, h('a', { href: '#/limits' }, 'Limits')),
+      h('li', {}, h('a', { href: '#/proof' }, 'Proof'))),
+    h('p', { class: 'footer-notice' }, NOTICE));
 }
 
 /** A page not built yet: its title and a sentence that says so. */

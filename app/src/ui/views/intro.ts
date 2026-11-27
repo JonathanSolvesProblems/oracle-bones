@@ -1,25 +1,35 @@
-// The opening of the first screen (quickened-app criterion 8.10), above the worked examples: what
-// the page does and for whom, how Quickened was rebuilt, the headline count with a link to the
-// proof page, a link to the limits page, and the notice of criterion 2.3. No number is typed:
-// the count and date come from results/headline.md, the year from the realdata file.
+// The opening of the first screen (quickened-app criteria 8.10 and 10.3), beside the main
+// example's reach block: what QUICK-2 is, that it does not start on a modern locked-down computer,
+// and that Quickened gives its answers in a browser, checked against the original, with the
+// headline count and a link to the proof page. No number is typed: the count comes from
+// results/headline.md, the year from the realdata file. The notice is in the footer of every page.
 import type { QuickenedData } from '../../../build/data.ts';
 import { h, type VNode } from '../vnode.ts';
-import { noticeView } from './notice.ts';
 import { NO_HEADLINE } from './proof.ts';
 
-export const INTRO_LEAD = "Quickened works out depths, water-surface elevations and channel capacities in open channels by QUICK-2's method. It is for a floodplain reviewer checking one cross section the way QUICK-2 does.";
+/** FEMA's list of accepted hydraulic models, where QUICK-2 is named. */
+export const FEMA_LIST_URL = 'https://www.fema.gov/flood-maps/products-tools/numerical-models/hydraulic';
+export const INTRO_TITLE = "QUICK-2's answers, in a browser";
+/** The two pieces of the opening that name FEMA, for the identity test's allowed list (criterion 9.2): FEMA published QUICK-2 and keeps the list. */
+export const INTRO_FEMA_PIECES = ["QUICK-2 is FEMA's ", "FEMA's list of accepted models"] as const;
+export const INTRO_DOS = ' DOS program for the water-surface elevation at one cross section of a stream. It is still on ';
+export const INTRO_ZONE = ' for one cross section in Zone A, but it does not start on a locked-down modern computer.';
+export const INTRO_BROWSER = 'Quickened gives its answers in a browser, checked against the original.';
 
 export function introView(headline: QuickenedData['headline'], program: QuickenedData['program']): VNode {
   return h('section', { class: 'intro', 'aria-label': 'About Quickened' },
-    h('p', { class: 'intro-lead' }, INTRO_LEAD),
+    h('h1', {}, INTRO_TITLE),
+    h('p', { class: 'intro-lead' },
+      "QUICK-2 is FEMA's ", program.year, INTRO_DOS,
+      h('a', { href: FEMA_LIST_URL, rel: 'noopener' }, "FEMA's list of accepted models"),
+      INTRO_ZONE),
     h('p', {},
-      `It was rebuilt from the running ${program.year} program, by questioning it in an emulator, not from its source. `,
+      `${INTRO_BROWSER} `,
       headline
         ? `In the headline run it printed what QUICK-2 printed in ${headline.matched} of ${headline.total} cases; see `
         : `${NO_HEADLINE} See `,
       h('a', { href: '#/proof' }, 'the proof page'),
       '. Where it differs from QUICK-2 or gives no answer is on ',
       h('a', { href: '#/limits' }, 'the limits page'),
-      '.'),
-    noticeView());
+      '.'));
 }

@@ -2,16 +2,13 @@
 import { expect, test } from '@playwright/test';
 import { DATA, expectPrinted, golden, open } from './helpers.ts';
 
-test('the right page before a calculation is the ruled sketch page with its one line', async ({ page }) => {
+test('before a calculation there is no empty ruled page: the first screen is the main example\'s block, drawn live', async ({ page }) => {
   await open(page);
-  const empty = page.locator('#results .sketch-empty');
-  await expect(empty).toBeVisible();
-  await expect(empty).toHaveText('The result and the drawing appear here.');
-  const bg = await empty.evaluate((e) => getComputedStyle(e).backgroundImage);
-  expect(bg).toContain('repeating-linear-gradient');
-  const box = (await empty.boundingBox())!;
-  expect(box.width).toBeGreaterThan(0);
-  expect(box.height).toBeGreaterThan(0);
+  await expect(page.locator('.sketch-empty')).toHaveCount(0);
+  await expect(page.locator('#results')).toBeHidden();
+  const block = page.locator('.hero svg.reach-block');
+  await expect(block).toBeVisible();
+  await expect(block.locator('text.hwm-figure')).toHaveText(golden(DATA.examples.main.id).printed.ws_elev!.trim());
 });
 
 test('the worked examples: one click each, their goldens, sources, cut-off line and exact values; one edit drops them', async ({ page }) => {

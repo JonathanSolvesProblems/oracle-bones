@@ -53,7 +53,7 @@
   --hairline: var(--hairline-width) solid var(--rule-line); /* table rules and the binding between the pages */
   --page-max: 1200px;      /* the desktop spread */
   --drawing-phone-height: 200px; /* the drawing at 343 x 200 on a phone */
-  --sketch-lines: 12;      /* ruled lines of the empty sketch page on a desktop */
+  --measure: 640px;        /* the width of a column of reading or of a form on its own */
   --print-drawing-width: 6in; /* the drawing on the printed sheet: 6 x 3 in, near the top */
 }
 
