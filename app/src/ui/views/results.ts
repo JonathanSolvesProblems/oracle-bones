@@ -12,8 +12,8 @@ import { wsMark, wsMarkSymbol } from '../drawing/svg.ts';
 import { hauntingHref, hauntingLinksView } from './hauntings.ts';
 import { flagList, type FlagLine } from './states.ts';
 
-export const ECHOED_HEADING = 'Your inputs, as QUICK-2 read them';
-export const COMPUTED_HEADING = "Computed by QUICK-2's method";
+export const ECHOED_HEADING = 'Your inputs, as Quickened read them';
+export const COMPUTED_HEADING = "Computed by Quickened with QUICK-2's method";
 
 export interface PrintedRow {
   field: string;
