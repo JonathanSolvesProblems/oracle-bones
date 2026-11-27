@@ -8,7 +8,7 @@ import type { Mode, Shape } from '../src/solver/index.ts';
 import type { AppJob } from '../src/ui/job.ts';
 import { runJob, classify } from '../src/ui/state.ts';
 import { sectionDrawing, DRAWING_WORDS, type DrawingModel } from '../src/ui/drawing/section.ts';
-import { BLOCK_WORDS, DEFAULT_WIDTH, GAUGE_GAP, GAUGE_STEP_MAX, TEXT, blockLayout, blockView, depthFor, frameHeight, hitsBox, redrawBlock } from '../src/ui/drawing/block.ts';
+import { BLOCK_WORDS, DEFAULT_WIDTH, GAUGE_GAP, GAUGE_STEP_MAX, TEXT, bandOf, blockLayout, blockView, clipGround, depthFor, frameHeight, hitsBox, redrawBlock } from '../src/ui/drawing/block.ts';
 import { overlaps } from '../src/ui/drawing/labels.ts';
 import { screenView } from '../src/ui/views/screen.ts';
 import { findAll, textOf, type Child, type VNode } from '../src/ui/vnode.ts';
@@ -122,28 +122,83 @@ describe('the geometry: an oblique extrusion with the water standing level in it
     }
   });
 
-  it('the high-water mark lies on the end wall at the water\'s level, skewed to the wall, the printed figure above it', () => {
+  // Criterion 10.8 (2026-11-27): a painted mark, not a dimension line.
+  it('the high-water mark is painted on the end wall: a stripe across it at the water\'s level, the symbol at its front end, the figure upright on a plate inside the wall, the wall washed below', () => {
+    const failed: string[] = [];
     for (const g of all) for (const w of WIDTHS) {
       const { m } = drawnOf(g);
       const L = blockLayout(m, w);
-      const DEPTH = L.depth;
+      const D = L.depth;
       const mark = L.mark!;
+      const ws = L.f.py(m.waterLevel);
       const level = m.values.find((v) => v.role === 'ws' || v.role === 'depth')!;
       expect(mark.text, g.id).toBe(level.text);
       // Quickened's own printed field (the drawing never types a value; a few circle cases print a hundredth otherwise than QUICK-2, a known miss).
       expect(mark.text, g.id).toBe(runJob(jobOf(g)).printed[level.field]!.trim());
-      // On the wall: between its front edge and its back edge, at the height the water's level has there.
-      const along = (mark.x - L.face.x1) / DEPTH.dx;
-      expect(along, g.id).toBeGreaterThan(0);
-      expect(along + mark.length / DEPTH.dx, g.id).toBeLessThan(1);
-      expect(mark.y - along * DEPTH.dy, g.id).toBeCloseTo(L.f.py(m.waterLevel), 6);
-      expect(mark.angle, g.id).toBeCloseTo((Math.atan2(DEPTH.dy, DEPTH.dx) * 180) / Math.PI, 6);
+      // The stripe runs the whole wall, from its front edge to its back edge, at the water's level.
+      expect(mark.stripe[0], g.id).toEqual({ x: L.face.x1, y: ws });
+      expect(mark.stripe[1].x - mark.stripe[0].x, g.id).toBeCloseTo(D.dx, 6);
+      expect(mark.stripe[1].y - mark.stripe[0].y, g.id).toBeCloseTo(D.dy, 6);
+      // The symbol's point stands on the stripe's front end.
+      expect(Math.max(...mark.symbol.map((p) => p.y)), g.id).toBeLessThanOrEqual(ws);
+      expect(mark.symbol.some((p) => p.x === L.face.x1), g.id).toBe(true);
+      // The figure: 18 px on a desktop, 14 on a phone, unless the wall is too narrow for that.
+      const wanted = w >= 560 ? 18 : 14;
+      if (mark.size < wanted) failed.push(`${g.id} at ${w}: the figure is ${mark.size.toFixed(1)} px`);
+      // The plate is inside the wall with 6 px to spare: between its two edges, under its top, over its bottom, off the stripe.
+      const k = D.dy / D.dx;
+      const at = (y0: number, x: number) => y0 + (x - L.face.x1) * k;
+      const b = mark.box;
+      const wallTop = Math.min(...[...L.wall.quad, ...(L.wall.extension ?? [])].filter((p) => p.x === L.face.x1).map((p) => p.y));
+      if (b.x0 < L.face.x1 + 6 - 1e-6 || b.x1 > L.face.x1 + D.dx - 6 + 1e-6) failed.push(`${g.id} at ${w}: the plate is not 6 px inside the wall's edges`);
+      if (b.y0 < at(wallTop, b.x0) + 6 - 1e-6) failed.push(`${g.id} at ${w}: the plate is above the wall's top`);
+      if (b.y1 > at(L.face.yBase, b.x1) - 6 + 1e-6) failed.push(`${g.id} at ${w}: the plate is below the wall's bottom`);
+      const above = b.y1 <= at(ws, b.x1) - 6 + 1e-6;
+      const below = b.y0 >= at(ws, b.x0) + 6 - 1e-6;
+      if (!above && !below) failed.push(`${g.id} at ${w}: the plate is on the stripe`);
+      // The wash is the wall below the stripe.
+      expect(mark.wash, g.id).toEqual([mark.stripe[0], mark.stripe[1], { x: L.face.x1 + D.dx, y: L.face.yBase + D.dy }, { x: L.face.x1, y: L.face.yBase }]);
       const svg = svgOf(blockView(m, { width: w }));
       const g1 = findAll(svg, (n) => n.attrs.class === 'hwm')[0]!;
-      expect(g1.attrs.transform, g.id).toMatch(/^translate\(.+\) skewY\(-?\d+\.\d\d\)$/);
-      expect(findAll(g1, (n) => n.tag === 'line'), g.id).toHaveLength(3);
+      expect(g1.attrs.transform, g.id).toBeUndefined();
+      expect(Number(g1.attrs['font-size']), g.id).toBeCloseTo(mark.size, 1);
+      for (const part of ['hwm-wash', 'hwm-stripe', 'hwm-symbol', 'hwm-plate', 'hwm-figure']) expect(count(g1, part), `${g.id}: ${part}`).toBe(1);
       expect(textOf(findAll(g1, (n) => n.tag === 'text')[0]!), g.id).toBe(level.text);
     }
+    expect(failed).toEqual([]);
+  });
+
+  // Criterion 10.7 (2026-11-27): the flood is what you see.
+  it('a surveyed section is drawn in the band round its water, the ground above it cut off with a break line, the flood at least 40 px deep on a desktop and 20 on a phone', () => {
+    const failed: string[] = [];
+    for (const g of all.filter((x) => x.shape === 'irregular')) for (const w of WIDTHS) {
+      const { m } = drawnOf(g);
+      const L = blockLayout(m, w);
+      const band = bandOf(m.bounds.yMin, m.bounds.yMax, m.waterLevel);
+      // The band: up to 6 ft of bank above the water and up to 3 ft below the lowest ground, never above the section's top.
+      expect(band.top, g.id).toBeLessThanOrEqual(Math.max(m.waterLevel, Math.min(m.bounds.yMax, m.waterLevel + 6)) + 1e-9);
+      expect(band.top, g.id).toBeGreaterThanOrEqual(m.waterLevel);
+      expect(m.bounds.yMin - band.bottom, g.id).toBeLessThanOrEqual(3 + 1e-9);
+      expect(L.face.top, g.id).toBeCloseTo(L.f.py(band.top), 6);
+      // No ground point is drawn above the band; where the ground left it, the cut is flat at the top and has a break line.
+      for (const p of L.ground) expect(p.y, g.id).toBeGreaterThanOrEqual(L.face.top - 1e-6);
+      const risesOut = m.ground.some((p) => p.y > band.top);
+      expect(L.breaks.length > 0, g.id).toBe(risesOut);
+      expect(count(svgOf(blockView(m, { width: w })), 'break-line'), g.id).toBe(L.breaks.length);
+      L.cut.forEach((c, i) => { if (c) expect([L.ground[i]!.y, L.ground[i + 1]!.y], g.id).toEqual([L.face.top, L.face.top]); });
+      // The flood's depth on the drawing.
+      const deep = Math.abs(L.f.py(m.waterLevel) - L.f.py(Math.min(...m.ground.map((p) => p.y))));
+      if (deep < (w >= 560 ? 40 : 20)) failed.push(`${g.id} at ${w}: the flood is ${deep.toFixed(0)} px deep`);
+    }
+    expect(failed).toEqual([]);
+  });
+
+  it('clipGround cuts the ground at the top, with a point where it crosses, and names the runs cut off', () => {
+    const c = clipGround([{ x: 0, y: 10 }, { x: 2, y: 2 }, { x: 4, y: 2 }, { x: 6, y: 10 }], 6);
+    expect(c.pts).toEqual([{ x: 0, y: 6 }, { x: 1, y: 6 }, { x: 2, y: 2 }, { x: 4, y: 2 }, { x: 5, y: 6 }, { x: 6, y: 6 }]);
+    expect(c.cut).toEqual([true, false, false, false, true]);
+    expect(c.runs).toEqual([[0, 1], [5, 6]]);
+    expect(clipGround([{ x: 0, y: 1 }, { x: 1, y: 0 }], 5)).toEqual({ pts: [{ x: 0, y: 1 }, { x: 1, y: 0 }], cut: [false], runs: [] });
   });
 
   it('the staff gauge: marks a unit apart, a figure every fifth unit, the water\'s line across it', () => {
@@ -162,8 +217,11 @@ describe('the geometry: an oblique extrusion with the water standing level in it
       if (GAUGE_STEP_MAX * perUnit >= GAUGE_GAP) expect(L.gauge.step, ` at `).toBeLessThanOrEqual(GAUGE_STEP_MAX);
       const water = findAll(svgOf(blockView(m, { width: w })), (n) => n.attrs.class === 'gauge-water')[0]!;
       expect(Number(water.attrs.y1), g.id).toBeCloseTo(L.f.py(m.waterLevel), 0);
-      expect(Number(water.attrs.x1), g.id).toBeLessThan(L.gauge.x);
+      // Criterion 10.9 (2026-11-27): the figures stand left of the marks, and the water's bar crosses the marks only.
+      const figures = L.labels.filter((l) => l.role === 'gauge');
+      expect(Number(water.attrs.x1), g.id).toBeGreaterThan(Math.max(...figures.map((l) => l.box.x1)));
       expect(Number(water.attrs.x2), g.id).toBeGreaterThan(L.gauge.x + L.gauge.width);
+      for (const l of figures) expect(l.anchor, g.id).toBe('end');
     }
   });
 });
@@ -184,14 +242,19 @@ describe('the layout is the drawing\'s real width in CSS px, and fills its frame
       const svg = svgOf(blockView(drawnOf(g).m, { width: w }));
       expect(svg.attrs.viewBox, g.id).toBe(`0 ${L.view.y} ${w} ${L.view.height}`);
       const faceHeight = L.face.yBase - L.face.top;
-      ratios.push(faceHeight / L.view.height);
-      if (faceHeight / L.view.height < 0.55) failed.push(`${g.id} at ${w}: the face is ${(100 * faceHeight / L.view.height).toFixed(0)}% of the frame`);
+      // Rows of labels raised to clear one another are content, not frame.
+      const raised = Math.max(0, new Set(L.labels.filter((l) => l.stem).map((l) => Math.round(l.y))).size - 1) * 16;
+      const share = faceHeight / (L.view.height - raised);
+      ratios.push(share);
+      if (share < 0.55) failed.push(`${g.id} at ${w}: the face is ${(100 * share).toFixed(0)}% of the frame`);
       // No empty band: something is drawn within 12 px of the top and of the bottom of the viewBox.
       const top = Math.min(L.face.top + L.depth.dy, ...L.labels.map((l) => l.box.y0 - 2), L.gauge.top);
       if (top - L.view.y > 12) failed.push(`${g.id} at ${w}: a band of ${(top - L.view.y).toFixed(0)} px above`);
       const bottom = Math.max(L.face.yBase, ...L.labels.map((l) => l.box.y1 + 2));
       if (L.view.y + L.view.height - bottom > 12) failed.push(`${g.id} at ${w}: a band of ${(L.view.y + L.view.height - bottom).toFixed(0)} px below`);
-      expect(L.view.height, g.id).toBeLessThanOrEqual(frameHeight(w) + 12);
+      // A label raised to a second or third row to clear another adds its line to the height, and nothing else does.
+      const rows = new Set(L.labels.filter((l) => l.stem).map((l) => Math.round(l.y))).size;
+      expect(L.view.height, g.id).toBeLessThanOrEqual(frameHeight(w) + 12 + Math.max(0, rows - 1) * 16);
     }
     expect(failed).toEqual([]);
     expect(Math.min(...ratios)).toBeGreaterThanOrEqual(0.55);
@@ -315,15 +378,36 @@ describe('labels: never on a line, never over one another, and 13 px at any widt
     expect(Number(/\.reach-block \.gauge-mark\.major \{[^}]*stroke-width: ([\d.]+)/.exec(appCss)![1])).toBeGreaterThanOrEqual(3);
   });
 
-  it('a bank label is a small stake with its text on a chip just above the stake\'s head', () => {
+  // Criterion 10.9 (2026-11-27): read against the station axis, a stake is where its bank is.
+  it('a bank\'s stake stands on the front face\'s ground line at its true station, up to a row of labels above the block, its text on a chip just above the head', () => {
     for (const g of all) for (const w of WIDTHS) {
-      const banks = blockLayout(drawnOf(g).m, w).labels.filter((l) => l.role === 'bank');
-      for (const l of banks) {
+      const { m } = drawnOf(g);
+      const L = blockLayout(m, w);
+      const banks = L.labels.filter((l) => l.role === 'bank');
+      expect(banks.length, g.id).toBe(m.values.filter((v) => v.role === 'bank').length);
+      const blockTop = Math.min(...L.ground.map((p) => p.y + L.depth.dy), ...L.wall.quad.map((p) => p.y));
+      banks.forEach((l, i) => {
+        const v = m.values.filter((x) => x.role === 'bank')[i]!;
         const [foot, head] = l.stem!;
+        expect(foot.x, g.id).toBeCloseTo(L.f.px(v.at.x), 6);
+        expect(foot.y, g.id).toBeCloseTo(L.f.py(Math.min(v.at.y, m.bounds.yMax, bandOf(m.bounds.yMin, m.bounds.yMax, m.waterLevel).top)), 6);
+        expect(head.x, g.id).toBe(foot.x);
         expect(foot.y - head.y, g.id).toBeGreaterThan(0);
         expect(l.box.y1, g.id).toBeLessThanOrEqual(head.y);
         expect(head.y - l.box.y1, `${g.id} at ${w}`).toBeLessThanOrEqual(3);
-      }
+        expect(l.box.y1, `${g.id} at ${w}: above the block`).toBeLessThanOrEqual(blockTop);
+      });
+    }
+  });
+
+  it('the cut-off label has a leader from the pocket of water it names', () => {
+    const cut = all.filter((g) => g.shape === 'irregular').map(drawnOf).filter(({ m }) => m.words.some((x) => x.text === DRAWING_WORDS.cutOff));
+    expect(cut.length).toBeGreaterThan(0);
+    for (const { m } of cut) for (const w of WIDTHS) {
+      const L = blockLayout(m, w);
+      const word = m.words.find((x) => x.text === DRAWING_WORDS.cutOff)!;
+      const l = L.labels.find((x) => x.text === BLOCK_WORDS.cutOff)!;
+      expect(l.stem![0]).toEqual({ x: L.f.px(word.at!.x), y: L.f.py(word.at!.y) });
     }
   });
 });

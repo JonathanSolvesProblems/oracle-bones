@@ -326,3 +326,30 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     Playwright reaches it from the top line and axe passes on it. Then `build/story.ts`,
     `views/story.ts`, `views/shell.ts`, `views/intro.ts` and `main.ts`.
     - _Requirements: 11.4_
+
+- [x] 19. The second design round (2026-11-27, outside Kiro; from a designer's critique that saw
+  only screenshots and scored the redesign 6 out of 10)
+  - [x] 19.1 Test: every irregular result golden is drawn in its band, nothing above the band's
+    top, a break line for each run cut off, the flood at least 40 px deep at 640 px and 20 px at
+    343 px; `clipGround` on a small section. Then `drawing/block.ts` (`bandOf`, `clipGround`).
+    - _Requirements: 10.7_
+  - [x] 19.2 Test: on every result golden at 343 and 640 px the mark is a stripe across the end
+    wall at the water's level, the symbol at its front end, the figure on a plate 6 px inside the
+    wall and off the stripe, 18 px or 14 px, the wall washed below. Then `drawing/block.ts` and
+    the stylesheet.
+    - _Requirements: 10.8_
+  - [x] 19.3 Test: each bank's stake stands on the front face at its true station, its label in
+    a row above the block; the cut-off label's leader comes from its pocket; no label meets
+    another or a stake; the gauge's figures stand left of its marks and the water's bar crosses
+    the marks only. Then `drawing/block.ts`.
+    - _Requirements: 10.9_
+  - [x] 19.4 Test: on a phone the result comes after the examples and before the calculator, the
+    sources closed under it; each example's button carries its section and the loaded one is
+    pressed until an input changes. Then `views/calculate.ts`, `views/example.ts`,
+    `drawing/thumb.ts` and `main.ts`.
+    - _Requirements: 10.10, 10.11_
+  - [x] 19.5 Test: the modes on one row on a desktop inside the left page, both tables on one
+    grid with one-line labels, the cut-off sentence once, the reading measure, the symbol on the
+    baseline, the recorded screens at 12 px with sideways scroll on a phone. Then
+    `views/results.ts` and the stylesheets.
+    - _Requirements: 10.12, 10.5, 6.8_

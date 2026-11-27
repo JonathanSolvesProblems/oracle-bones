@@ -33,7 +33,7 @@ export interface CalculatePageParts {
   hero?: Child | null;
   /** After the hero, before the calculator: the worked-example controls (criterion 8.1). */
   examples?: Child | null;
-  /** Under the form: the loaded example's sources block (criterion 8.7). */
+  /** The loaded example's sources block (criterion 8.7): under the result when there is one, else under the form. */
   afterForm?: Child | null;
 }
 
@@ -52,15 +52,17 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
       aboveRows: parts.aboveRows, rowNotes: parts.rowNotes, belowRows: parts.belowRows, ground: s.ground,
     });
   }
-  // Before a calculation the right page is empty and hidden: there is no ruled notepad (criterion 10.3).
+  // Before a calculation the right page is empty and hidden: there is no ruled notepad (criterion 10.3). On a phone
+  // the result comes first, straight after the examples, and the example's sources under it (criterion 10.10).
+  const results = parts.results ?? null;
   return h('div', { class: 'calculate' },
     parts.hero ?? null,
     parts.examples ?? null,
-    h('div', { class: parts.results ? 'spread' : 'spread solo' },
+    h('div', { class: results ? 'spread' : 'spread solo' },
       h('section', { class: 'field-notes', 'aria-label': 'Field notes' },
         h('h2', { class: 'calculate-heading' }, CALCULATE_HEADING),
         picker(pickerModel(s.mode, s.shape)),
         left,
-        parts.afterForm ?? null),
-      h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, parts.results ?? null)));
+        results ? null : parts.afterForm ?? null),
+      h('section', { class: 'sketch', 'aria-label': 'Results', id: 'results', tabindex: '-1' }, results, results ? parts.afterForm ?? null : null)));
 }

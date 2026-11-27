@@ -23,10 +23,13 @@ describe('the cut-off line', () => {
       const rows = [...m.inputs, ...m.outputs];
       expect(rows.filter((r) => r.notes.includes(CUT_OFF_LINE)).map((r) => r.field).sort(), g.id)
         .toEqual(cutOff ? ['area', 'top_width', 'wet_perimeter'] : []);
-      // In the view, the line sits in those fields' rows.
+      // Amended 2026-11-27 (criterion 10.12): the screen writes the line once, in Area's row; all three rows carry the flag's number.
       const view = resultsView(m);
+      const flagRows = findAll(view, (n) => n.tag === 'tr' && n.attrs.class === 'marked');
+      expect(flagRows.length, g.id).toBe(cutOff ? 3 : flagRows.length);
       const lineRows = findAll(view, (n) => n.tag === 'tr' && textOf(n).includes(CUT_OFF_LINE));
-      expect(lineRows.length, g.id).toBe(cutOff ? 3 : 0);
+      expect(lineRows.length, g.id).toBe(cutOff ? 1 : 0);
+      expect(textOf(view).split(CUT_OFF_LINE).length - 1, g.id).toBe(cutOff ? 1 : 0);
     }
     expect(withFlag).toBeGreaterThan(0);
     expect(withFlag).toBeLessThan(irregular.length);

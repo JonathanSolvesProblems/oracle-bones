@@ -2832,3 +2832,40 @@ the old one, pointing at a script the deploy had removed (404 once the browser's
 The worker now fetches its files from the server (`cache: 'reload'`), the Playwright server sends
 GitHub Pages' `max-age=600` (all three tests fail without the fix and pass with it), and the mark
 is now "quickened-3-", so the new worker also reloads pages of the one build that had the fault.
+
+## 2026-11-27, outside Kiro: the second design round (task 19, criteria 10.7 to 10.12)
+
+**Done from the command line with an AI coding assistant, not in a Kiro session.** The brief is
+the designer's critique of the redesign (session 17), which saw only screenshots and scored it 6
+out of 10: the block, the gauge and the silt water credited; the flood too thin to see; the shell
+around it generic. The prompt written for Kiro from that critique could not be sent (no credits),
+so its five items were done by hand under the quickened-app spec, tests first.
+
+### What changed
+1. **The flood is what you see** (10.7). A surveyed section is drawn in the band round its water,
+   from a little below the lowest ground to as much dry bank as the water is deep (2 to 6 ft);
+   ground that rises out of it is cut off at the top, the cut hatched and a break line on the
+   front face's edge. On the main example the water went from 15.7 px deep at 640 px to 97.6 px,
+   and from 10.1 px to 63.6 px at 343 px. The vertical exaggeration rises with it (×3.5 to ×22 at
+   640 px), and the caption says so.
+2. **A painted high-water mark** (10.8). A stripe across the end wall at the water's level, the
+   water-surface symbol at its front end, the figure upright in ink on an enamel plate inside the
+   wall (18 px, 14 px on a phone), the wall washed in the water's colour below the stripe. On a
+   dark wall an ink figure would not read, hence the plate, in the gauge's enamel.
+3. **Stakes at their true stations** (10.9). The banks, the cut-off water and QUICK-2's wall are
+   labelled in one row above the block, each on a stake from its station on the front face. One
+   pass from left to right could not place three labels in 150 px on a phone, and a bank at
+   QUICK-2's wall shares its stake's station, so every combination of row and side is tried and
+   the one with the fewest raised rows wins. The gauge's figures stand left of its marks.
+4. **The result first on a phone** (10.10): straight after the examples, with the example's
+   sources closed under it.
+5. **The shell** (10.11, 10.12): each example's button shows its section and the loaded one is
+   pressed; the four modes on one row; both results tables on one grid; the cut-off sentence
+   written once on the screen (the print sheet keeps its numbered note); 72 characters a line on
+   the limits and proof pages; the symbol on the main figure's baseline; QUICK-2's recorded
+   screens at a line height of 1, and at 12 px with sideways scroll on a phone instead of 5 px
+   (criterion 10.5 amended).
+
+Also from this session: a clean clone of the public repository, with no credentials, ran the
+README's commands (2,698 tests, the build, the preview, the golden check, 254 pytest passed). The
+README now says that `oracle_quick.py --full` exits with 1 while any case differs, as some do.

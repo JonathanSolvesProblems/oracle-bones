@@ -408,6 +408,18 @@ words ("cut off", "QUICK-2's wall", "assumed"). Each label is placed clear of ev
 of every line on the drawing and of the gauge and the wall, on a ground of the canvas colour.
 The depth of the block is drawn, not computed, and the caption says so.
 
+**The second design round (amended 2026-11-27, task 19, criteria 10.7 to 10.12; outside Kiro).**
+A surveyed section is drawn in the band round its water (`bandOf`): the ground above the band is
+cut off at its top (`clipGround`), the cut hatched on the top surface and a break line on the
+front face's edge, so the flood fills the drawing. The high-water mark is painted: a stripe across
+the whole end wall at the water's level, the water-surface symbol at its front end, the figure
+upright on an enamel plate inside the wall (18 px, 14 px on a phone), the wall washed in the
+water's colour below the stripe; it replaces the skewed line with ticks above. The bank stations,
+the cut-off water and QUICK-2's wall are labelled in one row above the block, on stakes from their
+true stations on the front face; every combination of row and side is tried, and the one with the
+fewest raised rows where no label meets another or a stake wins. The gauge's figures stand left of
+its marks. Each example's button carries a thumbnail of its section (`drawing/thumb.ts`).
+
 ## The worked examples
 
 Two controls sit above the picker on the first screen (criterion 8.1), side by side on a

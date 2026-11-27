@@ -21,16 +21,22 @@ test('the block is laid out in the width it has: every label is 13 px, the front
     const vb = (await block.getAttribute('viewBox'))!.split(' ').map(Number);
     return Math.abs(vb[2]! - box.width) < 1.5;
   }).toBe(true);
-  const sizes = await block.locator('text').evaluateAll((els) => els.map((e) => {
+  const sizeOf = (els: Element[]) => els.map((e) => {
     const svg = (e as SVGTextElement).ownerSVGElement!;
     const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
     return parseFloat(getComputedStyle(e).fontSize) * scale;
-  }));
+  });
+  const sizes = await block.locator('text:not(.hwm-figure)').evaluateAll(sizeOf);
   expect(sizes.length).toBeGreaterThan(4);
   for (const px of sizes) {
     expect(px).toBeGreaterThanOrEqual(12);
     expect(px).toBeLessThanOrEqual(14);
   }
+  // The painted mark's figure is larger (criterion 10.8): 18 px on a desktop, 14 on a phone.
+  const [figure] = await block.locator('text.hwm-figure').evaluateAll(sizeOf);
+  const wide = (await block.boundingBox())!.width >= 560;
+  expect(figure!).toBeGreaterThanOrEqual(wide ? 17.5 : 13.5);
+  expect(figure!).toBeLessThanOrEqual(wide ? 18.5 : 14.5);
   const box = (await block.boundingBox())!;
   const frame = box.width * (box.width >= 560 ? 0.6 : 0.75);
   expect(box.height, 'no empty band: the block is no taller than its frame, a little over').toBeLessThanOrEqual(frame + 14);

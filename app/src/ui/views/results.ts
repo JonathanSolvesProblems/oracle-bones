@@ -42,7 +42,10 @@ export function exactCaptionWords(assumption: string): string {
   return `${EXACT_HEADER}: the hydraulically exact value ${assumption}, shown beside the value QUICK-2 prints, which stays the answer.`;
 }
 
-/** Beside the fields the cut_off_area_counted flag names: Area, Top Wid and Wet Per (6.8). */
+/**
+ * Beside the fields the cut_off_area_counted flag names: Area, Top Wid and Wet Per (6.8). The screen writes it once,
+ * in the first of those rows, the others carrying the flag's number (10.12); the print sheet numbers it as a note.
+ */
 export const CUT_OFF_LINE = 'Includes low ground cut off from the channel, which QUICK-2 counts as flowing.';
 
 export interface ResultsModel {
@@ -100,7 +103,8 @@ function exactCaption(e: NonNullable<ResultsModel['exact']>): Child[] {
   return [`${exactCaptionWords(e.assumption)} `, h('a', { href: hauntingHref(e.haunting) }, limitsNote(e.haunting)), '.'];
 }
 
-function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row: PrintedRow) => Child | null, exact: ResultsModel['exact']): VNode {
+/** `written` holds the notes already written on the screen, so each is written once across both tables. */
+function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row: PrintedRow) => Child | null, exact: ResultsModel['exact'], written: Set<string>): VNode {
   const withExact = exact !== null && rows.some((x) => x.exact !== null);
   return h('table', { class: withExact ? 'printed with-exact' : 'printed' },
     h('caption', {}, caption, withExact ? h('span', { class: 'exact-caption' }, exactCaption(exact!)) : null),
@@ -114,7 +118,7 @@ function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row:
         x.exact !== null ? [h('span', { class: 'exact-label' }, EXACT_HEADER), ' ', x.exact] : null) : null,
       h('td', { class: 'row-extra' },
         x.flagNumbers.length ? h('span', { class: 'flag-ref' }, `Flag ${x.flagNumbers.join(', ')}`) : null,
-        x.notes.map((n) => h('span', { class: 'field-note' }, n)),
+        x.notes.filter((n) => !written.has(n) && written.add(n)).map((n) => h('span', { class: 'field-note' }, n)),
         extra(x))))));
 }
 
@@ -129,6 +133,7 @@ export interface ResultsParts {
 
 export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
   const extra = parts.rowExtra ?? (() => null);
+  const written = new Set<string>();
   return h('section', { class: 'state state-result', 'aria-live': 'polite' },
     wsMarkSymbol(),
     h('h2', { id: 'result-heading', tabindex: '-1' }, m.heading),
@@ -138,8 +143,8 @@ export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
       ' ',
       h('span', { class: 'main-value figures' }, m.mainFigure.text)),
     parts.drawing ?? null,
-    printedTable(ECHOED_HEADING, m.inputs, extra, m.exact),
-    printedTable(COMPUTED_HEADING, m.outputs, extra, m.exact),
+    printedTable(ECHOED_HEADING, m.inputs, extra, m.exact, written),
+    printedTable(COMPUTED_HEADING, m.outputs, extra, m.exact, written),
     flagList(m.flags),
     hauntingLinksView(m.links),
     parts.afterFlags ?? null,

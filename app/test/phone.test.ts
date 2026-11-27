@@ -80,10 +80,15 @@ describe('the proof page on a phone', () => {
   const page = proofView(model);
   const longest = Math.max(...model.cases.flatMap((c) => c.capture.split('\n').map((l) => l.length)));
 
-  it('QUICK-2\'s recorded screens scale to the width: the screen figure is a size container, the type is the width over the columns', () => {
+  // Amended 2026-11-27 (criterion 10.5): scaled to fit, a phone's screens were 5 px. They keep 12 px there and scroll
+  // sideways inside their own frame; the line height is 1, so the box-drawing characters join.
+  it('QUICK-2\'s recorded screens scale to the width on a wider screen, keep 12 px and scroll sideways on a phone, at a line height of 1', () => {
     expect(css).toMatch(/\.quick2-screen \{[^}]*container-type: inline-size/);
-    expect(css).toMatch(/\.quick2-screen pre \{[^}]*font: var\(--evidence-size\) var\(--font-evidence\)/);
-    expect(css).not.toMatch(/\.quick2-screen pre \{[^}]*overflow-x: auto/);
+    expect(css).toMatch(/\.quick2-screen pre \{[^}]*font: var\(--evidence-size\) var\(--font-evidence\); line-height: var\(--evidence-leading\);/);
+    expect(tokens).toMatch(/--evidence-leading: 1;/);
+    expect(css).not.toMatch(/\.quick2-screen pre \{[^}]*overflow-x: auto[^}]*\}\s*\.quick2-screen pre:focus/);
+    expect(css).toMatch(/@media \(max-width: 559\.98px\) \{ \.quick2-screen pre \{ font-size: var\(--evidence-phone\); overflow-x: auto; \} \}/);
+    expect(tokens).toMatch(/--evidence-phone: 12px;/);
     expect(tokens).toMatch(/--evidence-size: min\(var\(--evidence-max\), calc\(\(100cqw [^;]*var\(--screen-columns\)[^;]*\)\);/);
     const columns = Number(/--screen-columns:\s*(\d+)/.exec(tokens)![1]);
     expect(columns).toBeGreaterThanOrEqual(longest);

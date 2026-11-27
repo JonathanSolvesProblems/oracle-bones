@@ -36,25 +36,29 @@ test('a loaded section is one summary row that opens on demand and closes again'
   await expect(page.locator('table.grid')).toHaveCount(0);
 });
 
-test('on the proof page the recorded screens fit the width and no field table breaks a word or a value', async ({ page }) => {
+// Amended 2026-11-27 (criterion 10.5): on a phone the screens keep 12 px and scroll sideways inside their own frame,
+// which can be reached by keyboard; the page itself never scrolls sideways.
+test('on the proof page the recorded screens are 12 px and scroll inside their frame, and no field table breaks a word or a value', async ({ page }) => {
   await open(page, '#/proof');
   const m = await page.evaluate(() => {
     const over = (sel: string) => [...document.querySelectorAll<HTMLElement>(sel)].filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => `${sel}: ${e.textContent!.slice(0, 40)}`);
     const pre = document.querySelector<HTMLElement>('.quick2-screen pre')!;
+    const style = getComputedStyle(pre);
     return {
       wide: document.documentElement.scrollWidth,
-      screens: over('.quick2-screen pre'),
       cells: [...over('.proof-table td'), ...over('.proof-table th')],
-      size: parseFloat(getComputedStyle(pre).fontSize),
-      cropped: pre.scrollWidth > pre.clientWidth,
+      size: parseFloat(style.fontSize),
+      lineHeight: style.lineHeight,
+      overflow: style.overflowX,
+      focusable: pre.tabIndex >= 0,
     };
   });
   expect(m.wide).toBeLessThanOrEqual(375);
-  expect(m.screens).toEqual([]);
   expect(m.cells).toEqual([]);
-  expect(m.size).toBeGreaterThan(0);
-  expect(m.size).toBeLessThan(16);
-  expect(m.cropped).toBe(false);
+  expect(m.size).toBe(12);
+  expect(m.lineHeight).toBe('12px');
+  expect(m.overflow).toBe('auto');
+  expect(m.focusable).toBe(true);
   // Each value is on a line of its own width: no word of a cell is wider than the cell.
   const broken = await page.evaluate(() => {
     const out: string[] = [];

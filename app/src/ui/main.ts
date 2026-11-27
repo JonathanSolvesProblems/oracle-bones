@@ -51,7 +51,7 @@ function page(route: Route): Child {
         results: view?.node ?? null,
         // The main example's block is the first screen's object; a result brings its own block (criterion 10.3).
         hero: heroView({ block: !view }),
-        examples: examplesView(),
+        examples: examplesView(loaded && origin === loaded ? loaded : null),
         afterForm: loaded ? exampleBlock(loaded, origin) : null,
       });
     }

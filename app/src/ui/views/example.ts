@@ -5,6 +5,9 @@
 import { data } from 'virtual:quickened/data';
 import type { Mode, Shape } from '../../solver/index.ts';
 import type { AppJob, Origin, Row } from '../job.ts';
+import { sectionDrawing } from '../drawing/section.ts';
+import { thumbSvg } from '../drawing/thumb.ts';
+import { runJob } from '../state.ts';
 import { h, type VNode } from '../vnode.ts';
 
 export type ExampleOrigin = Exclude<Origin, 'typed'>;
@@ -43,9 +46,22 @@ export function exampleForm(origin: ExampleOrigin): { rows: Row[]; values: Recor
   return { rows, values };
 }
 
-export function examplesView(): VNode {
+/** Each example's section, drawn once: the same model the result's drawing is made from. */
+const thumbs = new Map<ExampleOrigin, VNode | null>();
+function thumbOf(origin: ExampleOrigin): VNode | null {
+  if (!thumbs.has(origin)) {
+    const job = exampleJob(origin);
+    const m = sectionDrawing(job, runJob(job));
+    thumbs.set(origin, m ? thumbSvg(m) : null);
+  }
+  return thumbs.get(origin)!;
+}
+
+/** The two examples, each with a small drawing of its section; the one loaded, and not edited since, is pressed (10.11). */
+export function examplesView(selected: ExampleOrigin | null = null): VNode {
   return h('section', { class: 'examples', 'aria-label': EXAMPLES_HEADING },
-    EXAMPLES.map((e) => h('button', { type: 'button', class: 'example', on: { click: { type: 'example', origin: e.origin } } }, e.label)));
+    EXAMPLES.map((e) => h('button', { type: 'button', class: 'example', 'aria-pressed': e.origin === selected ? 'true' : 'false',
+      on: { click: { type: 'example', origin: e.origin } } }, thumbOf(e.origin), h('span', { class: 'example-label' }, e.label))));
 }
 
 /** The discharge sentence of an example (8.8, 8.9). */
@@ -53,15 +69,19 @@ export function dischargeSentence(origin: ExampleOrigin): string {
   return origin === 'main_example' ? data.sources.mainDischarge : data.sources.cutoffDischarge;
 }
 
-/** The sources block of the loaded example; after an edit it says the job is no longer the recorded case. */
+/**
+ * The sources block of the loaded example, closed under its heading so the result stays near the top (criterion
+ * 10.10); after an edit it says, outside the closed part, that the job is no longer the recorded case.
+ */
 export function exampleBlock(loaded: ExampleOrigin, origin: Origin): VNode {
   const changed = origin !== loaded;
   const discharge = changed ? null : dischargeSentence(loaded);
   return h('section', { class: 'example-sources' },
-    h('h2', {}, SOURCES_HEADING),
     changed ? h('p', { class: 'no-longer' }, NO_LONGER_RECORDED) : null,
-    h('dl', {}, data.sources.items.flatMap((i) => [h('dt', {}, i.name), h('dd', {}, i.text)])),
-    discharge ? h('p', { class: 'discharge-sentence' }, discharge) : null,
-    h('h3', {}, 'Caveats from the data file'),
-    h('ul', {}, data.sources.caveats.map((c) => h('li', {}, c))));
+    h('details', {},
+      h('summary', {}, SOURCES_HEADING),
+      h('dl', {}, data.sources.items.flatMap((i) => [h('dt', {}, i.name), h('dd', {}, i.text)])),
+      discharge ? h('p', { class: 'discharge-sentence' }, discharge) : null,
+      h('h3', {}, 'Caveats from the data file'),
+      h('ul', {}, data.sources.caveats.map((c) => h('li', {}, c)))));
 }

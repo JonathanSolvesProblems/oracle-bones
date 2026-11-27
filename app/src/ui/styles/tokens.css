@@ -54,9 +54,18 @@
   --page-max: 1200px;      /* the desktop spread */
   --drawing-phone-height: 200px; /* the drawing at 343 x 200 on a phone */
   --measure: 640px;        /* the width of a column of reading or of a form on its own */
-  /* QUICK-2's recorded screens scale to the width of their figure: 80 columns of Plex Mono (0.6 em each), no larger than --evidence-max. */
+  --reading: 72ch;         /* the longest line of running text on the limits and proof pages (10.12) */
+  --thumb-width: 96px;     /* a worked example's section, drawn in its button (10.11) */
+  /* The results tables share one grid on a desktop (10.12): QUICK-2's label, the printed value, the exact answer. */
+  --label-column: 38%;
+  --figure-column: 15%;
+  --exact-column: 14%;
+  /* QUICK-2's recorded screens scale to the width of their figure: 80 columns of Plex Mono (0.6 em each), no larger than --evidence-max.
+     On a phone they keep a readable size and scroll sideways instead (10.5, amended 2026-11-27). */
   --screen-columns: 80;
   --evidence-max: 16px;
+  --evidence-phone: 12px;
+  --evidence-leading: 1;   /* so the box-drawing characters of a screen join, line to line */
   --evidence-size: min(var(--evidence-max), calc((100cqw - 2 * var(--space-2) - 2 * var(--hairline-width)) / (var(--screen-columns) * 0.6)));
   --print-drawing-width: 6in; /* the drawing on the printed sheet: 6 x 3 in, near the top */
 }

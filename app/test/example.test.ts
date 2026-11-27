@@ -9,9 +9,9 @@ import { data } from 'virtual:quickened/data';
 import { edited } from '../src/ui/job.ts';
 import { classify, runJob } from '../src/ui/state.ts';
 import { calculatePage } from '../src/ui/views/calculate.ts';
-import { EXAMPLES, exampleBlock, exampleJob, examplesView, NO_LONGER_RECORDED } from '../src/ui/views/example.ts';
+import { EXAMPLES, exampleBlock, exampleJob, examplesView, NO_LONGER_RECORDED, SOURCES_HEADING } from '../src/ui/views/example.ts';
 import { CUT_OFF_LINE, resultsModel, resultsView } from '../src/ui/views/results.ts';
-import { findAll, textOf, type VNode } from '../src/ui/vnode.ts';
+import { findAll, h, textOf, type VNode } from '../src/ui/vnode.ts';
 import { golden, ROOT } from './golden.ts';
 
 const REAL = JSON.parse(readFileSync(join(ROOT, 'realdata', 'huntington-section-01.json'), 'utf-8'));
@@ -33,12 +33,48 @@ describe('the worked examples', () => {
   it('offers two controls above the picker, the main example first (8.1)', () => {
     expect(EXAMPLES.map((e) => [e.origin, e.caseId])).toEqual([['main_example', 'nd-irr-000006'], ['cutoff_example', 'nd-irr-000010']]);
     const buttons = findAll(examplesView(), (n) => n.tag === 'button');
-    expect(buttons.map((b) => [b.on.click?.type, b.on.click?.origin, textOf(b)])).toEqual(EXAMPLES.map((e) => ['example', e.origin, e.label]));
+    expect(buttons.map((b) => [b.on.click?.type, b.on.click?.origin, textOf(b).trim()])).toEqual(EXAMPLES.map((e) => ['example', e.origin, e.label]));
     const page = calculatePage({ mode: null, shape: null, values: {}, rows: [], marked: new Set() }, { examples: examplesView() });
     // Criterion 10.3: the controls come before the calculator, whose picker is in the spread.
     const order = page.children.map((c) => (typeof c === 'string' ? '' : String(c.attrs.class ?? '')));
     expect(order.indexOf('examples')).toBeGreaterThanOrEqual(0);
     expect(order.indexOf('examples')).toBeLessThan(order.findIndex((c) => c.startsWith('spread')));
+  });
+
+  // Criterion 10.11 (2026-11-27): each example shows its section, and the loaded one shows it is loaded.
+  it('each example button carries a small drawing of its own section, and only the loaded, unedited example is pressed', () => {
+    for (const selected of [null, 'main_example', 'cutoff_example'] as const) {
+      const buttons = findAll(examplesView(selected), (n) => n.tag === 'button');
+      expect(buttons.map((b) => b.attrs['aria-pressed'])).toEqual(EXAMPLES.map((e) => (e.origin === selected ? 'true' : 'false')));
+      for (const b of buttons) {
+        const thumb = findAll(b, (n) => n.tag === 'svg' && n.attrs.class === 'thumb')[0]!;
+        expect(thumb.attrs['aria-hidden']).toBe('true');
+        expect(findAll(thumb, (n) => n.attrs.class === 'thumb-line')).toHaveLength(1);
+        expect(findAll(thumb, (n) => String(n.attrs.class ?? '').startsWith('thumb-water')).length).toBeGreaterThan(0);
+      }
+    }
+    // The two sections differ in their water: the second has the cut-off pocket.
+    const [a, b] = findAll(examplesView(), (n) => n.tag === 'button').map((x) => findAll(x, (n) => String(n.attrs.class ?? '') === 'thumb-water cut-off').length);
+    expect([a, b]).toEqual([0, 1]);
+    const main = readFileSync(join(ROOT, 'app', 'src', 'ui', 'main.ts'), 'utf-8');
+    expect(main).toContain('examplesView(loaded && origin === loaded ? loaded : null)');
+  });
+
+  // Criterion 10.10 (2026-11-27): the sources close under their heading, under the result once there is one.
+  it('the sources block is closed under its heading, and sits under the result when there is one, else under the form', () => {
+    const block = exampleBlock('main_example', 'main_example');
+    const details = findAll(block, (n) => n.tag === 'details')[0]!;
+    expect(details.attrs.open).toBeUndefined();
+    expect(textOf(findAll(details, (n) => n.tag === 'summary')[0]!)).toBe(SOURCES_HEADING);
+    // The note that the job changed stays outside the closed part.
+    const changed = exampleBlock('main_example', 'typed');
+    expect(textOf(findAll(changed, (n) => n.tag === 'p' && n.attrs.class === 'no-longer')[0]!)).toBe(NO_LONGER_RECORDED);
+    expect(textOf(findAll(changed, (n) => n.tag === 'details')[0]!)).not.toContain(NO_LONGER_RECORDED);
+    const s = { mode: 'normal_depth' as const, shape: 'irregular' as const, values: {}, rows: [], marked: new Set<string>() };
+    const where = (page: VNode) => findAll(page, (n) => n.tag === 'section' && n.attrs.class !== 'example-sources' && findAll(n, (x) => x.attrs.class === 'example-sources').length > 0)
+      .map((n) => n.attrs.class).filter((c) => c === 'sketch' || c === 'field-notes');
+    expect(where(calculatePage(s, { afterForm: block, results: h('p', {}, 'result') }))).toEqual(['sketch']);
+    expect(where(calculatePage(s, { afterForm: block }))).toEqual(['field-notes']);
   });
 
   it('main example: nd-irr-000006\'s inputs key for key and text for text; its printed fields and no exact value (8.2, 8.3)', () => {
@@ -67,6 +103,8 @@ describe('the worked examples', () => {
     expect(shownPrinted(m)).toEqual(trimmed(g.printed));
     const cutOffRows = m.outputs.filter((r) => r.notes.includes(CUT_OFF_LINE)).map((r) => r.field).sort();
     expect(cutOffRows).toEqual(['area', 'top_width', 'wet_perimeter']);
+    // On the screen the line is written once (criterion 10.12).
+    expect(textOf(resultsView(m)).split(CUT_OFF_LINE).length - 1).toBe(1);
     const line = data.hauntings.find((h) => h.id === 'H-001')!.exactByField.find((x) => x.caseId === CUTOFF!.caseId)!;
     expect(state.exact?.haunting).toBe('H-001');
     const exact = Object.fromEntries(m.outputs.filter((r) => r.exact !== null).map((r) => [r.field, r.exact]));
