@@ -2741,3 +2741,7 @@ Vitest 2,668 passed in 59 files (2,608 before). The typecheck and the build are 
   dark, at 1280 px and 375 px; no one has reviewed them yet.
 - The gauge shows two figures on the main example (650 and 600): the least gap between figures
   is 20 units, and the block's scale puts 50 ft there.
+### After the first look at 1280 px and 375 px (task 17.7)
+- The block is laid out in its container's real width in CSS px (a ResizeObserver redraws it), so every label is 13 px at any width; the frame is 0.6 of the width on a desktop and 0.75 on a phone, and the front face takes at least 55% of it.
+- The gauge puts a figure as close as 15 px allows, with E-marks 2 px thick; the bank labels are small stakes with a canvas chip above the head, off the far terrain where a clear spot is near.
+- `block.test.ts` takes the width (343 and 640); a Playwright check reads the rendered label sizes. Only the drawing tests and the first-screen and result specs were run; the rest of Vitest was not.
