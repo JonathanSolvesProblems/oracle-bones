@@ -2745,3 +2745,42 @@ Vitest 2,668 passed in 59 files (2,608 before). The typecheck and the build are 
 - The block is laid out in its container's real width in CSS px (a ResizeObserver redraws it), so every label is 13 px at any width; the frame is 0.6 of the width on a desktop and 0.75 on a phone, and the front face takes at least 55% of it.
 - The gauge puts a figure as close as 15 px allows, with E-marks 2 px thick; the bank labels are small stakes with a canvas chip above the head, off the far terrain where a clear spot is near.
 - `block.test.ts` takes the width (343 and 640); a Playwright check reads the rendered label sizes. Only the drawing tests and the first-screen and result specs were run; the rest of Vitest was not.
+## 2026-11-27, outside Kiro: a practitioner's first try (task 18.0)
+
+**Written and done by the person from the command line, with an AI coding assistant, not in a
+Kiro session.** The prompt for task 18.0 was sent to Kiro on Claude Haiku 5.5 with "Approve for
+me" and refused before any work: "You've reached your monthly usage limit." It is entry 53 of
+`docs/prompts.md`, with 0.00 credits and the error recorded. The two items below are that
+prompt's, done by hand under the quickened-app spec, tests first, one commit each. The solver
+was not touched.
+
+### Why
+A practitioner who works out advisory flood heights tried the live site on a phone. Entering
+an irregular cross-section one station at a time was the drawback, and some of the terminology
+was not clear. The practitioner's profile tool copies its 40 stations as two columns, distance then
+elevation, which the reader already took; the paste control was a small button beside an empty
+row and "Add row", so the stations were typed one by one.
+
+### Credits of session 17
+Recorded in Kiro's session files: 97.63 credits for the reach block (17.1 to 17.6, Claude Sonnet
+5.5) and 16.88 for task 17.7. Kiro's counter read 3.47 of 133 left before the 18.0 prompt.
+
+### What was built
+1. **Paste first** (18.0a, 1fce569; criteria 1.7 and 1.8 amended, 11.1 and 11.2 added). The
+   irregular form opens with a paste panel under "The section": "Paste the section", "Up to 40
+   stations, distance then elevation, as copied from a profile tool, Excel or HEC-RAS.", the box,
+   "Load stations", and "Paste from clipboard" where the browser has the clipboard. It closes to
+   "Paste again" once rows are loaded. The reader takes a tab, a comma, a semicolon or spaces and
+   skips a header line; every other rule stays. More than one line pasted into a station or
+   elevation cell loads from that row down, the way a spreadsheet does.
+2. **Plain words** (18.0b, f3d8543; criterion 11.3). "How QUICK-2 computes this", "Where QUICK-2
+   differs from the exact answer", "Limits, note H-001", "Exact answer" with a caption saying the
+   value QUICK-2 prints stays the answer, and "QUICK-2 stopped at this input". "Pair", "held
+   prompt" and "comparator" are gone from the calculate page, the result, the print view and the
+   proof page's rule and rows. "Haunting" is defined and used on the limits page only.
+
+### Checks at the end
+Vitest 2,690 passed in 59 files (2,674 before). The typecheck and the build are clean.
+Playwright 60 passed and 6 were skipped (50 before): at 390 px the Huntington stations load 40
+rows from the box, from the clipboard control, from a paste into the first station cell, and as
+comma-separated values under a "Distance,Elevation" header. Axe passes in both themes.

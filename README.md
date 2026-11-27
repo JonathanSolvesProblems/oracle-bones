@@ -140,7 +140,7 @@ The full-pipe number in A-018's first row came from the person's prompt, not fro
 
 ## How it was built
 
-Built in Kiro, in 50 sessions. Kiro wrote the specs, the harness, the solver, the app and the
+Built in Kiro, in 53 sessions. Kiro wrote the specs, the harness, the solver, the app and the
 power, each rule from what the 1995 program printed:
 
 | Kiro feature | Where it is | What it does here |
@@ -155,7 +155,7 @@ power, each rule from what the 1995 program printed:
 | Property tests | `app/test/`, `oracle/tests/` | fast-check and Hypothesis, with expected values taken from the recorded answers. |
 
 [docs/build-log.md](docs/build-log.md) records every session, and
-[docs/prompts.md](docs/prompts.md) has every prompt word for word (76 prompts), exported from
+[docs/prompts.md](docs/prompts.md) has every prompt word for word (79 prompts), exported from
 Kiro's own session files.
 
 Some pieces were done outside Kiro, and the build log marks each one: the first drafts of the
@@ -163,7 +163,8 @@ plan, specs, steering, hooks and agents, written with another AI coding assistan
 1 and then rewritten by Kiro; the real cross-section data; the headline batch and the two
 ablation runs; and, after Kiro's usage limit was reached on 2026-11-26, the fixes that the clean
 install called for, three corrected rows of the held-out record, this README and the script that
-exports the prompts.
+exports the prompts; and, when the limit refused the prompt for task 18.0 on 2026-11-27, the
+paste panel and the plainer wording that a practitioner's first try on a phone called for.
 
 ## Licences
 

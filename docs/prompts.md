@@ -5,7 +5,7 @@ Each prompt is copied word for word, in the order it was sent, with the credits 
 for its turn. Times are UTC. A session that sent no prompt is left out. Credits Kiro spent
 outside a recorded turn are not in these files, so the total here is below the account's.
 
-50 sessions, 76 prompts, 3815.81 credits recorded. The model was `claude-opus-5.5` in every session that
+53 sessions, 79 prompts, 3930.32 credits recorded. The model was `claude-opus-5.5` in every session that
 does not name another. The agent `default-v2` is Kiro's Default agent; `exhumer` is this
 repository's own, in `.kiro/agents/`.
 
@@ -1561,4 +1561,92 @@ Rules: edit files with your file tool only, never with a shell script. Keep ever
 9. The held-out record as its own file, results/held-out.md, so that the README and the submission page can quote it whole and never in part. One table, one row for each prediction round in results/attempts.md, in order, the misses included, with exactly these columns: Round | Committed | Right | What was predicted. Round is the attempt's id (A-005, and so on), Committed is the 7-character hash of the commit that fixed the predictions before their cases were run, Right is written as "n of m", and the last column is one plain line. Where a round graded two rules (A-018 did), each rule gets its own row. Under the table, two sentences: which number came from my prompt and not from you (the full-pipe number), and that the menu below it is still unexplained. A test fails when a row's count or commit is not found under that round's heading in results/attempts.md.
 
 Then run every suite once more, write a build-log entry and commit it. The entry carries the last session's credits: 81.0 over 32 min 56 s (the power built). devpost/ is mine and stays out of every commit. Show me the first screen's text, the limits page's headings with their counts, the proof page's count, and results/held-out.md in full, and stop. The root README comes in the next session, with the power's install record.
+~~~~
+
+## 51. Design System Foundation: Tokens and Typography
+
+2026-11-27 01:21 UTC. Agent: default-v2. Model: claude-sonnet-5.5.
+
+**Prompt 1 of 1, 01:21 UTC, 97.63 credits**
+
+~~~~text
+The app works and its tests pass, and it looks weak: a column of small grey text beside an empty ruled notepad, and a thin flat drawing. I wrote a design direction for a redesign, outside Kiro, and committed it in 334c6f4. Read .design/DIRECTION.md and .design/CHARTER.md, and look at .design/mock/reach-block-light.png (made by .design/mock/reach_block.py from the 40 recorded stations; it shows the target, it is not app code). Then build it under the quickened-app spec: add task 17 with a criterion and a test for each item below, tests first, one commit per item. Don't change the solver.
+
+Rules: edit files with your file tool only. Keep every shell command short. Commit messages go in a file under tmp/, passed with git commit -F, without a byte order mark. This account has about 130 credits left this month, so work in the order below and commit after each item: if the session stops, what is committed must stand on its own. Run only the test files an item touches; the whole Vitest and Playwright suites once at the end.
+
+1. Tokens. Replace the field-book palette in app/src/ui/styles/tokens.css with the charter's, light and dark (prefers-color-scheme), and its type scale. The print view stays black on white. IBM Plex Mono is used only inside QUICK-2's recorded screens; every other figure is IBM Plex Sans Condensed with tabular figures (add the SemiBold weight of Plex Sans Condensed if the result's figure needs it, self-hosted under the OFL like the others). Axe must pass in both themes.
+
+2. The reach block. Redraw the results drawing (app/src/ui/drawing/) as the charter's laws 7 to 10 describe and the mock shows: the section as the front face of a block extruded upstream in an oblique projection, the top surface shaded by slope, the cut face hatched, the water as a level plane between its edges and a body in front, cut-off water with its own hatch as now, QUICK-2's vertical walls and the full pipe's assumed line as now. The circle is a pipe seen the same way. The high-water mark goes on the block's end wall at the water's level, skewed to the wall, with the printed figure lettered above it. The elevation axis becomes a staff gauge. Every value written on the drawing stays a printed field's text, and every existing drawing test keeps passing or is rewritten to check the same fact on the new geometry. Labels never sit on a line and are at least 12 px on a 375 px screen. The print view keeps the 2D front face.
+
+3. The first screen. Compose it around one object: the main example's reach block, computed live on load, large, beside a short opening. The opening says what QUICK-2 is (FEMA's 1995 DOS program, still on FEMA's list of accepted models for one cross section in Zone A, link to that list: https://www.fema.gov/flood-maps/products-tools/numerical-models/hydraulic), that it does not start on a locked-down modern computer, and that Quickened gives its answers in a browser, checked against the original (the headline count, read from results/headline.md, linked to the proof page). Then the two examples as clear buttons, then the calculator. No empty ruled notepad anywhere. Add a footer on every page: the source repository (https://github.com/JonathanSolvesProblems/oracle-bones), the limits and proof pages, and the notice.
+
+4. Words that imply QUICK-2 ran the user's inputs: "Your inputs, as Quickened read them" and "Computed by Quickened with QUICK-2's method", everywhere they appear, print view included.
+
+5. Phone. After an example or Calculate, scroll to the result's heading, not past it. The ground-point table collapses to a summary row ("40 ground points, 0 to 500") that opens on demand once the section has been pasted or loaded. On the proof page, QUICK-2's recorded screens scale to fit the width, and the field tables never break a word or a value.
+
+6. The public pages. On the limits and proof pages, everything written for the repository (run ids, golden, ledger wording, decision numbers, "the person", attempt ids) goes into a closed details element under each entry, so the plain sentence stands alone. Define "haunting" where the limits page first uses it. Render H-009's table as a table. Remove or complete the dangling "as recorded:" under Step-Backwater.
+
+When the items are done, run Vitest, the typecheck, the build and Playwright once, and write a build-log entry that says the direction and the mock were written outside Kiro and the build is yours. The entry carries the last sessions' credits: 1.63 and 1.81, the clean install rerun in Kiro under the name oracle-bones, and 87.73 over 24 min 7 s, the session that stopped on the usage limit. Then show me the first screen's text, a list of what changed per item, and the test counts, and stop.
+~~~~
+
+## 52. Fix Reach Block Responsive Layout And Gauge
+
+2026-11-27 02:12 UTC. Agent: default-v2. Model: claude-sonnet-5.5.
+
+**Prompt 1 of 1, 02:12 UTC, 16.88 credits**
+
+~~~~text
+One fix to the reach block, task 17.7, and nothing else; about 30 credits are left this month, so keep it tight and commit as soon as it works. I looked at it in a browser at 1280 px and 375 px in both themes.
+
+The problem: block.ts lays out in a fixed 440 by 244 viewBox with the type at 16 units. On a phone that is 12.5 px, but at desktop width the same units render the labels at about 23 px, so "Left 179.5", "Right 230.8" and the station figures become big boxes over the terrain, and the front face fills only about a third of the frame's height. The gauge shows only two figures and its E-marks are hard to see.
+
+The fix:
+
+1. Lay the block out in the drawing's real width in CSS px (measured from its container, with a ResizeObserver that redraws it when the width changes), so the viewBox is that width and every label is 13 px at any width: no label above 14 px or below 12 px at 1280 or at 375.
+
+2. Make the block fill its frame: the frame's height follows the width (about 0.6 of it on a desktop, 0.75 on a phone), the extrusion is about 0.2 of the width across and 0.12 up, and the vertical exaggeration is chosen so the front face takes at least 55% of the frame's height. Fit the viewBox to what is drawn, with no empty band above or below.
+
+3. The gauge: a figure at least every 10 units where it fits, E-marks at least 2 px thick.
+
+4. Bank labels as small stakes with their 13 px text on a canvas-coloured chip just above the stake's top, never over the far bank's terrain if a clear spot exists nearby.
+
+Keep the existing guarantees: every value on the drawing is a printed field's text, labels stay off lines, the print view keeps the 2D front face. Update the drawing tests for the new layout (they can take the width as a parameter: test at 343 and 640). Run only the drawing tests and the Playwright tests of the result and the first screen. Then commit with a message from a file under tmp/, add three lines to the session 17 build-log entry saying what changed, commit that, and stop.
+~~~~
+
+## 53. Task 18.0: what the practitioner said after trying the live site on his phone...
+
+2026-11-27 13:43 UTC. Agent: not recorded. Model: claude-haiku-5.5.
+
+**Prompt 1 of 1, 13:43 UTC, 0.00 credits, ended: error**
+
+~~~~text
+Task 18.0: what the practitioner said after trying the live site on his phone. Entering an irregular cross-section one station at a time was the drawback, and some of the terminology was unclear. Fix both under the quickened-app spec: a criterion and a test for each, tests first, one commit for 18.0a, one for 18.0b. Don't change the solver.
+
+Rules: edit files with your file tool only. Keep shell commands short. Commit messages in a file under tmp/, passed with git commit -F, without a byte order mark. Run only the test files you touch, then Vitest, the typecheck and Playwright once at the end.
+
+18.0a. Paste first, and paste anywhere.
+
+- His profile tool gives the 40 stations through a "Copy Data" button as two columns, distance then elevation, separated by a tab. The app already reads that, but on a phone the "Paste rows" control is a small secondary button beside an empty row one and "Add row", so he typed the stations one by one.
+
+- On the irregular form, the first thing under "The section" is a paste panel, open by default while the section has no rows: a heading "Paste the section", one line "Up to 40 stations, distance then elevation, as copied from a profile tool, Excel or HEC-RAS.", the text box, and a "Load stations" button. Where navigator.clipboard.readText exists, add a "Paste from clipboard" button that reads, fills the box and loads in one tap; if the browser refuses, it says so in one line and the box stays. Once rows are loaded the panel closes to the existing summary row ("40 ground points, 0 to 500 (show)") with a "Paste again" control.
+
+- Pasting text with more than one line into any station or elevation cell of the table loads the rows from that cell down, the way a spreadsheet does, instead of putting the text in one cell.
+
+- The reader accepts a tab, a comma, a semicolon or spaces between the two numbers, and skips a first line that is not two numbers (a header). Every other rule stays: two plain decimals per line, at most 40 rows, a bad line named with its number and text, nothing loaded on an error.
+
+- Playwright: at 390 px, paste the 40 stations of realdata/huntington-section-01.tsv into the box, and separately into the first station cell; both load 40 rows. A comma version with a "Distance,Elevation" header loads 40 rows too.
+
+18.0b. The words a reviewer reads on the calculate page and the result. QUICK-2's own field labels stay exactly as they are. Replace these, and update their tests:
+
+- "QUICK-2's method for this pair" becomes "How QUICK-2 computes this", and "pair" anywhere on these pages becomes "mode and shape".
+
+- "Hauntings that describe this kind of answer" becomes "Where QUICK-2 differs from the exact answer". A link reading "Haunting H-001 on the limits page" becomes "Limits, note H-001".
+
+- The "Exact" column heading becomes "Exact answer"; its caption says in plain words that it is the hydraulically exact value, shown beside the value QUICK-2 prints, which stays the answer.
+
+- "Held prompt" becomes "QUICK-2 stopped at this input".
+
+- Any other word on these two screens a floodplain reviewer would not use (golden, oracle, rebuild, behaviour case, harness, ledger) is replaced by plain words or moved to the limits page.
+
+When done, write a build-log entry for 18.0 and commit it. Show me the paste panel's text, the list of replaced terms, and the test counts, and stop.
 ~~~~

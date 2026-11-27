@@ -1,5 +1,5 @@
 // Testing Strategy item 3: the Huntington section pastes as its rows; 41 rows load nothing.
-// Criteria 11.1 and 11.2 (2026-11-27, the practitioner on his phone): at 390 px the paste panel is
+// Criteria 11.1 and 11.2 (2026-11-27, a practitioner on a phone): at 390 px the paste panel is
 // the first thing under the section's heading, and the 40 stations load from the box, from the
 // clipboard button, from a paste into the first station cell, and as comma-separated values with
 // a header.

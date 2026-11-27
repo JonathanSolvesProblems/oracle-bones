@@ -3,8 +3,8 @@
 // by a tab, a comma, a semicolon or spaces, with or without a header line, the paste gives the
 // same rows, text for text. For 41 or more rows, or any line that is not two plain decimals, it
 // loads nothing and the error names the line or the count. A paste into a cell loads from that
-// row down. Amended 2026-11-27: the practitioner typed a 40-station section one station at a time
-// on his phone, so the reader takes what profile tools, Excel and HEC-RAS copy, and the paste
+// row down. Amended 2026-11-27: a practitioner typed a 40-station section one station at a time
+// on a phone, so the reader takes what profile tools, Excel and HEC-RAS copy, and the paste
 // panel is the first thing the section offers.
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';

@@ -240,10 +240,10 @@ Kiro's. The solver is not touched.
 **User Story:** As a floodplain reviewer trying the site on a phone, I want to paste a section
 I already have and read the answer in my own words, so that checking it takes a minute.
 
-Source: a practitioner who works out advisory flood heights tried the live site on his phone on
+Source: a practitioner who works out advisory flood heights tried the live site on a phone on
 2026-11-27. Entering an irregular cross-section one station at a time was the drawback, and some
-of the terminology was not clear to him. His profile tool copies its 40 stations as two columns,
-distance then elevation. The solver is not touched.
+of the terminology was not clear. The practitioner's profile tool copies its 40 stations as two
+columns, distance then elevation. The solver is not touched.
 
 #### Acceptance Criteria
 
