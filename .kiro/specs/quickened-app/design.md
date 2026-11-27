@@ -482,6 +482,15 @@ The parsers are pure functions in `app/build/`, tested on the real files and on 
 fixtures. A test fails when an `## H-` heading or a Limits entry of the real file is missing
 from the page data, so a new haunting cannot be left off.
 
+**Plain words (amended 2026-11-27, task 17.6, criterion 10.6).** The page opens by defining
+"haunting". A sentence of a results file that holds repository wording (a run id, "golden",
+"ledger", an A-0xx or Q-0xx id, "the person", a decision number, a path under `results/` or
+`scripts/`) is taken out of the plain text and put in a closed details element, "For the
+repository", under its entry (`views/repo.ts`); each open question's ledger wording is in
+that element too. H-009's markdown table is drawn as a table. Step-Backwater's entry lists
+what QUICK-2 asks for after the sentence that announces it. The proof page's reasons go
+through the same split.
+
 ## The proof page
 
 `src/ui/proof/cases.json` is the committed list, each case with a one-line reason. It starts

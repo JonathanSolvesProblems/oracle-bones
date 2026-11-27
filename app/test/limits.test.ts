@@ -10,7 +10,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { data } from 'virtual:quickened/data';
 import { isBuilt, type Mode, type Shape } from '../src/solver/index.ts';
-import { KNOWN_MISSES_HEADING, LEDGER_WORDING, limitsModel, limitsView, NOT_OBSERVED_HEADING } from '../src/ui/views/limits.ts';
+import { KNOWN_MISSES_HEADING, LEDGER_WORDING, limitsModel, limitsView, NOT_OBSERVED_HEADING, parseTable } from '../src/ui/views/limits.ts';
+import { sentences, splitRepo } from '../src/ui/views/repo.ts';
 import { inline } from '../src/ui/views/inline.ts';
 import { notBuiltModel } from '../src/ui/views/notBuilt.ts';
 import { MODES, SHAPES, shapeChoice, STEP_BACKWATER_SHAPE } from '../src/ui/views/picker.ts';
@@ -44,14 +45,17 @@ describe('the limits page data', () => {
     expect(model.hauntings.map((h) => h.id)).toEqual(headingIds);
     for (const h of model.hauntings) {
       const block = byId(view, `haunting-${h.id}`);
-      for (const part of [h.title, h.caseText, h.printed, h.exactAnswer, h.difference]) expect(squash(textOf(block)), h.id).toContain(squash(part));
+      // Criterion 10.6: a sentence for the repository is in the entry's details, so each sentence is checked, not the run of them.
+      expect(squash(textOf(block)), h.id).toContain(squash(h.title));
+      for (const part of [h.caseText, h.printed, h.difference]) for (const s of sentences(part)) expect(squash(textOf(block)), h.id).toContain(squash(s));
+      if (!parseTable(h.exactAnswer)) for (const s of sentences(h.exactAnswer)) expect(squash(textOf(block)), h.id).toContain(squash(s));
     }
   });
   it('has every Limits entry by its Limits page paragraph, verbatim', () => {
     expect([...model.misses.map((m) => m.title), ...model.limits.map((l) => l.title)].sort()).toEqual([...limitTitles].sort());
     for (const l of [...model.misses, ...model.limits]) {
       expect(read('hauntings.md').replace(/\s+/g, ' ')).toContain(l.paragraph.replace(/\s+/g, ' ').trim());
-      expect(squash(text)).toContain(squash(l.paragraph));
+      for (const s of sentences(l.paragraph)) expect(squash(text), l.title).toContain(squash(s));
     }
   });
   it('has every pair isBuilt calls not built, with the sentence of criterion 7.3', () => {
@@ -67,10 +71,13 @@ describe('the limits page data', () => {
     for (const q of model.openQuestions) {
       expect(q.plain, q.id).toBeTruthy();
       const block = squash(textOf(byId(section, `question-${q.id}`)));
-      const plainAt = block.indexOf(squash(q.plain!));
       const wordingAt = block.indexOf(squash(LEDGER_WORDING));
-      expect(plainAt, q.id).toBeGreaterThanOrEqual(0);
-      expect(wordingAt, q.id).toBeGreaterThan(plainAt);
+      expect(wordingAt, q.id).toBeGreaterThanOrEqual(0);
+      // The plain sentences come first; a sentence of the plain text that holds repository wording is in the details, after the wording.
+      const { plain, repo } = splitRepo(q.plain!);
+      if (plain) expect(block.indexOf(squash(plain)), q.id).toBeGreaterThanOrEqual(0);
+      if (plain) expect(block.indexOf(squash(plain)), q.id).toBeLessThan(wordingAt);
+      for (const s of repo) expect(block.indexOf(squash(s)), q.id).toBeGreaterThan(wordingAt);
       expect(block.indexOf(q.id, wordingAt), q.id).toBeGreaterThan(wordingAt);
       expect(block.indexOf(squash(q.question), wordingAt), q.id).toBeGreaterThan(wordingAt);
     }

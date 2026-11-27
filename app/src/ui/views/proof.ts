@@ -10,6 +10,7 @@ import type { AppJob } from '../job.ts';
 import { screenLabel, screenRowHeading } from '../forms.ts';
 import { runJob } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
+import { forRepo, splitRepo } from './repo.ts';
 import { proofCaseHash } from './shell.ts';
 
 export const NO_HEADLINE = 'No headline run has been recorded yet.';
@@ -114,10 +115,16 @@ export function proofSummary(m: ProofModel): VNode {
 /** A row's text as it is compared: leading and trailing blanks left out. */
 const shown = (s: string | null): string => (s === null ? '(none)' : s.trim());
 
+/** Why the case is on the page: the plain sentences, and any wording for the repository in a closed details under them (criterion 10.6). */
+function reasonView(reason: string): Child[] {
+  const s = splitRepo(reason);
+  return [s.plain ? h('p', {}, s.plain) : null, forRepo(s.repo.map((x) => h('p', {}, x)))].filter((c): c is VNode => c !== null);
+}
+
 function caseView(c: ProofCaseModel): VNode {
   return h('article', { class: 'proof-case', id: `case-${c.id}` },
     h('h2', {}, h('span', { class: 'figures' }, c.id), ' ', c.same ? 'same' : 'different'),
-    h('p', {}, c.reason),
+    reasonView(c.reason),
     h('div', { class: 'proof-pair' },
       h('figure', { class: 'quick2-screen' },
         h('figcaption', {}, c.captureLabel),

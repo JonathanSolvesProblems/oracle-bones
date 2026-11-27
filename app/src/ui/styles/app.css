@@ -94,7 +94,7 @@ input[type='text'], textarea {
 input.figures { font-family: var(--font-figures); }
 
 /* The spread: field notes on the left page, sketch and results on the right. */
-.spread { display: grid; grid-template-columns: 1fr; gap: var(--space-8); margin-top: var(--space-6); }
+.spread { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); margin-top: var(--space-6); }
 .sketch:empty { display: none; }
 
 /* Picker: modes as tabs, shapes as radio buttons. */
@@ -189,6 +189,16 @@ input.figures { font-family: var(--font-figures); }
 /* A value the files mark as code: the figures face at the text's own size, no marks (5.8). */
 .limits-page code { font-family: var(--font-figures); font-size: inherit; }
 .limits-page .miss-count { font-weight: 600; margin-bottom: var(--space-2); }
+.haunting-definition { font: var(--text-lg) var(--font-body); max-width: var(--measure); }
+.haunting-table { border-collapse: collapse; margin: var(--space-2) 0; }
+.haunting-table th, .haunting-table td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-3) var(--space-1) 0; text-align: left; font-weight: 400; vertical-align: top; }
+.haunting-table thead th { font: var(--text-xs) var(--font-label); letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--ink-muted); }
+.haunting-table td, .haunting-table tbody th { font-family: var(--font-figures); }
+@media (max-width: 959.98px) { .haunting-table { display: block; overflow-x: auto; } }
+/* Wording for the repository: closed under its entry, so the plain sentence stands alone (10.6). */
+.for-repo { margin: var(--space-2) 0; color: var(--ink-muted); font: var(--text-md) var(--font-body); }
+.for-repo summary { min-height: var(--tap); display: flex; align-items: center; cursor: pointer; }
+.for-repo p { margin: 0 0 var(--space-2); overflow-wrap: anywhere; }
 .proof-case { border-top: var(--hairline); padding: var(--space-4) 0; }
 .proof-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
 .quick2-screen { margin: 0; min-width: 0; container-type: inline-size; }
@@ -305,7 +315,7 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .footer-links { list-style: none; margin: 0 0 var(--space-3); padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-6); }
 .footer-links a { display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap); }
 .footer-notice { font: var(--text-md) var(--font-body); color: var(--ink-muted); max-width: var(--measure); }
-.example-sources { margin-top: var(--space-8); border-top: var(--hairline); font: var(--text-md) var(--font-body); }
+.example-sources { margin-top: var(--space-8); border-top: var(--hairline); font: var(--text-md) var(--font-body); overflow-wrap: anywhere; }
 .example-sources h2 { font: var(--text-md) var(--font-body); font-weight: 600; }
 .example-sources h3 { font: var(--text-xs) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); color: var(--ink-muted); }
 .example-sources dt { font-weight: 600; }

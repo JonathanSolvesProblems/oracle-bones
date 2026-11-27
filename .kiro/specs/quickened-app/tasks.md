@@ -298,6 +298,6 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     collapses to a summary and opens on demand, the proof page's screens fit and its tables
     never break a word. Then the phone stylesheet and `main.ts`.
     - _Requirements: 10.5_
-  - [ ] 17.6 Test: no repository wording outside a closed details on the limits and proof pages,
+  - [x] 17.6 Test: no repository wording outside a closed details on the limits and proof pages,
     "haunting" defined at first use, H-009 as a table, no dangling "as recorded:". Then the pages.
     - _Requirements: 10.6, 5.3_
