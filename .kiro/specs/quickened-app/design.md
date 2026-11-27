@@ -280,14 +280,17 @@ In order, top to bottom on a phone and on the right-hand page on a desktop:
    Area, Top Wid and Wet Per: "Includes low ground cut off from the channel, which QUICK-2
    counts as flowing."
 5. **Exact values**, only for a haunting's recorded case (criterion 2.2): in the printed fields
-   table, each field the case's Exact by field line names gets a third column, "Exact", with
-   the line's value as written, and the table's caption gives the entry's assumption (the
-   label of its **Exact answer** bullet, such as "with the pocket treated as ineffective") and
-   links the entry. The printed value stays in the second column and is the one read first,
-   by eye and by a screen reader. A case whose line is `none` gets the link only. For every
-   other result, links to the hauntings that describe this kind of result (criterion 2.4),
-   with no value.
-6. **QUICK-2's method for this pair** (criterion 2.6): a short list read from `method.ts`. Each
+   table, each field the case's Exact by field line names gets a third column, "Exact
+   answer", with the line's value as written, and the table's caption says in plain words that
+   it is the hydraulically exact value under the entry's assumption (the label of its **Exact
+   answer** bullet, such as "with the pocket treated as ineffective"), shown beside the value
+   QUICK-2 prints, which stays the answer, and links the entry as "Limits, note H-001". The
+   printed value stays in the second column and is the one read first, by eye and by a screen
+   reader. A case whose line is `none` gets the link only. For every other result, links to
+   the hauntings that describe this kind of result (criterion 2.4), with no value, under the
+   heading "Where QUICK-2 differs from the exact answer". The word "haunting" is not used on
+   this screen (criterion 11.3).
+6. **How QUICK-2 computes this** (criterion 2.6, heading of 11.3): a short list read from `method.ts`. Each
    item names the value and its role and imports the value from `constants.ts`, for example
    "Manning constant 1.486" from `MANNING_K` and "g 32.2 ft/s²" from `G`. The list ends with
    one item labelled as Quickened's, not QUICK-2's: the search limit `SEARCH_DEPTH_LIMIT`,

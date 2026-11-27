@@ -241,12 +241,14 @@ describe('every value written on the drawing is a printed field\'s text or the s
     expect(failed).toEqual([]);
   });
 
-  it('the caption says the depth is drawn, not computed, gives the scale, and keeps Quickened\'s words in full', () => {
+  // Criterion 11.3 (2026-11-27): the caption says it without the design's word "block".
+  it('the caption says the upstream length is drawn, not computed, gives the scale, and keeps Quickened\'s words in full', () => {
     for (const g of [MAIN, circle, byId('cd-circ-000081')]) {
       const { m } = drawnOf(g);
       const cap = textOf(findAll(blockView(m), (n) => n.tag === 'figcaption')[0]!);
       expect(cap).toMatch(/Vertical scale ×\d+/);
-      expect(cap).toContain('its depth is drawn, not computed');
+      expect(cap).toContain('The section is drawn extended upstream; that length is drawn, not computed.');
+      expect(cap).not.toMatch(/\bblock\b/);
       for (const w of m.words) expect(cap).toContain(w.text);
     }
     expect(Object.values(DRAWING_WORDS).length).toBeGreaterThan(0);

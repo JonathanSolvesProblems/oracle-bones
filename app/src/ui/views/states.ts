@@ -16,7 +16,9 @@ export const QUICK2_MESSAGE = "QUICK-2's message:";
 export const QUICKENED_MESSAGE = "Quickened's message:";
 export const NO_RESULT = 'There is no result.';
 export const KEY_LINE_SENTENCE = 'QUICK-2 writes this message over its key line and leaves the rest of that line on the screen:';
-export const HELD_SENTENCE = 'QUICK-2 keeps this prompt and shows no message: it does not take the value. Your other values are kept.';
+export const HELD_SENTENCE = 'QUICK-2 stays on this input and shows no message: it does not take the value. Your other values are kept.';
+/** The held state's heading, in a reviewer's words (criterion 11.3). */
+export const HELD_HEADING = 'QUICK-2 stopped at this input';
 export const INVALID_SENTENCE = 'Quickened sends QUICK-2 only plain decimals, such as 12, .035 or -1. What QUICK-2 does with an empty field or other text has not been observed.';
 
 export interface FlagLine { number: number; text: string; fields: string[]; }
@@ -68,8 +70,8 @@ export function stateModel(job: AppJob, state: Exclude<ScreenState, { kind: 'idl
       return m;
     }
     case 'held': {
-      const m = base('held', 'QUICK-2 holds a prompt', job, state.result);
-      m.sentences = [`The prompt: ${labelOf(job, state.prompt)}.`, HELD_SENTENCE, NO_RESULT];
+      const m = base('held', HELD_HEADING, job, state.result);
+      m.sentences = [`The input: ${labelOf(job, state.prompt)}.`, HELD_SENTENCE, NO_RESULT];
       m.quick2Message = state.message?.trim() ?? null;
       m.marked = [state.prompt, ...m.marked.filter((x) => x !== state.prompt)];
       return m;

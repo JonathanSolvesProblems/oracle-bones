@@ -311,3 +311,11 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     40 rows from the box, the clipboard control and the first station cell, and as CSV with a
     header. Then `paste.ts`, `views/paste.ts`, `views/form.ts`, `dom.ts` and `main.ts`.
     - _Requirements: 1.7, 1.8, 11.1, 11.2_
+  - [x] 18.0b Test: the main and cut-off examples, a stop at an input, every recorded result and
+    refusal on the regular shapes, the not-built views, the print view and the proof page's
+    rule, rows and case reasons carry none of haunting, pair, held prompt, golden, oracle,
+    harness, ledger, comparator or behaviour case; the headings read "How QUICK-2 computes
+    this", "Where QUICK-2 differs from the exact answer", "Exact answer" and "QUICK-2 stopped at
+    this input"; the exact caption says the value QUICK-2 prints stays the answer and links
+    "Limits, note H-001". Then the views.
+    - _Requirements: 11.3, 2.2, 2.4, 2.6_

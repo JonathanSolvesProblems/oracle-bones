@@ -16,7 +16,9 @@ import { proofCaseHash } from './shell.ts';
 export const NO_HEADLINE = 'No headline run has been recorded yet.';
 /** The mark's addition on a row the comparator does not compare (criterion 5.10). */
 export const NOT_COUNTED = 'not counted';
-export const RULE_SENTENCE = "A case is marked same when QUICK-2 and Quickened give the same outcome and every printed field reads the same with its leading and trailing blanks left out, as the comparator marks it. The message and the held prompt are shown beside it, compared the same way, and do not mark the case.";
+export const RULE_SENTENCE = "A case is marked same when QUICK-2 and Quickened give the same outcome and every printed field reads the same with its leading and trailing blanks left out, as the checking script marks it. QUICK-2's message and the input it stopped at, if any, are shown beside it, compared the same way, and do not mark the case.";
+/** The proof table's row for the input QUICK-2 stopped at (criterion 11.3). */
+export const STOPPED_ROW = 'Input QUICK-2 stopped at';
 
 export interface ProofRow {
   kind: 'outcome' | 'message' | 'held' | 'printed';
@@ -78,7 +80,7 @@ function caseModels(cases: QuickenedData['proof']): ProofCaseModel[] {
     const r = runJob(job);
     const rows = [row('outcome', 'outcome', 'Outcome', c.outcome, r.outcome)];
     if (c.outcome === 'rejected') {
-      rows.push(row('message', 'message', "QUICK-2's message", c.message, r.message), row('held', 'held', 'Held prompt', c.held, r.held));
+      rows.push(row('message', 'message', "QUICK-2's message", c.message, r.message), row('held', 'held', STOPPED_ROW, c.held, r.held));
     }
     for (const [k, v] of Object.entries(c.printed)) rows.push(row('printed', k, fieldLabel(job.mode, job.shape, k), v, r.printed[k] ?? null));
     // A field Quickened prints and QUICK-2 did not is a difference too, as the comparator reports it.

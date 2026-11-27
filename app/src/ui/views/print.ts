@@ -13,7 +13,8 @@ import type { ShownState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { dischargeSentence } from './example.ts';
 import { NOTICE } from './notice.ts';
-import { COMPUTED_HEADING, ECHOED_HEADING, EXACT_HEADER, resultsModel, type PrintedRow, type ResultsModel } from './results.ts';
+import { COMPUTED_HEADING, ECHOED_HEADING, EXACT_HEADER, exactCaptionWords, resultsModel, type PrintedRow, type ResultsModel } from './results.ts';
+import { limitsNote } from './hauntings.ts';
 import type { FlagLine } from './states.ts';
 
 export { PRINT_ACTION } from './results.ts';
@@ -90,7 +91,7 @@ function side(cls: string, head: string, rows: readonly PrintedRow[], exact: Pri
             r.exact !== null ? [h('span', { class: 'exact-label' }, EXACT_HEADER), ' ', r.exact] : null) : null,
           h('td', { class: 'row-extra' }, marks));
       }))),
-    withExact ? h('p', { class: 'exact-caption' }, `${EXACT_HEADER}: the exact answer ${exact!.assumption}, from haunting ${exact!.haunting}. The printed value is QUICK-2's and comes first.`) : null);
+    withExact ? h('p', { class: 'exact-caption' }, `${exactCaptionWords(exact!.assumption)} ${limitsNote(exact!.haunting)}.`) : null);
 }
 
 function groundTable(rows: PrintModel['groundRows']): VNode | null {

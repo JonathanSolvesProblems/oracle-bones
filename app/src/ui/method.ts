@@ -23,6 +23,8 @@ export interface MethodItem {
 }
 
 export const METHOD_SENTENCE = "These values come from QUICK-2's program, not from your inputs. Quickened uses the same ones.";
+/** The method list's heading, in a reviewer's words (criterion 11.3). */
+export const METHOD_HEADING = 'How QUICK-2 computes this';
 
 function item(constant: Constant, name: string, unit: string | null, role: string, part: MethodPart, source: MethodItem['source'] = 'QUICK-2'): MethodItem {
   return { name, constant, value: K[constant], unit, role, part, source };
@@ -100,7 +102,7 @@ export function methodList(mode: Mode, shape: Shape): MethodItem[] {
 
 export function methodView(items: readonly MethodItem[]): VNode {
   return h('section', { class: 'method' },
-    h('h3', {}, "QUICK-2's method for this pair"),
+    h('h3', {}, METHOD_HEADING),
     h('p', {}, METHOD_SENTENCE),
     h('ul', {}, items.map((i) => h('li', { class: i.source === 'Quickened' ? 'quickened' : undefined },
       h('span', { class: 'method-name' }, i.name),

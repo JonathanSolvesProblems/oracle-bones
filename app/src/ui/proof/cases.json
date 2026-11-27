@@ -19,9 +19,9 @@
   { "id": "nd-circ-000001", "reason": "A result for Normal Depth on the circle." },
   { "id": "nd-rect-000001", "reason": "A result for Normal Depth on the rectangle." },
   { "id": "nd-vdit-000001", "reason": "A result for Normal Depth on the V-ditch." },
-  { "id": "nd-circ-000008", "reason": "A held prompt: Diameter 0, which QUICK-2 holds with no message." },
+  { "id": "nd-circ-000008", "reason": "QUICK-2 stops at an input: Diameter 0, which it does not take, with no message." },
   { "id": "nd-irr-000009", "reason": "A bank message: a right bank station that matches no ground point." },
   { "id": "cd-circ-000039", "reason": "The circle message: a depth greater than the diameter." },
-  { "id": "cc-circ-000035", "reason": "A known difference of the solver design (Circle): Quickened does not print what QUICK-2 printed." },
-  { "id": "nd-circ-000020", "reason": "A known difference of the solver design (Circle): Quickened does not print what QUICK-2 printed." }
+  { "id": "cc-circ-000035", "reason": "A known difference on the circle: Quickened does not print what QUICK-2 printed." },
+  { "id": "nd-circ-000020", "reason": "A known difference on the circle: Quickened does not print what QUICK-2 printed." }
 ]

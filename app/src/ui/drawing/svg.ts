@@ -6,6 +6,7 @@ import { h, type Child, type VNode } from '../vnode.ts';
 import { BOX, coord, frameFor } from './axis.ts';
 import { bankTickTop, placeLabels } from './labels.ts';
 import type { DrawingModel, Pt } from './section.ts';
+import { limitsNote } from '../views/hauntings.ts';
 
 const MARK = 24;
 /** Room round a label's box on its paper ground, in SVG units. */
@@ -69,6 +70,6 @@ export function drawingView(m: DrawingModel, opts: { links: boolean } = { links:
       labels.map((l) => text(l.cls, l.x, l.y, l.text, l.anchor))),
     m.words.some((w) => !w.at)
       ? h('figcaption', {}, m.words.filter((w) => !w.at).map((w) => h('p', { class: 'note' }, w.text,
-        w.haunting ? [' ', opts.links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)))
+        w.haunting ? [' ', opts.links ? h('a', { href: '#/limits' }, limitsNote(w.haunting)) : limitsNote(w.haunting), '.'] : null)))
       : null);
 }

@@ -50,7 +50,7 @@ export function notBuiltModel(mode: Mode, shape: Shape): NotBuiltModel {
     heading: `${pair}: not built yet`,
     sentences: [
       `Quickened does not compute ${pair} yet.`,
-      `What QUICK-2 asks for and prints for ${pair} has not been observed: no recorded case has run it.`,
+      `What QUICK-2 asks for and prints for ${pair} has not been observed: QUICK-2 has not been run on it here yet.`,
     ],
     asks: [],
     quick2Texts: [],
@@ -68,6 +68,6 @@ export function notBuiltView(m: NotBuiltModel): VNode {
     m.asks.length ? h('ul', { class: 'asks' }, m.asks.map((a) => h('li', {},
       a.text, a.quick2 ? [' ', h('span', { class: 'quick2' }, `“${a.quick2}”`)] : null))) : null,
     m.asks.length ? h('p', {}, FIRST_SECTION_LIMIT) : null,
-    h('p', {}, 'Every pair not built yet, and what is not known about QUICK-2, is on the ', h('a', { href: m.limitsHref }, 'limits page'), '.'),
+    h('p', {}, 'Every mode and shape not built yet, and what is not known about QUICK-2, is on the ', h('a', { href: m.limitsHref }, 'limits page'), '.'),
   );
 }

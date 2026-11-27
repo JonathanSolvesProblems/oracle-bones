@@ -14,7 +14,7 @@ import { classify, runJob, type ShownState } from '../src/ui/state.ts';
 import { dischargeSentence, exampleJob } from '../src/ui/views/example.ts';
 import { NOTICE } from '../src/ui/views/notice.ts';
 import { printDate, printModel, printView, PRINT_ACTION } from '../src/ui/views/print.ts';
-import { resultsModel } from '../src/ui/views/results.ts';
+import { EXACT_HEADER, resultsModel } from '../src/ui/views/results.ts';
 import { screenView } from '../src/ui/views/screen.ts';
 import { findAll, textOf } from '../src/ui/vnode.ts';
 import { goldens, ROOT } from './golden.ts';
@@ -59,7 +59,7 @@ describe('the print view', () => {
       expect(findAll(view, CONTROLS)).toEqual([]);
       // Exact values where the results screen shows them, on their fields' rows.
       const cells = findAll(view, (n) => n.attrs['data-exact'] !== undefined);
-      expect(Object.fromEntries(cells.map((c) => [c.attrs['data-exact'], textOf(c).replace(/^Exact /, '')])))
+      expect(Object.fromEntries(cells.map((c) => [c.attrs['data-exact'], textOf(c).replace(`${EXACT_HEADER} `, '')])))
         .toEqual(Object.fromEntries(rm.outputs.concat(rm.inputs).filter((r) => r.exact !== null).map((r) => [r.field, r.exact])));
       // The sources and discharge sentence go with either worked example, and only with one.
       if (job.origin === 'typed') {

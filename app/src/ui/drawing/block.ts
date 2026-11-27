@@ -12,6 +12,7 @@ import { h, type Child, type VNode } from '../vnode.ts';
 import { angleText, coord, frameFor, gaugeFigure, niceAtLeast, scaleText, stationText, type DrawingBox, type Frame } from './axis.ts';
 import { overlaps, type Anchor, type Box } from './labels.ts';
 import { DRAWING_WORDS, type DrawingModel, type Pt } from './section.ts';
+import { limitsNote } from '../views/hauntings.ts';
 
 /** The width the block is drawn at before its container has been measured. */
 export const DEFAULT_WIDTH = 640;
@@ -305,9 +306,9 @@ export function blockLayout(m: DrawingModel, width: number = DEFAULT_WIDTH): Blo
 function caption(m: DrawingModel, f: Frame, links: boolean): VNode {
   const n = f.exaggeration;
   return h('figcaption', {},
-    h('p', { class: 'note' }, `${scaleText(n)}: ${n === 1 ? 'drawn at one scale across and up' : `elevations are drawn ${n} times the horizontal scale`}. The block runs upstream; its depth is drawn, not computed.`),
+    h('p', { class: 'note' }, `${scaleText(n)}: ${n === 1 ? 'drawn at one scale across and up' : `elevations are drawn ${n} times the horizontal scale`}. The section is drawn extended upstream; that length is drawn, not computed.`),
     m.words.map((w) => h('p', { class: 'note' }, w.text,
-      w.haunting ? [' ', links ? h('a', { href: '#/limits' }, `Haunting ${w.haunting} on the limits page`) : `Haunting ${w.haunting} on the limits page`, '.'] : null)));
+      w.haunting ? [' ', links ? h('a', { href: '#/limits' }, limitsNote(w.haunting)) : limitsNote(w.haunting), '.'] : null)));
 }
 
 /** The models drawn, by id, so the page can draw one again at the width its container has. */

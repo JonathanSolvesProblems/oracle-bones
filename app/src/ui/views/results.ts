@@ -9,7 +9,7 @@ import type { HauntingLink, ShownState } from '../state.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { noticeView } from './notice.ts';
 import { wsMark, wsMarkSymbol } from '../drawing/svg.ts';
-import { hauntingHref, hauntingLinksView } from './hauntings.ts';
+import { hauntingHref, hauntingLinksView, limitsNote } from './hauntings.ts';
 import { flagList, type FlagLine } from './states.ts';
 
 export const ECHOED_HEADING = 'Your inputs, as Quickened read them';
@@ -34,8 +34,13 @@ export interface PrintedRow {
 /** The action of the Print control. */
 export const PRINT_ACTION = 'print';
 
-/** The Exact column's head (design: The results screen, item 5). */
-export const EXACT_HEADER = 'Exact';
+/** The Exact column's head (design: The results screen, item 5; criterion 11.3). */
+export const EXACT_HEADER = 'Exact answer';
+
+/** The Exact answer column's caption in plain words: what the value is, and that QUICK-2's printed value stays the answer. */
+export function exactCaptionWords(assumption: string): string {
+  return `${EXACT_HEADER}: the hydraulically exact value ${assumption}, shown beside the value QUICK-2 prints, which stays the answer.`;
+}
 
 /** Beside the fields the cut_off_area_counted flag names: Area, Top Wid and Wet Per (6.8). */
 export const CUT_OFF_LINE = 'Includes low ground cut off from the channel, which QUICK-2 counts as flowing.';
@@ -92,8 +97,7 @@ export function resultsModel(job: AppJob, state: Extract<ShownState, { kind: 're
 
 /** The Exact column's caption: the entry's assumption, and the entry linked (criterion 2.2). */
 function exactCaption(e: NonNullable<ResultsModel['exact']>): Child[] {
-  return [`${EXACT_HEADER}: the exact answer ${e.assumption}, from `, h('a', { href: hauntingHref(e.haunting) }, `haunting ${e.haunting}`),
-    '. The printed value is QUICK-2\'s and comes first.'];
+  return [`${exactCaptionWords(e.assumption)} `, h('a', { href: hauntingHref(e.haunting) }, limitsNote(e.haunting)), '.'];
 }
 
 function printedTable(caption: string, rows: readonly PrintedRow[], extra: (row: PrintedRow) => Child | null, exact: ResultsModel['exact']): VNode {

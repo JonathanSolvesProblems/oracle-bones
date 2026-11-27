@@ -37,7 +37,7 @@ describe('Property 7: exact values only for recorded cases, beside their fields'
       expect(withExact).toEqual(x.values ?? {});
       const view = resultsView(m);
       const cells = findAll(view, (n) => n.attrs['data-exact'] !== undefined);
-      expect(Object.fromEntries(cells.map((c) => [c.attrs['data-exact'], textOf(c).replace(/^Exact /, '')]))).toEqual(x.values ?? {});
+      expect(Object.fromEntries(cells.map((c) => [c.attrs['data-exact'], textOf(c).replace(`${EXACT_HEADER} `, '')]))).toEqual(x.values ?? {});
       // The printed value is the first one read on the row.
       for (const c of cells) {
         const row = findAll(view, (n) => n.tag === 'tr' && n.children.includes(c))[0]!;
