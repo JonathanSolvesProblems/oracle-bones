@@ -11,9 +11,9 @@
   body { font: var(--text-xs) var(--font-body); }
   .print-view .print-header { border-bottom: var(--margin-rule); margin: 0 0 var(--space-2); }
   .print-view .print-header p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .print-view .print-name { font: var(--text-sm) var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: var(--label-tracking); }
+  .print-view .print-name { font: var(--text-md) var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: var(--label-tracking); }
   .print-view .main-figure { margin: 0 0 var(--space-1); }
-  .print-view .main-figure .main-label { font: var(--text-sm) var(--font-figures); }
+  .print-view .main-figure .main-label { font: var(--text-md) var(--font-figures); }
   .print-view .main-figure .main-value { font: var(--text-lg) var(--font-figures); }
   .print-view .drawing { margin: 0 auto var(--space-2); width: var(--print-drawing-width); break-inside: avoid; }
   .print-view .section-drawing { height: auto; }
@@ -23,6 +23,7 @@
   .print-table { border-collapse: collapse; width: 100%; }
   .print-table th, .print-table td { font: var(--text-xs) var(--font-figures); padding: 0 var(--space-2) 0 0; border-bottom: var(--hairline); text-align: left; vertical-align: baseline; white-space: nowrap; }
   .print-table th { font-weight: 400; }
+  .print-view .main-figure .main-value, .print-table th, .print-table td, .ground-print th, .ground-print td { font-variant-numeric: tabular-nums; }
   .print-table td.figures { white-space: pre; }
   .print-table .row-heading { color: var(--ink-muted); }
   .print-table .exact-label { display: none; }
@@ -35,6 +36,6 @@
   .print-view .flags { margin: var(--space-2) 0; font: var(--text-xs) var(--font-body); }
   .print-view .notice { margin: var(--space-2) 0 0; font: var(--text-xs) var(--font-body); }
   .print-sources { break-before: page; font: var(--text-xs) var(--font-body); }
-  .print-sources h2 { font: var(--text-sm) var(--font-body); font-weight: 600; margin: 0 0 var(--space-2); }
+  .print-sources h2 { font: var(--text-md) var(--font-body); font-weight: 600; margin: 0 0 var(--space-2); }
   .print-sources dd { margin: 0 0 var(--space-1); }
 }

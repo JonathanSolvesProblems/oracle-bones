@@ -216,6 +216,25 @@ printout in a permit file says only what is true.
 4. THE SYSTEM SHALL take every colour, type size and spacing value of its own pages from the tokens of the design's Visual design section; a test over the stylesheets fails on a literal colour or size outside the token file.
 5. THE SYSTEM SHALL contain no FEMA binary and no Microsoft runtime; a test over the built site fails on any `.EXE`, `.COM` or `.DLL` file and on any file with the hash of a file in `oracle/vendor/`. _(product)_
 
+### Requirement 10: The reach block
+
+**User Story:** As a permit reviewer, I want the answer drawn as the flood standing in the
+section, on a page that says what it is, so that I can read it at a glance and trust where it
+came from.
+
+Source: the design direction and charter written outside Kiro (`.design/DIRECTION.md`,
+`.design/CHARTER.md`, commit 334c6f4), which the person asked for on 2026-11-27. The build is
+Kiro's. The solver is not touched.
+
+#### Acceptance Criteria
+
+1. THE SYSTEM SHALL take its palette, light and under `prefers-color-scheme: dark`, from the table of `.design/CHARTER.md`, and its type sizes from the charter's scale (12, 16, 21, 28, 37, 50 and 66 px); every figure other than QUICK-2's recorded screens SHALL be set in IBM Plex Sans Condensed with tabular figures, and IBM Plex Mono SHALL appear only inside those recorded screens; no colour SHALL be blue; the print view SHALL stay black on white; axe SHALL find no violation in either theme. _(person, design direction)_
+2. THE SYSTEM SHALL draw each result on screen as a reach block, as charter laws 7 to 10 describe: the section as the front face of a block extruded upstream in an oblique projection, the top surface shaded by slope, the cut face hatched, the water a level plane between its edges and a body in front, cut-off water with its own hatch, QUICK-2's vertical walls and a full pipe's assumed line as before; the high-water mark on the block's end wall at the water's level, skewed to the wall, with the printed figure lettered above it; the elevation axis a staff gauge; every value written on the drawing a printed field's text; no label on a line and every label at least 12 px on a 375 px screen; the print view SHALL keep the 2D front face. _(person, design direction)_
+3. THE SYSTEM SHALL open the first screen with the main example's reach block, computed live on load and large, beside a short opening that says what QUICK-2 is (FEMA's 1995 DOS program, on FEMA's list of accepted models for one cross section in Zone A, linked to that list), that it does not start on a locked-down modern computer, and that Quickened gives its answers in a browser, checked against the original (the headline count read from `results/headline.md`, linked to the proof page); then the two examples as buttons, then the calculator; no empty ruled page; and every page SHALL end in a footer with the source repository, the limits and proof pages, and the notice. _(person, design direction)_
+4. THE SYSTEM SHALL name the user's inputs "Your inputs, as Quickened read them" and the computed values "Computed by Quickened with QUICK-2's method", on every screen and in the print view, and no heading SHALL say that QUICK-2 read or computed the user's inputs. _(person, design direction)_
+5. WHEN an example or Calculate has run, THE SYSTEM SHALL scroll to the result's heading and not past it; once a section has been pasted or loaded, the ground-point table SHALL collapse to a summary row ("40 ground points, 0 to 500") that opens on demand; on the proof page QUICK-2's recorded screens SHALL scale to fit the width and the field tables SHALL never break a word or a value. _(person, design direction)_
+6. THE SYSTEM SHALL keep what is written for the repository (run ids, golden, ledger wording, decision numbers, "the person", attempt ids) on the limits and proof pages inside a closed details element under each entry, so that the plain sentence stands alone; the limits page SHALL define "haunting" where it first uses the word; H-009's table SHALL be a table; no entry SHALL end in a dangling "as recorded:". _(person, design direction)_
+
 ## Open points
 
 - `results/headline.md` does not exist yet (exhume-loop task 5.1). Its format is not fixed, so

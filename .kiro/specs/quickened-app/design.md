@@ -506,13 +506,18 @@ works from any host and any sub-path without rewrite rules. The host is the pers
 
 ## Visual design
 
-The identity comes from the papers an engineer carries to and from a channel: the surveyor's
-field book with its ruled pages and red centre line, the cross-section plot on gridded paper,
-and benchmark and stationing notation. It is not a retro terminal: no black screens, no
-phosphor green, no box-drawing borders in Quickened's own UI. QUICK-2's captured screens on the
-proof page are shown as recorded, inside a frame that names them as QUICK-2's. It is not a
-dashboard template: no cards with shadows, no tiles of big numbers, no icon set, no gradients,
-no chart other than the cross section.
+**Amended 2026-11-27 (task 17, requirement 10).** The field-book identity below was replaced by
+the reach block: the design direction and charter written outside Kiro (`.design/DIRECTION.md`,
+`.design/CHARTER.md`, commit 334c6f4) and built here. The colours and the type scale of the
+Tokens section are the charter's, and `test/charter.test.ts` reads the charter's table. The
+water is the only colour on the page; there is no map blue; every result is drawn as a block of
+the reach; panels are divided by rules, not cards. It is not a retro terminal: QUICK-2's captured
+screens on the proof page are shown as recorded, in the monospace face, inside a frame that
+names them as QUICK-2's, and nowhere else.
+
+Where the text below still speaks of paper, the field book, the red centre rule or the ruled
+sketch page, read the amended tokens: `--paper` is `--canvas`, the red centre rule is a 2px
+`--ink-muted` rule, and the empty ruled page is gone (task 17.3).
 
 ### Tokens
 
@@ -523,21 +528,30 @@ colour, font size or spacing literal anywhere else (criterion 9.4).
 
 | Token | Value | Use |
 |---|---|---|
-| `--paper` | `#F4EFE2` | page background, the field book's buff page |
-| `--paper-rule` | `#D9CFB8` | the horizontal rules of tables and the ruled page |
-| `--grid` | `#C9DCCB` | the cross-section paper grid behind the drawing |
-| `--ink` | `#1F2A36` | text, ground line, borders |
-| `--ink-muted` | `#5A6470` | secondary text, scale labels |
-| `--pencil` | `#B23A2E` | the red centre rule, flags and the fields they mark |
-| `--water` | `#2F6FA3` | the water-surface line and mark, links, focus ring |
-| `--water-fill` | `#CFE0EE` | water connected to the channel |
-| `--water-cutoff` | `#CFE0EE` with `--water` hatching at 45° | cut-off water counted by QUICK-2 |
-| `--ground` | `#6B4E2E` | the ground hatch |
+Light values; the dark values are under `prefers-color-scheme: dark` in the same file, and the
+print view sets canvas white and every text and line colour black. The charter's table
+(`.design/CHARTER.md`) is the source; its `rule` token is `--rule-line` here, because `--rule`
+is the 24px line.
 
-Contrast on `--paper`, computed with the WCAG formula: `--ink` 12.7:1, `--ink-muted` 5.2:1,
-`--pencil` 5.2:1, `--water` 4.7:1, each at or above WCAG AA for body text. The axe check of
-the Playwright run confirms them on the rendered pages. Colour never carries meaning alone: a flag has its
-number and words, cut-off water has its hatching and label.
+| Token | Value | Use |
+|---|---|---|
+| `--canvas` | `#E7E8E3` | page background: whitewashed plaster under a high-water mark |
+| `--ink` | `#1A1C19` | text, ground line, borders |
+| `--ink-muted` | `#565A53` | secondary text, scale labels |
+| `--rule-line` | `#C5C8BF` | the rules that divide panels and tables |
+| `--water` | `#8C7737` | floodwater: turbid silt, the only hue on the page |
+| `--water-top` | `#A8924F` | the lit surface of the same water; cut-off water's ground |
+| `--water-line` | `#4E3F14` | the water's edge, links and the focus ring |
+| `--ground-lit` | `#D7D4C6` | the block's top surface where it faces up and left |
+| `--ground-shade` | `#8F8B7C` | the block's top surface where it faces away |
+| `--cut-face` | `#615B4B` | the soil of the cut face |
+| `--hatch` | `#4B4639` | the hatching on the cut face |
+| `--gauge` | `#F4F4F0` | the staff gauge's white enamel |
+| `--flag` | `#A3241C` | warnings only: flags and the fields they mark |
+
+Links are `--water-line` and underlined, never colour alone. Colour never carries meaning
+alone: a flag has its number and words, cut-off water has its hatching and label. The axe check
+of the Playwright run confirms the contrast on the rendered pages in both themes.
 
 **Type**
 
@@ -547,13 +561,19 @@ Three families, self-hosted woff2 under the SIL Open Font License, Latin subset:
 |---|---|---|
 | `--font-label` | IBM Plex Sans Condensed, then Arial Narrow, sans-serif | column heads and field labels, as lettered on a field book's page; upper case, `letter-spacing: 0.06em` |
 | `--font-body` | IBM Plex Sans, then system-ui, sans-serif | Quickened's sentences |
-| `--font-figures` | IBM Plex Mono, then ui-monospace, monospace | every printed field, QUICK-2's messages and labels, typed values; tabular by nature, so columns of figures align |
-| `--text-xs` | 12px / 16px | scale labels, footnotes |
-| `--text-sm` | 14px / 20px | labels, table text on phones |
+| `--font-figures` | IBM Plex Sans Condensed, then Arial Narrow, sans-serif | every printed field, QUICK-2's messages and typed values, with `font-variant-numeric: tabular-nums` so columns of figures align |
+| `--font-evidence` | IBM Plex Mono, then ui-monospace, monospace | QUICK-2's recorded screens on the proof page, and nothing else |
+| `--text-xs` | 12px / 16px | scale labels, uppercase labels |
 | `--text-md` | 16px / 24px | body, inputs, table text |
-| `--text-lg` | 20px / 28px | section heads |
+| `--text-lg` | 21px / 28px | section heads |
 | `--text-xl` | 28px / 32px | page titles |
-| `--text-figure` | 40px / 48px | the main figure (32px / 40px under 480px) |
+| `--text-xxl` | 37px / 40px | the figure on a phone |
+| `--text-figure` | 50px / 56px | the main figure (37px / 40px under 480px, `--text-display` from 960px) |
+| `--text-display` | 66px / 72px | the main figure on a desktop |
+
+The scale is the charter's, ratio 1.333 from 16px: 12, 16, 21, 28, 37, 50, 66. The result's
+figure is the only thing at 50 or 66. The SemiBold of Plex Sans Condensed is not needed: the
+figure is set in the Medium.
 
 **Space**
 
@@ -561,10 +581,10 @@ Three families, self-hosted woff2 under the SIL Open Font License, Latin subset:
 |---|---|
 | `--rule` | 24px: the ruled line. Body line height, table row height and the vertical rhythm |
 | `--space-1` to `--space-12` | 4, 8, 12, 16, 24, 32, 48px (`--space-1`, `-2`, `-3`, `-4`, `-6`, `-8`, `-12`) |
-| `--margin-rule` | 2px solid `--pencil`: the field book's red centre line |
+| `--margin-rule` | 2px solid `--ink-muted`: the rule between a label and its value |
 | `--radius` | 0 on surfaces; 2px on inputs and buttons |
 | `--tap` | 44px: the least height and width of anything that can be pressed |
-| `--focus` | 2px solid `--water`, 2px offset |
+| `--focus` | 2px solid `--water-line`, 2px offset |
 
 ### The signature element: the water-surface mark
 

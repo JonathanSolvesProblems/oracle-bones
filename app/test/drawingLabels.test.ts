@@ -107,6 +107,6 @@ describe('the ground under each label', () => {
   it('fills the ground with the paper colour', async () => {
     const { readFileSync } = await import('node:fs');
     const css = readFileSync(new URL('../src/ui/styles/app.css', import.meta.url), 'utf-8');
-    expect(css).toMatch(/\.section-drawing \.label-ground \{[^}]*fill: var\(--paper\)/);
+    expect(css).toMatch(/\.section-drawing \.label-ground \{[^}]*fill: var\(--canvas\)/);
   });
 });

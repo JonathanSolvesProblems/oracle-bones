@@ -276,3 +276,28 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     `results/attempts.md`, in order, each count and commit found under a heading that names the
     round. Then the file.
     - _Requirements: 5.12_
+- [ ] 17. The reach block (person, 2026-11-27: the design direction and charter in `.design/`,
+  written outside Kiro, built here; one commit per item; the solver is not touched)
+  - [x] 17.1 Test: `tokens.css` holds the charter's palette, light and dark, and its type scale;
+    no blue; print black on white; the figures face is Plex Sans Condensed with tabular figures and
+    Plex Mono only inside recorded screens; axe in both themes. Then the tokens and the styles.
+    - _Requirements: 10.1, 9.4_
+  - [ ] 17.2 Test: the drawing model is a block (front face, top surface, end wall, gauge, mark
+    on the wall) over the main example, a circle and a trapezoid; every written value is a printed
+    field's text; no label on a line; labels at least 12 px at 375 px; the print view keeps the
+    2D front face. Then `drawing/`.
+    - _Requirements: 10.2, 2.7_
+  - [ ] 17.3 Test: the first screen's order (opening with its three statements and two links,
+    the live block, the examples, the calculator), no ruled notepad, and a footer on every page.
+    Then `views/`.
+    - _Requirements: 10.3, 8.10_
+  - [ ] 17.4 Test: the two headings in every screen and the print view, and no heading that
+    says QUICK-2 read or computed the user's inputs. Then the words.
+    - _Requirements: 10.4_
+  - [ ] 17.5 Test: at 375 px the page scrolls to the result's heading, the ground-point table
+    collapses to a summary and opens on demand, the proof page's screens fit and its tables
+    never break a word. Then the phone stylesheet and `main.ts`.
+    - _Requirements: 10.5_
+  - [ ] 17.6 Test: no repository wording outside a closed details on the limits and proof pages,
+    "haunting" defined at first use, H-009 as a table, no dangling "as recorded:". Then the pages.
+    - _Requirements: 10.6, 5.3_

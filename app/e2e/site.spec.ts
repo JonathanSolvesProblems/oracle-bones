@@ -55,9 +55,13 @@ test('no request goes to another origin, on any page', async ({ page, baseURL })
   expect(other).toEqual([]);
 });
 
-test('axe finds no WCAG 2.2 A or AA violation on any page or state', async ({ page }) => {
-  for await (const what of visits(page)) await axe(page, what);
-});
+// Criterion 10.1: both themes of the charter's palette pass.
+for (const scheme of ['light', 'dark'] as const) {
+  test(`axe finds no WCAG 2.2 A or AA violation on any page or state, ${scheme} theme`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    for await (const what of visits(page)) await axe(page, `${scheme}: ${what}`);
+  });
+}
 
 // Criterion 8.10 (2026-11-26): the opening sits above the examples and, on a phone, leaves both
 // example controls inside the first screen.

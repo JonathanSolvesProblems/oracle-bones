@@ -5,14 +5,15 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { background: var(--paper); color: var(--ink); }
+html { background: var(--canvas); color: var(--ink); }
 
 body {
   margin: 0;
   font: var(--text-md) var(--font-body);
+  font-variant-numeric: tabular-nums;
 }
 
-a { color: var(--water); }
+a { color: var(--water-line); text-decoration: underline; }
 
 :focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); }
 
@@ -49,7 +50,7 @@ a { color: var(--water); }
   min-height: var(--tap);
   min-width: var(--tap);
 }
-.top-line li a[aria-current='page'] { color: var(--ink); text-decoration-color: var(--pencil); }
+.top-line li a[aria-current='page'] { color: var(--ink); text-decoration-color: var(--water-line); }
 
 h1 { font: var(--text-xl) var(--font-body); font-weight: 600; margin: var(--space-6) 0 var(--space-4); }
 h2 { font: var(--text-lg) var(--font-body); font-weight: 600; margin: var(--space-6) 0 var(--space-2); }
@@ -64,8 +65,9 @@ p { margin: 0 0 var(--space-4); }
   white-space: nowrap;
 }
 
-.figures, .quick2 { font-family: var(--font-figures); }
-.note { color: var(--ink-muted); font: var(--text-sm) var(--font-body); }
+.figures { font-family: var(--font-figures); }
+.quick2 { font-family: var(--font-label); }
+.note { color: var(--ink-muted); font: var(--text-md) var(--font-body); }
 
 /* Buttons and inputs: the only rounded things, never smaller than --tap. */
 button, input, textarea { font: var(--text-md) var(--font-body); color: var(--ink); }
@@ -76,10 +78,10 @@ button {
   border: var(--hairline);
   border-color: var(--ink);
   border-radius: var(--radius);
-  background: var(--paper);
+  background: var(--canvas);
   cursor: pointer;
 }
-button.calculate { background: var(--ink); color: var(--paper); margin-top: var(--space-4); }
+button.calculate { background: var(--ink); color: var(--canvas); margin-top: var(--space-4); }
 input[type='text'], textarea {
   min-height: var(--tap);
   width: 100%;
@@ -87,7 +89,7 @@ input[type='text'], textarea {
   border: var(--hairline);
   border-color: var(--ink-muted);
   border-radius: var(--radius);
-  background: var(--paper);
+  background: var(--canvas);
 }
 input.figures { font-family: var(--font-figures); }
 
@@ -98,7 +100,7 @@ input.figures { font-family: var(--font-figures); }
 /* Picker: modes as tabs, shapes as radio buttons. */
 .picker fieldset { border: 0; margin: 0 0 var(--space-4); padding: 0; }
 .picker legend, .inputs legend, .inputs h2 {
-  font: var(--text-sm) var(--font-label);
+  font: var(--text-xs) var(--font-label);
   font-weight: 500;
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
@@ -115,8 +117,8 @@ input.figures { font-family: var(--font-figures); }
   padding: 0 var(--space-3);
   cursor: pointer;
 }
-.choice input { width: var(--space-4); height: var(--space-4); margin: 0; accent-color: var(--water); }
-.choice .not-built { font: var(--text-xs) var(--font-body); color: var(--pencil); }
+.choice input { width: var(--space-4); height: var(--space-4); margin: 0; accent-color: var(--water-line); }
+.choice .not-built { font: var(--text-xs) var(--font-body); color: var(--ink-muted); }
 .modes { display: grid; grid-template-columns: 1fr 1fr; border-bottom: var(--hairline); }
 .modes .choice { border-bottom: var(--margin-rule); border-bottom-color: transparent; }
 .modes .choice.selected { border-bottom-color: var(--ink); font-weight: 600; }
@@ -124,7 +126,7 @@ input.figures { font-family: var(--font-figures); }
 .modes .choice:focus-within { outline: var(--focus); outline-offset: var(--focus-offset); }
 .shapes { display: flex; flex-wrap: wrap; gap: 0 var(--space-2); }
 
-/* The form: a ruled table, QUICK-2's label left of the red centre rule. */
+/* The form: a ruled table, QUICK-2's label left of the centre rule. */
 .inputs h2 { margin-top: var(--space-6); }
 .inputs fieldset { border: 0; margin: 0 0 var(--space-4); padding: 0; }
 .field-row {
@@ -135,18 +137,18 @@ input.figures { font-family: var(--font-figures); }
 }
 .field-row .label { display: flex; align-items: center; min-height: var(--rule); }
 .field-row .value { border-left: var(--margin-rule); padding-left: var(--space-3); display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); min-height: var(--tap); }
-.field-row.marked .label, td.marked input, .field-row.marked input { color: var(--pencil); }
-.field-row.marked input, td.marked input { border-color: var(--pencil); border-left: var(--margin-rule); border-left-width: var(--space-1); }
+.field-row.marked .label, td.marked input, .field-row.marked input { color: var(--flag); }
+.field-row.marked input, td.marked input { border-color: var(--flag); border-left: var(--margin-rule); border-left-width: var(--space-1); }
 
 /* Ground points: a ruled table with row numbers. */
 .grid { border-collapse: collapse; width: 100%; }
-.grid caption { text-align: left; font: var(--text-sm) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
+.grid caption { text-align: left; font: var(--text-md) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
 .grid th, .grid td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; }
-.grid thead th { font: var(--text-sm) var(--font-figures); }
-.grid .row-number { font: var(--text-sm) var(--font-figures); color: var(--ink-muted); width: var(--space-12); }
+.grid thead th { font: var(--text-md) var(--font-figures); }
+.grid .row-number { font: var(--text-md) var(--font-figures); color: var(--ink-muted); width: var(--space-12); }
 .grid td + td { border-left: var(--margin-rule); padding-left: var(--space-2); }
-.grid tr.not-taken input { text-decoration: line-through; text-decoration-color: var(--pencil); }
-.grid tr.row-note td { color: var(--pencil); font: var(--text-sm) var(--font-body); }
+.grid tr.not-taken input { text-decoration: line-through; text-decoration-color: var(--flag); }
+.grid tr.row-note td { color: var(--flag); font: var(--text-md) var(--font-body); }
 .grid tr.row-note .message-label { font-weight: 600; }
 .grid tr.row-note .figures { font-family: var(--font-figures); white-space: pre-wrap; }
 .row-controls { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0; }
@@ -158,25 +160,25 @@ input.figures { font-family: var(--font-figures); }
 .message .figures { white-space: pre-wrap; }
 .flags { padding-left: var(--space-6); margin: var(--space-4) 0; }
 .flags li { color: var(--ink); margin-bottom: var(--space-2); }
-.flags li::marker { color: var(--pencil); font-family: var(--font-figures); }
-.flag-fields { color: var(--pencil); }
+.flags li::marker { color: var(--flag); font-family: var(--font-figures); }
+.flag-fields { color: var(--flag); }
 .notice {
   border-top: var(--margin-rule);
   padding-top: var(--space-3);
   margin-top: var(--space-6);
-  font: var(--text-sm) var(--font-body);
+  font: var(--text-md) var(--font-body);
   color: var(--ink);
 }
 
 /* The results screen: the main figure, then the printed fields as ruled tables. */
 .main-figure { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-3); margin: 0 0 var(--space-6); }
 .main-figure .main-label { font: var(--text-md) var(--font-figures); color: var(--ink-muted); }
-.main-figure .main-value { font: var(--text-figure) var(--font-figures); }
+.main-figure .main-value { font: var(--text-figure) var(--font-figures); font-weight: 500; }
 .limits-page .limit-entry { border-top: var(--hairline); padding: var(--space-3) 0; }
 .limits-page .limit-terms dt { font-weight: 600; margin-top: var(--space-2); }
 .limits-page .limit-terms dd { margin: 0; }
 .limits-page .limit-entry > p { font-family: var(--font-body); }
-.limits-page .ledger-wording { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
+.limits-page .ledger-wording { font: var(--text-md) var(--font-body); color: var(--ink-muted); }
 .limits-page .ledger-wording h3 { font: inherit; font-weight: 600; margin: var(--space-2) 0 0; }
 .limits-page .ledger-wording p { margin: 0; overflow-wrap: anywhere; }
 /* A value the files mark as code: the figures face at the text's own size, no marks (5.8). */
@@ -185,18 +187,19 @@ input.figures { font-family: var(--font-figures); }
 .proof-case { border-top: var(--hairline); padding: var(--space-4) 0; }
 .proof-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
 .quick2-screen { margin: 0; min-width: 0; }
-.quick2-screen figcaption { font: var(--text-sm) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-1); }
-.quick2-screen pre { margin: 0; overflow-x: auto; border: var(--hairline); padding: var(--space-2); font-size: var(--text-xs); }
+.quick2-screen figcaption { font: var(--text-md) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-1); }
+/* QUICK-2's recorded screens are evidence: the only place the monospace face is used. */
+.quick2-screen pre { margin: 0; overflow-x: auto; border: var(--hairline); padding: var(--space-2); font: var(--text-xs) var(--font-evidence); }
 .quick2-screen pre:focus { outline: var(--focus); outline-offset: var(--focus-offset); }
 .proof-table { border-collapse: collapse; width: 100%; }
-.proof-table caption { text-align: left; font: var(--text-sm) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
+.proof-table caption { text-align: left; font: var(--text-md) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
 .proof-table th, .proof-table td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; overflow-wrap: anywhere; }
 .proof-table td.figures { white-space: pre-wrap; }
-.proof-table tr.different .mark { color: var(--pencil); font-weight: 600; }
+.proof-table tr.different .mark { color: var(--flag); font-weight: 600; }
 table.printed { border-collapse: collapse; width: 100%; margin-bottom: var(--space-6); }
 table.printed caption {
   text-align: left;
-  font: var(--text-sm) var(--font-label);
+  font: var(--text-xs) var(--font-label);
   font-weight: 500;
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
@@ -207,19 +210,19 @@ table.printed th, table.printed td { border-bottom: var(--hairline); padding: 0 
 table.printed th { font-weight: 400; }
 table.printed td.figures { border-left: var(--margin-rule); padding-left: var(--space-3); white-space: pre; }
 table.printed .row-heading { color: var(--ink-muted); }
-table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--pencil); }
-.row-extra { font: var(--text-sm) var(--font-body); color: var(--ink-muted); }
-.flag-ref { color: var(--pencil); margin-right: var(--space-2); }
+table.printed tr.marked th, table.printed tr.marked td.figures { color: var(--flag); }
+.row-extra { font: var(--text-md) var(--font-body); color: var(--ink-muted); }
+.flag-ref { color: var(--flag); margin-right: var(--space-2); }
 .field-note { display: block; color: var(--ink); }
 
 /* The Exact column: beside the printed value, never before it (criterion 2.2). */
 table.printed thead th { font: var(--text-xs) var(--font-label); letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--ink-muted); }
-table.printed .exact-caption { display: block; text-transform: none; letter-spacing: initial; font: var(--text-sm) var(--font-body); color: var(--ink); margin-top: var(--space-1); }
+table.printed .exact-caption { display: block; text-transform: none; letter-spacing: initial; font: var(--text-md) var(--font-body); color: var(--ink); margin-top: var(--space-1); }
 table.printed td.exact { color: var(--ink-muted); white-space: pre; }
 table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); }
 
 .method h3, .haunting-links h3 {
-  font: var(--text-sm) var(--font-label);
+  font: var(--text-xs) var(--font-label);
   font-weight: 500;
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
@@ -243,33 +246,33 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 
 /* The empty sketch page before a calculation: the field book's ruled page. */
 .sketch-empty {
-  background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - var(--hairline-width)), var(--paper-rule) calc(var(--rule) - var(--hairline-width)) var(--rule));
+  background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - var(--hairline-width)), var(--rule-line) calc(var(--rule) - var(--hairline-width)) var(--rule));
   color: var(--ink-muted);
 }
 .sketch-empty p { margin: 0; line-height: var(--rule); }
 
 /* The water-surface mark: one symbol, beside the main figure and on the drawing. */
 .ws-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
-.ws-mark { width: var(--space-4); height: var(--space-4); color: var(--water); align-self: center; }
-.ws-mark-on { color: var(--water); }
+.ws-mark { width: var(--space-4); height: var(--space-4); color: var(--water-line); align-self: center; }
+.ws-mark-on { color: var(--water-line); }
 
-/* The cross-section drawing on its gridded paper. */
+/* The cross-section drawing. */
 .drawing { margin: 0 0 var(--space-6); }
 .section-drawing { display: block; width: 100%; height: auto; }
-.section-drawing .paper { fill: url(#paper-grid); }
-.section-drawing .grid-line { stroke: var(--grid); fill: none; }
-.section-drawing .hatch-line { stroke: var(--ground); }
-.section-drawing .cutoff-ground { fill: var(--water-fill); }
-.section-drawing .cutoff-line { stroke: var(--water); }
+.section-drawing .paper { fill: none; }
+.section-drawing .grid-line { stroke: var(--rule-line); fill: none; }
+.section-drawing .hatch-line { stroke: var(--hatch); }
+.section-drawing .cutoff-ground { fill: var(--water-top); }
+.section-drawing .cutoff-line { stroke: var(--water-line); }
 .section-drawing .ground-fill { fill: url(#ground-hatch); stroke: none; }
 .section-drawing .ground-line, .section-drawing .pipe { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.section-drawing .water { fill: var(--water-fill); stroke: none; }
+.section-drawing .water { fill: var(--water); stroke: none; }
 .section-drawing .water.cut-off { fill: url(#cutoff-hatch); }
-.section-drawing .ws-line { stroke: var(--water); stroke-width: 2; }
-.section-drawing .ws-line.assumed, .section-drawing .wall { stroke: var(--water); stroke-width: 2; stroke-dasharray: 6 4; }
+.section-drawing .ws-line { stroke: var(--water-line); stroke-width: 2; }
+.section-drawing .ws-line.assumed, .section-drawing .wall { stroke: var(--water-line); stroke-width: 2; stroke-dasharray: 6 4; }
 .section-drawing .bank, .section-drawing .tick { stroke: var(--ink); stroke-width: 1; }
-.section-drawing .label-ground { fill: var(--paper); stroke: none; }
-.section-drawing text { font: var(--text-xs) var(--font-figures); fill: var(--ink); }
+.section-drawing .label-ground { fill: var(--canvas); stroke: none; }
+.section-drawing text { font: var(--text-xs) var(--font-figures); font-variant-numeric: tabular-nums; fill: var(--ink); }
 .section-drawing text.words { font: var(--text-xs) var(--font-body); }
 .section-drawing text.scale { fill: var(--ink-muted); }
 .drawing figcaption .note { margin: var(--space-2) 0 0; }
@@ -283,26 +286,26 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 /* The worked examples: two controls above the picker, stacked on a phone, side by side on a desktop. */
 .examples { display: grid; grid-template-columns: 1fr; gap: var(--space-2); margin-bottom: var(--space-6); }
 .examples button.example { text-align: left; padding: var(--space-2) var(--space-3); }
-.example-sources { margin-top: var(--space-8); border-top: var(--hairline); font: var(--text-sm) var(--font-body); }
+.example-sources { margin-top: var(--space-8); border-top: var(--hairline); font: var(--text-md) var(--font-body); }
 .example-sources h2 { font: var(--text-md) var(--font-body); font-weight: 600; }
-.example-sources h3 { font: var(--text-sm) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); color: var(--ink-muted); }
+.example-sources h3 { font: var(--text-xs) var(--font-label); text-transform: uppercase; letter-spacing: var(--label-tracking); color: var(--ink-muted); }
 .example-sources dt { font-weight: 600; }
 .example-sources dd { margin: 0 0 var(--space-2); }
-.example-sources .no-longer { color: var(--pencil); }
+.example-sources .no-longer { color: var(--flag); }
 
 /* A newer build has taken over the open page (1.13): one line under the top line, never a reload by itself. */
 .update-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: 0; padding: var(--space-2) 0; border-bottom: var(--hairline); }
 
-.kept-points { margin-top: var(--space-3); font: var(--text-sm) var(--font-body); }
+.kept-points { margin-top: var(--space-3); font: var(--text-md) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 
 .paste { margin-bottom: var(--space-4); }
 .paste label { display: block; font-weight: 600; }
 .paste textarea { padding: var(--space-2); resize: vertical; }
-.paste-error { color: var(--pencil); margin: var(--space-2) 0 0; }
+.paste-error { color: var(--flag); margin: var(--space-2) 0 0; }
 
 @media (max-width: 959.98px) {
-  .top-line .name, .top-line li a { font: var(--text-sm) var(--font-label); }
+  .top-line .name, .top-line li a { font: var(--text-md) var(--font-label); }
   .top-line .name { letter-spacing: var(--label-tracking); }
   button.calculate { width: 100%; }
   .section-drawing { height: var(--drawing-phone-height); }
@@ -320,3 +323,6 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
   .field-row { grid-template-columns: 2fr 3fr; }
   .field-row .label { min-height: var(--tap); padding-right: var(--space-3); }
 }
+
+/* Figures stay tabular where a `font` shorthand above reset the inherited setting. */
+:root :is(.figures, td, th, .main-value, .main-label) { font-variant-numeric: tabular-nums; }
