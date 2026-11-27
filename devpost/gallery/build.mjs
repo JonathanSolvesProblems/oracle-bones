@@ -10,6 +10,7 @@
 //   npm --prefix app run build
 //   node app/node_modules/vite/bin/vite.js preview app --port 4173 --strictPort     (keep running)
 //   node devpost/gallery/build.mjs [--url http://localhost:4173/] [--only 01,04] [--no-captures]
+//     [--pick what-it-is,headline,... --out devpost/preview]   (those slides only, numbered 1 to n)
 //
 // Output: devpost/gallery/out/NN-name.png, 3000 x 2000 (3:2), and out/index.json with each
 // slide's caption for the submission form.
@@ -31,6 +32,11 @@ const args = process.argv.slice(2);
 const argOf = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const BASE = argOf('--url', process.env.QUICKENED_URL ?? 'http://localhost:4173/');
 const ONLY = argOf('--only', '')?.split(',').filter(Boolean) ?? [];
+// --pick name,name,...: only these slides, in this order, numbered 1 to n of n (the submission's preview set);
+// --out <dir>: where the pictures and index.json go, from the repository root (default devpost/gallery/out).
+const PICK = argOf('--pick', '')?.split(',').filter(Boolean) ?? [];
+const OUT_DIR = argOf('--out', '') ? resolve(ROOT, argOf('--out', '')) : OUT;
+mkdirSync(OUT_DIR, { recursive: true });
 const SKIP_CAPTURES = args.includes('--no-captures');
 
 // ---------------------------------------------------------------------------------------------
@@ -509,10 +515,15 @@ const data = loadData();
 const browser = await openBrowser();
 try {
   if (!SKIP_CAPTURES) await takeCaptures(browser);
-  const all = slides(data);
+  const every = slides(data);
+  const all = PICK.length ? PICK.map((n) => {
+    const s = every.find((x) => x.name === n);
+    if (!s) throw new Error(`gallery: no slide named ${n}; the slides are ${every.map((x) => x.name).join(', ')}`);
+    return s;
+  }) : every;
   const index = [];
   // A full build starts from an empty folder, so a renumbered slide leaves no stale picture behind.
-  if (!ONLY.length) for (const f of readdirSync(OUT)) if (/^\d\d-.*\.png$/.test(f)) rmSync(join(OUT, f));
+  if (!ONLY.length) for (const f of readdirSync(OUT_DIR)) if (/^\d\d-.*\.png$/.test(f)) rmSync(join(OUT_DIR, f));
   await browser.send('Emulation.setEmulatedMedia', { media: 'screen' });
   await browser.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1000, deviceScaleFactor: 2, mobile: false });
   for (const [i, slide] of all.entries()) {
@@ -528,10 +539,10 @@ try {
     const fit = await browser.js(`(() => { const pre = document.querySelector('.shot.old pre'); if (!pre) return ''; const b = pre.parentElement.getBoundingClientRect(); return ' fit ' + pre.style.transform + ' pre ' + pre.scrollWidth + 'x' + pre.scrollHeight + ' box ' + Math.round(b.width) + 'x' + Math.round(b.height); })()`);
     const overflow = await browser.js(`(() => { const s = document.querySelector('.sheet'); const m = document.querySelector('.main'); const b = document.querySelector('.block').getBoundingClientRect().top; return s.scrollHeight > s.clientHeight + 1 || s.scrollWidth > s.clientWidth + 1 || [...m.querySelectorAll('.col > *')].some((e) => e.getBoundingClientRect().bottom > b + 1); })()`);
     const shot = await browser.send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 0, width: 1500, height: 1000, scale: 1 } });
-    writeFileSync(join(OUT, `${num}-${slide.name}.png`), Buffer.from(shot.result.data, 'base64'));
+    writeFileSync(join(OUT_DIR, `${num}-${slide.name}.png`), Buffer.from(shot.result.data, 'base64'));
     console.log(`slide ${num} ${slide.name}${overflow ? '  OVERFLOWS its sheet' : ''}${fit}`);
   }
-  writeFileSync(join(OUT, 'index.json'), JSON.stringify({ built: new Date().toISOString(), url: BASE, slides: index, data }, null, 1));
+  writeFileSync(join(OUT_DIR, 'index.json'), JSON.stringify({ built: new Date().toISOString(), url: BASE, slides: index, data }, null, 1));
 } finally {
   await browser.close();
 }
