@@ -240,15 +240,16 @@ describe('the scale and the texts on the drawing', () => {
     }
   });
 
-  it('the results screen shows the drawing, with the water-surface mark on it and before the main figure', () => {
+  it('the results screen shows the drawing, with the water surface marked on it (task 17.2: by the high-water mark on the end wall, at the water\'s level) and the water-surface mark before the main figure', () => {
     const g = results.find((x) => x.id === 'nd-irr-000006')!;
     const job = jobOf(g.mode, g.shape, g.inputs);
     const state = classify(job, runJob(job));
     const node = screenView(job, state)!.node;
-    const svgs = findAll(node, (n) => n.tag === 'svg' && n.attrs.class === 'section-drawing');
+    const svgs = findAll(node, (n) => n.tag === 'svg' && n.attrs.class === 'section-drawing reach-block');
     expect(svgs).toHaveLength(1);
     const marks = (n: Child) => findAll(n, (x) => x.tag === 'use' && x.attrs.href === '#ws-mark');
-    expect(marks(svgs[0]!)).toHaveLength(1);
+    expect(findAll(svgs[0]!, (x) => x.attrs.class === 'hwm')).toHaveLength(1);
+    expect(marks(svgs[0]!)).toHaveLength(0);
     const figure = findAll(node, (n) => n.attrs.class === 'main-figure')[0]!;
     expect(marks(figure)).toHaveLength(1);
     expect(findAll(node, (n) => n.tag === 'symbol' && n.attrs.id === 'ws-mark')).toHaveLength(1);

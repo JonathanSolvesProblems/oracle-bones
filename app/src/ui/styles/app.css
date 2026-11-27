@@ -324,5 +324,31 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
   .field-row .label { min-height: var(--tap); padding-right: var(--space-3); }
 }
 
+/* The reach block (task 17.2; charter laws 7 to 10). Its type is --text-md in a 440-unit viewBox, 12.5px on a phone. */
+.section-drawing.reach-block { height: auto; }
+.reach-block .top-shade { fill: var(--ground-shade); stroke: var(--ground-shade); stroke-width: 1; }
+.reach-block .top-lit { fill: var(--ground-lit); stroke: var(--ground-lit); stroke-width: 1; }
+.reach-block .back-edge { fill: none; stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.5; }
+.reach-block .soil { fill: var(--cut-face); }
+.reach-block .water-plane { fill: var(--water-top); fill-opacity: 0.85; stroke: none; }
+.reach-block .water { fill-opacity: 0.92; }
+.reach-block .end-wall { fill: var(--cut-face); fill-opacity: 0.75; stroke: var(--ink); stroke-width: 1.2; }
+.reach-block .end-wall-extension { fill: none; stroke: var(--water-line); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.reach-block .block-edge { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.reach-block .level { stroke: var(--water-line); stroke-width: 1.4; stroke-dasharray: 6 5; }
+.reach-block .bore { fill: var(--ground-shade); stroke: none; }
+.reach-block .bore-far { fill: var(--cut-face); stroke: none; }
+.reach-block .hwm-line { stroke: var(--ink); stroke-width: 3; }
+.reach-block .gauge-plate { fill: var(--gauge); stroke: var(--hatch); stroke-width: 1.2; }
+.reach-block .gauge-stem { stroke: var(--hatch); stroke-width: 3; }
+.reach-block .gauge-mark { stroke: var(--hatch); stroke-width: 1.6; }
+.reach-block .gauge-mark.major { stroke-width: 2.6; }
+.reach-block .gauge-water { stroke: var(--water-line); stroke-width: 3; }
+.reach-block text { font: var(--text-md) var(--font-figures); font-weight: 500; font-variant-numeric: tabular-nums; }
+.reach-block text.words { font: var(--text-md) var(--font-figures); font-weight: 500; }
+.reach-block text.gauge-figure { fill: var(--hatch); }
+/* Lettered on the wall in the gauge's enamel, with a dark edge so it reads wherever the wall is short. */
+.section-drawing text.hwm-figure { font: var(--text-lg) var(--font-figures); font-weight: 500; fill: var(--gauge); stroke: var(--hatch); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }
+
 /* Figures stay tabular where a `font` shorthand above reset the inherited setting. */
 :root :is(.figures, td, th, .main-value, .main-label) { font-variant-numeric: tabular-nums; }

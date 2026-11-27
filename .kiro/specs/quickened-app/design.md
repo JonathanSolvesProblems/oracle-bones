@@ -371,6 +371,27 @@ water-surface elevation (or the depth) at the right end of the water line, each 
 under its tick, and Quickened's words; a full pipe's assumption goes above the line. A Vitest
 test checks, over every result golden, that no two label boxes overlap.
 
+**The reach block (amended 2026-11-27, task 17.2, criterion 10.2).** On screen the model is
+drawn by `drawing/block.ts`, not `svg.ts`; `svg.ts` still draws the 2D front face for the print
+view. The block is a 440 x 244 viewBox: the section is the front face; one extrusion of
+(100, -52) units, up and to the right, gives the top surface (a strip for each segment of the
+ground, lit by its slope), the end wall and the water's plane (the water's two edges pushed back
+by the extrusion, at one level); the cut face below the ground line is hatched; the water's body
+is in front. The high-water mark is a line with a tick at each end, 80% of the wall's width,
+skewed to the wall at the water's level, with the printed figure of the `ws` or `depth` value
+above it. It replaces the water-surface mark on the drawing (the mark stays before the main
+figure). The vertical scale is a staff gauge: a mark every unit, a figure every fifth unit, the
+unit chosen so figures are at least 20 units apart, and the water's line across it. A circle is a
+pipe bored through the same block: the front face has a circular opening, the bore is seen
+through it, and the water's plane is clipped to the opening. QUICK-2's vertical walls and a full
+pipe's assumed line are drawn as before, and the end wall carries a dashed extension where the
+water is above the ground's end. Bank stations are stakes on the top surface, lettered "Left"
+and "Right" with the printed value. The type is `--text-md` in user units, 12.5 px on a 343 px
+phone; Quickened's longer sentences are in the caption, in full, and the drawing carries short
+words ("cut off", "QUICK-2's wall", "assumed"). Each label is placed clear of every other label,
+of every line on the drawing and of the gauge and the wall, on a ground of the canvas colour.
+The depth of the block is drawn, not computed, and the caption says so.
+
 ## The worked examples
 
 Two controls sit above the picker on the first screen (criterion 8.1), side by side on a

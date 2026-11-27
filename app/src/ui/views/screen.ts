@@ -4,7 +4,7 @@ import type { ScreenState } from '../state.ts';
 import type { VNode } from '../vnode.ts';
 import { methodList, methodView } from '../method.ts';
 import { sectionDrawing } from '../drawing/section.ts';
-import { drawingView } from '../drawing/svg.ts';
+import { blockView } from '../drawing/block.ts';
 import { resultsModel, resultsView } from './results.ts';
 import { stateModel, stateView } from './states.ts';
 
@@ -15,7 +15,7 @@ export function screenView(job: AppJob, screen: ScreenState): { node: VNode; mar
     const drawing = sectionDrawing(job, screen.result);
     const node = resultsView(resultsModel(job, screen), {
       afterFlags: methodView(methodList(job.mode, job.shape)),
-      drawing: drawing ? drawingView(drawing) : null,
+      drawing: drawing ? blockView(drawing, { id: 'result' }) : null,
     });
     return { node, marked: m.marked };
   }

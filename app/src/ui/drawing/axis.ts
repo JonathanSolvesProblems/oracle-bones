@@ -6,6 +6,9 @@ import type { DrawingModel } from './section.ts';
 /** The drawing's box in SVG units, 2:1, and the room kept round the section for labels. */
 export const BOX = { width: 640, height: 320, left: 24, right: 24, top: 48, bottom: 56 } as const;
 
+/** A drawing's box in SVG units and the room kept round the section. */
+export interface DrawingBox { width: number; height: number; left: number; right: number; top: number; bottom: number; }
+
 /** Survey stationing: 179.49 ft is 1+79.49, 150 ft at no decimals is 1+50. */
 export function stationText(ft: number, decimals: number): string {
   const scale = 10 ** decimals;
@@ -47,9 +50,9 @@ function niceAtMost(limit: number): number {
 }
 
 /** The scale that makes the section fill the box, with a round vertical exaggeration. */
-export function frameFor(m: DrawingModel): Frame {
-  const w = BOX.width - BOX.left - BOX.right;
-  const h = BOX.height - BOX.top - BOX.bottom;
+export function frameFor(m: DrawingModel, box: DrawingBox = BOX): Frame {
+  const w = box.width - box.left - box.right;
+  const h = box.height - box.top - box.bottom;
   const xSpan = Math.max(m.bounds.xMax - m.bounds.xMin, 1e-6);
   const ySpan = Math.max(m.bounds.yMax - m.bounds.yMin, 1e-6);
   const fitX = w / xSpan;
@@ -57,8 +60,8 @@ export function frameFor(m: DrawingModel): Frame {
   const exaggeration = fitY >= fitX ? niceAtMost(fitY / fitX) : 1;
   const sx = fitY >= fitX ? fitX : fitY;
   const sy = sx * exaggeration;
-  const ox = BOX.left + (w - xSpan * sx) / 2;
-  const oy = BOX.top + (h - ySpan * sy) / 2;
+  const ox = box.left + (w - xSpan * sx) / 2;
+  const oy = box.top + (h - ySpan * sy) / 2;
   const px = (x: number) => ox + (x - m.bounds.xMin) * sx;
   const py = (y: number) => oy + (m.bounds.yMax - y) * sy;
   const ticks: Frame['ticks'] = [];
@@ -70,7 +73,7 @@ export function frameFor(m: DrawingModel): Frame {
 }
 
 /** 1, 2, 5, 10, ...: the smallest at or above `limit`. */
-function niceAtLeast(limit: number): number {
+export function niceAtLeast(limit: number): number {
   for (let k = 0; k < 40; k++) {
     const n = [1, 2, 5][k % 3]! * 10 ** Math.floor(k / 3);
     if (n >= limit) return n;

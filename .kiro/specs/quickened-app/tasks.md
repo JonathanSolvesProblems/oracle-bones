@@ -282,7 +282,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     no blue; print black on white; the figures face is Plex Sans Condensed with tabular figures and
     Plex Mono only inside recorded screens; axe in both themes. Then the tokens and the styles.
     - _Requirements: 10.1, 9.4_
-  - [ ] 17.2 Test: the drawing model is a block (front face, top surface, end wall, gauge, mark
+  - [x] 17.2 Test: the drawing model is a block (front face, top surface, end wall, gauge, mark
     on the wall) over the main example, a circle and a trapezoid; every written value is a printed
     field's text; no label on a line; labels at least 12 px at 375 px; the print view keeps the
     2D front face. Then `drawing/`.
