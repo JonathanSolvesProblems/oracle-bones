@@ -2801,3 +2801,14 @@ marked here, where it falls short, the licence, and that QUICK-2 itself is not i
 repository. Every number is read from its file at build time (`build/story.ts`), and each claim
 links to the file that holds it. Vitest 2,696 passed; Playwright, the page and site specs, 20
 passed and 2 skipped, with axe on the new page in both themes.
+
+### The practitioner named, and the repository public (outside Kiro, 2026-11-27)
+Joe Trimboli, MSc GIS-SME, agreed to being named on the site and in the video, and to the credit
+for his TPE page. Until then this log and the app called him "a practitioner". The story page
+now names him, quotes his message of 2026-11-20 whole (the one he cleared for publication, held
+equal to the gallery's copy by a test), links his two QUICK-2 guides, his Quick2af (QUICK-2
+packaged with DOSBox to run on Windows) and his TPE page, and says what the name means: "quick"
+is an old word for alive, so Quickened is QUICK-2 brought back to life. The README has a Thanks
+section, and criterion 11.4 is amended. Before the repository was made public, its whole history
+was checked: every commit under the person's own address, no private planning file, no secret,
+and no quote of his beyond the two he cleared.

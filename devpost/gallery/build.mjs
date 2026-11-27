@@ -367,7 +367,7 @@ function slides(d) {
     alt: 'A quoted message from Joe Trimboli about still using QUICK-2.',
     h1: `The person who still needs it`,
     main: `<div class="col" style="justify-content:center"><blockquote>${esc(QUOTE)}</blockquote>
-      <div class="who"><b>Joe Trimboli, MSc, GIS SME</b> · Huntington, West Virginia · author of two QUICK-2 guides (2013, 2023)</div></div>`,
+      <div class="who"><b>Joe Trimboli, MSc GIS-SME</b> · Huntington, West Virginia · author of two QUICK-2 guides (2013, 2023)</div></div>`,
     block: [['Source', 'his message of 2026-11-20, quoted whole and with his permission'], ['Context', "FEMA's list of nationally accepted hydraulic models names QUICK-2 1.0, for Zone A areas (devpost/sources.md)"]],
   });
 

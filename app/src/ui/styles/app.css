@@ -332,6 +332,7 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .story-page { max-width: var(--measure); }
 .story-page .story-lead { font: var(--text-lg) var(--font-body); }
 .story-page section { border-top: var(--hairline); margin-top: var(--space-6); }
+.story-page .story-quote { margin: 0 0 var(--space-4); padding-left: var(--space-4); border-left: var(--space-1) solid var(--rule-line); }
 
 /* The paste panel (11.1): the first thing under "The section" while it has no rows, ruled off from the table. */
 .paste { margin-bottom: var(--space-4); }

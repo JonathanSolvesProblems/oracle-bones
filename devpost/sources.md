@@ -30,7 +30,7 @@ the classes of misses add up to the headline's misses.
    studied by approximate methods (Zone A) only." "May be used to develop water-surface
    elevations at one cross section or a series of cross sections." "May not be used to develop a
    floodway." The list names QUICK-2. It does not name Quickened, and the app says so.
-2. **The practitioner's message.** Joe Trimboli, MSc, GIS SME, Huntington, West Virginia: a
+2. **The practitioner's message.** Joe Trimboli, MSc GIS-SME, Huntington, West Virginia: a
    message to me of 2026-11-20, quoted whole with his permission given the same day. A second
    sentence he offered for publication on 2026-11-21: "a single property evaluation could be made
    more efficient and streamlined within a micro process." Nothing else he wrote is quoted.

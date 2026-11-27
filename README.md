@@ -164,10 +164,19 @@ plan, specs, steering, hooks and agents, written with another AI coding assistan
 ablation runs; and, after Kiro's usage limit was reached on 2026-11-26, the fixes that the clean
 install called for, three corrected rows of the held-out record, this README and the script that
 exports the prompts; and, when the limit refused the prompt for task 18.0 on 2026-11-27, the
-paste panel and the plainer wording that a practitioner's first try on a phone called for. From
+paste panel and the plainer wording that Joe Trimboli's first try on a phone called for. From
 that day the rest of the project is finished outside Kiro, and the build log marks each change.
 
 The app tells this story in short on its own page: https://jonathansolvesproblems.github.io/quickened/#/story
+
+## Thanks
+
+Joe Trimboli, MSc GIS-SME, of Huntington, West Virginia, still works out advisory flood heights
+and has written two guides to QUICK-2 (https://bzjoe.blogspot.com/2013/06/fema-quick-2-version-1.html,
+https://femaquick2.blogspot.com/2023/06/quick2-tutorial.html). His Quick2af packages QUICK-2 with
+the DOSBox emulator to run on Windows. He tried Quickened on a phone: the paste panel, the plainer
+wording and the story page came from that. The worked example's section was cut the way his TPE
+page (https://bzjoe.github.io/TPE/) cuts one. He is named here with his OK.
 
 ## Licences
 

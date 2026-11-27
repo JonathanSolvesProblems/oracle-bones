@@ -1,13 +1,14 @@
 // Criterion 11.4 (2026-11-27): the practitioner who tried the site asked that the project be
 // transparent and that its story be part of the result. The story page says how Quickened was
-// made, reads every number from the file that holds it, and links each claim to that file.
+// made, reads every number from the file that holds it, and links each claim to that file. Since
+// his OK the same day, it names him and credits his own QUICK-2 work.
 import { describe, expect, it } from 'vitest';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { data } from 'virtual:quickened/data';
 import { introView } from '../src/ui/views/intro.ts';
 import { REPOSITORY_URL, ROUTES, routeOf, shell } from '../src/ui/views/shell.ts';
-import { STORY_TITLE, storyModel, storyView } from '../src/ui/views/story.ts';
+import { JOE, NAME_SENTENCE, STORY_TITLE, storyModel, storyView } from '../src/ui/views/story.ts';
 import { findAll, textOf } from '../src/ui/vnode.ts';
 import { ROOT } from './golden.ts';
 
@@ -37,7 +38,9 @@ describe('the story page (criterion 11.4)', () => {
 
   it('types no number: every figure on the page is a count from a file, the year, or the competition\'s year', () => {
     const n = (x: number) => x.toLocaleString('en-US');
-    let rest = text.replace(/QUICK-2/g, '').replace('Kiroween 2026', '');
+    // Names are not figures: the program, the competition, Joe Trimboli's Quick2af and his guides' years.
+    let rest = text.replace(/QUICK-2/g, '').replace('Kiroween 2026', '').replace('Quick2af', '');
+    for (const g of JOE.guides) rest = rest.replace(g.year, '');
     // Longest first, so a short count never takes a digit out of a longer one.
     const values = [m.year, m.recorded, m.drawn, ...[m.headline!.total, m.headline!.matched, m.baseline.total, m.baseline.matched,
       m.sessions, m.prompts, m.headline!.total - m.headline!.matched, m.missClasses].map(n)].sort((x, y) => y.length - x.length);
@@ -71,6 +74,23 @@ describe('the story page (criterion 11.4)', () => {
     expect(text).toContain('MIT license');
     expect(read('LICENSE')).toMatch(/^MIT License/);
     expect(text).toContain('QUICK-2 itself is not in the repository');
+  });
+
+  it('names the practitioner (his OK, 2026-11-27), quotes his cleared message whole, and credits his own work', () => {
+    expect(text).toContain(`${JOE.name}, ${JOE.title}, of Huntington, West Virginia`);
+    expect(text).toContain(`${JOE.name} tried the site on a phone.`);
+    // The same words the gallery quotes, as he cleared them on 2026-11-20.
+    expect(JOE.quote).toBe(/const QUOTE = "([^"]+)";/.exec(read('devpost/gallery/build.mjs'))![1]);
+    const quote = findAll(view, (n) => n.tag === 'blockquote');
+    expect(quote).toHaveLength(1);
+    expect(textOf(quote[0]!)).toBe(JOE.quote);
+    for (const url of [JOE.tpe, JOE.quick2af, ...JOE.guides.map((g) => g.url)]) expect(hrefs).toContain(url);
+    // The worked example's section names the TPE page it was cut like.
+    expect(read('realdata/huntington-section-01.json')).toContain(JOE.tpe);
+  });
+
+  it('says what the name means', () => {
+    expect(text).toContain(NAME_SENTENCE);
   });
 
   it('is a route with its own link in the top line and the footer, and the opening links it', () => {
