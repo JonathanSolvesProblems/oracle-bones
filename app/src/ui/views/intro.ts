@@ -31,5 +31,8 @@ export function introView(headline: QuickenedData['headline'], program: Quickene
       h('a', { href: '#/proof' }, 'the proof page'),
       '. Where it differs from QUICK-2 or gives no answer is on ',
       h('a', { href: '#/limits' }, 'the limits page'),
-      '.'));
+      '. ',
+      // Criterion 11.4: the story is part of the result.
+      h('a', { href: '#/story' }, 'How it was made'),
+      ' is open too, down to every prompt.'));
 }

@@ -33,6 +33,8 @@ async function* visits(page: Page): AsyncGenerator<string> {
   yield 'the limits page';
   await open(page, '#/proof');
   yield 'the proof page';
+  await open(page, '#/story');
+  yield 'the story page';
 }
 
 test('offline: load, wait for the service worker, go offline, reload, run the main example', async ({ page, context }) => {

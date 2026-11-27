@@ -44,6 +44,16 @@ test('the proof page: each listed case, the known differences as different, the 
   for (const c of listed) await expect(page.locator(`#case-${c.id} h2`)).toContainText('different');
 });
 
+// Criterion 11.4 (2026-11-27): the story is part of the result, reached from the top line.
+test('the story page: reached from the top line, with the headline and the comparison read from the files', async ({ page }) => {
+  await open(page, '#/');
+  await page.locator('nav a[href="#/story"]').click();
+  await expect(page.locator('h1')).toHaveText('How Quickened was made');
+  await expect(page.locator('.story-page')).toContainText(`on ${DATA.headline!.matched} of them`);
+  await expect(page.locator('.story-page')).toContainText(`matches ${DATA.story.baseline.matched} of ${DATA.story.baseline.total}`);
+  await expect(page.locator('.story-page a[href$="docs/prompts.md"]')).toHaveCount(1);
+});
+
 test('the proof page: the headline of results/headline.md, and the count at the top links to each case', async ({ page }) => {
   const file = readFileSync(join(ROOT, 'results', 'headline.md'), 'utf-8');
   const cases = /^Cases:\s*(\d+)\s+of\s+(\d+)\s*$/m.exec(file)!;

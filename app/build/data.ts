@@ -13,6 +13,7 @@ import { readHauntings, type Haunting, type LimitEntry } from './hauntings.ts';
 import { readOpenQuestions } from './ledger.ts';
 import { readPlain } from './plain.ts';
 import { readSources, type Sources } from './sources.ts';
+import { readStory, type Story } from './story.ts';
 
 export const DATA_ID = 'virtual:quickened/data';
 export const DATA_PLUGIN = 'quickened-data';
@@ -51,6 +52,8 @@ export interface QuickenedData {
   program: { year: string };
   /** package.json's version and the build's short commit, for the print header (criterion 4.1). */
   build: { version: string; commit: string };
+  /** The story page's counts, each read from its file (criterion 11.4). */
+  story: Story;
 }
 
 /** The short commit the build is made from; the build fails outside a git checkout. */
@@ -93,7 +96,7 @@ export const EXAMPLE_CASES = { main: 'nd-irr-000006', cutoff: 'nd-irr-000010' } 
 export function sourceFiles(root: string): string[] {
   return [join(root, 'results', 'hauntings.md'), join(root, 'results', 'ledger.json'), join(root, 'results', 'limits-plain.md'),
     join(root, 'results', 'headline.md'), join(root, 'results', 'known-misses.json'), join(root, 'app', 'src', 'ui', 'proof', 'cases.json'),
-    join(root, 'realdata', 'huntington-section-01.json')];
+    join(root, 'realdata', 'huntington-section-01.json'), join(root, 'results', 'ablation-manual-only.md'), join(root, 'docs', 'prompts.md')];
 }
 
 function readText(path: string): string {
@@ -129,6 +132,7 @@ export function buildData(root: string = ROOT): QuickenedData {
       version: String((JSON.parse(readText(join(root, 'app', 'package.json'))) as { version: string }).version),
       commit: shortCommit(root),
     },
+    story: readStory(root),
   };
 }
 

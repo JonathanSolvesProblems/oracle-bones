@@ -97,10 +97,10 @@ describe('the first screen is one object, then the examples, then the calculator
 
 describe('the footer of every page', () => {
   for (const r of ROUTES) {
-    it(`${r.route}: the source repository, the limits and proof pages, and the notice`, () => {
+    it(`${r.route}: the source repository, the limits, proof and story pages, and the notice`, () => {
       const f = findAll(shell(r.route, 'x'), (n) => n.tag === 'footer')[0]!;
       const hrefs = findAll(f, (n) => n.tag === 'a').map((a) => a.attrs.href);
-      expect(hrefs).toEqual([REPOSITORY_URL, '#/limits', '#/proof']);
+      expect(hrefs).toEqual([REPOSITORY_URL, '#/limits', '#/proof', '#/story']);
       expect(REPOSITORY_URL).toBe('https://github.com/JonathanSolvesProblems/oracle-bones');
       expect(textOf(f)).toContain(NOTICE);
     });

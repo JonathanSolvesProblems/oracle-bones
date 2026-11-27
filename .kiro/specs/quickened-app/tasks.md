@@ -319,3 +319,10 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
     this input"; the exact caption says the value QUICK-2 prints stays the answer and links
     "Limits, note H-001". Then the views.
     - _Requirements: 11.3, 2.2, 2.4, 2.6_
+  - [x] 18.1 Test: the story page's counts equal the files' (recorded cases, drawn inputs, the
+    headline, the comparison, sessions and prompts), no other number is typed, every repository
+    link names a path that exists, it names the maker, the competition, Kiro and the work done
+    outside it, the licence, and it is linked from the top line, the footer and the opening;
+    Playwright reaches it from the top line and axe passes on it. Then `build/story.ts`,
+    `views/story.ts`, `views/shell.ts`, `views/intro.ts` and `main.ts`.
+    - _Requirements: 11.4_

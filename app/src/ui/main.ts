@@ -4,6 +4,7 @@ import { data } from 'virtual:quickened/data';
 import type { Mode, Shape } from '../solver/index.ts';
 import { limitsModel, limitsView } from './views/limits.ts';
 import { proofModel, proofView } from './views/proof.ts';
+import { storyModel, storyView } from './views/story.ts';
 import { render, type Dispatch } from './dom.ts';
 import { formFor } from './forms.ts';
 import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from './job.ts';
@@ -38,6 +39,7 @@ function page(route: Route): Child {
   switch (route) {
     case 'limits': return limitsView(limitsModel(data));
     case 'proof': return proofView(proofModel(data.proof, data.headline));
+    case 'story': return storyView(storyModel(data));
     default: {
       if (printing && last && last.screen.kind === 'result') return printView(printModel(last.job, last.screen, printing));
       const grid = gridParts(state.rows);

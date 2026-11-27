@@ -328,6 +328,11 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .kept-points { margin-top: var(--space-3); font: var(--text-md) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 
+/* The story page (11.4): one column of reading. */
+.story-page { max-width: var(--measure); }
+.story-page .story-lead { font: var(--text-lg) var(--font-body); }
+.story-page section { border-top: var(--hairline); margin-top: var(--space-6); }
+
 /* The paste panel (11.1): the first thing under "The section" while it has no rows, ruled off from the table. */
 .paste { margin-bottom: var(--space-4); }
 .paste.open { border-left: var(--margin-rule); padding: var(--space-1) 0 var(--space-1) var(--space-3); }

@@ -3,12 +3,14 @@
 import { h, type Child, type VNode } from '../vnode.ts';
 import { NOTICE } from './notice.ts';
 
-export type Route = 'calculate' | 'limits' | 'proof';
+export type Route = 'calculate' | 'limits' | 'proof' | 'story';
 
 export const ROUTES: readonly { route: Route; hash: string; label: string }[] = [
   { route: 'calculate', hash: '#/', label: 'Calculate' },
   { route: 'limits', hash: '#/limits', label: 'Limits' },
   { route: 'proof', hash: '#/proof', label: 'Proof' },
+  // How it was made (criterion 11.4).
+  { route: 'story', hash: '#/story', label: 'Story' },
 ];
 
 const PROOF_CASE = /^#\/proof\/([a-z]+-[a-z]+-\d{6})$/;
@@ -57,13 +59,14 @@ export function shell(route: Route, main: Child, opts: { newerBuild?: boolean } 
 /** The source repository of the project, linked from every page's footer. */
 export const REPOSITORY_URL = 'https://github.com/JonathanSolvesProblems/oracle-bones';
 
-/** The footer of every page (criterion 10.3): the source, the limits and proof pages, and the notice. */
+/** The footer of every page (criteria 10.3, 11.4): the source, the limits, proof and story pages, and the notice. */
 export function footer(): VNode {
   return h('footer', { class: 'site-footer' },
     h('ul', { class: 'footer-links' },
       h('li', {}, h('a', { href: REPOSITORY_URL, rel: 'noopener' }, 'Source repository')),
       h('li', {}, h('a', { href: '#/limits' }, 'Limits')),
-      h('li', {}, h('a', { href: '#/proof' }, 'Proof'))),
+      h('li', {}, h('a', { href: '#/proof' }, 'Proof')),
+      h('li', {}, h('a', { href: '#/story' }, 'How it was made'))),
     h('p', { class: 'footer-notice' }, NOTICE));
 }
 
