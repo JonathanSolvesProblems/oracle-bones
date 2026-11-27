@@ -24,6 +24,16 @@ export function scaleText(n: number): string {
   return `Vertical scale ×${n}`;
 }
 
+/** A figure on the staff gauge: the elevation at a mark, to the decimals of the gauge's step. Quickened's scale, never a QUICK-2 value. */
+export function gaugeFigure(v: number, decimals: number): string {
+  return v.toFixed(decimals);
+}
+
+/** An angle in degrees, to a hundredth, for the skew of the high-water mark. */
+export function angleText(degrees: number): string {
+  return degrees.toFixed(2);
+}
+
 /** An SVG coordinate, to a tenth of a unit. */
 export function coord(n: number): string {
   return n.toFixed(1);

@@ -9,7 +9,7 @@
 // the section, the water, a printed value or the scale. Colours and type come from the stylesheet
 // by class. The text is 16 units in a 440-unit-wide viewBox, which is 12.5 px on a 343 px phone.
 import { h, type Child, type VNode } from '../vnode.ts';
-import { coord, frameFor, niceAtLeast, scaleText, stationText, type DrawingBox, type Frame } from './axis.ts';
+import { angleText, coord, frameFor, gaugeFigure, niceAtLeast, scaleText, stationText, type DrawingBox, type Frame } from './axis.ts';
 import { overlaps, type Anchor, type Box } from './labels.ts';
 import { DRAWING_WORDS, type DrawingModel, type Pt } from './section.ts';
 
@@ -146,7 +146,7 @@ export function blockLayout(m: DrawingModel): BlockLayout {
     const v = Math.round(k * unit * 10 ** (decimals + 1)) / 10 ** (decimals + 1);
     marks.push({ v, y: f.py(v), major: k % 5 === 0 });
   }
-  const widest = Math.max(...marks.filter((x) => x.major).map((x) => x.v.toFixed(decimals).length), 1);
+  const widest = Math.max(...marks.filter((x) => x.major).map((x) => gaugeFigure(x.v, decimals).length), 1);
   const gauge = { x: 4, width: 18 + widest * CHAR, top: f.py(hi), bottom: yBase, unit, step, decimals, marks };
 
   const lines: [Pt, Pt][] = [];
@@ -174,7 +174,7 @@ export function blockLayout(m: DrawingModel): BlockLayout {
   const fixed = (role: BlockLabel['role'], cls: string, text: string, s: Spot): void => {
     labels.push({ cls, role, text, ...s, box: boxOf(text, s.x, s.y, s.anchor), stem: null });
   };
-  for (const g of marks.filter((x) => x.major)) fixed('gauge', 'scale gauge-figure', g.v.toFixed(decimals), { x: gauge.x + 18, y: g.y + 5, anchor: 'start' });
+  for (const g of marks.filter((x) => x.major)) fixed('gauge', 'scale gauge-figure', gaugeFigure(g.v, decimals), { x: gauge.x + 18, y: g.y + 5, anchor: 'start' });
   if (m.stations) {
     const sx = f.px(1) - f.px(0);
     for (let k = 0; k < 60; k++) {
@@ -330,7 +330,7 @@ export function blockView(m: DrawingModel, opts: { links?: boolean; id?: string 
     return h('clipPath', { id: `${id}-bore` }, h('circle', { cx: coord(c.x), cy: coord(c.y), r: coord(m.circle.r * (f.px(1) - f.px(0))) }));
   })() : null;
 
-  const hwm = mark ? h('g', { class: 'hwm', transform: `translate(${coord(mark.x)} ${coord(mark.y)}) skewY(${mark.angle.toFixed(2)})` },
+  const hwm = mark ? h('g', { class: 'hwm', transform: `translate(${coord(mark.x)} ${coord(mark.y)}) skewY(${angleText(mark.angle)})` },
     h('line', { class: 'hwm-line', x1: '0', y1: '0', x2: coord(mark.length), y2: '0' }),
     h('line', { class: 'hwm-line', x1: '0', y1: '-8', x2: '0', y2: '8' }),
     h('line', { class: 'hwm-line', x1: coord(mark.length), y1: '-8', x2: coord(mark.length), y2: '8' }),
