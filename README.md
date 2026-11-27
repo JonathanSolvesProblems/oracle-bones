@@ -164,7 +164,10 @@ plan, specs, steering, hooks and agents, written with another AI coding assistan
 ablation runs; and, after Kiro's usage limit was reached on 2026-11-26, the fixes that the clean
 install called for, three corrected rows of the held-out record, this README and the script that
 exports the prompts; and, when the limit refused the prompt for task 18.0 on 2026-11-27, the
-paste panel and the plainer wording that a practitioner's first try on a phone called for.
+paste panel and the plainer wording that a practitioner's first try on a phone called for. From
+that day the rest of the project is finished outside Kiro, and the build log marks each change.
+
+The app tells this story in short on its own page: https://jonathansolvesproblems.github.io/quickened/#/story
 
 ## Licences
 

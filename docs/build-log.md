@@ -2784,3 +2784,20 @@ Vitest 2,690 passed in 59 files (2,674 before). The typecheck and the build are 
 Playwright 60 passed and 6 were skipped (50 before): at 390 px the Huntington stations load 40
 rows from the box, from the clipboard control, from a paste into the first station cell, and as
 comma-separated values under a "Distance,Elevation" header. Axe passes in both themes.
+
+### The rest is finished outside Kiro (decided 2026-11-27)
+Kiro's credits for the month are spent, and the person decided not to buy more: the project is
+finished outside Kiro, with an AI coding assistant, from here on. Each change says so in its
+commit message and in this log. Kiro wrote the specs, the harness, the solver, the app and the
+power in sessions 1 to 17; `docs/prompts.md` has every prompt of those sessions.
+
+### The story page (18.1, fe09201; criterion 11.4)
+The practitioner wrote back after the fixes above were planned: the project has to be
+transparent, and its story has to be part of the result. `#/story`, linked from the top line, the
+footer and the opening, says how Quickened was made: the problem, asking the original program,
+predictions before runs, the headline run beside the rebuild made with no recorded answers, who
+made it and for which competition, that most of the code was written in Kiro and the rest is
+marked here, where it falls short, the licence, and that QUICK-2 itself is not in the
+repository. Every number is read from its file at build time (`build/story.ts`), and each claim
+links to the file that holds it. Vitest 2,696 passed; Playwright, the page and site specs, 20
+passed and 2 skipped, with axe on the new page in both themes.
