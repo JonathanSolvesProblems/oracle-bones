@@ -20,6 +20,15 @@ function create(node: Child, dispatch: Dispatch, inSvg: boolean): Node {
   for (const [event, action] of Object.entries(node.on)) {
     el.addEventListener(event, (e) => {
       if (event === 'submit') e.preventDefault();
+      if (event === 'paste') {
+        // A paste of more than one line, or of two values on one line, goes to the action with the
+        // pasted text; any other paste goes into the field as usual (criterion 11.2).
+        const text = (e as ClipboardEvent).clipboardData?.getData('text/plain') ?? '';
+        if (!/[\n\t]/.test(text.trim())) return;
+        e.preventDefault();
+        dispatch(action, text);
+        return;
+      }
       const t = e.currentTarget;
       const value = t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t instanceof HTMLSelectElement ? t.value : null;
       dispatch(action, value);

@@ -74,7 +74,8 @@ function groundPoints(m: FormViewModel): VNode {
           h('input', {
             id: rowId(i, part), type: 'text', class: 'figures', value: r[part], autocomplete: 'off', spellcheck: 'false',
             'aria-label': `Row ${i + 1} ${label}`, 'aria-invalid': m.marked.has(keys[part]) ? 'true' : undefined,
-            on: { input: { type: 'row', index: i, part } },
+            // A paste of more than one line loads from this row down (criterion 11.2; dom.ts reads the clipboard).
+            on: { input: { type: 'row', index: i, part }, paste: { type: 'paste-cell', index: i, part } },
           }));
         return [
           h('tr', { class: note ? 'not-taken' : undefined },

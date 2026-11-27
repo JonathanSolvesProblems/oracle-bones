@@ -328,10 +328,14 @@ table.printed .exact-label { font: var(--text-xs) var(--font-label); text-transf
 .kept-points { margin-top: var(--space-3); font: var(--text-md) var(--font-body); }
 .kept-points ol { font-family: var(--font-figures); columns: 2; margin: 0; padding-left: var(--space-8); }
 
+/* The paste panel (11.1): the first thing under "The section" while it has no rows, ruled off from the table. */
 .paste { margin-bottom: var(--space-4); }
-.paste label { display: block; font-weight: 600; }
+.paste.open { border-left: var(--margin-rule); padding: var(--space-1) 0 var(--space-1) var(--space-3); }
+.paste .paste-heading { display: block; font: var(--text-lg) var(--font-body); font-weight: 600; }
+.paste .note { margin: var(--space-1) 0 var(--space-2); }
 .paste textarea { padding: var(--space-2); resize: vertical; }
 .paste-error { color: var(--flag); margin: var(--space-2) 0 0; }
+button.primary { background: var(--ink); color: var(--canvas); }
 
 @media (max-width: 959.98px) {
   .top-line .name, .top-line li a { font: var(--text-md) var(--font-label); }

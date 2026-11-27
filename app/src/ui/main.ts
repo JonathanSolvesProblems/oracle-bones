@@ -11,11 +11,11 @@ import { exampleBlock, exampleForm, exampleJob, examplesView, type ExampleOrigin
 import { heroView } from './views/hero.ts';
 import { PRINT_ACTION, printModel, printView } from './views/print.ts';
 import { GROUND_TOGGLE, groundAfter } from './ground.ts';
-import { readPaste } from './paste.ts';
+import { readPaste, readPasteInto } from './paste.ts';
 import { calculate, type ScreenState } from './state.ts';
 import { calculatePage, type CalculatorState } from './views/calculate.ts';
 import { gridParts } from './views/grid.ts';
-import { pasteControl, type PasteState } from './views/paste.ts';
+import { CLIPBOARD_REFUSED, hasGroundPoints, pasteControl, type PasteState } from './views/paste.ts';
 import { shapeChoice, STEP_BACKWATER_SHAPE } from './views/picker.ts';
 import { proofCaseAnchor, RELOAD_ACTION, routeOf, shell, type Route } from './views/shell.ts';
 import { screenView } from './views/screen.ts';
@@ -24,7 +24,8 @@ import type { Action, Child } from './vnode.ts';
 const emptyRow = (): Row => ({ station: '', elevation: '' });
 
 const state: CalculatorState = { mode: null, shape: null, values: {}, rows: [emptyRow()], marked: new Set(), ground: 'typed' };
-const paste: PasteState = { open: false, text: '', message: null };
+// The paste panel starts open, so it is the first thing a new section offers (criterion 11.1).
+const paste: PasteState = { open: true, text: '', message: null, clipboard: typeof navigator.clipboard?.readText === 'function' };
 /** The worked example loaded into the form, if any, and whether the job is still that example (8.6). */
 let loaded: ExampleOrigin | null = null;
 let origin: Origin = 'typed';
@@ -43,7 +44,8 @@ function page(route: Route): Child {
       const view = last ? screenView(last.job, last.screen) : null;
       state.marked = new Set(view?.marked ?? []);
       return calculatePage(state, {
-        aboveRows: pasteControl(paste), rowNotes: grid.rowNotes, belowRows: grid.summary,
+        aboveRows: pasteControl(paste, { hasRows: hasGroundPoints(state.rows), loaded: (state.ground ?? 'typed') !== 'typed' }),
+        rowNotes: grid.rowNotes, belowRows: grid.summary,
         results: view?.node ?? null,
         // The main example's block is the first screen's object; a result brings its own block (criterion 10.3).
         hero: heroView({ block: !view }),
@@ -55,7 +57,7 @@ function page(route: Route): Child {
 }
 
 /** Actions that change the job end the last calculation's state. */
-const EDITS = new Set(['pick-mode', 'pick-shape', 'field', 'row', 'add-row', 'remove-row', 'paste-load']);
+const EDITS = new Set(['pick-mode', 'pick-shape', 'field', 'row', 'add-row', 'remove-row', 'paste-load', 'paste-cell']);
 
 function update(action: Action, value: string | null): void {
   if (EDITS.has(action.type)) {
@@ -122,6 +124,25 @@ function update(action: Action, value: string | null): void {
         focusAfterDraw = 'paste-open';
       } else {
         paste.message = r.message;
+      }
+      break;
+    }
+    case 'paste-clipboard':
+      // One tap: read the clipboard into the box and load it. If the browser refuses, say so and keep the box.
+      navigator.clipboard.readText().then(
+        (text) => { paste.text = text; dispatch({ type: 'paste-load' }, null); },
+        () => { paste.message = CLIPBOARD_REFUSED; draw(); });
+      break;
+    case 'paste-cell': {
+      // More than one line pasted into a cell loads from that row down (criterion 11.2). On an error
+      // nothing is loaded, and the panel opens with the text and the reason.
+      const r = readPasteInto(value ?? '', state.rows, action.index as number, action.part as keyof Row);
+      if (r.ok) {
+        state.rows = r.rows;
+        paste.message = null;
+      } else {
+        Object.assign(paste, { open: true, text: value ?? '', message: r.message });
+        focusAfterDraw = 'paste-text';
       }
       break;
     }

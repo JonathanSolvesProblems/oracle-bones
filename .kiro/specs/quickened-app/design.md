@@ -228,16 +228,29 @@ rejects or computes them as QUICK-2 did.
 ### Ground points
 
 The irregular form shows the ground points as a table of rows, station then elevation, with
-row numbers 1 to 40 and an "Add row" control that stops at 40. "Paste rows" opens a text area;
-`paste.ts` reads it:
+row numbers 1 to 40 and an "Add row" control that stops at 40. Above the table is the paste
+panel (`views/paste.ts`, criterion 11.1). It starts open and stays open while no row has a
+station or an elevation: "Paste the section", one line on what it takes, a text area, "Load
+stations", and "Paste from clipboard" where `navigator.clipboard.readText` exists (`main.ts`
+reads the clipboard into the text area and loads it; a refusal is one line under the box). Once
+rows are loaded it closes to "Paste again" over the summary row; over rows typed by hand the
+closed control reads "Paste stations". `paste.ts` reads the text:
 
-- split on LF, with a trailing CR removed from each line; empty lines are skipped;
-- each line must be two plain decimals separated by exactly one tab;
+- split on LF, with a trailing CR removed from each line; blank lines are skipped;
+- each line is two plain decimals, station then elevation, separated by a tab, else a
+  semicolon, else a comma, else spaces, with blanks at the ends and around the separator ignored;
+- a first line with no plain decimal in it is a header and is skipped;
 - more than 40 rows, or one bad line, loads nothing and says which line failed (its number and
   text) or how many rows the paste had and that QUICK-2 takes at most 40;
-- otherwise the pasted rows replace the table's rows, text as pasted.
+- otherwise the pasted rows replace the table's rows, each number's text as pasted.
 
-`realdata/huntington-section-01.tsv` is a valid paste (40 rows, two decimals each).
+A paste into a station or elevation cell (criterion 11.2): `dom.ts` passes a paste whose text has
+a line break or a tab to the cell's `paste-cell` action instead of the field, and `readPasteInto`
+puts the rows in from that cell's row down, keeping the rows below; one number per line fills
+that column only. On an error nothing loads and the panel opens with the text and the reason.
+
+`realdata/huntington-section-01.tsv` is a valid paste (40 rows, two decimals each), and so is the
+same section as comma-separated values under a "Distance,Elevation" header.
 
 The rows are entered the way QUICK-2's editor takes keys: `sectionKeys(inputs)` gives the key
 sequence and `enter()` the points it keeps. `grid.ts` compares the kept points with the typed

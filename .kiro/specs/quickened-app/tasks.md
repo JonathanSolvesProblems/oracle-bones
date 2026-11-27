@@ -301,3 +301,13 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
   - [x] 17.6 Test: no repository wording outside a closed details on the limits and proof pages,
     "haunting" defined at first use, H-009 as a table, no dangling "as recorded:". Then the pages.
     - _Requirements: 10.6, 5.3_
+- [ ] 18. A practitioner's first try (2026-11-27: he tried the live site on his phone; done
+  outside Kiro after Kiro's monthly usage limit refused the prompt, and marked so in the build
+  log; the solver is not touched)
+  - [x] 18.0a Test: the reader takes a tab, a comma, a semicolon or spaces and skips a header
+    line, every other rule kept; the panel is open and first while the section has no rows, with
+    "Load stations" and, where the browser has it, "Paste from clipboard", and closes to "Paste
+    again"; a paste into a cell loads from that row down; at 390 px the Huntington stations load
+    40 rows from the box, the clipboard control and the first station cell, and as CSV with a
+    header. Then `paste.ts`, `views/paste.ts`, `views/form.ts`, `dom.ts` and `main.ts`.
+    - _Requirements: 1.7, 1.8, 11.1, 11.2_

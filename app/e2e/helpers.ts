@@ -29,10 +29,11 @@ export async function fill(page: Page, values: Record<string, string>): Promise<
   for (const [k, v] of Object.entries(values)) await page.locator(`#field-${k}`).fill(v);
 }
 
+/** Pastes into the paste panel, which is open while the section has no rows (criterion 11.1), and loads it. */
 export async function paste(page: Page, text: string): Promise<void> {
-  await page.locator('#paste-open').click();
+  if (!(await page.locator('#paste-text').isVisible())) await page.locator('#paste-open').click();
   await page.locator('#paste-text').fill(text);
-  await page.getByRole('button', { name: 'Load rows' }).click();
+  await page.getByRole('button', { name: 'Load stations' }).click();
   await openGround(page);
 }
 /** A pasted or loaded section is one summary row (criterion 10.5); the reader opens it to see the rows. */
