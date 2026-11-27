@@ -203,9 +203,9 @@ const clickNth = (selector, n) => `(() => { const el = document.querySelectorAll
 // What to photograph in the app. `clip` names an element; `maxHeight` cuts a long one; `pad`
 // adds paper around it. Widths are CSS pixels; pictures are taken at twice that.
 const CAPTURES = {
-  'drawing-main': { width: 1280, height: 900, steps: [clickNth('.example', 0)], union: '.state-result .main-figure, .state-result figure.drawing' },
+  'drawing-main': { width: 1280, height: 900, steps: [], union: '.hero svg.reach-block' },
   'tables-main': { width: 1280, height: 900, steps: [clickNth('.example', 0)], union: '.state-result table.printed' },
-  'drawing-cutoff': { width: 1280, height: 900, steps: [clickNth('.example', 1)], union: '.state-result .main-figure, .state-result figure.drawing' },
+  'drawing-cutoff': { width: 1280, height: 900, steps: [clickNth('.example', 1)], union: '.state-result .main-figure, .state-result svg.reach-block' },
   'flags-cutoff': { width: 1280, height: 900, steps: [clickNth('.example', 1)], union: '.state-result .flags' },
   'limits-h001': { width: 700, height: 900, hash: '#/limits', union: '#haunting-H-001' },
   'phone-main': { width: 375, height: 812, mobile: true, steps: [clickNth('.example', 0)], scrollTo: '.state-result', viewport: true },
@@ -223,14 +223,14 @@ async function takeCaptures(browser) {
   const { send, js } = browser;
   for (const [name, c] of Object.entries(CAPTURES)) {
     await send('Emulation.setDeviceMetricsOverride', { width: c.width, height: c.height, deviceScaleFactor: 2, mobile: Boolean(c.mobile) });
-    await send('Emulation.setEmulatedMedia', { media: 'screen' });
+    await send('Emulation.setEmulatedMedia', { media: 'screen', features: [{ name: 'prefers-color-scheme', value: 'light' }] });
     await send('Page.navigate', { url: 'about:blank' });
     await sleep(150);
     await send('Page.navigate', { url: BASE + (c.hash ?? '') });
     await sleep(1200);
     for (const step of c.steps ?? []) { await js(step); await sleep(400); }
     if (c.print) {
-      await send('Emulation.setEmulatedMedia', { media: 'print' });
+      await send('Emulation.setEmulatedMedia', { media: 'print', features: [{ name: 'prefers-color-scheme', value: 'light' }] });
       await js("window.dispatchEvent(new Event('beforeprint')), 'ok'");
       await sleep(500);
     }
@@ -268,16 +268,19 @@ const CSS = `
 @font-face { font-family: 'IBM Plex Sans'; src: url('${fontUrl('IBMPlexSans-SemiBold-Latin1.woff2')}') format('woff2'); font-weight: 600; }
 @font-face { font-family: 'IBM Plex Sans Condensed'; src: url('${fontUrl('IBMPlexSansCondensed-Medium-Latin1.woff2')}') format('woff2'); font-weight: 500; }
 @font-face { font-family: 'IBM Plex Mono'; src: url('${fontUrl('IBMPlexMono-Regular-Latin1.woff2')}') format('woff2'); font-weight: 400; }
-:root { --paper: ${token('paper')}; --rule: ${token('paper-rule')}; --grid: ${token('grid')}; --ink: ${token('ink')}; --muted: ${token('ink-muted')};
-  --pencil: ${token('pencil')}; --water: ${token('water')}; --water-fill: ${token('water-fill')}; --ground: ${token('ground')};
+:root { --paper: ${token('canvas')}; --rule: ${token('rule-line')}; --grid: ${token('rule-line')}; --ink: ${token('ink')}; --muted: ${token('ink-muted')};
+  --pencil: ${token('water-line')}; --water: ${token('water')}; --water-fill: ${token('water-top')}; --ground: ${token('cut-face')}; --gauge: ${token('gauge')};
   --label: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; --body: 'IBM Plex Sans', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace; }
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 1500px; height: 1000px; overflow: hidden; }
 body { background: var(--paper); color: var(--ink); font: 400 24px/32px var(--body); position: relative;
   background-image: linear-gradient(to bottom, transparent 39px, color-mix(in srgb, var(--rule) 55%, transparent) 39px, color-mix(in srgb, var(--rule) 55%, transparent) 40px);
   background-size: 100% 40px; }
-/* The field book's red centre rule, and the sheet's frame. */
-body::before { content: ''; position: absolute; left: 84px; top: 0; bottom: 0; border-left: 3px solid var(--pencil); }
+/* A staff gauge down the left edge, as the app's charter makes the vertical scale: a white plate,
+   black E-marks a unit apart. */
+body::before { content: ''; position: absolute; left: 62px; top: 0; bottom: 0; width: 22px; background:
+  repeating-linear-gradient(to bottom, var(--ink) 0 4px, transparent 4px 8px, var(--ink) 8px 12px, transparent 12px 16px, var(--ink) 16px 20px, transparent 20px 40px) 4px 0 / 10px 100% no-repeat,
+  linear-gradient(var(--ink), var(--ink)) 4px 0 / 3px 100% no-repeat, var(--gauge); border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
 .sheet { position: absolute; inset: 0; padding: 44px 64px 40px 124px; display: flex; flex-direction: column; }
 .top { display: flex; justify-content: space-between; align-items: baseline; font: 500 20px/24px var(--label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .top b { color: var(--ink); font-weight: 500; letter-spacing: 0.16em; }
