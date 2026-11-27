@@ -2693,3 +2693,51 @@ The control case was then asked for in chat, as in the clean install, and Kiro a
 sending prompt: You've reached your monthly usage limit", though the status bar read "Kiro Free
 50 / 50". So the free plan's counter is not the limit that applies, and no Kiro agent turn has
 run since session 16. The README's install section says what was and was not observed.
+## 2026-11-27, session 17: the reach block
+**The design direction and the mock were written outside Kiro; the build is Kiro's.** The person
+wrote `.design/DIRECTION.md`, `.design/CHARTER.md`, the reference photographs and the mock
+(`.design/mock/reach_block.py`, which draws the main example from its 40 recorded stations) on
+their own, and committed them as 334c6f4. This session read them and built the app to them under
+the quickened-app spec: requirement 10 and task 17, a criterion and a test for each of six items,
+tests first, one commit per item. The solver was not touched.
+### Credits: the last sessions
+- The clean install, rerun in Kiro under the name `oracle-bones`: 1.63 and 1.81 credits, in two
+  sessions.
+- The session that stopped on the usage limit (session 16): 87.73 credits over 24 min 7 s.
+- This session's credits are not counted here; they go in the next entry.
+### What was built
+1. **Tokens** (17.1). The charter's thirteen colours, light and under `prefers-color-scheme: dark`,
+   and its type scale 12, 16, 21, 28, 37, 50, 66. The field-book palette and its names are gone.
+   Figures are IBM Plex Sans Condensed with tabular figures; IBM Plex Mono is `--font-evidence`,
+   used only inside QUICK-2's recorded screens. The SemiBold was not needed. Print stays black on
+   white in either theme. `test/charter.test.ts` reads the charter's table, so a change to the
+   charter fails until the tokens follow. Axe passes in both themes.
+2. **The reach block** (17.2). `drawing/block.ts` draws the result as the front face of a block
+   extruded upstream: top surface shaded by slope, hatched cut face, the water as a level plane
+   with a body in front, cut-off water with its own hatch, QUICK-2's walls and a full pipe's
+   assumed line as before, the high-water mark on the end wall with the printed figure above it,
+   a staff gauge. A circle is a pipe bored through the same block. The print view keeps the 2D
+   front face. `test/block.test.ts` runs over every result golden. The module was drafted before
+   its test file was written; both are in one commit, so this item was not strictly tests first.
+   A later commit moved the gauge's number formatting into `axis.ts`, where the ui guard allows it.
+3. **The first screen** (17.3). The opening beside the main example's block, computed live on load;
+   then the two examples as bordered buttons; then the calculator. The empty ruled page, its
+   tokens and its tests are gone. Every page has a footer: the source repository, the limits and
+   proof pages, the notice. The opening's FEMA sentences are on the identity test's allowed list.
+4. **Words** (17.4). "Your inputs, as Quickened read them" and "Computed by Quickened with
+   QUICK-2's method", on the screen and in the print view.
+5. **Phone** (17.5). The page scrolls to the result's heading. A pasted or loaded section's ground
+   points are one summary row that opens on demand. On the proof page the recorded screens scale to
+   fit and the field tables stack, so no word or value breaks.
+6. **Public pages** (17.6). Repository wording is split out of the plain sentences into a closed
+   "For the repository" details under each entry. The limits page defines "haunting" before it uses
+   the word. H-009's table is a table. Step-Backwater's entry lists what QUICK-2 asks for after
+   the sentence that announces it.
+### Checks at the end
+Vitest 2,668 passed in 59 files (2,608 before). The typecheck and the build are clean. Playwright
+48 passed and 6 were skipped, the phone-only checks on the desktop project (43 before).
+### Not done
+- The whole-page look was checked by screenshots of the first screen and of the block, light and
+  dark, at 1280 px and 375 px; no one has reviewed them yet.
+- The gauge shows two figures on the main example (650 and 600): the least gap between figures
+  is 20 units, and the block's scale puts 50 ft there.
