@@ -3,6 +3,7 @@
 // QUICK-2 prints them and cannot be edited. On the irregular section the ground points come
 // first, as rows of a station and an elevation, 1 to 40.
 import type { FormField, FormModel } from '../forms.ts';
+import { GROUND_SUMMARY_ID, GROUND_TABLE_ID, GROUND_TOGGLE, groundSummary, type GroundView } from '../ground.ts';
 import { rowKeys, type Row } from '../job.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 
@@ -18,6 +19,8 @@ export interface FormViewModel {
   rowNotes?: Readonly<Record<number, Child>>;
   /** Under the table: the points the editor keeps, when a row was not taken as typed. */
   belowRows?: Child | null;
+  /** Once a section is pasted or loaded the table is a summary row that opens on demand (criterion 10.5); undefined or 'typed': the table alone. */
+  ground?: GroundView;
 }
 
 export const FIXED_NOTE = 'QUICK-2 prints this value without asking for it.';
@@ -50,9 +53,15 @@ function fieldRow(f: FormField, value: string, marked: boolean): VNode {
 function groundPoints(m: FormViewModel): VNode {
   const gp = m.form.groundPoints!;
   const notes = m.rowNotes ?? {};
+  const collapsed = m.ground === 'collapsed';
+  const summary = m.ground === 'open' || collapsed
+    ? h('button', { type: 'button', class: 'ground-summary', id: GROUND_SUMMARY_ID, 'aria-expanded': collapsed ? 'false' : 'true',
+      'aria-controls': GROUND_TABLE_ID, on: { click: { type: GROUND_TOGGLE } } }, groundSummary(m.rows))
+    : null;
   return h('div', { class: 'ground-points' },
     m.aboveRows ?? null,
-    h('table', { class: 'grid' },
+    summary,
+    collapsed ? null : h('table', { class: 'grid', id: GROUND_TABLE_ID },
       h('caption', {}, `Ground points: from 1 to ${gp.max} rows, station then elevation`),
       h('thead', {}, h('tr', {},
         h('th', { scope: 'col', class: 'row-number' }, 'Row'),
@@ -75,7 +84,7 @@ function groundPoints(m: FormViewModel): VNode {
         ].filter((x): x is VNode => x !== null);
       }).flat())),
     m.belowRows ?? null,
-    h('div', { class: 'row-controls' },
+    collapsed ? null : h('div', { class: 'row-controls' },
       m.rows.length < gp.max
         ? h('button', { type: 'button', on: { click: { type: 'add-row' } } }, 'Add row')
         : h('p', { class: 'note' }, `QUICK-2 takes at most ${gp.max} ground points.`),

@@ -127,7 +127,7 @@ export function resultsView(m: ResultsModel, parts: ResultsParts = {}): VNode {
   const extra = parts.rowExtra ?? (() => null);
   return h('section', { class: 'state state-result', 'aria-live': 'polite' },
     wsMarkSymbol(),
-    h('h2', {}, m.heading),
+    h('h2', { id: 'result-heading', tabindex: '-1' }, m.heading),
     h('p', { class: 'main-figure' },
       wsMark(),
       h('span', { class: 'main-label quick2' }, m.mainFigure.label),

@@ -128,9 +128,9 @@ function caseView(c: ProofCaseModel): VNode {
           h('th', { scope: 'col' }, 'Quickened'), h('th', { scope: 'col' }, 'Same?'))),
         h('tbody', {}, c.rows.map((x) => h('tr', { class: x.same ? 'same' : 'different', 'data-kind': x.kind, 'data-field': x.field },
           h('th', { scope: 'row', class: x.kind === 'printed' ? 'quick2' : undefined }, x.label),
-          h('td', { class: 'figures' }, shown(x.quick2)),
-          h('td', { class: 'figures' }, shown(x.quickened)),
-          h('td', {}, h('span', { class: 'mark' }, `${x.same ? 'same' : 'different'}${x.counted ? '' : `, ${NOT_COUNTED}`}`))))))));
+          h('td', { class: 'figures', 'data-label': 'QUICK-2' }, shown(x.quick2)),
+          h('td', { class: 'figures', 'data-label': 'Quickened' }, shown(x.quickened)),
+          h('td', { 'data-label': 'Same?' }, h('span', { class: 'mark' }, `${x.same ? 'same' : 'different'}${x.counted ? '' : `, ${NOT_COUNTED}`}`))))))));
 }
 
 export function proofView(m: ProofModel): VNode {

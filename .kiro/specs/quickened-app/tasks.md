@@ -294,7 +294,7 @@ Tasks 1 to 13 are the core path. Tasks 14 and 15, the files, wait for the Exhume
   - [x] 17.4 Test: the two headings in every screen and the print view, and no heading that
     says QUICK-2 read or computed the user's inputs. Then the words.
     - _Requirements: 10.4_
-  - [ ] 17.5 Test: at 375 px the page scrolls to the result's heading, the ground-point table
+  - [x] 17.5 Test: at 375 px the page scrolls to the result's heading, the ground-point table
     collapses to a summary and opens on demand, the proof page's screens fit and its tables
     never break a word. Then the phone stylesheet and `main.ts`.
     - _Requirements: 10.5_

@@ -648,6 +648,13 @@ One column with `--space-4` margins, so content is 343px wide:
   notice, Print.
 - Ground points: a two-column table (station, elevation) with row numbers; the paste text area
   is full width.
+- Amended by task 17.5 (criterion 10.5). After an example or Calculate the page scrolls to the
+  result's heading (`#result-heading`, at the top of the screen, no further). Once a section has
+  been pasted or loaded, the ground points are one summary row, a button ("40 ground points, 0
+  to 500") that opens the table and closes it again (`ui/ground.ts`); typed by hand, the table
+  is shown alone. On the proof page QUICK-2's recorded screens scale to the width of their
+  figure (`--evidence-size`, 80 columns of the monospace face) and each field table stacks, a
+  row to a block with each value labelled, so no word or value breaks.
 - Nothing is wider than the screen: the Playwright run checks that the page's scroll width is
   375px, and that every control is at least `--tap` in both directions.
 

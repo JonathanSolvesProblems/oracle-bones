@@ -156,6 +156,11 @@ input.figures { font-family: var(--font-figures); }
 /* Screen states on the right-hand page. */
 .sketch:focus { outline: none; }
 .state h2 { margin-top: 0; }
+#result-heading { scroll-margin-top: var(--space-4); }
+#result-heading:focus { outline: none; }
+.ground-summary { width: 100%; text-align: left; font-weight: 600; margin-bottom: var(--space-2); border-width: var(--hairline-width); }
+.ground-summary::after { content: ' (show)'; font-weight: 400; color: var(--ink-muted); }
+.ground-summary[aria-expanded='true']::after { content: ' (hide)'; }
 .message .message-label { font-weight: 600; }
 .message .figures { white-space: pre-wrap; }
 .flags { padding-left: var(--space-6); margin: var(--space-4) 0; }
@@ -186,15 +191,25 @@ input.figures { font-family: var(--font-figures); }
 .limits-page .miss-count { font-weight: 600; margin-bottom: var(--space-2); }
 .proof-case { border-top: var(--hairline); padding: var(--space-4) 0; }
 .proof-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
-.quick2-screen { margin: 0; min-width: 0; }
+.quick2-screen { margin: 0; min-width: 0; container-type: inline-size; }
 .quick2-screen figcaption { font: var(--text-md) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-1); }
-/* QUICK-2's recorded screens are evidence: the only place the monospace face is used. */
-.quick2-screen pre { margin: 0; overflow-x: auto; border: var(--hairline); padding: var(--space-2); font: var(--text-xs) var(--font-evidence); }
+/* QUICK-2's recorded screens are evidence: the only place the monospace face is used. They scale to the figure's width (criterion 10.5). */
+.quick2-screen pre { margin: 0; border: var(--hairline); padding: var(--space-2); font: var(--evidence-size) var(--font-evidence); }
 .quick2-screen pre:focus { outline: var(--focus); outline-offset: var(--focus-offset); }
 .proof-table { border-collapse: collapse; width: 100%; }
 .proof-table caption { text-align: left; font: var(--text-md) var(--font-body); color: var(--ink-muted); padding-bottom: var(--space-2); }
-.proof-table th, .proof-table td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; overflow-wrap: anywhere; }
+/* Words and values break only at spaces, never inside (criterion 10.5). */
+.proof-table th, .proof-table td { border-bottom: var(--hairline); padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; overflow-wrap: normal; word-break: normal; }
 .proof-table td.figures { white-space: pre-wrap; }
+.proof-table td::before { content: attr(data-label); display: none; }
+@media (max-width: 959.98px) {
+  .proof-table, .proof-table tbody, .proof-table tr, .proof-table th, .proof-table td { display: block; }
+  .proof-table thead { display: none; }
+  .proof-table tr { border-bottom: var(--hairline); padding: var(--space-2) 0; }
+  .proof-table th, .proof-table td { border-bottom: 0; padding: 0; }
+  .proof-table td::before { display: inline; color: var(--ink-muted); }
+  .proof-table td::before { content: attr(data-label) ': '; }
+}
 .proof-table tr.different .mark { color: var(--flag); font-weight: 600; }
 table.printed { border-collapse: collapse; width: 100%; margin-bottom: var(--space-6); }
 table.printed caption {

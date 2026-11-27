@@ -33,6 +33,14 @@ export async function paste(page: Page, text: string): Promise<void> {
   await page.locator('#paste-open').click();
   await page.locator('#paste-text').fill(text);
   await page.getByRole('button', { name: 'Load rows' }).click();
+  await openGround(page);
+}
+/** A pasted or loaded section is one summary row (criterion 10.5); the reader opens it to see the rows. */
+export async function openGround(page: Page): Promise<void> {
+  const summary = page.locator('button.ground-summary');
+  // A paste that was refused loads nothing, so there is no summary row and the table is as it was.
+  if ((await summary.count()) > 0 && (await summary.getAttribute('aria-expanded')) === 'false') await summary.click();
+  await expect(page.locator('table.grid')).toBeVisible();
 }
 
 /** A golden's ground points as tab-delimited rows, as a spreadsheet copies them. */

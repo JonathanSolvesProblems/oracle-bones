@@ -3,6 +3,7 @@
 // layout, Phone layout).
 import type { Mode, Shape } from '../../solver/index.ts';
 import { formFor } from '../forms.ts';
+import type { GroundView } from '../ground.ts';
 import type { Row } from '../job.ts';
 import { h, type Child, type VNode } from '../vnode.ts';
 import { formView } from './form.ts';
@@ -15,6 +16,8 @@ export interface CalculatorState {
   values: Record<string, string>;
   rows: Row[];
   marked: ReadonlySet<string>;
+  /** How the ground-point table is shown (criterion 10.5); absent: typed by hand. */
+  ground?: GroundView;
 }
 
 export interface CalculatePageParts {
@@ -46,7 +49,7 @@ export function calculatePage(s: CalculatorState, parts: CalculatePageParts = {}
   else {
     left = formView({
       form, values: s.values, rows: s.rows, marked: s.marked,
-      aboveRows: parts.aboveRows, rowNotes: parts.rowNotes, belowRows: parts.belowRows,
+      aboveRows: parts.aboveRows, rowNotes: parts.rowNotes, belowRows: parts.belowRows, ground: s.ground,
     });
   }
   // Before a calculation the right page is empty and hidden: there is no ruled notepad (criterion 10.3).

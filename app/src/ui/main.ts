@@ -10,6 +10,7 @@ import { buildJob, originAfterEdit, type AppJob, type Origin, type Row } from '.
 import { exampleBlock, exampleForm, exampleJob, examplesView, type ExampleOrigin } from './views/example.ts';
 import { heroView } from './views/hero.ts';
 import { PRINT_ACTION, printModel, printView } from './views/print.ts';
+import { GROUND_TOGGLE, groundAfter } from './ground.ts';
 import { readPaste } from './paste.ts';
 import { calculate, type ScreenState } from './state.ts';
 import { calculatePage, type CalculatorState } from './views/calculate.ts';
@@ -22,7 +23,7 @@ import type { Action, Child } from './vnode.ts';
 
 const emptyRow = (): Row => ({ station: '', elevation: '' });
 
-const state: CalculatorState = { mode: null, shape: null, values: {}, rows: [emptyRow()], marked: new Set() };
+const state: CalculatorState = { mode: null, shape: null, values: {}, rows: [emptyRow()], marked: new Set(), ground: 'typed' };
 const paste: PasteState = { open: false, text: '', message: null };
 /** The worked example loaded into the form, if any, and whether the job is still that example (8.6). */
 let loaded: ExampleOrigin | null = null;
@@ -62,6 +63,7 @@ function update(action: Action, value: string | null): void {
     origin = originAfterEdit(origin);
   }
   if (action.type === 'pick-mode' || action.type === 'pick-shape') loaded = null;
+  if (action.type === 'example' || action.type === GROUND_TOGGLE) state.ground = groundAfter(state.ground ?? 'typed', action.type);
   switch (action.type) {
     case 'example': {
       const which = action.origin as ExampleOrigin;
@@ -115,6 +117,7 @@ function update(action: Action, value: string | null): void {
       const r = readPaste(paste.text);
       if (r.ok) {
         state.rows = r.rows;
+        state.ground = groundAfter(state.ground ?? 'typed', 'paste-load');
         Object.assign(paste, { open: false, text: '', message: null });
         focusAfterDraw = 'paste-open';
       } else {
@@ -162,7 +165,13 @@ let newerBuild = false;
 function draw(): void {
   const route = routeOf(location.hash);
   render(root!, shell(route, page(route), { newerBuild }), dispatch);
-  if (focusAfterDraw) {
+  if (focusAfterDraw === 'results') {
+    // The page goes to the result's heading, with the heading at the top of the screen and no further (10.5).
+    const heading = document.getElementById('result-heading') ?? document.querySelector<HTMLElement>('#results h2') ?? document.getElementById('results');
+    heading?.focus({ preventScroll: true });
+    heading?.scrollIntoView({ block: 'start' });
+    focusAfterDraw = null;
+  } else if (focusAfterDraw) {
     document.getElementById(focusAfterDraw)?.focus();
     focusAfterDraw = null;
   }
