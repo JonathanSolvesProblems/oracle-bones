@@ -600,10 +600,10 @@ is the 24px line.
 | `--water` | `#8C7737` | floodwater: turbid silt, the only hue on the page |
 | `--water-top` | `#A8924F` | the lit surface of the same water; cut-off water's ground |
 | `--water-line` | `#4E3F14` | the water's edge, links and the focus ring |
-| `--ground-lit` | `#D7D4C6` | the block's top surface where it faces up and left |
-| `--ground-shade` | `#8F8B7C` | the block's top surface where it faces away |
-| `--cut-face` | `#615B4B` | the soil of the cut face |
-| `--hatch` | `#4B4639` | the hatching on the cut face |
+| `--ground-lit` | `#E0DED4` | the block's top surface where it faces up and left |
+| `--ground-shade` | `#BDB8A8` | the block's top surface where it faces away |
+| `--cut-face` | `#D3CFC1` | the cut face: paper, drawn with ink hatching (design round 2) |
+| `--hatch` | `#6B6656` | the hatching on the cut face, in ink |
 | `--gauge` | `#F4F4F0` | the staff gauge's white enamel |
 | `--flag` | `#A3241C` | warnings only: flags and the fields they mark |
 

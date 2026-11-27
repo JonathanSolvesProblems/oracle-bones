@@ -16,9 +16,10 @@ export const INTRO_DOS = ' DOS program for the water-surface elevation at one cr
 export const INTRO_ZONE = ' for one cross section in Zone A, but it does not start on a locked-down modern computer.';
 export const INTRO_BROWSER = 'Quickened gives its answers in a browser, checked against the original.';
 
-export function introView(headline: QuickenedData['headline'], program: QuickenedData['program']): VNode {
+/** The opening; `title: false` leaves the heading to the first screen, which places it (criterion 10.12). */
+export function introView(headline: QuickenedData['headline'], program: QuickenedData['program'], opts: { title?: boolean } = {}): VNode {
   return h('section', { class: 'intro', 'aria-label': 'About Quickened' },
-    h('h1', {}, INTRO_TITLE),
+    opts.title === false ? null : h('h1', {}, INTRO_TITLE),
     h('p', { class: 'intro-lead' },
       "QUICK-2 is FEMA's ", program.year, INTRO_DOS,
       h('a', { href: FEMA_LIST_URL, rel: 'noopener' }, "FEMA's list of accepted models"),

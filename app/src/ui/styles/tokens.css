@@ -14,10 +14,10 @@
   --water: #8C7737;         /* floodwater: turbid silt, not blue */
   --water-top: #A8924F;     /* the lit surface of the same water */
   --water-line: #4E3F14;    /* the water's edge, links and the focus ring */
-  --ground-lit: #D7D4C6;    /* the block's top surface where it faces up and left */
-  --ground-shade: #8F8B7C;  /* the block's top surface where it faces away */
-  --cut-face: #615B4B;      /* the soil of the cut face */
-  --hatch: #4B4639;         /* the hatching on the cut face */
+  --ground-lit: #E0DED4;    /* the block's top surface where it faces up and left: paper, a little ink */
+  --ground-shade: #BDB8A8;  /* the block's top surface where it faces away */
+  --cut-face: #D3CFC1;      /* the cut face: paper, drawn with ink hatching (design round 2) */
+  --hatch: #6B6656;         /* the hatching on the cut face, in ink */
   --gauge: #F4F4F0;         /* the staff gauge's white enamel */
   --flag: #A3241C;          /* warnings only */
 
@@ -81,10 +81,10 @@
     --water: #A88C45;
     --water-top: #C2A65E;
     --water-line: #E3C977;
-    --ground-lit: #5B5A51;
-    --ground-shade: #2E2D28;
-    --cut-face: #3A352B;
-    --hatch: #2A261F;
+    --ground-lit: #63615A;
+    --ground-shade: #34332D;
+    --cut-face: #22231F;
+    --hatch: #5A564B;
     --gauge: #E6E8E3;
     --flag: #E5735F;
   }
@@ -103,10 +103,10 @@
     --water: #8C7737;
     --water-top: #A8924F;
     --water-line: #000000;
-    --ground-lit: #D7D4C6;
-    --ground-shade: #8F8B7C;
-    --cut-face: #615B4B;
-    --hatch: #4B4639;
+    --ground-lit: #E0DED4;
+    --ground-shade: #BDB8A8;
+    --cut-face: #D3CFC1;
+    --hatch: #6B6656;
     --gauge: #F4F4F0;
     --flag: #000000;
     --margin-rule: 3px solid #000000;

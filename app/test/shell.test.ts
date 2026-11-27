@@ -30,7 +30,8 @@ describe('the shell (criterion 10.12)', () => {
     const wide = media('min-width: 480px');
     expect(wide).toMatch(/\.modes \{ display: flex; flex-wrap: nowrap; \}/);
     expect(wide).toMatch(/\.modes \.choice \{[^}]*white-space: nowrap/);
-    expect(wide).toMatch(/\.modes \.choice:has\(\.not-built\) \{[^}]*flex-direction: column/);
+    // Each name at the top of its tab, so the names line up and "not built yet" sits under its own.
+    expect(wide).toMatch(/\.modes \.choice \{[^}]*flex-direction: column; align-items: flex-start; justify-content: flex-start/);
     expect(css).toMatch(/\.choice \.not-built \{ font: var\(--text-xs\)/);
     expect(tokens).toMatch(/--text-xs: 12px/);
   });

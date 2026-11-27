@@ -8,7 +8,7 @@ import type { Mode, Shape } from '../src/solver/index.ts';
 import type { AppJob } from '../src/ui/job.ts';
 import { runJob, classify } from '../src/ui/state.ts';
 import { sectionDrawing, DRAWING_WORDS, type DrawingModel } from '../src/ui/drawing/section.ts';
-import { BLOCK_WORDS, DEFAULT_WIDTH, GAUGE_GAP, GAUGE_STEP_MAX, TEXT, bandOf, blockLayout, blockView, clipGround, depthFor, frameHeight, hitsBox, redrawBlock } from '../src/ui/drawing/block.ts';
+import { BLOCK_WORDS, DEFAULT_WIDTH, GAUGE_GAP, GAUGE_MARK_GAP, GAUGE_STEP_MAX, TEXT, bandOf, blockLayout, blockView, clipGround, depthFor, frameHeight, hitsBox, redrawBlock } from '../src/ui/drawing/block.ts';
 import { overlaps } from '../src/ui/drawing/labels.ts';
 import { screenView } from '../src/ui/views/screen.ts';
 import { findAll, textOf, type Child, type VNode } from '../src/ui/vnode.ts';
@@ -205,7 +205,12 @@ describe('the geometry: an oblique extrusion with the water standing level in it
     for (const g of all) for (const w of WIDTHS) {
       const { m } = drawnOf(g);
       const L = blockLayout(m, w);
-      expect(L.gauge.step, g.id).toBeCloseTo(5 * L.gauge.unit, 9);
+      // A mark every fifth of the step, or every half or whole step where fifths would be under 4 px apart (10.12).
+      const per = Math.round(L.gauge.step / L.gauge.unit);
+      expect([1, 2, 5], g.id).toContain(per);
+      const perUnitPx = Math.abs(L.f.py(L.gauge.unit) - L.f.py(0));
+      if (per > 1) expect(perUnitPx, `${g.id} at ${w}`).toBeGreaterThanOrEqual(GAUGE_MARK_GAP - 1e-9);
+      if (per < 5) expect((L.gauge.step / 5) * Math.abs(L.f.py(1) - L.f.py(0)), `${g.id} at ${w}`).toBeLessThan(GAUGE_MARK_GAP);
       const majors = L.gauge.marks.filter((k) => k.major);
       expect(majors.length, g.id).toBeGreaterThan(0);
       for (let i = 1; i < L.gauge.marks.length; i++) expect(L.gauge.marks[i]!.v - L.gauge.marks[i - 1]!.v, g.id).toBeCloseTo(L.gauge.unit, 6);

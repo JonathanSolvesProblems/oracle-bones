@@ -34,6 +34,8 @@ const GAP = 5;
 export const GAUGE_GAP = 15;
 /** The gauge's figures are at most this many units apart wherever that many units are at least GAUGE_GAP px. */
 export const GAUGE_STEP_MAX = 10;
+/** The least space between two marks on the gauge, in px, so they never run together into a bar. */
+export const GAUGE_MARK_GAP = 4;
 /** The room above the block for the row of labels, and below it for the stations, in px. */
 const LABEL_ROOM = 26;
 const FOOT_ROOM = 28;
@@ -242,14 +244,17 @@ export function blockLayout(m: DrawingModel, width: number = DEFAULT_WIDTH): Blo
   // GAUGE_GAP px allows (never wider than GAUGE_STEP_MAX where that many units fit the gap).
   const perFoot = Math.abs(f.py(1) - f.py(0));
   const step = niceUp(GAUGE_GAP / perFoot);
-  const unit = step / 5;
+  // A mark every fifth of a figure's step, or every half or whole step where fifths would run together (under
+  // GAUGE_MARK_GAP px apart, as on a phone's steep exaggeration).
+  const per = [5, 2, 1].find((n) => (step / n) * perFoot >= GAUGE_MARK_GAP) ?? 1;
+  const unit = step / per;
   const decimals = decimalsOf(step);
   const lo = solid.bounds.yMin;
   const hi = solid.bounds.yMax;
   const marks: BlockLayout['gauge']['marks'] = [];
   for (let k = Math.ceil(lo / unit - 1e-9); k * unit <= hi + 1e-9; k++) {
     const v = Math.round(k * unit * 10 ** (decimals + 1)) / 10 ** (decimals + 1);
-    marks.push({ v, y: f.py(v), major: k % 5 === 0 });
+    marks.push({ v, y: f.py(v), major: k % per === 0 });
   }
   const widest = Math.max(...marks.filter((x) => x.major).map((x) => gaugeFigure(x.v, decimals).length), 1);
   // The figures stand left of the marks, so the water's bar, drawn across the marks only, never crosses one.
@@ -464,22 +469,41 @@ export function blockSvg(m: DrawingModel, id: string, width: number): VNode {
   const ws = f.py(m.waterLevel);
 
   // The top surface, strip by strip: lit where the ground faces up and left; where the ground was cut off at the
-  // band's top, the cut itself, hatched like the front face.
-  const strips: Child[] = [];
-  const data = m.circle ? [] : L.groundFeet;
-  const surface = m.circle ? [{ x: first.x, y: first.y }, { x: lastPt.x, y: lastPt.y }] : g;
+  // band's top, the cut itself, hatched like the front face. Each strip carries its own far edge.
+  // Seen from above and in front, wherever two strips overlap the higher one is the nearer, so the strips and the
+  // water's planes are drawn from the lowest up; a strip that crosses the water's level is split there first.
+  const surfFeet: Pt[] = [];
+  const surfCut: boolean[] = [];
+  if (!m.circle) {
+    const src = L.groundFeet;
+    src.forEach((p, i) => {
+      const q = src[i - 1];
+      if (q) {
+        const cut = L.cut[i - 1]!;
+        if ((q.y - m.waterLevel) * (p.y - m.waterLevel) < 0) {
+          surfFeet.push({ x: q.x + ((m.waterLevel - q.y) * (p.x - q.x)) / (p.y - q.y), y: m.waterLevel });
+          surfCut.push(cut);
+        }
+        surfCut.push(cut);
+      }
+      surfFeet.push(p);
+    });
+  }
+  const layers: { h: number; nodes: Child[] }[] = [];
+  const surface = m.circle ? [{ x: first.x, y: first.y }, { x: lastPt.x, y: lastPt.y }] : surfFeet.map((p) => P(p.x, p.y));
   for (let i = 0; i + 1 < surface.length; i++) {
     const a = surface[i]!;
     const b = surface[i + 1]!;
     const quad = pts([a, b, back(b), back(a)]);
-    if (L.cut[i]) {
-      strips.push(h('polygon', { class: 'top-cut', points: quad, fill: `url(#${id}-soil)` }));
+    const edge = h('line', { class: 'back-edge', x1: coord(back(a).x), y1: coord(back(a).y), x2: coord(back(b).x), y2: coord(back(b).y) });
+    const height = m.circle ? -Infinity : (surfFeet[i]!.y + surfFeet[i + 1]!.y) / 2;
+    if (!m.circle && surfCut[i]) {
+      layers.push({ h: height, nodes: [h('polygon', { class: 'top-cut', points: quad, fill: `url(#${id}-soil)` }), edge] });
       continue;
     }
-    const slope = m.circle ? 0 : (data[i + 1]!.y - data[i]!.y) / Math.max(data[i + 1]!.x - data[i]!.x, 1e-6);
-    strips.push(h('polygon', { class: 'top-shade', points: quad }));
+    const slope = m.circle ? 0 : (surfFeet[i + 1]!.y - surfFeet[i]!.y) / Math.max(surfFeet[i + 1]!.x - surfFeet[i]!.x, 1e-6);
     const lit = coord(clamp01(0.5 + slope * 2.2));
-    strips.push(h('polygon', { class: 'top-lit', points: quad, 'fill-opacity': lit, 'stroke-opacity': lit }));
+    layers.push({ h: height, nodes: [h('polygon', { class: 'top-shade', points: quad }), h('polygon', { class: 'top-lit', points: quad, 'fill-opacity': lit, 'stroke-opacity': lit }), edge] });
   }
   // The ground line, in runs between the cuts; each cut gets a break line on the front face's edge.
   const runs: Pt[][] = [];
@@ -493,8 +517,6 @@ export function blockSvg(m: DrawingModel, id: string, width: number): VNode {
     return h('polyline', { class: 'break-line', points: pts([{ x: r.x0, y: r.y }, { x: mid - z, y: r.y }, { x: mid - z / 2, y: r.y - 2 * z },
       { x: mid + z / 2, y: r.y + 2 * z }, { x: mid + z, y: r.y }, { x: r.x1, y: r.y }]) });
   });
-  const backEdge = h('polyline', { class: 'back-edge', points: pts(surface.map(back)) });
-
   const planes = m.spans.map((s) => {
     const a = P(s.from, m.waterLevel);
     const b = P(s.to, m.waterLevel);
@@ -558,9 +580,9 @@ export function blockSvg(m: DrawingModel, id: string, width: number): VNode {
           h('rect', { class: 'cutoff-ground', width: '6', height: '6' }),
           h('path', { class: 'cutoff-line', d: 'M0 0 V6' })),
         clip),
-      strips,
-      backEdge,
-      planes,
+      // The top surface and the water's planes, from the lowest up (a stable sort keeps the left-to-right order of equals).
+      [...layers, ...planes.map((p) => ({ h: m.circle ? Infinity : m.waterLevel, nodes: [p] as Child[] }))]
+        .sort((a, b) => a.h - b.h).flatMap((l) => l.nodes),
       h('polygon', { class: 'end-wall', points: pts(wall.quad) }),
       wall.extension ? h('polygon', { class: 'end-wall-extension', points: pts(wall.extension) }) : null,
       faceFill,

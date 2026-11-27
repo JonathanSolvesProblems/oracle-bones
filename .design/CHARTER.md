@@ -14,8 +14,8 @@ Laws every screen obeys. Each has its reason. Written outside Kiro, 2026-11-26; 
 | water | `#8C7737` | `#A88C45` | floodwater in every photograph: turbid silt, not blue |
 | water-top | `#A8924F` | `#C2A65E` | the lit surface of the same water |
 | water-line | `#4E3F14` | `#E3C977` | the water's edge; also links |
-| ground-lit / ground-shade | `#D7D4C6` / `#8F8B7C` | `#5B5A51` / `#2E2D28` | a lidar hillshade's greys |
-| cut-face / hatch | `#615B4B` / `#4B4639` | `#3A352B` / `#2A261F` | the soil of a cut bank |
+| ground-lit / ground-shade | `#E0DED4` / `#BDB8A8` | `#63615A` / `#34332D` | a lidar hillshade's greys, light as paper (design round 2) |
+| cut-face / hatch | `#D3CFC1` / `#6B6656` | `#22231F` / `#5A564B` | a cut bank drawn in ink on paper, so the water is the only fill (design round 2) |
 | gauge | `#F4F4F0` | `#E6E8E3` | the gauge's white enamel |
 | flag | `#A3241C` | `#E5735F` | warnings only |
 

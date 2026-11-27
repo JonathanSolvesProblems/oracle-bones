@@ -2870,6 +2870,30 @@ Also from this session: a clean clone of the public repository, with no credenti
 README's commands (2,698 tests, the build, the preview, the golden check, 254 pytest passed). The
 README now says that `oracle_quick.py --full` exits with 1 while any case differs, as some do.
 
+### A fresh critique of the round, and its fixes
+A second designer, again given only screenshots and nothing of the first critique, scored the
+built round 5 out of 10 (1 is studio-made for this client, 10 generic; the first was 6). It kept
+the stationing, the single hue, the thumbnails, the field-by-field tables and the proof page, and
+ranked the fixes. Done the same day:
+- The ground drawn in ink on paper: the cut face and the top surface light as paper, the hatch
+  in ink, so the silt water is the only fill (the charter's table changed with the tokens).
+- Ghost geometry: the top surface was drawn strip by strip from left to right, so the far edge of
+  a dip showed through the higher cut ground beside it, and the water's plane showed through a
+  bump. Seen from above and in front, the higher of two overlapping surfaces is the nearer, so the
+  strips and the planes are now drawn from the lowest up, each strip with its own far edge, split
+  at the water's level.
+- The phone's first screen: the title, then the main example's block, then the opening.
+- The mode names line up; the shapes sit in two even columns; the loaded example keeps the
+  paper with a rule of the water's colour; the gauge's marks never run into a bar; a balanced
+  title; the proof page's table caption on a phone; the wash on the end wall fainter in dark mode.
+- QUICK-2's recorded screens: the Plex Mono file was its Latin-1 subset, so the box-drawing
+  characters came from another font and the frame did not join. The Pi subset of the same
+  package (2.5.0, 13.7 KB, OFL) now carries them.
+Not done, and why: moving the gauge into the water (a new layout problem for every shape),
+figures in Plex Mono (the charter sets them in Plex Sans Condensed), and one exaggeration per
+section (the band follows the water, so two discharges draw at different scales; the caption
+gives each).
+
 ### The power installed from the repository's address
 With the repository public, the power was installed in Kiro from its address in an empty, trusted
 folder (`ob-url`): POWERS, "Add Custom Power", "Import power from a repository URL", the URL of

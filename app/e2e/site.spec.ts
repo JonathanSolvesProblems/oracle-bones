@@ -81,7 +81,17 @@ test('the first screen is the opening beside the main example\'s block, then the
   const blockBox = (await block.boundingBox())!;
   expect(blockBox.y, 'the block is in the first screen').toBeLessThan(height);
   expect(blockBox.width, 'the block is large').toBeGreaterThan(page.viewportSize()!.width * 0.4);
-  expect(Math.abs(blockBox.y - introBox.y) < 200 || blockBox.y > introBox.y, 'the block beside or after the opening').toBe(true);
+  // Amended 2026-11-27 (criterion 10.12): the title first; on a desktop the block beside the opening, on a phone
+  // straight after the title, before the opening's paragraphs, so it is in the first screen.
+  const title = (await page.locator('.hero h1').boundingBox())!;
+  expect(blockBox.y, 'the block after the title').toBeGreaterThan(title.y);
+  if (page.viewportSize()!.width >= 960) expect(Math.abs(blockBox.y - introBox.y) < 200, 'the block beside the opening').toBe(true);
+  else {
+    expect(blockBox.y, 'the block before the opening').toBeLessThan(introBox.y);
+    // Nothing between them but the heading's margin and the grid's gap (16 px each); the block's caption is its own.
+    const heroBlock = (await page.locator('.hero .hero-block').boundingBox())!;
+    expect(heroBlock.y - (title.y + title.height), 'the block straight after the title').toBeLessThanOrEqual(32.5);
+  }
   const formTop = (await page.locator('section.field-notes').boundingBox())!.y;
   for (const b of await page.locator('button.example').all()) {
     const box = (await b.boundingBox())!;
