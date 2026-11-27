@@ -52,7 +52,9 @@ function serve(): Promise<void> {
       res.writeHead(404).end();
       return;
     }
-    res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream', 'cache-control': 'no-cache' });
+    // GitHub Pages' header: a browser may keep each file ten minutes. With it, a worker that filled
+    // its cache through the browser's cache would keep the first build's page (seen live, 2026-11-27).
+    res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream', 'cache-control': 'max-age=600' });
     res.end(readFileSync(file));
   });
   return new Promise((ok) => server!.listen(PORT, ok));
@@ -120,7 +122,7 @@ test('a page where nothing was typed reloads into the newer build by itself, on 
 });
 
 // Pages of the builds deployed before the amendment only show the line. When the newer build's
-// worker replaces such a build (its cache is named without "quickened-2-"), the worker reloads
+// worker replaces such a build (its cache is named without "quickened-3-"), the worker reloads
 // those pages itself. Here the page holds a typed value, so the reload can only be the worker's.
 test('a page of a build from before the amendment is reloaded into the newer build by its worker', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop', 'the worker does not depend on the width');
@@ -129,8 +131,8 @@ test('a page of a build from before the amendment is reloaded into the newer bui
   const before = mkdtempSync(join(tmpdir(), 'quickened-A0-'));
   cpSync(a, before, { recursive: true });
   const sw = join(before, 'sw.js');
-  expect(readFileSync(sw, 'utf-8')).toContain('quickened-2-');
-  writeFileSync(sw, readFileSync(sw, 'utf-8').replaceAll('quickened-2-', 'quickened-'));
+  expect(readFileSync(sw, 'utf-8')).toContain('quickened-3-');
+  writeFileSync(sw, readFileSync(sw, 'utf-8').replaceAll('quickened-3-', 'quickened-'));
   root = before;
 
   await page.goto(URL0);
@@ -144,5 +146,5 @@ test('a page of a build from before the amendment is reloaded into the newer bui
   root = b;
   await page.evaluate(async () => { await (await navigator.serviceWorker.getRegistration())?.update(); });
   await expect(page.locator('meta[name="quickened-test-build"]')).toHaveAttribute('content', 'B', { timeout: 30_000 });
-  await expect.poll(() => page.evaluate(async () => (await caches.keys()).filter((k) => k.startsWith('quickened-')).join())).toMatch(/^quickened-2-[0-9a-f]{16}$/);
+  await expect.poll(() => page.evaluate(async () => (await caches.keys()).filter((k) => k.startsWith('quickened-')).join())).toMatch(/^quickened-3-[0-9a-f]{16}$/);
 });

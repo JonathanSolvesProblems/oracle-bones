@@ -10,15 +10,19 @@ declare const VERSION: string;
 
 const worker = self as unknown as ServiceWorkerGlobalScope;
 /**
- * "quickened-2-" marks a build whose pages reload themselves when a newer build takes over and
- * nothing was typed (criterion 1.13, amended 2026-11-27). Builds before it named the cache
- * "quickened-" and the hash alone; their pages only show a line and wait for the reader.
+ * "quickened-3-" marks a build whose pages reload themselves when a newer build takes over and
+ * nothing was typed (criterion 1.13, amended 2026-11-27), and whose cache was filled from the
+ * server. Builds before it named the cache "quickened-" and the hash alone, and their pages only
+ * show a line; the one "quickened-2-" build could keep the previous build's page in its cache.
  */
-const PAGES_RELOAD = 'quickened-2-';
+const PAGES_RELOAD = 'quickened-3-';
 const CACHE = `${PAGES_RELOAD}${VERSION}`;
 
 worker.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => worker.skipWaiting()));
+  // From the server, past the browser's own cache: GitHub Pages lets a browser keep a file for ten
+  // minutes, and a page kept from the previous build would point at scripts this build removed.
+  const fresh = PRECACHE.map((url) => new Request(url, { cache: 'reload' }));
+  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(fresh)).then(() => worker.skipWaiting()));
 });
 
 worker.addEventListener('activate', (event) => {

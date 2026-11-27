@@ -2819,7 +2819,16 @@ previous build, with a line and a Reload control, when sent a link after a deplo
 asked that a returning visitor get the new build. A page where nothing was typed or picked now
 reloads into the newer build by itself, on the same page; a page holding typed values keeps the
 line, so nothing typed is lost. The builds already deployed cannot do that, so the new worker
-reloads their open pages itself when it replaces one (their cache names lack "quickened-2-").
+reloads their open pages itself when it replaces one (their cache names lack the current mark).
 First try hung: the worker waited for those reloads inside its own activation, and a reload is
 fetched through the same worker, which serves nothing until activation ends. The reloads are now
 started and not waited for. Three Playwright tests with two real builds cover the three cases.
+
+The live check of the path a returning visitor takes (a browser profile that had opened the
+previous build, then the story link after the deploy, 8504ccb) found an older bug: the page did
+reload, but into the previous build. The worker filled its cache through the browser's own
+cache, and GitHub Pages lets a browser keep each file ten minutes, so the cached index.html was
+the old one, pointing at a script the deploy had removed (404 once the browser's copy expires).
+The worker now fetches its files from the server (`cache: 'reload'`), the Playwright server sends
+GitHub Pages' `max-age=600` (all three tests fail without the fix and pass with it), and the mark
+is now "quickened-3-", so the new worker also reloads pages of the one build that had the fault.
