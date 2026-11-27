@@ -22,7 +22,7 @@ test('the block is laid out in the width it has: every label is 13 px, the front
     return Math.abs(vb[2]! - box.width) < 1.5;
   }).toBe(true);
   const sizes = await block.locator('text').evaluateAll((els) => els.map((e) => {
-    const svg = e.ownerSVGElement!;
+    const svg = (e as SVGTextElement).ownerSVGElement!;
     const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
     return parseFloat(getComputedStyle(e).fontSize) * scale;
   }));
