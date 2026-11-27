@@ -2869,3 +2869,12 @@ so its five items were done by hand under the quickened-app spec, tests first.
 Also from this session: a clean clone of the public repository, with no credentials, ran the
 README's commands (2,698 tests, the build, the preview, the golden check, 254 pytest passed). The
 README now says that `oracle_quick.py --full` exits with 1 while any case differs, as some do.
+
+### The power installed from the repository's address
+With the repository public, the power was installed in Kiro from its address in an empty, trusted
+folder (`ob-url`): POWERS, "Add Custom Power", "Import power from a repository URL", the URL of
+`powers/oracle-bones` on main. The copy installed from the local folder was uninstalled first,
+because Kiro skips a power whose name is already installed. Kiro's registry records the source as
+the repository's clone URL, path `powers/oracle-bones`, branch main; the 51 files it wrote match
+the repository's folder file for file, and the oracle server showed connected. No chat was sent,
+so no credits were used and the control case was not run in that window.

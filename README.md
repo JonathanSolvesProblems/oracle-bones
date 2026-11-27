@@ -83,9 +83,14 @@ folder was renamed, and the package was installed again from `powers/oracle-bone
 empty folder: Kiro's notice read `Power "oracle-bones" installed successfully.`, and its server
 appears as `power-oracle-bones-oracle`. The control case was not run again in Kiro that time,
 because Kiro's monthly usage limit had been reached; the renamed package was driven through the
-same three tools from a copy outside this repository, outside Kiro, to the same 3.27. Installing
-from the repository's address has not been run: Kiro asks for a public address, and the
-repository was private at the time.
+same three tools from a copy outside this repository, outside Kiro, to the same 3.27.
+
+Once the repository was public, on 2026-11-27, the power was installed from its address in a third
+empty folder: POWERS, "Add Custom Power", "Import power from a repository URL", then
+`https://github.com/JonathanSolvesProblems/oracle-bones/tree/main/powers/oracle-bones`. Kiro
+cloned it, installed 51 files identical to `powers/oracle-bones`, and its MCP SERVERS list showed
+`power-oracle-bones-oracle` connected. No chat was sent in that window, so the control case was
+not run there.
 
 ## What the numbers are
 
